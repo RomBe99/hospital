@@ -80,9 +80,9 @@ SET @@time_zone = 'SYSTEM';
 
 CREATE TABLE schedule_cell
 (
-    id        INT      NOT NULL AUTO_INCREMENT,
-    doctorId  INT      NOT NULL,
-    date      DATE     NOT NULL,
+    id       INT  NOT NULL AUTO_INCREMENT,
+    doctorId INT  NOT NULL,
+    date     DATE NOT NULL,
 
     PRIMARY KEY (id),
     UNIQUE KEY (date),
@@ -93,8 +93,9 @@ CREATE TABLE schedule_cell
 
 CREATE TABLE time_cell
 (
-    ticketTime TIME NOT NULL,
-    scheduleCellId INT NOT NULL,
+    ticketTime     TIME NOT NULL,
+    scheduleCellId INT  NOT NULL,
+    duration       INT  NOT NULL,
 
     PRIMARY KEY (ticketTime),
     FOREIGN KEY (scheduleCellId) REFERENCES schedule_cell (id) ON DELETE CASCADE
@@ -112,5 +113,7 @@ CREATE TABLE patient_to_ticket
 ) ENGINE = INNODB
   DEFAULT CHARSET = utf8;
 
-INSERT INTO user VALUES(0, 'admin', 'admin', 'Petr', 'Petrov', NULL);
-INSERT INTO administrator VALUES(1, 'Root admin');
+INSERT INTO user
+VALUES (0, 'admin', 'admin', 'Petr', 'Petrov', NULL);
+INSERT INTO administrator
+VALUES (1, 'Root admin');
