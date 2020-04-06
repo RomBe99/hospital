@@ -2,16 +2,6 @@ DROP DATABASE IF EXISTS hospital;
 CREATE DATABASE hospital;
 USE hospital;
 
-CREATE TABLE position
-(
-    id   INT         NOT NULL AUTO_INCREMENT,
-    name VARCHAR(30) NOT NULL,
-
-    PRIMARY KEY (id),
-    UNIQUE KEY (name)
-) ENGINE = INNODB
-  DEFAULT CHARSET = utf8;
-
 CREATE TABLE user
 (
     id         INT         NOT NULL AUTO_INCREMENT,
@@ -23,11 +13,8 @@ CREATE TABLE user
     lastName   VARCHAR(50) NOT NULL,
     patronymic VARCHAR(50) DEFAULT NULL,
 
-    positionId INT         NOT NULL,
-
     PRIMARY KEY (id),
     UNIQUE KEY (login),
-    FOREIGN KEY (positionId) REFERENCES position (id) ON DELETE CASCADE,
     KEY firstName (firstName),
     KEY lastName (lastName),
     KEY patronymic (patronymic)
@@ -36,7 +23,8 @@ CREATE TABLE user
 
 CREATE TABLE administrator
 (
-    userId INT NOT NULL,
+    userId   INT          NOT NULL,
+    position VARCHAR(200) NOT NULL,
 
     PRIMARY KEY (userId),
     FOREIGN KEY (userId) REFERENCES user (id) ON DELETE CASCADE
@@ -94,15 +82,22 @@ CREATE TABLE schedule_cell
 (
     id        INT      NOT NULL AUTO_INCREMENT,
     doctorId  INT      NOT NULL,
-    cabinetId INT      NOT NULL,
-    date      DATETIME NOT NULL,
+    date      DATE     NOT NULL,
 
     PRIMARY KEY (id),
     UNIQUE KEY (date),
     FOREIGN KEY (doctorId) REFERENCES doctor (userId) ON DELETE CASCADE,
-    FOREIGN KEY (cabinetId) REFERENCES cabinet (id) ON DELETE CASCADE,
-    KEY doctorId (doctorId),
-    KEY cabinetName (cabinetId)
+    KEY doctorId (doctorId)
+) ENGINE = INNODB
+  DEFAULT CHARSET = utf8;
+
+CREATE TABLE time_cell
+(
+    ticketTime TIME NOT NULL,
+    scheduleCellId INT NOT NULL,
+
+    PRIMARY KEY (ticketTime),
+    FOREIGN KEY (scheduleCellId) REFERENCES schedule_cell (id) ON DELETE CASCADE
 ) ENGINE = INNODB
   DEFAULT CHARSET = utf8;
 
@@ -116,3 +111,6 @@ CREATE TABLE patient_to_ticket
     FOREIGN KEY (scheduleCellId) REFERENCES schedule_cell (id) ON DELETE CASCADE
 ) ENGINE = INNODB
   DEFAULT CHARSET = utf8;
+
+INSERT INTO user VALUES(0, 'admin', 'admin', 'Petr', 'Petrov', NULL);
+INSERT INTO administrator VALUES(1, 'Root admin');
