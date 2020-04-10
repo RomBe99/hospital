@@ -108,6 +108,7 @@ CREATE TABLE patient_to_ticket
     scheduleCellId INT NOT NULL,
 
     PRIMARY KEY (userId, scheduleCellId),
+    UNIQUE KEY (scheduleCellId),
     FOREIGN KEY (userId) REFERENCES patient (userId) ON DELETE CASCADE,
     FOREIGN KEY (scheduleCellId) REFERENCES schedule_cell (id) ON DELETE CASCADE
 ) ENGINE = INNODB
