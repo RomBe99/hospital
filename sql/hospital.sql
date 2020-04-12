@@ -69,7 +69,10 @@ CREATE TABLE doctor
 
 CREATE TABLE patient
 (
-    userId INT NOT NULL,
+    userId  INT          NOT NULL,
+    email   VARCHAR(320) NOT NULL,
+    address VARCHAR(200) NOT NULL,
+    phone   VARCHAR(12)  NOT NULL,
 
     PRIMARY KEY (userId),
     FOREIGN KEY (userId) REFERENCES user (id) ON DELETE CASCADE
@@ -95,22 +98,12 @@ CREATE TABLE time_cell
 (
     ticketTime     TIME NOT NULL,
     scheduleCellId INT  NOT NULL,
+    patientId      INT DEFAULT NULL,
     duration       INT  NOT NULL,
 
     PRIMARY KEY (ticketTime),
-    FOREIGN KEY (scheduleCellId) REFERENCES schedule_cell (id) ON DELETE CASCADE
-) ENGINE = INNODB
-  DEFAULT CHARSET = utf8;
-
-CREATE TABLE patient_to_ticket
-(
-    userId         INT NOT NULL,
-    scheduleCellId INT NOT NULL,
-
-    PRIMARY KEY (userId, scheduleCellId),
-    UNIQUE KEY (scheduleCellId),
-    FOREIGN KEY (userId) REFERENCES patient (userId) ON DELETE CASCADE,
-    FOREIGN KEY (scheduleCellId) REFERENCES schedule_cell (id) ON DELETE CASCADE
+    FOREIGN KEY (scheduleCellId) REFERENCES schedule_cell (id) ON DELETE CASCADE,
+    FOREIGN KEY (patientId) REFERENCES patient (userId) ON DELETE SET NULL
 ) ENGINE = INNODB
   DEFAULT CHARSET = utf8;
 
