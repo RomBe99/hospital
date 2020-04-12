@@ -6,18 +6,28 @@ import java.util.Objects;
 // TODO Добавить валидацию через аннотации
 public class TimeCell {
     private LocalTime time;
+    private Patient patient;
     private int duration;
 
     public TimeCell() {
     }
 
-    public TimeCell(LocalTime time, int duration) {
+    public TimeCell(LocalTime time, Patient patient, int duration) {
         setTime(time);
+        setPatient(patient);
         setDuration(duration);
+    }
+
+    public TimeCell(LocalTime time,  int duration) {
+        this(time, null, duration);
     }
 
     public void setTime(LocalTime time) {
         this.time = time;
+    }
+
+    public void setPatient(Patient patient) {
+        this.patient = patient;
     }
 
     public void setDuration(int duration) {
@@ -26,6 +36,10 @@ public class TimeCell {
 
     public LocalTime getTime() {
         return time;
+    }
+
+    public Patient getPatient() {
+        return patient;
     }
 
     public int getDuration() {
@@ -38,18 +52,20 @@ public class TimeCell {
         if (!(o instanceof TimeCell)) return false;
         TimeCell timeCell = (TimeCell) o;
         return getDuration() == timeCell.getDuration() &&
-                Objects.equals(getTime(), timeCell.getTime());
+                Objects.equals(getTime(), timeCell.getTime()) &&
+                Objects.equals(getPatient(), timeCell.getPatient());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getTime(), getDuration());
+        return Objects.hash(getTime(), getPatient(), getDuration());
     }
 
     @Override
     public String toString() {
         return "TimeCell{" +
                 "time=" + time +
+                ", patient=" + patient +
                 ", duration=" + duration +
                 '}';
     }
