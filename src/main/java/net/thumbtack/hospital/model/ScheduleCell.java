@@ -8,34 +8,34 @@ import java.util.Objects;
 // TODO Добавить валидацию через аннотации
 public class ScheduleCell {
     private int id;
-    private int doctorId;
+    private Doctor doctor;
     private LocalDate date;
     private List<TimeCell> cells;
 
     public ScheduleCell() {
     }
 
-    public ScheduleCell(int id, int doctorId, LocalDate date, List<TimeCell> cells) {
+    public ScheduleCell(int id, Doctor doctor, LocalDate date, List<TimeCell> cells) {
         setId(id);
-        setDoctorId(doctorId);
+        setDoctor(doctor);
         setDate(date);
         setCells(cells);
     }
 
-    public ScheduleCell(int id, int doctorId, LocalDate date) {
-        this(id, doctorId, date, new ArrayList<>());
+    public ScheduleCell(int id, Doctor doctor, LocalDate date) {
+        this(id, doctor, date, new ArrayList<>());
     }
 
-    public ScheduleCell(int doctorId, LocalDate date) {
-        this(0, doctorId, date);
+    public ScheduleCell(Doctor doctor, LocalDate date) {
+        this(0, doctor, date);
     }
 
     public void setId(int id) {
         this.id = id;
     }
 
-    public void setDoctorId(int doctorId) {
-        this.doctorId = doctorId;
+    public void setDoctor(Doctor doctor) {
+        this.doctor = doctor;
     }
 
     public void setDate(LocalDate date) {
@@ -50,8 +50,8 @@ public class ScheduleCell {
         return id;
     }
 
-    public int getDoctorId() {
-        return doctorId;
+    public Doctor getDoctor() {
+        return doctor;
     }
 
     public LocalDate getDate() {
@@ -68,21 +68,21 @@ public class ScheduleCell {
         if (!(o instanceof ScheduleCell)) return false;
         ScheduleCell that = (ScheduleCell) o;
         return getId() == that.getId() &&
-                getDoctorId() == that.getDoctorId() &&
+                getDoctor() == that.getDoctor() &&
                 Objects.equals(getDate(), that.getDate()) &&
                 Objects.equals(getCells(), that.getCells());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId(), getDoctorId(), getDate(), getCells());
+        return Objects.hash(getId(), getDoctor(), getDate(), getCells());
     }
 
     @Override
     public String toString() {
         return "ScheduleCell{" +
                 "id=" + id +
-                ", doctorId=" + doctorId +
+                ", doctorId=" + doctor +
                 ", date=" + date +
                 ", cells=" + cells +
                 '}';
