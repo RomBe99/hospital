@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-// TODO Добавить валидацию через аннотации
 public class Doctor extends User {
     private String cabinetName;
     private String doctorSpecialtyName;
@@ -79,7 +78,7 @@ public class Doctor extends User {
 
     @Override
     public String toString() {
-        return super.toString() + "\nDoctor{" +
+        return super.toString() + " Doctor{" +
                 "cabinetName='" + cabinetName + '\'' +
                 ", doctorSpecialtyName='" + doctorSpecialtyName + '\'' +
                 ", schedule=" + schedule +

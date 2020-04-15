@@ -4,9 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-// TODO Добавить валидацию через аннотации
 public class Patient extends User {
-    // FIXME Добавить недостающие поля
     private String email;
     private String address;
     private String phone;
@@ -67,5 +65,32 @@ public class Patient extends User {
 
     public List<ScheduleCell> getTickets() {
         return tickets;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Patient)) return false;
+        if (!super.equals(o)) return false;
+        Patient patient = (Patient) o;
+        return Objects.equals(getEmail(), patient.getEmail()) &&
+                Objects.equals(getAddress(), patient.getAddress()) &&
+                Objects.equals(getPhone(), patient.getPhone()) &&
+                Objects.equals(getTickets(), patient.getTickets());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), getEmail(), getAddress(), getPhone(), getTickets());
+    }
+
+    @Override
+    public String toString() {
+        return super.toString() + " Patient{" +
+                "email='" + email + '\'' +
+                ", address='" + address + '\'' +
+                ", phone='" + phone + '\'' +
+                ", tickets=" + tickets +
+                '}';
     }
 }

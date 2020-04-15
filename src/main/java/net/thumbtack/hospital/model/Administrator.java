@@ -2,7 +2,6 @@ package net.thumbtack.hospital.model;
 
 import java.util.Objects;
 
-// TODO Добавить валидацию через аннотации
 public class Administrator extends User {
     private String position;
 
@@ -48,7 +47,7 @@ public class Administrator extends User {
 
     @Override
     public String toString() {
-        return super.toString() + "\nAdministrator{" +
+        return super.toString() + " Administrator{" +
                 "position='" + position + '\'' +
                 '}';
     }
