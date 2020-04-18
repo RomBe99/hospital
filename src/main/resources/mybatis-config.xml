@@ -24,5 +24,8 @@
     </environments>
 
     <mappers>
+        <mapper class="net.thumbtack.hospital.mappers.AdminMapper"/>
+        <mapper class="net.thumbtack.hospital.mappers.PatientMapper"/>
+        <mapper class="net.thumbtack.hospital.mappers.UserMapper"/>
     </mappers>
 </configuration>
