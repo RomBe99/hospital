@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-// TODO Добавить валидацию через аннотации
 public class ScheduleCell {
     private int id;
     private Doctor doctor;

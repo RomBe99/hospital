@@ -3,7 +3,6 @@ package net.thumbtack.hospital.model;
 import java.time.LocalTime;
 import java.util.Objects;
 
-// TODO Добавить валидацию через аннотации
 public class TimeCell {
     private LocalTime time;
     private Patient patient;

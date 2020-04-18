@@ -2,7 +2,6 @@ package net.thumbtack.hospital.model;
 
 import java.util.Objects;
 
-// TODO Добавить валидацию через аннотации
 public abstract class User {
     private int id;
     private String login;
