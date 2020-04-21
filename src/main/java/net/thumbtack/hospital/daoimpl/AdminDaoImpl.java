@@ -29,7 +29,7 @@ public class AdminDaoImpl extends BaseDaoImpl implements AdminDao {
                 return administrator;
             } catch (RuntimeException ex) {
                 session.rollback();
-                LOGGER.debug(className + ": Can't insert administrator = {}", administrator, ex);
+                LOGGER.error(className + ": Can't insert administrator = {}", administrator, ex);
 
                 throw ex;
             }
@@ -51,7 +51,7 @@ public class AdminDaoImpl extends BaseDaoImpl implements AdminDao {
                 return doctor;
             } catch (RuntimeException ex) {
                 session.rollback();
-                LOGGER.debug(className + ": Can't insert doctor = {}", doctor, ex);
+                LOGGER.error(className + ": Can't insert doctor = {}", doctor, ex);
 
                 throw ex;
             }
@@ -71,7 +71,7 @@ public class AdminDaoImpl extends BaseDaoImpl implements AdminDao {
                 LOGGER.debug(className + ": Administrator = {} successfully updated", administrator);
             } catch (RuntimeException ex) {
                 session.rollback();
-                LOGGER.debug(className + ": Can't update administrator = {}", administrator, ex);
+                LOGGER.error(className + ": Can't update administrator = {}", administrator, ex);
 
                 throw ex;
             }
@@ -90,7 +90,7 @@ public class AdminDaoImpl extends BaseDaoImpl implements AdminDao {
                 LOGGER.debug(className + ": Doctor = {} schedule = {} successfully updated", doctor, newSchedule);
             } catch (RuntimeException ex) {
                 session.rollback();
-                LOGGER.debug(className + ": Can't update doctor = {} schedule = {}", doctor, newSchedule);
+                LOGGER.error(className + ": Can't update doctor = {} schedule = {}", doctor, newSchedule);
 
                 throw ex;
             }
@@ -109,7 +109,7 @@ public class AdminDaoImpl extends BaseDaoImpl implements AdminDao {
                 LOGGER.debug(className + ": Doctor with id = {} removed", id);
             } catch (RuntimeException ex) {
                 session.rollback();
-                LOGGER.debug(className + ": Can't remove doctor with id = {}", id, ex);
+                LOGGER.error(className + ": Can't remove doctor with id = {}", id, ex);
 
                 throw ex;
             }

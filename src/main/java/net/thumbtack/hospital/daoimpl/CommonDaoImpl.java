@@ -23,7 +23,7 @@ public class CommonDaoImpl extends BaseDaoImpl implements CommonDao {
                 LOGGER.debug(className + ": All tables deleted from database");
             } catch (RuntimeException ex) {
                 session.rollback();
-                LOGGER.debug(className + ": Can't clear database", ex);
+                LOGGER.error(className + ": Can't clear database", ex);
 
                 throw ex;
             }

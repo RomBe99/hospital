@@ -25,7 +25,7 @@ public class PatientDaoImpl extends BaseDaoImpl implements PatientDao {
                 return patient;
             } catch (RuntimeException ex) {
                 session.rollback();
-                LOGGER.debug(className + ": Can't insert patient = {}", patient, ex);
+                LOGGER.error(className + ": Can't insert patient = {}", patient, ex);
 
                 throw ex;
             }
@@ -45,7 +45,7 @@ public class PatientDaoImpl extends BaseDaoImpl implements PatientDao {
                 LOGGER.debug(className + ": Patient = {} successfully updated", patient);
             } catch (RuntimeException ex) {
                 session.rollback();
-                LOGGER.debug(className + ": Can't update patient = {}", patient, ex);
+                LOGGER.error(className + ": Can't update patient = {}", patient, ex);
 
                 throw ex;
             }

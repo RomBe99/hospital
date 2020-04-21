@@ -19,7 +19,7 @@ public class UserDaoImpl extends BaseDaoImpl implements UserDao {
         try (SqlSession session = getSession()) {
             return getUserMapper(session).getAllDoctors();
         } catch (RuntimeException ex) {
-            LOGGER.debug(className + ": Can't get all doctors", ex);
+            LOGGER.error(className + ": Can't get all doctors", ex);
 
             throw ex;
         }
@@ -32,7 +32,7 @@ public class UserDaoImpl extends BaseDaoImpl implements UserDao {
         try (SqlSession session = getSession()) {
             return getUserMapper(session).getDoctorById(id);
         } catch (RuntimeException ex) {
-            LOGGER.debug(className + ": Can't get doctor by id", ex);
+            LOGGER.error(className + ": Can't get doctor by id", ex);
 
             throw ex;
         }
