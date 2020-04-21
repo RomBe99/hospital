@@ -6,7 +6,7 @@ import net.thumbtack.hospital.model.User;
 import java.util.List;
 
 public interface UserMapper {
-    User insertUser(User user);
+    int insertUser(User user);
 
     void updateUser(User user);
 

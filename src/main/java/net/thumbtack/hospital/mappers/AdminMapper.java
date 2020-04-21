@@ -7,9 +7,9 @@ import net.thumbtack.hospital.model.ScheduleCell;
 import java.util.List;
 
 public interface AdminMapper {
-    Administrator insertAdministrator(Administrator administrator);
+    int insertAdministrator(Administrator administrator);
 
-    Doctor insertDoctor(Doctor doctor);
+    int insertDoctor(Doctor doctor);
 
     void updateAdministrator(Administrator administrator);
 
