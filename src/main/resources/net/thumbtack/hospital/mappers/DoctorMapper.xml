@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="net.thumbtack.hospital.mappers.DoctorMapper">
+    <resultMap id="resultDoctor" type="net.thumbtack.hospital.model.Doctor">
+        <id property="id" column="userId"/>
+        <result property="login" column="login"/>
+        <result property="password" column="password"/>
+        <result property="firstName" column="firstName"/>
+        <result property="lastName" column="lastName"/>
+        <result property="patronymic" column="patronymic"/>
+        <result property="cabinet" column="cabinet"/>
+        <result property="specialty" column="specialty"/>
+
+<!--        <collection property="schedule" column="scheduleCellId" javaType="java.util.List"-->
+<!--                    ofType="net.thumbtack.hospital.model.ScheduleCell">-->
+<!--            <result property="id" column="scheduleCellId"/>-->
+<!--   FIXME         <result property="doctor" column=""/>-->
+
+<!--            <collection property="cells" column="timeCellId" javaType="java.util.List"-->
+<!--                        ofType="net.thumbtack.hospital.model.TimeCell">-->
+<!--                <result property=""-->
+<!--            </collection>-->
+<!--        </collection>-->
+    </resultMap>
+
+    <select id="getAllDoctors" resultMap="resultDoctor">
+       SELECT user.id AS userId,
+         login,
+         password,
+         firstName,
+         lastName,
+         patronymic,
+         ds.name AS specialty,
+         c.name AS cabinet,
+         sc.id AS scheduleCellId,
+         date,
+         ticketTime AS time,
+         duration
+       FROM user
+         JOIN doctor d ON user.id = d.userId
+         JOIN doctor_specialty ds ON d.specialtyId = ds.id
+         LEFT JOIN cabinet c ON d.cabinetId = c.id
+         LEFT JOIN schedule_cell sc ON d.userId = sc.doctorId
+         JOIN time_cell tc ON sc.id = tc.scheduleCellId;
+    </select>
+
+    <select id="getDoctorById" parameterType="int" resultMap="resultDoctor">
+       SELECT user.id AS userId,
+         login,
+         password,
+         firstName,
+         lastName,
+         patronymic,
+         ds.name AS specialty,
+         c.name AS cabinet,
+         sc.id AS scheduleCellId,
+         date,
+         ticketTime AS time,
+         duration
+       FROM user
+         JOIN doctor d ON user.id = d.userId
+         JOIN doctor_specialty ds ON d.specialtyId = ds.id
+         LEFT JOIN cabinet c ON d.cabinetId = c.id
+         LEFT JOIN schedule_cell sc ON d.userId = sc.doctorId
+         JOIN time_cell tc ON sc.id = tc.scheduleCellId
+       WHERE userId = #{id};
+    </select>
+</mapper>

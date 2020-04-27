@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="net.thumbtack.hospital.mappers.AdminMapper">
+    <resultMap id="resultAdmin" type="net.thumbtack.hospital.model.Administrator">
+        <id property="id" column="id"/>
+        <result property="login" column="login"/>
+        <result property="password" column="password"/>
+        <result property="firstName" column="firstName"/>
+        <result property="lastName" column="lastName"/>
+        <result property="patronymic" column="patronymic"/>
+        <result property="position" column="position"/>
+    </resultMap>
+
+    <select id="getAdminById" parameterType="int" resultMap="resultAdmin">
+        SELECT *
+        FROM user
+                 JOIN administrator a ON user.id = a.userId
+        WHERE id = #{id};
+    </select>
+</mapper>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="net.thumbtack.hospital.mappers.PatientMapper">
+    <resultMap id="resultPatient" type="net.thumbtack.hospital.model.Patient">
+<!--TODO-->
+    </resultMap>
+
+    <select id="getPatientById" parameterType="int" resultMap="resultPatient">
+        SELECT user.id,
+               login,
+               password,
+               firstName,
+               lastName,
+               patronymic,
+               email,
+               address,
+               phone,
+               ticketTime,
+               scheduleCellId,
+               duration,
+               date
+        FROM user
+                 JOIN patient p ON user.id = p.userId
+                 LEFT JOIN time_cell tc on p.userId = tc.patientId
+                 LEFT JOIN schedule_cell sc on tc.scheduleCellId = sc.id
+        WHERE userId = 2;
+    </select>
+</mapper>

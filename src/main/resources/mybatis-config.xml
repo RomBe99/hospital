@@ -4,7 +4,6 @@
         "http://mybatis.org/dtd/mybatis-3-config.dtd">
 
 <configuration>
-
     <properties resource='mysql.jdbc.properties'/>
 
     <settings>
@@ -27,5 +26,10 @@
         <mapper class="net.thumbtack.hospital.mappers.AdminMapper"/>
         <mapper class="net.thumbtack.hospital.mappers.PatientMapper"/>
         <mapper class="net.thumbtack.hospital.mappers.UserMapper"/>
+        <mapper class="net.thumbtack.hospital.mappers.CommonMapper"/>
+        <mapper class="net.thumbtack.hospital.mappers.DoctorMapper"/>
+        <mapper resource="net/thumbtack/hospital/mappers/DoctorMapper.xml"/>
+        <mapper resource="net/thumbtack/hospital/mappers/AdminMapper.xml"/>
+        <mapper resource="net/thumbtack/hospital/mappers/PatientMapper.xml"/>
     </mappers>
 </configuration>
