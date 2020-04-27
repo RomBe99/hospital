@@ -1,21 +1,20 @@
 package net.thumbtack.hospital.mappers;
 
 import net.thumbtack.hospital.model.Administrator;
-import net.thumbtack.hospital.model.Doctor;
-import net.thumbtack.hospital.model.ScheduleCell;
-
-import java.util.List;
+import org.apache.ibatis.annotations.Delete;
+import org.apache.ibatis.annotations.Insert;
+import org.apache.ibatis.annotations.Update;
 
 public interface AdminMapper {
-    int insertAdministrator(Administrator administrator);
+    @Insert("INSERT INTO administrator VALUES (#{id}, #{position});")
+    void insertAdministrator(Administrator administrator);
 
-    int insertDoctor(Doctor doctor);
-
+    @Update("UPDATE administrator SET position = #{position} WHERE userId = #{id};")
     void updateAdministrator(Administrator administrator);
 
-    void updateDoctorSchedule(Doctor doctor, List<ScheduleCell> newSchedule);
+    @Delete("DELETE FROM administrator WHERE userId = #{id};")
+    void removeAdministratorById(int id);
 
-    void deleteDoctor(Doctor doctor);
-
+    @Delete("DELETE FROM administrator;")
     void deleteAll();
 }
