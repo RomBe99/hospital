@@ -10,11 +10,38 @@ public class CommonDaoImpl extends BaseDaoImpl implements CommonDao {
     private static final String className = CommonDaoImpl.class.getSimpleName();
 
     @Override
+    public int getDoctorSpecialityIdByName(String name) {
+        LOGGER.debug(className + ": Get doctor speciality id with name  = {}", name);
+
+        try (SqlSession session = getSession()) {
+            return getCommonMapper(session).getDoctorSpecialityIdByName(name);
+        } catch (RuntimeException ex) {
+            LOGGER.error(className + ": Get doctor speciality id with name  = {}", name, ex);
+
+            throw ex;
+        }
+    }
+
+    @Override
+    public int getCabinetIdByName(String name) {
+        LOGGER.debug(className + ": Get cabinet id with name  = {}", name);
+
+        try (SqlSession session = getSession()) {
+            return getCommonMapper(session).getCabinetIdByName(name);
+        } catch (RuntimeException ex) {
+            LOGGER.error(className + ": Get cabinet id with name  = {}", name, ex);
+
+            throw ex;
+        }
+    }
+
+    @Override
     public void clear() {
         LOGGER.debug(className + ": Delete all tables from database");
 
         try (SqlSession session = getSession()) {
             try {
+                getDoctorMapper(session).deleteAll();
                 getAdminMapper(session).deleteAll();
                 getPatientMapper(session).deleteAll();
                 getUserMapper(session).deleteAll();

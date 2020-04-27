@@ -2,13 +2,9 @@ package net.thumbtack.hospital.daoimpl;
 
 import net.thumbtack.hospital.dao.AdminDao;
 import net.thumbtack.hospital.model.Administrator;
-import net.thumbtack.hospital.model.Doctor;
-import net.thumbtack.hospital.model.ScheduleCell;
 import org.apache.ibatis.session.SqlSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.List;
 
 public class AdminDaoImpl extends BaseDaoImpl implements AdminDao {
     private static final Logger LOGGER = LoggerFactory.getLogger(AdminDaoImpl.class);
@@ -37,28 +33,6 @@ public class AdminDaoImpl extends BaseDaoImpl implements AdminDao {
     }
 
     @Override
-    public Doctor insertDoctor(Doctor doctor) {
-        LOGGER.debug(className + ": Insert doctor = {}", doctor);
-
-        try (SqlSession session = getSession()) {
-            try {
-                getUserMapper(session).insertUser(doctor);
-                getAdminMapper(session).insertDoctor(doctor);
-
-                session.commit();
-                LOGGER.debug(className + ": Doctor = {} successfully inserted", doctor);
-
-                return doctor;
-            } catch (RuntimeException ex) {
-                session.rollback();
-                LOGGER.error(className + ": Can't insert doctor = {}", doctor, ex);
-
-                throw ex;
-            }
-        }
-    }
-
-    @Override
     public void updateAdministrator(Administrator administrator) {
         LOGGER.debug(className + ": Update administrator = {}", administrator);
 
@@ -79,37 +53,31 @@ public class AdminDaoImpl extends BaseDaoImpl implements AdminDao {
     }
 
     @Override
-    public void updateDoctorSchedule(Doctor doctor, List<ScheduleCell> newSchedule) {
-        LOGGER.debug(className + ": Doctor = {} schedule = {} update", doctor, newSchedule);
+    public Administrator getAdministratorById(int id) {
+        LOGGER.debug(className + ": Get administrator with id = {}", id);
 
         try (SqlSession session = getSession()) {
-            try {
-                getAdminMapper(session).updateDoctorSchedule(doctor, newSchedule);
+            return session.selectOne("net.thumbtack.hospital.mappers.AdminMapper.getAdminById", id);
+        } catch (RuntimeException ex) {
+            LOGGER.error(className + ": Can't get administrator with id = {}", id, ex);
 
-                session.commit();
-                LOGGER.debug(className + ": Doctor = {} schedule = {} successfully updated", doctor, newSchedule);
-            } catch (RuntimeException ex) {
-                session.rollback();
-                LOGGER.error(className + ": Can't update doctor = {} schedule = {}", doctor, newSchedule);
-
-                throw ex;
-            }
+            throw ex;
         }
     }
 
     @Override
-    public void deleteDoctor(int id) {
-        LOGGER.debug(className + ": Delete doctor with id = {}", id);
+    public void removeAdministratorById(int id) {
+        LOGGER.debug(className + ": Remove administrator with id = {}", id);
 
         try (SqlSession session = getSession()) {
             try {
-                getUserMapper(session).removeUser(id);
+                getAdminMapper(session).removeAdministratorById(id);
 
                 session.commit();
-                LOGGER.debug(className + ": Doctor with id = {} removed", id);
+                LOGGER.debug(className + ": Administrator with id = {} successfully removed", id);
             } catch (RuntimeException ex) {
                 session.rollback();
-                LOGGER.error(className + ": Can't remove doctor with id = {}", id, ex);
+                LOGGER.error(className + ": Can't remove administrator with id = {}", id, ex);
 
                 throw ex;
             }

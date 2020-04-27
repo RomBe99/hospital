@@ -1,8 +1,6 @@
 package net.thumbtack.hospital.daoimpl;
 
-import net.thumbtack.hospital.mappers.AdminMapper;
-import net.thumbtack.hospital.mappers.PatientMapper;
-import net.thumbtack.hospital.mappers.UserMapper;
+import net.thumbtack.hospital.mappers.*;
 import net.thumbtack.hospital.utils.mybatis.MyBatisUtils;
 import org.apache.ibatis.session.SqlSession;
 
@@ -21,5 +19,13 @@ public class BaseDaoImpl {
 
     protected UserMapper getUserMapper(SqlSession session) {
         return session.getMapper(UserMapper.class);
+    }
+
+    protected CommonMapper getCommonMapper(SqlSession session) {
+        return session.getMapper(CommonMapper.class);
+    }
+
+    protected DoctorMapper getDoctorMapper(SqlSession session) {
+        return session.getMapper(DoctorMapper.class);
     }
 }

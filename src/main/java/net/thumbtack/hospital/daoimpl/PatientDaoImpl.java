@@ -51,4 +51,36 @@ public class PatientDaoImpl extends BaseDaoImpl implements PatientDao {
             }
         }
     }
+
+    @Override
+    public Patient getPatientById(int id) {
+        LOGGER.debug(className + ": Get patient with id = {}", id);
+
+        try (SqlSession session = getSession()) {
+            return session.selectOne("net.thumbtack.hospital.mappers.PatientMapper.getPatientById", id);
+        } catch (RuntimeException ex) {
+            LOGGER.error(className + ": Can't get patient with id = {}", id, ex);
+
+            throw ex;
+        }
+    }
+
+    @Override
+    public void removePatient(int id) {
+        LOGGER.debug(className + ": Remove patient with id = {}", id);
+
+        try (SqlSession session = getSession()) {
+            try {
+                getPatientMapper(session).removePatient(id);
+
+                session.commit();
+                LOGGER.debug(className + ": Patient with id = {} successfully removed", id);
+            } catch (RuntimeException ex) {
+                session.rollback();
+                LOGGER.error(className + ": Can't remove patient with id = {}", id, ex);
+
+                throw ex;
+            }
+        }
+    }
 }
