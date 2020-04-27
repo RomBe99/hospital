@@ -107,7 +107,37 @@ CREATE TABLE time_cell
 ) ENGINE = INNODB
   DEFAULT CHARSET = utf8;
 
+# Insert doctors specialities
+
+INSERT INTO doctor_specialty
+VALUES (0, 'Dentist');
+
+INSERT INTO doctor_specialty
+VALUES (0, 'Surgeon');
+
+INSERT INTO doctor_specialty
+VALUES (0, 'Therapist');
+
+INSERT INTO doctor_specialty
+VALUES (0, 'Traumatologist');
+
+# Insert hospital cabinets
+
+INSERT INTO cabinet
+VALUES (0, '104');
+
+INSERT INTO cabinet
+VALUES (0, '205');
+
+INSERT INTO cabinet
+VALUES (0, '306');
+
+INSERT INTO cabinet
+VALUES (0, '407');
+
+# Insert root admin
+
 INSERT INTO user
-VALUES (0, 'admin', 'admin', 'Petr', 'Petrov', NULL);
+VALUES (0, 'admin', 'admin', 'Roman', 'Belinsky', NULL);
 INSERT INTO administrator
 VALUES (1, 'Root admin');
