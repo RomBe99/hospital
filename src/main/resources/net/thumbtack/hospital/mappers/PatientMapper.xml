@@ -5,11 +5,33 @@
 
 <mapper namespace="net.thumbtack.hospital.mappers.PatientMapper">
     <resultMap id="resultPatient" type="net.thumbtack.hospital.model.Patient">
-<!--TODO-->
+        <id property="id" column="userId"/>
+        <result property="login" column="login"/>
+        <result property="password" column="password"/>
+        <result property="firstName" column="firstName"/>
+        <result property="lastName" column="lastName"/>
+        <result property="patronymic" column="patronymic"/>
+        <result property="email" column="email"/>
+        <result property="address" column="address"/>
+        <result property="phone" column="phone"/>
+
+        <collection property="tickets" column="scheduleCellId" javaType="java.util.List"
+                    ofType="net.thumbtack.hospital.model.ScheduleCell">
+            <result property="id" column="scheduleCellId"/>
+            <!--FIXME <result property="doctor" column=""/>-->
+            <result property="date" column="date"/>
+
+            <collection property="cells" column="timeCellId" javaType="java.util.List"
+                        ofType="net.thumbtack.hospital.model.TimeCell">
+                <result property="time" column="time"/>
+                <!--FIXME <result property="patient" column=""/>-->
+                <result property="duration" column="duration"/>
+            </collection>
+        </collection>
     </resultMap>
 
     <select id="getPatientById" parameterType="int" resultMap="resultPatient">
-        SELECT user.id,
+        SELECT user.id AS userId,
                login,
                password,
                firstName,
@@ -26,6 +48,6 @@
                  JOIN patient p ON user.id = p.userId
                  LEFT JOIN time_cell tc on p.userId = tc.patientId
                  LEFT JOIN schedule_cell sc on tc.scheduleCellId = sc.id
-        WHERE userId = 2;
+        WHERE userId = #{id};
     </select>
 </mapper>

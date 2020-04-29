@@ -14,16 +14,19 @@
         <result property="cabinet" column="cabinet"/>
         <result property="specialty" column="specialty"/>
 
-<!--        <collection property="schedule" column="scheduleCellId" javaType="java.util.List"-->
-<!--                    ofType="net.thumbtack.hospital.model.ScheduleCell">-->
-<!--            <result property="id" column="scheduleCellId"/>-->
-<!--   FIXME         <result property="doctor" column=""/>-->
+        <collection property="schedule" column="scheduleCellId" javaType="java.util.List"
+                    ofType="net.thumbtack.hospital.model.ScheduleCell">
+            <result property="id" column="scheduleCellId"/>
+            <!--FIXME <result property="doctor" column=""/>-->
+            <result property="date" column="date"/>
 
-<!--            <collection property="cells" column="timeCellId" javaType="java.util.List"-->
-<!--                        ofType="net.thumbtack.hospital.model.TimeCell">-->
-<!--                <result property=""-->
-<!--            </collection>-->
-<!--        </collection>-->
+            <collection property="cells" column="timeCellId" javaType="java.util.List"
+                        ofType="net.thumbtack.hospital.model.TimeCell">
+                <result property="time" column="time"/>
+                <!--FIXME <result property="patient" column=""/>-->
+                <result property="duration" column="duration"/>
+            </collection>
+        </collection>
     </resultMap>
 
     <select id="getAllDoctors" resultMap="resultDoctor">
