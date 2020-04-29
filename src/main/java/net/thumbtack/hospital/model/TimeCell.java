@@ -1,5 +1,6 @@
 package net.thumbtack.hospital.model;
 
+import java.sql.Time;
 import java.time.LocalTime;
 import java.util.Objects;
 
@@ -17,8 +18,16 @@ public class TimeCell {
         setDuration(duration);
     }
 
+    public TimeCell(Time time, Patient patient, int duration) {
+        this(time.toLocalTime(), patient, duration);
+    }
+
     public TimeCell(LocalTime time,  int duration) {
         this(time, null, duration);
+    }
+
+    public TimeCell(Time time,  int duration) {
+        this(time.toLocalTime(), null, duration);
     }
 
     public void setTime(LocalTime time) {

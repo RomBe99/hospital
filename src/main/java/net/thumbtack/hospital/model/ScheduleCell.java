@@ -1,5 +1,6 @@
 package net.thumbtack.hospital.model;
 
+import java.sql.Date;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,11 +22,23 @@ public class ScheduleCell {
         setCells(cells);
     }
 
+    public ScheduleCell(int id, Doctor doctor, Date date, List<TimeCell> cells) {
+        this(id, doctor, date.toLocalDate(), cells);
+    }
+
     public ScheduleCell(int id, Doctor doctor, LocalDate date) {
         this(id, doctor, date, new ArrayList<>());
     }
 
+    public ScheduleCell(int id, Doctor doctor, Date date) {
+        this(id, doctor, date, new ArrayList<>());
+    }
+
     public ScheduleCell(Doctor doctor, LocalDate date) {
+        this(0, doctor, date);
+    }
+
+    public ScheduleCell(Doctor doctor, Date date) {
         this(0, doctor, date);
     }
 
