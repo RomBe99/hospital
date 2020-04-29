@@ -57,7 +57,7 @@ public class AdminDaoImpl extends BaseDaoImpl implements AdminDao {
         LOGGER.debug(className + ": Get administrator with id = {}", id);
 
         try (SqlSession session = getSession()) {
-            return session.selectOne("net.thumbtack.hospital.mappers.AdminMapper.getAdminById", id);
+            return session.selectOne("net.thumbtack.hospital.mapper.AdminMapper.getAdminById", id);
         } catch (RuntimeException ex) {
             LOGGER.error(className + ": Can't get administrator with id = {}", id, ex);
 

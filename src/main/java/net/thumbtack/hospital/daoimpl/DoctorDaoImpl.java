@@ -61,7 +61,7 @@ public class DoctorDaoImpl extends BaseDaoImpl implements DoctorDao {
         LOGGER.debug(className + ": Get all doctors");
 
         try (SqlSession session = getSession()) {
-            return session.selectList("net.thumbtack.hospital.mappers.DoctorMapper.getAllDoctors");
+            return session.selectList("net.thumbtack.hospital.mapper.DoctorMapper.getAllDoctors");
         } catch (RuntimeException ex) {
             LOGGER.error(className + ": Can't get all doctors", ex);
 
@@ -74,7 +74,7 @@ public class DoctorDaoImpl extends BaseDaoImpl implements DoctorDao {
         LOGGER.debug(className + ": Get doctor by id");
 
         try (SqlSession session = getSession()) {
-            return session.selectOne("net.thumbtack.hospital.mappers.DoctorMapper.getDoctorById", id);
+            return session.selectOne("net.thumbtack.hospital.mapper.DoctorMapper.getDoctorById", id);
         } catch (RuntimeException ex) {
             LOGGER.error(className + ": Can't get doctor by id", ex);
 

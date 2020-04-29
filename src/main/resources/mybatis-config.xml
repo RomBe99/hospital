@@ -23,13 +23,13 @@
     </environments>
 
     <mappers>
-        <mapper class="net.thumbtack.hospital.mappers.AdminMapper"/>
-        <mapper class="net.thumbtack.hospital.mappers.PatientMapper"/>
-        <mapper class="net.thumbtack.hospital.mappers.UserMapper"/>
-        <mapper class="net.thumbtack.hospital.mappers.CommonMapper"/>
-        <mapper class="net.thumbtack.hospital.mappers.DoctorMapper"/>
-        <mapper resource="net/thumbtack/hospital/mappers/DoctorMapper.xml"/>
-        <mapper resource="net/thumbtack/hospital/mappers/AdminMapper.xml"/>
-        <mapper resource="net/thumbtack/hospital/mappers/PatientMapper.xml"/>
+        <mapper class="net.thumbtack.hospital.mapper.AdminMapper"/>
+        <mapper class="net.thumbtack.hospital.mapper.PatientMapper"/>
+        <mapper class="net.thumbtack.hospital.mapper.UserMapper"/>
+        <mapper class="net.thumbtack.hospital.mapper.CommonMapper"/>
+        <mapper class="net.thumbtack.hospital.mapper.DoctorMapper"/>
+        <mapper resource="net/thumbtack/hospital/mapper/DoctorMapper.xml"/>
+        <mapper resource="net/thumbtack/hospital/mapper/AdminMapper.xml"/>
+        <mapper resource="net/thumbtack/hospital/mapper/PatientMapper.xml"/>
     </mappers>
 </configuration>

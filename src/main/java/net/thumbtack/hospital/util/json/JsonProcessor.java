@@ -1,4 +1,4 @@
-package net.thumbtack.hospital.utils.json;
+package net.thumbtack.hospital.util.json;
 
 import com.google.gson.Gson;
 

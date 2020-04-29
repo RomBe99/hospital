@@ -5,7 +5,7 @@ import net.thumbtack.hospital.daoimpl.*;
 import net.thumbtack.hospital.model.Administrator;
 import net.thumbtack.hospital.model.Doctor;
 import net.thumbtack.hospital.model.Patient;
-import net.thumbtack.hospital.utils.mybatis.MyBatisUtils;
+import net.thumbtack.hospital.util.mybatis.MyBatisUtils;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
