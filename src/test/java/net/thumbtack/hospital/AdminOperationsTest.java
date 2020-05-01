@@ -108,6 +108,4 @@ public class AdminOperationsTest extends BaseTest {
             Assert.fail();
         }
     }
-
-    // TODO Добавить тесты нарушающие правила валидации
 }

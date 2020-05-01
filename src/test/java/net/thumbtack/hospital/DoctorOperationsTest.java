@@ -63,6 +63,4 @@ public class DoctorOperationsTest extends BaseTest {
 
         Assert.assertTrue(emptyDoctorsList.isEmpty());
     }
-
-    // TODO Добавить тесты нарушающие правила валидации
 }
