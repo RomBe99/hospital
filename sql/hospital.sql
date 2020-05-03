@@ -9,9 +9,9 @@ CREATE TABLE user
     login      VARCHAR(30) NOT NULL,
     password   VARCHAR(30) NOT NULL,
 
-    firstName  VARCHAR(50) NOT NULL,
-    lastName   VARCHAR(50) NOT NULL,
-    patronymic VARCHAR(50) DEFAULT NULL,
+    firstName  VARCHAR(30) NOT NULL,
+    lastName   VARCHAR(30) NOT NULL,
+    patronymic VARCHAR(30) DEFAULT NULL,
 
     PRIMARY KEY (id),
     UNIQUE KEY (login),
@@ -78,8 +78,6 @@ CREATE TABLE patient
     FOREIGN KEY (userId) REFERENCES user (id) ON DELETE CASCADE
 ) ENGINE = INNODB
   DEFAULT CHARSET = utf8;
-
-SET @@time_zone = 'SYSTEM';
 
 CREATE TABLE schedule_cell
 (
