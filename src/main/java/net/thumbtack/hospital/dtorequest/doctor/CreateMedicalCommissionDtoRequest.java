@@ -4,18 +4,18 @@ import java.util.List;
 import java.util.Objects;
 
 public class CreateMedicalCommissionDtoRequest {
-    private int patientId;
-    private List<Integer> doctorIds;
+    private String patientId;
+    private List<String> doctorIds;
     private String room;
     private String date;
     private String time;
-    private int duration;
+    private String duration;
 
     public CreateMedicalCommissionDtoRequest() {
     }
 
-    public CreateMedicalCommissionDtoRequest(int patientId, List<Integer> doctorIds,
-                                             String room, String date, String time, int duration) {
+    public CreateMedicalCommissionDtoRequest(String patientId, List<String> doctorIds,
+                                             String room, String date, String time, String duration) {
         setPatientId(patientId);
         setDoctorIds(doctorIds);
         setRoom(room);
@@ -24,11 +24,11 @@ public class CreateMedicalCommissionDtoRequest {
         setDuration(duration);
     }
 
-    public void setPatientId(int patientId) {
+    public void setPatientId(String patientId) {
         this.patientId = patientId;
     }
 
-    public void setDoctorIds(List<Integer> doctorIds) {
+    public void setDoctorIds(List<String> doctorIds) {
         this.doctorIds = doctorIds;
     }
 
@@ -44,15 +44,15 @@ public class CreateMedicalCommissionDtoRequest {
         this.time = time;
     }
 
-    public void setDuration(int duration) {
+    public void setDuration(String duration) {
         this.duration = duration;
     }
 
-    public int getPatientId() {
+    public String getPatientId() {
         return patientId;
     }
 
-    public List<Integer> getDoctorIds() {
+    public List<String> getDoctorIds() {
         return doctorIds;
     }
 
@@ -68,7 +68,7 @@ public class CreateMedicalCommissionDtoRequest {
         return time;
     }
 
-    public int getDuration() {
+    public String getDuration() {
         return duration;
     }
 
@@ -77,12 +77,12 @@ public class CreateMedicalCommissionDtoRequest {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         CreateMedicalCommissionDtoRequest that = (CreateMedicalCommissionDtoRequest) o;
-        return patientId == that.patientId &&
-                duration == that.duration &&
+        return Objects.equals(patientId, that.patientId) &&
                 Objects.equals(doctorIds, that.doctorIds) &&
                 Objects.equals(room, that.room) &&
                 Objects.equals(date, that.date) &&
-                Objects.equals(time, that.time);
+                Objects.equals(time, that.time) &&
+                Objects.equals(duration, that.duration);
     }
 
     @Override
@@ -93,12 +93,12 @@ public class CreateMedicalCommissionDtoRequest {
     @Override
     public String toString() {
         return "CreateMedicalCommissionDtoRequest{" +
-                "patientId=" + patientId +
+                "patientId='" + patientId + '\'' +
                 ", doctorIds=" + doctorIds +
                 ", room='" + room + '\'' +
                 ", date='" + date + '\'' +
                 ", time='" + time + '\'' +
-                ", duration=" + duration +
+                ", duration='" + duration + '\'' +
                 '}';
     }
 }

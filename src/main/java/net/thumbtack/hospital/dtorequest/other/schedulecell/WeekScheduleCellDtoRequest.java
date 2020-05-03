@@ -6,12 +6,12 @@ import java.util.Objects;
 public class WeekScheduleCellDtoRequest {
     private String timeStart;
     private String timeEnd;
-    private List<Integer> weekDays;
+    private List<String> weekDays;
 
     public WeekScheduleCellDtoRequest() {
     }
 
-    public WeekScheduleCellDtoRequest(String timeStart, String timeEnd, List<Integer> weekDays) {
+    public WeekScheduleCellDtoRequest(String timeStart, String timeEnd, List<String> weekDays) {
         setTimeStart(timeStart);
         setTimeEnd(timeEnd);
         setWeekDays(weekDays);
@@ -25,7 +25,7 @@ public class WeekScheduleCellDtoRequest {
         this.timeEnd = timeEnd;
     }
 
-    public void setWeekDays(List<Integer> weekDays) {
+    public void setWeekDays(List<String> weekDays) {
         this.weekDays = weekDays;
     }
 
@@ -37,7 +37,7 @@ public class WeekScheduleCellDtoRequest {
         return timeEnd;
     }
 
-    public List<Integer> getWeekDays() {
+    public List<String> getWeekDays() {
         return weekDays;
     }
 
@@ -58,7 +58,7 @@ public class WeekScheduleCellDtoRequest {
 
     @Override
     public String toString() {
-        return "WeekScheduleCell{" +
+        return "WeekScheduleCellDtoRequest{" +
                 "timeStart='" + timeStart + '\'' +
                 ", timeEnd='" + timeEnd + '\'' +
                 ", weekDays=" + weekDays +

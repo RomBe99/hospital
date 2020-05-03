@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Objects;
 
 public class EditDoctorScheduleDtoResponse {
-    private int id;
+    private String id;
     private String firstName;
     private String lastName;
     private String patronymic;
@@ -17,7 +17,7 @@ public class EditDoctorScheduleDtoResponse {
     public EditDoctorScheduleDtoResponse() {
     }
 
-    public EditDoctorScheduleDtoResponse(int id,
+    public EditDoctorScheduleDtoResponse(String id,
                                          String firstName, String lastName, String patronymic,
                                          String speciality, String room,
                                          List<ScheduleCellResponse> schedule) {
@@ -30,7 +30,7 @@ public class EditDoctorScheduleDtoResponse {
         setSchedule(schedule);
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -58,7 +58,7 @@ public class EditDoctorScheduleDtoResponse {
         this.schedule = schedule;
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
@@ -91,7 +91,7 @@ public class EditDoctorScheduleDtoResponse {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         EditDoctorScheduleDtoResponse that = (EditDoctorScheduleDtoResponse) o;
-        return id == that.id &&
+        return Objects.equals(id, that.id) &&
                 Objects.equals(firstName, that.firstName) &&
                 Objects.equals(lastName, that.lastName) &&
                 Objects.equals(patronymic, that.patronymic) &&
@@ -108,7 +108,7 @@ public class EditDoctorScheduleDtoResponse {
     @Override
     public String toString() {
         return "EditDoctorScheduleDtoResponse{" +
-                "id=" + id +
+                "id='" + id + '\'' +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", patronymic='" + patronymic + '\'' +

@@ -1,7 +1,9 @@
 package net.thumbtack.hospital.dtoresponse.admin;
 
+import java.util.Objects;
+
 public class EditAdminProfileDtoResponse {
-    private int id;
+    private String id;
     private String firstName;
     private String lastName;
     private String patronymic;
@@ -10,7 +12,7 @@ public class EditAdminProfileDtoResponse {
     public EditAdminProfileDtoResponse() {
     }
 
-    public EditAdminProfileDtoResponse(int id, String firstName, String lastName, String patronymic, String position) {
+    public EditAdminProfileDtoResponse(String id, String firstName, String lastName, String patronymic, String position) {
         setId(id);
         setFirstName(firstName);
         setLastName(lastName);
@@ -18,7 +20,7 @@ public class EditAdminProfileDtoResponse {
         setPosition(position);
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -38,7 +40,7 @@ public class EditAdminProfileDtoResponse {
         this.position = position;
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
@@ -56,5 +58,33 @@ public class EditAdminProfileDtoResponse {
 
     public String getPosition() {
         return position;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        EditAdminProfileDtoResponse that = (EditAdminProfileDtoResponse) o;
+        return Objects.equals(id, that.id) &&
+                Objects.equals(firstName, that.firstName) &&
+                Objects.equals(lastName, that.lastName) &&
+                Objects.equals(patronymic, that.patronymic) &&
+                Objects.equals(position, that.position);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, firstName, lastName, patronymic, position);
+    }
+
+    @Override
+    public String toString() {
+        return "EditAdminProfileDtoResponse{" +
+                "id='" + id + '\'' +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", patronymic='" + patronymic + '\'' +
+                ", position='" + position + '\'' +
+                '}';
     }
 }

@@ -3,7 +3,7 @@ package net.thumbtack.hospital.dtoresponse.patient;
 import java.util.Objects;
 
 public class PatientRegistrationDtoResponse {
-    private int id;
+    private String id;
     private String firstName;
     private String lastName;
     private String patronymic;
@@ -14,7 +14,7 @@ public class PatientRegistrationDtoResponse {
     public PatientRegistrationDtoResponse() {
     }
 
-    public PatientRegistrationDtoResponse(int id, String firstName, String lastName, String patronymic,
+    public PatientRegistrationDtoResponse(String id, String firstName, String lastName, String patronymic,
                                           String email, String address, String phone) {
         setId(id);
         setFirstName(firstName);
@@ -25,7 +25,7 @@ public class PatientRegistrationDtoResponse {
         setPhone(phone);
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -53,7 +53,7 @@ public class PatientRegistrationDtoResponse {
         this.phone = phone;
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
@@ -86,7 +86,7 @@ public class PatientRegistrationDtoResponse {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         PatientRegistrationDtoResponse that = (PatientRegistrationDtoResponse) o;
-        return id == that.id &&
+        return Objects.equals(id, that.id) &&
                 Objects.equals(firstName, that.firstName) &&
                 Objects.equals(lastName, that.lastName) &&
                 Objects.equals(patronymic, that.patronymic) &&
@@ -103,7 +103,7 @@ public class PatientRegistrationDtoResponse {
     @Override
     public String toString() {
         return "PatientRegistrationDtoResponse{" +
-                "id=" + id +
+                "id='" + id + '\'' +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", patronymic='" + patronymic + '\'' +
