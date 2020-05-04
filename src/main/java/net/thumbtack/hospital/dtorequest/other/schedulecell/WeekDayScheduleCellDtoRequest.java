@@ -7,7 +7,7 @@ import java.util.Objects;
 
 public class WeekDayScheduleCellDtoRequest {
     @WeekDay
-    private String weekDay;
+    private int weekDay;
     @Date
     private String timeStart;
     @Date
@@ -16,13 +16,13 @@ public class WeekDayScheduleCellDtoRequest {
     public WeekDayScheduleCellDtoRequest() {
     }
 
-    public WeekDayScheduleCellDtoRequest(String weekDay, String timeStart, String timeEnd) {
+    public WeekDayScheduleCellDtoRequest(int weekDay, String timeStart, String timeEnd) {
         setWeekDay(weekDay);
         setTimeStart(timeStart);
         setTimeEnd(timeEnd);
     }
 
-    public void setWeekDay(String weekDay) {
+    public void setWeekDay(int weekDay) {
         this.weekDay = weekDay;
     }
 
@@ -34,7 +34,7 @@ public class WeekDayScheduleCellDtoRequest {
         this.timeEnd = timeEnd;
     }
 
-    public String getWeekDay() {
+    public int getWeekDay() {
         return weekDay;
     }
 
@@ -51,7 +51,7 @@ public class WeekDayScheduleCellDtoRequest {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         WeekDayScheduleCellDtoRequest that = (WeekDayScheduleCellDtoRequest) o;
-        return Objects.equals(weekDay, that.weekDay) &&
+        return weekDay == that.weekDay &&
                 Objects.equals(timeStart, that.timeStart) &&
                 Objects.equals(timeEnd, that.timeEnd);
     }
@@ -63,8 +63,8 @@ public class WeekDayScheduleCellDtoRequest {
 
     @Override
     public String toString() {
-        return "WeekDayScheduleCell{" +
-                "weekDay='" + weekDay + '\'' +
+        return "WeekDayScheduleCellDtoRequest{" +
+                "weekDay=" + weekDay +
                 ", timeStart='" + timeStart + '\'' +
                 ", timeEnd='" + timeEnd + '\'' +
                 '}';

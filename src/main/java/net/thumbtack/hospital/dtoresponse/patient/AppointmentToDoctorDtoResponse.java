@@ -4,7 +4,7 @@ import java.util.Objects;
 
 public class AppointmentToDoctorDtoResponse {
     private String ticket;
-    private String doctorId;
+    private int doctorId;
     private String firstName;
     private String lastName;
     private String patronymic;
@@ -16,7 +16,7 @@ public class AppointmentToDoctorDtoResponse {
     public AppointmentToDoctorDtoResponse() {
     }
 
-    public AppointmentToDoctorDtoResponse(String ticket, String doctorId,
+    public AppointmentToDoctorDtoResponse(String ticket, int doctorId,
                                           String firstName, String lastName, String patronymic,
                                           String speciality, String room, String date, String time) {
         setTicket(ticket);
@@ -34,7 +34,7 @@ public class AppointmentToDoctorDtoResponse {
         this.ticket = ticket;
     }
 
-    public void setDoctorId(String doctorId) {
+    public void setDoctorId(int doctorId) {
         this.doctorId = doctorId;
     }
 
@@ -70,7 +70,7 @@ public class AppointmentToDoctorDtoResponse {
         return ticket;
     }
 
-    public String getDoctorId() {
+    public int getDoctorId() {
         return doctorId;
     }
 
@@ -107,8 +107,8 @@ public class AppointmentToDoctorDtoResponse {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         AppointmentToDoctorDtoResponse that = (AppointmentToDoctorDtoResponse) o;
-        return Objects.equals(ticket, that.ticket) &&
-                Objects.equals(doctorId, that.doctorId) &&
+        return doctorId == that.doctorId &&
+                Objects.equals(ticket, that.ticket) &&
                 Objects.equals(firstName, that.firstName) &&
                 Objects.equals(lastName, that.lastName) &&
                 Objects.equals(patronymic, that.patronymic) &&
@@ -127,7 +127,7 @@ public class AppointmentToDoctorDtoResponse {
     public String toString() {
         return "AppointmentToDoctorDtoResponse{" +
                 "ticket='" + ticket + '\'' +
-                ", doctorId='" + doctorId + '\'' +
+                ", doctorId=" + doctorId +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", patronymic='" + patronymic + '\'' +

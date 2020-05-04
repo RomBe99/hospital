@@ -3,7 +3,7 @@ package net.thumbtack.hospital.dtoresponse.admin;
 import java.util.Objects;
 
 public class EditAdminProfileDtoResponse {
-    private String id;
+    private int id;
     private String firstName;
     private String lastName;
     private String patronymic;
@@ -12,7 +12,7 @@ public class EditAdminProfileDtoResponse {
     public EditAdminProfileDtoResponse() {
     }
 
-    public EditAdminProfileDtoResponse(String id, String firstName, String lastName, String patronymic, String position) {
+    public EditAdminProfileDtoResponse(int id, String firstName, String lastName, String patronymic, String position) {
         setId(id);
         setFirstName(firstName);
         setLastName(lastName);
@@ -20,7 +20,7 @@ public class EditAdminProfileDtoResponse {
         setPosition(position);
     }
 
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -40,7 +40,7 @@ public class EditAdminProfileDtoResponse {
         this.position = position;
     }
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 
@@ -65,7 +65,7 @@ public class EditAdminProfileDtoResponse {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         EditAdminProfileDtoResponse that = (EditAdminProfileDtoResponse) o;
-        return Objects.equals(id, that.id) &&
+        return id == that.id &&
                 Objects.equals(firstName, that.firstName) &&
                 Objects.equals(lastName, that.lastName) &&
                 Objects.equals(patronymic, that.patronymic) &&
@@ -80,7 +80,7 @@ public class EditAdminProfileDtoResponse {
     @Override
     public String toString() {
         return "EditAdminProfileDtoResponse{" +
-                "id='" + id + '\'' +
+                "id=" + id +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", patronymic='" + patronymic + '\'' +

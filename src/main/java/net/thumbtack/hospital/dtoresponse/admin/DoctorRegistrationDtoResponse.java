@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Objects;
 
 public class DoctorRegistrationDtoResponse {
-     private String id;
+     private int id;
      private String firstName;
      private String lastName;
      private String patronymic;
@@ -17,7 +17,7 @@ public class DoctorRegistrationDtoResponse {
     public DoctorRegistrationDtoResponse() {
     }
 
-    public DoctorRegistrationDtoResponse(String id,
+    public DoctorRegistrationDtoResponse(int id,
                                          String firstName, String lastName, String patronymic,
                                          String speciality, String room,
                                          List<ScheduleCellResponse> schedule) {
@@ -30,7 +30,7 @@ public class DoctorRegistrationDtoResponse {
         setSchedule(schedule);
     }
 
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -58,7 +58,7 @@ public class DoctorRegistrationDtoResponse {
         this.schedule = schedule;
     }
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 

@@ -1,15 +1,15 @@
 package net.thumbtack.hospital.dtorequest.patient;
 
 import net.thumbtack.hospital.util.validator.annotation.Date;
-import net.thumbtack.hospital.util.validator.annotation.Id;
 import net.thumbtack.hospital.util.validator.annotation.Speciality;
 import net.thumbtack.hospital.util.validator.annotation.Time;
 
+import javax.validation.constraints.Positive;
 import java.util.Objects;
 
 public class AppointmentToDoctorDtoRequest {
-    @Id
-    private String doctorId;
+    @Positive
+    private int doctorId;
     @Speciality
     private String speciality;
     @Date
@@ -20,14 +20,14 @@ public class AppointmentToDoctorDtoRequest {
     public AppointmentToDoctorDtoRequest() {
     }
 
-    public AppointmentToDoctorDtoRequest(String doctorId, String speciality, String date, String time) {
+    public AppointmentToDoctorDtoRequest(int doctorId, String speciality, String date, String time) {
         setDoctorId(doctorId);
         setSpeciality(speciality);
         setDate(date);
         setTime(time);
     }
 
-    public void setDoctorId(String doctorId) {
+    public void setDoctorId(int doctorId) {
         this.doctorId = doctorId;
     }
 
@@ -43,7 +43,7 @@ public class AppointmentToDoctorDtoRequest {
         this.time = time;
     }
 
-    public String getDoctorId() {
+    public int getDoctorId() {
         return doctorId;
     }
 
@@ -64,7 +64,7 @@ public class AppointmentToDoctorDtoRequest {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         AppointmentToDoctorDtoRequest that = (AppointmentToDoctorDtoRequest) o;
-        return Objects.equals(doctorId, that.doctorId) &&
+        return doctorId == that.doctorId &&
                 Objects.equals(speciality, that.speciality) &&
                 Objects.equals(date, that.date) &&
                 Objects.equals(time, that.time);
@@ -78,7 +78,7 @@ public class AppointmentToDoctorDtoRequest {
     @Override
     public String toString() {
         return "AppointmentToDoctorDtoRequest{" +
-                "doctorId='" + doctorId + '\'' +
+                "doctorId=" + doctorId +
                 ", speciality='" + speciality + '\'' +
                 ", date='" + date + '\'' +
                 ", time='" + time + '\'' +

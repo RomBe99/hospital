@@ -1,16 +1,20 @@
 package net.thumbtack.hospital.dtorequest.doctor;
 
-import net.thumbtack.hospital.util.validator.annotation.*;
+import net.thumbtack.hospital.util.validator.annotation.Date;
+import net.thumbtack.hospital.util.validator.annotation.Duration;
+import net.thumbtack.hospital.util.validator.annotation.Room;
+import net.thumbtack.hospital.util.validator.annotation.Time;
 
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Positive;
 import java.util.List;
 import java.util.Objects;
 
 public class CreateMedicalCommissionDtoRequest {
-    @Id
-    private String patientId;
+    @Positive
+    private int patientId;
     @NotEmpty
-    private List<@Id String> doctorIds;
+    private List<@Positive Integer> doctorIds;
     @Room
     private String room;
     @Date
@@ -23,7 +27,7 @@ public class CreateMedicalCommissionDtoRequest {
     public CreateMedicalCommissionDtoRequest() {
     }
 
-    public CreateMedicalCommissionDtoRequest(String patientId, List<String> doctorIds,
+    public CreateMedicalCommissionDtoRequest(int patientId, List<Integer> doctorIds,
                                              String room, String date, String time, String duration) {
         setPatientId(patientId);
         setDoctorIds(doctorIds);
@@ -33,11 +37,11 @@ public class CreateMedicalCommissionDtoRequest {
         setDuration(duration);
     }
 
-    public void setPatientId(String patientId) {
+    public void setPatientId(int patientId) {
         this.patientId = patientId;
     }
 
-    public void setDoctorIds(List<String> doctorIds) {
+    public void setDoctorIds(List<Integer> doctorIds) {
         this.doctorIds = doctorIds;
     }
 
@@ -57,11 +61,11 @@ public class CreateMedicalCommissionDtoRequest {
         this.duration = duration;
     }
 
-    public String getPatientId() {
+    public int getPatientId() {
         return patientId;
     }
 
-    public List<String> getDoctorIds() {
+    public List<Integer> getDoctorIds() {
         return doctorIds;
     }
 
@@ -86,7 +90,7 @@ public class CreateMedicalCommissionDtoRequest {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         CreateMedicalCommissionDtoRequest that = (CreateMedicalCommissionDtoRequest) o;
-        return Objects.equals(patientId, that.patientId) &&
+        return patientId == that.patientId &&
                 Objects.equals(doctorIds, that.doctorIds) &&
                 Objects.equals(room, that.room) &&
                 Objects.equals(date, that.date) &&
@@ -102,7 +106,7 @@ public class CreateMedicalCommissionDtoRequest {
     @Override
     public String toString() {
         return "CreateMedicalCommissionDtoRequest{" +
-                "patientId='" + patientId + '\'' +
+                "patientId=" + patientId +
                 ", doctorIds=" + doctorIds +
                 ", room='" + room + '\'' +
                 ", date='" + date + '\'' +

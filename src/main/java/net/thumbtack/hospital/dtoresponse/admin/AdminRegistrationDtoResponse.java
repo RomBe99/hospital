@@ -3,7 +3,7 @@ package net.thumbtack.hospital.dtoresponse.admin;
 import java.util.Objects;
 
 public class AdminRegistrationDtoResponse {
-    private String id;
+    private int id;
     private String firstName;
     private String lastName;
     private String patronymic;
@@ -12,7 +12,7 @@ public class AdminRegistrationDtoResponse {
     public AdminRegistrationDtoResponse() {
     }
 
-    public AdminRegistrationDtoResponse(String id, String firstName, String lastName, String patronymic, String position) {
+    public AdminRegistrationDtoResponse(int id, String firstName, String lastName, String patronymic, String position) {
         setId(id);
         setFirstName(firstName);
         setLastName(lastName);
@@ -20,7 +20,7 @@ public class AdminRegistrationDtoResponse {
         setPosition(position);
     }
 
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -40,7 +40,7 @@ public class AdminRegistrationDtoResponse {
         this.position = position;
     }
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 
@@ -65,7 +65,7 @@ public class AdminRegistrationDtoResponse {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         AdminRegistrationDtoResponse that = (AdminRegistrationDtoResponse) o;
-        return Objects.equals(id, that.id) &&
+        return id == that.id &&
                 Objects.equals(firstName, that.firstName) &&
                 Objects.equals(lastName, that.lastName) &&
                 Objects.equals(patronymic, that.patronymic) &&
@@ -80,7 +80,7 @@ public class AdminRegistrationDtoResponse {
     @Override
     public String toString() {
         return "AdminRegistrationDtoResponse{" +
-                "id='" + id + '\'' +
+                "id=" + id +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", patronymic='" + patronymic + '\'' +
