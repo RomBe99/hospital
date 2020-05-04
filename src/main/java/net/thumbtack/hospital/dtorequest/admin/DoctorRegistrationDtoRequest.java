@@ -2,23 +2,34 @@ package net.thumbtack.hospital.dtorequest.admin;
 
 import net.thumbtack.hospital.dtorequest.other.schedulecell.WeekDayScheduleCellDtoRequest;
 import net.thumbtack.hospital.dtorequest.other.schedulecell.WeekScheduleCellDtoRequest;
+import net.thumbtack.hospital.util.validator.annotation.*;
 
 import java.util.List;
 import java.util.Objects;
 
 public class DoctorRegistrationDtoRequest {
+    @Name
     private String firstName;
+    @Name
     private String lastName;
+    @Name(isPatronymic = true)
     private String patronymic;
+    @Speciality
     private String speciality;
+    @Room
     private String room;
+    @Login
     private String login;
+    @Password
     private String password;
+    @Date
     private String dateStart;
+    @Date
     private String dateEnd;
     private List<WeekScheduleCellDtoRequest> weekSchedule;
     private List<WeekDayScheduleCellDtoRequest> weekDaysSchedule;
-    private int duration;
+    @Duration
+    private String duration;
 
     public DoctorRegistrationDtoRequest() {
     }
@@ -29,7 +40,7 @@ public class DoctorRegistrationDtoRequest {
                                         String dateStart, String dateEnd,
                                         List<WeekScheduleCellDtoRequest> weekSchedule,
                                         List<WeekDayScheduleCellDtoRequest> weekDaysSchedule,
-                                        int duration) {
+                                        String duration) {
         setFirstName(firstName);
         setLastName(lastName);
         setPatronymic(patronymic);
@@ -88,7 +99,7 @@ public class DoctorRegistrationDtoRequest {
         this.weekDaysSchedule = weekDaysSchedule;
     }
 
-    public void setDuration(int duration) {
+    public void setDuration(String duration) {
         this.duration = duration;
     }
 
@@ -136,7 +147,7 @@ public class DoctorRegistrationDtoRequest {
         return weekDaysSchedule;
     }
 
-    public int getDuration() {
+    public String getDuration() {
         return duration;
     }
 
@@ -145,8 +156,7 @@ public class DoctorRegistrationDtoRequest {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         DoctorRegistrationDtoRequest that = (DoctorRegistrationDtoRequest) o;
-        return duration == that.duration &&
-                Objects.equals(firstName, that.firstName) &&
+        return Objects.equals(firstName, that.firstName) &&
                 Objects.equals(lastName, that.lastName) &&
                 Objects.equals(patronymic, that.patronymic) &&
                 Objects.equals(speciality, that.speciality) &&
@@ -156,7 +166,8 @@ public class DoctorRegistrationDtoRequest {
                 Objects.equals(dateStart, that.dateStart) &&
                 Objects.equals(dateEnd, that.dateEnd) &&
                 Objects.equals(weekSchedule, that.weekSchedule) &&
-                Objects.equals(weekDaysSchedule, that.weekDaysSchedule);
+                Objects.equals(weekDaysSchedule, that.weekDaysSchedule) &&
+                Objects.equals(duration, that.duration);
     }
 
     @Override
@@ -178,7 +189,7 @@ public class DoctorRegistrationDtoRequest {
                 ", dateEnd='" + dateEnd + '\'' +
                 ", weekSchedule=" + weekSchedule +
                 ", weekDaysSchedule=" + weekDaysSchedule +
-                ", duration=" + duration +
+                ", duration='" + duration + '\'' +
                 '}';
     }
 }

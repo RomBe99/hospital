@@ -1,12 +1,19 @@
 package net.thumbtack.hospital.dtorequest.other.schedulecell;
 
+import net.thumbtack.hospital.util.validator.annotation.Time;
+import net.thumbtack.hospital.util.validator.annotation.WeekDay;
+
+import javax.validation.constraints.NotEmpty;
 import java.util.List;
 import java.util.Objects;
 
 public class WeekScheduleCellDtoRequest {
+    @Time
     private String timeStart;
+    @Time
     private String timeEnd;
-    private List<String> weekDays;
+    @NotEmpty
+    private List<@WeekDay String> weekDays;
 
     public WeekScheduleCellDtoRequest() {
     }

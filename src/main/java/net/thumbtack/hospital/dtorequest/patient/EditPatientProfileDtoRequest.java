@@ -1,15 +1,29 @@
 package net.thumbtack.hospital.dtorequest.patient;
 
+import net.thumbtack.hospital.util.validator.annotation.Address;
+import net.thumbtack.hospital.util.validator.annotation.Name;
+import net.thumbtack.hospital.util.validator.annotation.Password;
+import net.thumbtack.hospital.util.validator.annotation.Phone;
+
+import javax.validation.constraints.Email;
 import java.util.Objects;
 
 public class EditPatientProfileDtoRequest {
+    @Name
     private String firstName;
+    @Name
     private String lastName;
+    @Name(isPatronymic = true)
     private String patronymic;
+    @Email
     private String email;
+    @Address
     private String address;
+    @Phone
     private String phone;
+    @Password
     private String oldPassword;
+    @Password
     private String newPassword;
 
     public EditPatientProfileDtoRequest() {

@@ -1,13 +1,24 @@
 package net.thumbtack.hospital.dtorequest.admin;
 
+import net.thumbtack.hospital.util.validator.annotation.Login;
+import net.thumbtack.hospital.util.validator.annotation.Name;
+import net.thumbtack.hospital.util.validator.annotation.Password;
+import net.thumbtack.hospital.util.validator.annotation.Position;
+
 import java.util.Objects;
 
 public class AdminRegistrationDtoRequest {
+    @Name
     private String firstName;
+    @Name
     private String lastName;
+    @Name(isPatronymic = true)
     private String patronymic;
+    @Position
     private String position;
+    @Login
     private String login;
+    @Password
     private String password;
 
     public AdminRegistrationDtoRequest() {

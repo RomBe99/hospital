@@ -1,9 +1,14 @@
 package net.thumbtack.hospital.dtorequest.user;
 
+import net.thumbtack.hospital.util.validator.annotation.Login;
+import net.thumbtack.hospital.util.validator.annotation.Password;
+
 import java.util.Objects;
 
 public class LoginDtoRequest {
+    @Login
     private String login;
+    @Password
     private String password;
 
     public LoginDtoRequest() {

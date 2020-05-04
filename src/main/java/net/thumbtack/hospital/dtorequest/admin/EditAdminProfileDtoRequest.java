@@ -1,13 +1,23 @@
 package net.thumbtack.hospital.dtorequest.admin;
 
+import net.thumbtack.hospital.util.validator.annotation.Name;
+import net.thumbtack.hospital.util.validator.annotation.Password;
+import net.thumbtack.hospital.util.validator.annotation.Position;
+
 import java.util.Objects;
 
 public class EditAdminProfileDtoRequest {
+    @Name
     private String firstName;
+    @Name
     private String lastName;
+    @Name(isPatronymic = true)
     private String patronymic;
+    @Position
     private String position;
+    @Password
     private String oldPassword;
+    @Password
     private String newPassword;
 
     public EditAdminProfileDtoRequest() {

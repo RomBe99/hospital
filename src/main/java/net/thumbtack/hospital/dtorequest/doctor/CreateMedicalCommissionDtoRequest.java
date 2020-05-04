@@ -1,14 +1,23 @@
 package net.thumbtack.hospital.dtorequest.doctor;
 
+import net.thumbtack.hospital.util.validator.annotation.*;
+
+import javax.validation.constraints.NotEmpty;
 import java.util.List;
 import java.util.Objects;
 
 public class CreateMedicalCommissionDtoRequest {
+    @Id
     private String patientId;
-    private List<String> doctorIds;
+    @NotEmpty
+    private List<@Id String> doctorIds;
+    @Room
     private String room;
+    @Date
     private String date;
+    @Time
     private String time;
+    @Duration
     private String duration;
 
     public CreateMedicalCommissionDtoRequest() {

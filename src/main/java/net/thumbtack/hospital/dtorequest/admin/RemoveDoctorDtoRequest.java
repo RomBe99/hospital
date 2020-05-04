@@ -1,8 +1,11 @@
 package net.thumbtack.hospital.dtorequest.admin;
 
+import net.thumbtack.hospital.util.validator.annotation.Date;
+
 import java.util.Objects;
 
 public class RemoveDoctorDtoRequest {
+    @Date
     private String date;
 
     public RemoveDoctorDtoRequest() {

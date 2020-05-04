@@ -2,12 +2,15 @@ package net.thumbtack.hospital.dtorequest.admin;
 
 import net.thumbtack.hospital.dtorequest.other.schedulecell.WeekDayScheduleCellDtoRequest;
 import net.thumbtack.hospital.dtorequest.other.schedulecell.WeekScheduleCellDtoRequest;
+import net.thumbtack.hospital.util.validator.annotation.Date;
 
 import java.util.List;
 import java.util.Objects;
 
 public class EditDoctorScheduleDtoRequest {
+    @Date
     private String dateStart;
+    @Date
     private String dateEnd;
     private List<WeekScheduleCellDtoRequest> weekSchedule;
     private List<WeekDayScheduleCellDtoRequest> weekDaysSchedule;

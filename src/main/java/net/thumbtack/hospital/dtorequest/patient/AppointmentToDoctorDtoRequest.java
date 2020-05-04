@@ -1,11 +1,20 @@
 package net.thumbtack.hospital.dtorequest.patient;
 
+import net.thumbtack.hospital.util.validator.annotation.Date;
+import net.thumbtack.hospital.util.validator.annotation.Id;
+import net.thumbtack.hospital.util.validator.annotation.Speciality;
+import net.thumbtack.hospital.util.validator.annotation.Time;
+
 import java.util.Objects;
 
 public class AppointmentToDoctorDtoRequest {
+    @Id
     private String doctorId;
+    @Speciality
     private String speciality;
+    @Date
     private String date;
+    @Time
     private String time;
 
     public AppointmentToDoctorDtoRequest() {
