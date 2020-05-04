@@ -7,8 +7,9 @@ import javax.validation.Payload;
 import java.lang.annotation.*;
 
 @Documented
-@Target(ElementType.FIELD)
+@Target({ElementType.METHOD, ElementType.FIELD, ElementType.ANNOTATION_TYPE, ElementType.CONSTRUCTOR, ElementType.PARAMETER, ElementType.TYPE_USE})
 @Retention(RetentionPolicy.RUNTIME)
+@Repeatable(Password.List.class)
 @Constraint(validatedBy = PasswordConstraintValidator.class)
 public @interface Password {
     String message() default "invalid_password";
@@ -16,4 +17,11 @@ public @interface Password {
     Class<?>[] groups() default {};
 
     Class<? extends Payload>[] payload() default {};
+
+    @Target({ElementType.METHOD, ElementType.FIELD, ElementType.ANNOTATION_TYPE, ElementType.CONSTRUCTOR, ElementType.PARAMETER, ElementType.TYPE_USE})
+    @Retention(RetentionPolicy.RUNTIME)
+    @Documented
+    @interface List {
+        Password[] value();
+    }
 }

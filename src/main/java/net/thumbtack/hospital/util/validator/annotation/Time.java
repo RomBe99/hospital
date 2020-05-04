@@ -7,8 +7,9 @@ import javax.validation.Payload;
 import java.lang.annotation.*;
 
 @Documented
-@Target(ElementType.FIELD)
+@Target({ElementType.METHOD, ElementType.FIELD, ElementType.ANNOTATION_TYPE, ElementType.CONSTRUCTOR, ElementType.PARAMETER, ElementType.TYPE_USE})
 @Retention(RetentionPolicy.RUNTIME)
+@Repeatable(Time.List.class)
 @Constraint(validatedBy = TimeConstraintValidator.class)
 public @interface Time {
     String message() default "invalid_time";
@@ -16,4 +17,11 @@ public @interface Time {
     Class<?>[] groups() default {};
 
     Class<? extends Payload>[] payload() default {};
+
+    @Target({ElementType.METHOD, ElementType.FIELD, ElementType.ANNOTATION_TYPE, ElementType.CONSTRUCTOR, ElementType.PARAMETER, ElementType.TYPE_USE})
+    @Retention(RetentionPolicy.RUNTIME)
+    @Documented
+    @interface List {
+        Time[] value();
+    }
 }
