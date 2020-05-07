@@ -29,6 +29,12 @@ public class Patient extends User {
         this(id, login, password, firstName, lastName, patronymic, email, address, phone, new ArrayList<>());
     }
 
+    public Patient(int id, String password,
+                   String firstName, String lastName, String patronymic,
+                   String email, String address, String phone) {
+        this(id, "", password, firstName, lastName, patronymic, email, address, phone, new ArrayList<>());
+    }
+
     public Patient(String login, String password,
                    String firstName, String lastName, String patronymic,
                    String email, String address, String phone) {
