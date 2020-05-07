@@ -7,13 +7,15 @@ import java.util.Objects;
 public class ScheduleTimeCellResponse {
     private String time;
     private PatientInformationDtoResponse patient;
+    private int duration;
 
     public ScheduleTimeCellResponse() {
     }
 
-    public ScheduleTimeCellResponse(String time, PatientInformationDtoResponse patient) {
+    public ScheduleTimeCellResponse(String time, PatientInformationDtoResponse patient, int duration) {
         setTime(time);
         setPatient(patient);
+        setDuration(duration);
     }
 
     public void setTime(String time) {
@@ -24,6 +26,10 @@ public class ScheduleTimeCellResponse {
         this.patient = patient;
     }
 
+    public void setDuration(int duration) {
+        this.duration = duration;
+    }
+
     public String getTime() {
         return time;
     }
@@ -32,18 +38,23 @@ public class ScheduleTimeCellResponse {
         return patient;
     }
 
+    public int getDuration() {
+        return duration;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ScheduleTimeCellResponse that = (ScheduleTimeCellResponse) o;
-        return Objects.equals(time, that.time) &&
+        return duration == that.duration &&
+                Objects.equals(time, that.time) &&
                 Objects.equals(patient, that.patient);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(time, patient);
+        return Objects.hash(time, patient, duration);
     }
 
     @Override
@@ -51,6 +62,7 @@ public class ScheduleTimeCellResponse {
         return "ScheduleTimeCellResponse{" +
                 "time='" + time + '\'' +
                 ", patient=" + patient +
+                ", duration=" + duration +
                 '}';
     }
 }
