@@ -18,14 +18,15 @@
         <collection property="tickets" column="scheduleCellId" javaType="java.util.List"
                     ofType="net.thumbtack.hospital.model.ScheduleCell">
             <result property="id" column="scheduleCellId"/>
-            <!--FIXME <result property="doctor" column=""/>-->
             <result property="date" column="date"/>
+            <association property="doctor" javaType="net.thumbtack.hospital.model.Doctor"/>
 
             <collection property="cells" column="timeCellId" javaType="java.util.List"
                         ofType="net.thumbtack.hospital.model.TimeCell">
                 <result property="time" column="time"/>
-                <!--FIXME <result property="patient" column=""/>-->
                 <result property="duration" column="duration"/>
+                <association property="patient" javaType="net.thumbtack.hospital.model.Patient"
+                             resultMap="resultPatient"/>
             </collection>
         </collection>
     </resultMap>

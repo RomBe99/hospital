@@ -18,7 +18,7 @@
                     ofType="net.thumbtack.hospital.model.ScheduleCell">
             <result property="id" column="scheduleCellId"/>
             <result property="date" column="date"/>
-<!--        TODO <association property="doctor" javaType="net.thumbtack.hospital.model.Doctor"/>-->
+            <association property="doctor" javaType="net.thumbtack.hospital.model.Doctor"/>
 
             <collection property="cells" column="timeCellId" javaType="java.util.List"
                         ofType="net.thumbtack.hospital.model.TimeCell">
@@ -40,59 +40,59 @@
     </resultMap>
 
     <select id="getAllDoctors" resultMap="resultDoctor">
-        SELECT user.id AS doctorId,
-          login,
-          password,
-          firstName,
-          lastName,
-          patronymic,
-          ds.name AS specialty,
-          c.name AS cabinet,
-          sc.id AS scheduleCellId,
-          date,
-          ticketTime AS time,
-          duration,
-          firstName AS patientFirstName,
-          lastName AS patientLastName,
-          patronymic AS patientPatronymic,
-          email AS patientEmail,
-          address AS patientAddress,
-          phone AS patientPhone
+        SELECT user.id    AS doctorId,
+               login,
+               password,
+               firstName,
+               lastName,
+               patronymic,
+               ds.name    AS specialty,
+               c.name     AS cabinet,
+               sc.id      AS scheduleCellId,
+               date,
+               ticketTime AS time,
+               duration,
+               firstName  AS patientFirstName,
+               lastName   AS patientLastName,
+               patronymic AS patientPatronymic,
+               email      AS patientEmail,
+               address    AS patientAddress,
+               phone      AS patientPhone
         FROM user
-          JOIN doctor d ON user.id = d.userId
-          JOIN doctor_specialty ds ON d.specialtyId = ds.id
-          LEFT JOIN cabinet c ON d.cabinetId = c.id
-          LEFT JOIN schedule_cell sc ON d.userId = sc.doctorId
-          JOIN time_cell tc ON sc.id = tc.scheduleCellId
-          LEFT JOIN patient p ON tc.patientId = p.userId;
+                 JOIN doctor d ON user.id = d.userId
+                 JOIN doctor_specialty ds ON d.specialtyId = ds.id
+                 LEFT JOIN cabinet c ON d.cabinetId = c.id
+                 LEFT JOIN schedule_cell sc ON d.userId = sc.doctorId
+                 JOIN time_cell tc ON sc.id = tc.scheduleCellId
+                 LEFT JOIN patient p ON tc.patientId = p.userId;
     </select>
 
     <select id="getDoctorById" parameterType="int" resultMap="resultDoctor">
-        SELECT user.id AS doctorId,
-          login,
-          password,
-          firstName,
-          lastName,
-          patronymic,
-          ds.name AS specialty,
-          c.name AS cabinet,
-          sc.id AS scheduleCellId,
-          date,
-          ticketTime AS time,
-          duration,
-          firstName AS patientFirstName,
-          lastName AS patientLastName,
-          patronymic AS patientPatronymic,
-          email AS patientEmail,
-          address AS patientAddress,
-          phone AS patientPhone
+        SELECT user.id    AS doctorId,
+               login,
+               password,
+               firstName,
+               lastName,
+               patronymic,
+               ds.name    AS specialty,
+               c.name     AS cabinet,
+               sc.id      AS scheduleCellId,
+               date,
+               ticketTime AS time,
+               duration,
+               firstName  AS patientFirstName,
+               lastName   AS patientLastName,
+               patronymic AS patientPatronymic,
+               email      AS patientEmail,
+               address    AS patientAddress,
+               phone      AS patientPhone
         FROM user
-          JOIN doctor d ON user.id = d.userId
-          JOIN doctor_specialty ds ON d.specialtyId = ds.id
-          LEFT JOIN cabinet c ON d.cabinetId = c.id
-          LEFT JOIN schedule_cell sc ON d.userId = sc.doctorId
-          JOIN time_cell tc ON sc.id = tc.scheduleCellId
-          LEFT JOIN patient p ON tc.patientId = p.userId
-       WHERE doctorId = #{id};
+                 JOIN doctor d ON user.id = d.userId
+                 JOIN doctor_specialty ds ON d.specialtyId = ds.id
+                 LEFT JOIN cabinet c ON d.cabinetId = c.id
+                 LEFT JOIN schedule_cell sc ON d.userId = sc.doctorId
+                 JOIN time_cell tc ON sc.id = tc.scheduleCellId
+                 LEFT JOIN patient p ON tc.patientId = p.userId
+        WHERE doctorId = #{id};
     </select>
 </mapper>
