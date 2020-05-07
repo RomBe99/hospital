@@ -23,6 +23,12 @@ public class Administrator extends User {
         this(0, login, password, firstName, lastName, patronymic, position);
     }
 
+    public Administrator(int id, String password,
+                         String firstName, String lastName, String patronymic,
+                         String position) {
+        this(id,"", password, firstName, lastName, patronymic, position);
+    }
+
     public void setPosition(String position) {
         this.position = position;
     }
