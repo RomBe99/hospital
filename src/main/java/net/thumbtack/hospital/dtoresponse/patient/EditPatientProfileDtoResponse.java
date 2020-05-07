@@ -9,23 +9,21 @@ public class EditPatientProfileDtoResponse {
     private String email;
     private String address;
     private String phone;
-    private String oldPassword;
-    private String newPassword;
+    private String password;
 
     public EditPatientProfileDtoResponse() {
     }
 
     public EditPatientProfileDtoResponse(String firstName, String lastName, String patronymic,
                                          String email, String address, String phone,
-                                         String oldPassword, String newPassword) {
+                                         String password) {
         setFirstName(firstName);
         setLastName(lastName);
         setPatronymic(patronymic);
         setEmail(email);
         setAddress(address);
         setPhone(phone);
-        setOldPassword(oldPassword);
-        setNewPassword(newPassword);
+        setPassword(password);
     }
 
     public void setFirstName(String firstName) {
@@ -52,12 +50,8 @@ public class EditPatientProfileDtoResponse {
         this.phone = phone;
     }
 
-    public void setOldPassword(String oldPassword) {
-        this.oldPassword = oldPassword;
-    }
-
-    public void setNewPassword(String newPassword) {
-        this.newPassword = newPassword;
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public String getFirstName() {
@@ -84,12 +78,8 @@ public class EditPatientProfileDtoResponse {
         return phone;
     }
 
-    public String getOldPassword() {
-        return oldPassword;
-    }
-
-    public String getNewPassword() {
-        return newPassword;
+    public String getPassword() {
+        return password;
     }
 
     @Override
@@ -103,13 +93,12 @@ public class EditPatientProfileDtoResponse {
                 Objects.equals(email, that.email) &&
                 Objects.equals(address, that.address) &&
                 Objects.equals(phone, that.phone) &&
-                Objects.equals(oldPassword, that.oldPassword) &&
-                Objects.equals(newPassword, that.newPassword);
+                Objects.equals(password, that.password);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(firstName, lastName, patronymic, email, address, phone, oldPassword, newPassword);
+        return Objects.hash(firstName, lastName, patronymic, email, address, phone, password);
     }
 
     @Override
@@ -121,8 +110,7 @@ public class EditPatientProfileDtoResponse {
                 ", email='" + email + '\'' +
                 ", address='" + address + '\'' +
                 ", phone='" + phone + '\'' +
-                ", oldPassword='" + oldPassword + '\'' +
-                ", newPassword='" + newPassword + '\'' +
+                ", password='" + password + '\'' +
                 '}';
     }
 }
