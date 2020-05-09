@@ -5,7 +5,8 @@ import net.thumbtack.hospital.dtorequest.patient.EditPatientProfileDtoRequest;
 import net.thumbtack.hospital.dtorequest.patient.PatientRegistrationDtoRequest;
 import net.thumbtack.hospital.service.PatientService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.RequestEntity;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -27,36 +28,42 @@ public class PatientController {
         this.patientService = patientService;
     }
 
-    @PostMapping(value = patientRegistrationUrl)
-    public RequestEntity<String> patientRegistration(@Valid @RequestBody PatientRegistrationDtoRequest request) {
+    @PostMapping(value = patientRegistrationUrl,
+            produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> patientRegistration(@Valid @RequestBody PatientRegistrationDtoRequest request) {
         return null;
     }
 
-    @PutMapping(value = editPatientProfileUrl)
-    public RequestEntity<String> editPatientProfile(@CookieValue(value = "session.id") int sessionId,
-                                                    @Valid @RequestBody EditPatientProfileDtoRequest request) {
+    @PutMapping(value = editPatientProfileUrl,
+            produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> editPatientProfile(@CookieValue(value = "JAVASESSIONID") int sessionId,
+                                                     @Valid @RequestBody EditPatientProfileDtoRequest request) {
         return null;
     }
 
-    @PatchMapping(value = appointmentToDoctorUrl)
-    public RequestEntity<String> appointmentToDoctor(@CookieValue(value = "session.id") int sessionId,
-                                                     @Valid @RequestBody AppointmentToDoctorDtoRequest request) {
+    @PatchMapping(value = appointmentToDoctorUrl,
+            produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> appointmentToDoctor(@CookieValue(value = "JAVASESSIONID") int sessionId,
+                                                      @Valid @RequestBody AppointmentToDoctorDtoRequest request) {
         return null;
     }
 
-    @PatchMapping(value = denyMedicalCommissionUrl)
-    public RequestEntity<String> denyMedicalCommission(@CookieValue(value = "session.id") int sessionId,
-                                                       @PathVariable int commissionTicketId) {
+    @PatchMapping(value = denyMedicalCommissionUrl,
+            produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> denyMedicalCommission(@CookieValue(value = "JAVASESSIONID") int sessionId,
+                                                        @PathVariable int commissionTicketId) {
         return null;
     }
 
-    @DeleteMapping(value = denyTicketUrl)
-    public RequestEntity<String> denyTicket(@CookieValue(value = "session.id") int sessionId) {
+    @DeleteMapping(value = denyTicketUrl,
+            produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> denyTicket(@CookieValue(value = "JAVASESSIONID") int sessionId) {
         return null;
     }
 
-    @GetMapping(value = getTicketsUrl)
-    public RequestEntity<String> getTickets(@CookieValue(value = "session.id") int sessionId) {
+    @GetMapping(value = getTicketsUrl,
+            produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> getTickets(@CookieValue(value = "JAVASESSIONID") int sessionId) {
         return null;
     }
 }
