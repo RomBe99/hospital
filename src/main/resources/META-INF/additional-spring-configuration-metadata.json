@@ -1,0 +1,21 @@
+{
+  "groups": [
+    {
+      "name": "hospital.constraints",
+      "type": "net.thumbtack.hospital.configuration.Constraints",
+      "sourceType": "net.thumbtack.hospital.configuration.Constraints"
+    }
+  ],
+  "properties": [
+    {
+      "name": "hospital.constraints.max-name-length",
+      "type": "java.lang.Integer",
+      "description": "Description for constraints.max-name-length."
+    },
+    {
+      "name": "hospital.constraints.min-password-length",
+      "type": "java.lang.Integer",
+      "description": "Description for constraints.min-password-length."
+    }
+  ]
+}
