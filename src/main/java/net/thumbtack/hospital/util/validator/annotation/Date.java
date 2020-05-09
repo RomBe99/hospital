@@ -12,7 +12,7 @@ import java.lang.annotation.*;
 @Repeatable(Date.List.class)
 @Constraint(validatedBy = DateConstraintValidator.class)
 public @interface Date {
-    String message() default "invalid_date";
+    String message() default "Date have invalid format.";
 
     Class<?>[] groups() default {};
 

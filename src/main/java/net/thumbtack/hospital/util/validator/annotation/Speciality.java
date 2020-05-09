@@ -12,7 +12,7 @@ import java.lang.annotation.*;
 @Repeatable(Speciality.List.class)
 @Constraint(validatedBy = SpecialityConstraintValidator.class)
 public @interface Speciality {
-    String message() default "invalid_speciality";
+    String message() default "Speciality must be not empty and not larger then 30 characters.";
 
     Class<?>[] groups() default {};
 

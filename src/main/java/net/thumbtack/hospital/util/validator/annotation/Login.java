@@ -12,7 +12,7 @@ import java.lang.annotation.*;
 @Repeatable(Login.List.class)
 @Constraint(validatedBy = LoginConstraintValidator.class)
 public @interface Login {
-    String message() default "invalid_login";
+    String message() default "Login can consist of numbers and capital/lowercase letters of the Latin alphabet/Cyrillic and be no more than 30 characters.";
 
     Class<?>[] groups() default {};
 

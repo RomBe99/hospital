@@ -12,7 +12,7 @@ import java.lang.annotation.*;
 @Repeatable(Address.List.class)
 @Constraint(validatedBy = AddressConstraintValidator.class)
 public @interface Address {
-    String message() default "invalid_address";
+    String message() default "Address must be not empty and not larger then 200 characters.";
 
     Class<?>[] groups() default {};
 

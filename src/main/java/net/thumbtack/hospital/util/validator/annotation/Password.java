@@ -12,7 +12,7 @@ import java.lang.annotation.*;
 @Repeatable(Password.List.class)
 @Constraint(validatedBy = PasswordConstraintValidator.class)
 public @interface Password {
-    String message() default "invalid_password";
+    String message() default "Password must contain at least one lowercase and lowercase Latin letter, and also have at least one number. Also, its length must be between 10 and 30 characters.";
 
     Class<?>[] groups() default {};
 

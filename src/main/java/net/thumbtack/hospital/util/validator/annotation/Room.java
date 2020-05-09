@@ -12,7 +12,7 @@ import java.lang.annotation.*;
 @Repeatable(Room.List.class)
 @Constraint(validatedBy = RoomConstraintValidator.class)
 public @interface Room {
-    String message() default "invalid_room";
+    String message() default "Room must be not empty and not larger then 30 characters.";
 
     Class<?>[] groups() default {};
 
