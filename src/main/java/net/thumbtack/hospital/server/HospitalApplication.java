@@ -6,13 +6,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = "net.thumbtack.hospital")
 public class HospitalApplication {
     private static final Logger LOGGER = LoggerFactory.getLogger(AdminDaoImpl.class);
 
     public static void main(String[] args) {
-        LOGGER.info(HospitalApplication.class.getSimpleName() + " is running");
+        LOGGER.info(HospitalApplication.class.getSimpleName() + ": is running");
         SpringApplication.run(HospitalApplication.class);
-        LOGGER.info(HospitalApplication.class.getSimpleName() + " application terminated");
+        LOGGER.info(HospitalApplication.class.getSimpleName() + ": application terminated");
     }
 }
