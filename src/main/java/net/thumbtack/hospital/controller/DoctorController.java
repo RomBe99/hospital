@@ -4,16 +4,14 @@ import net.thumbtack.hospital.dtorequest.doctor.CreateMedicalCommissionDtoReques
 import net.thumbtack.hospital.service.DoctorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.RequestEntity;
-import org.springframework.web.bind.annotation.CookieValue;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
 @RestController
+@RequestMapping("/api")
 public class DoctorController {
-    private static final String createMedicalCommissionUrl = "/api/commissions";
+    private static final String createMedicalCommissionUrl = "commissions";
 
     private final DoctorService doctorService;
 

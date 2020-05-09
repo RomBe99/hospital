@@ -1,22 +1,22 @@
 package net.thumbtack.hospital.controller;
 
-import net.thumbtack.hospital.dtorequest.user.*;
+import net.thumbtack.hospital.dtorequest.user.LoginDtoRequest;
 import net.thumbtack.hospital.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
 @RestController
+@RequestMapping("/api")
 public class UserController {
-    private static final String loginUrl = "/api/sessions";
-    private static final String logoutUrl = "/api/sessions";
-    private static final String getUserInformationUrl = "/api/account";
-    private static final String getDoctorInformationUrl = "/api/doctors/{doctorId}";
-    private static final String getDoctorsInformationUrl = "/api/doctors";
-    private static final String getPatientInformationUrl = "/api/patients/{patientId}";
+    private static final String loginUrl = "sessions";
+    private static final String logoutUrl = "sessions";
+    private static final String getUserInformationUrl = "account";
+    private static final String getDoctorInformationUrl = "doctors/{doctorId}";
+    private static final String getDoctorsInformationUrl = "doctors";
+    private static final String getPatientInformationUrl = "patients/{patientId}";
 
     private final UserService userService;
 
@@ -31,17 +31,17 @@ public class UserController {
     }
 
     @DeleteMapping(value = logoutUrl)
-    public RequestEntity<String> logout(@CookieValue(value = "session.id") int sessionId) {
+    public ResponseEntity<String> logout(@CookieValue(value = "session.id") int sessionId) {
         return null;
     }
 
     @GetMapping(value = getUserInformationUrl)
-    public RequestEntity<String> getUserInformation(@CookieValue(value = "session.id") int sessionId) {
+    public ResponseEntity<String> getUserInformation(@CookieValue(value = "session.id") int sessionId) {
         return null;
     }
 
     @GetMapping(value = getDoctorInformationUrl)
-    public RequestEntity<String> getDoctorInformation(@CookieValue(value = "session.id") int sessionId,
+    public ResponseEntity<String> getDoctorInformation(@CookieValue(value = "session.id") int sessionId,
                                                       @PathVariable int doctorId,
                                                      @RequestParam(value = "schedule") String schedule,
                                                      @RequestParam(value = "startDate", required = false) String startDate,
@@ -50,7 +50,7 @@ public class UserController {
     }
 
     @GetMapping(value = getDoctorsInformationUrl)
-    public RequestEntity<String> getDoctorsInformation(@CookieValue(value = "session.id") int sessionId,
+    public ResponseEntity<String> getDoctorsInformation(@CookieValue(value = "session.id") int sessionId,
                                                        @RequestParam(value = "schedule") String schedule,
                                                        @RequestParam(value = "speciality", required = false) String speciality,
                                                        @RequestParam(value = "startDate", required = false) String startDate,
@@ -59,7 +59,7 @@ public class UserController {
     }
 
     @GetMapping(value = getPatientInformationUrl)
-    public RequestEntity<String> getPatientInformation(@CookieValue(value = "session.id") int sessionId,
+    public ResponseEntity<String> getPatientInformation(@CookieValue(value = "session.id") int sessionId,
                                                        @PathVariable int patientId) {
         return null;
     }

@@ -9,12 +9,13 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 
 @RestController
+@RequestMapping("/api")
 public class AdministratorController {
-    private static final String administratorRegistrationUrl = "/api/admins";
-    private static final String doctorRegistrationUrl = "/api/doctors";
-    private static final String editAdministratorProfileUrl = "/api/admins";
-    private static final String editDoctorScheduleUrl = "/api/doctors/{doctorId}";
-    private static final String removeDoctorUrl = "/api/doctors/{doctorId}";
+    private static final String administratorRegistrationUrl = "admins";
+    private static final String doctorRegistrationUrl = "doctors";
+    private static final String editAdministratorProfileUrl = "admins";
+    private static final String editDoctorScheduleUrl = "doctors/{doctorId}";
+    private static final String removeDoctorUrl = "doctors/{doctorId}";
 
     private final AdministratorService administratorService;
 

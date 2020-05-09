@@ -11,13 +11,14 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 
 @RestController
+@RequestMapping("/api")
 public class PatientController {
-    private static final String patientRegistrationUrl = "/api/patients";
-    private static final String editPatientProfileUrl = "/api/patients";
-    private static final String appointmentToDoctorUrl = "/api/tickets";
-    private static final String denyMedicalCommissionUrl = "/api/commissions/{commissionTicketId}";
-    private static final String getTicketsUrl = "/api/tickets";
-    private static final String denyTicketUrl = "/api/tickets";
+    private static final String patientRegistrationUrl = "patients";
+    private static final String editPatientProfileUrl = "patients";
+    private static final String appointmentToDoctorUrl = "tickets";
+    private static final String denyMedicalCommissionUrl = "commissions/{commissionTicketId}";
+    private static final String getTicketsUrl = "tickets";
+    private static final String denyTicketUrl = "tickets";
 
     private final PatientService patientService;
 
