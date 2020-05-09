@@ -59,7 +59,7 @@ public class PatientDaoImpl extends BaseDaoImpl implements PatientDao {
         LOGGER.debug(className + ": Get patient with id = {}", id);
 
         try (SqlSession session = super.getSession()) {
-            return session.selectOne("net.thumbtack.hospital.mappers.PatientMapper.getPatientById", id);
+            return session.selectOne("net.thumbtack.hospital.mapper.PatientMapper.getPatientById", id);
         } catch (RuntimeException ex) {
             LOGGER.error(className + ": Can't get patient with id = {}", id, ex);
 
