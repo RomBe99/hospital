@@ -5,7 +5,9 @@ import net.thumbtack.hospital.model.Administrator;
 import org.apache.ibatis.session.SqlSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
+@Component
 public class AdminDaoImpl extends BaseDaoImpl implements AdminDao {
     private static final Logger LOGGER = LoggerFactory.getLogger(AdminDaoImpl.class);
     private static final String className = AdminDaoImpl.class.getSimpleName();
@@ -14,10 +16,10 @@ public class AdminDaoImpl extends BaseDaoImpl implements AdminDao {
     public Administrator insertAdministrator(Administrator administrator) {
         LOGGER.debug(className + ": Insert administrator = {}", administrator);
 
-        try (SqlSession session = getSession()) {
+        try (SqlSession session = super.getSession()) {
             try {
-                getUserMapper(session).insertUser(administrator);
-                getAdminMapper(session).insertAdministrator(administrator);
+                super.getUserMapper(session).insertUser(administrator);
+                super.getAdminMapper(session).insertAdministrator(administrator);
 
                 session.commit();
                 LOGGER.debug(className + ": Administrator = {} successfully inserted", administrator);
@@ -36,10 +38,10 @@ public class AdminDaoImpl extends BaseDaoImpl implements AdminDao {
     public void updateAdministrator(Administrator administrator) {
         LOGGER.debug(className + ": Update administrator = {}", administrator);
 
-        try (SqlSession session = getSession()) {
+        try (SqlSession session = super.getSession()) {
             try {
-                getUserMapper(session).updateUser(administrator);
-                getAdminMapper(session).updateAdministrator(administrator);
+                super.getUserMapper(session).updateUser(administrator);
+                super.getAdminMapper(session).updateAdministrator(administrator);
 
                 session.commit();
                 LOGGER.debug(className + ": Administrator = {} successfully updated", administrator);
@@ -56,7 +58,7 @@ public class AdminDaoImpl extends BaseDaoImpl implements AdminDao {
     public Administrator getAdministratorById(int id) {
         LOGGER.debug(className + ": Get administrator with id = {}", id);
 
-        try (SqlSession session = getSession()) {
+        try (SqlSession session = super.getSession()) {
             return session.selectOne("net.thumbtack.hospital.mapper.AdminMapper.getAdminById", id);
         } catch (RuntimeException ex) {
             LOGGER.error(className + ": Can't get administrator with id = {}", id, ex);
@@ -69,9 +71,9 @@ public class AdminDaoImpl extends BaseDaoImpl implements AdminDao {
     public void removeAdministratorById(int id) {
         LOGGER.debug(className + ": Remove administrator with id = {}", id);
 
-        try (SqlSession session = getSession()) {
+        try (SqlSession session = super.getSession()) {
             try {
-                getAdminMapper(session).removeAdministratorById(id);
+                super.getAdminMapper(session).removeAdministratorById(id);
 
                 session.commit();
                 LOGGER.debug(className + ": Administrator with id = {} successfully removed", id);

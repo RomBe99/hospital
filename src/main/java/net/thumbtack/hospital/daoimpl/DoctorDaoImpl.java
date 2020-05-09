@@ -5,9 +5,11 @@ import net.thumbtack.hospital.dao.DoctorDao;
 import org.apache.ibatis.session.SqlSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+@Component
 public class DoctorDaoImpl extends BaseDaoImpl implements DoctorDao {
     private static final Logger LOGGER = LoggerFactory.getLogger(DoctorDaoImpl.class);
     private static final String className = DoctorDaoImpl.class.getSimpleName();
@@ -16,13 +18,13 @@ public class DoctorDaoImpl extends BaseDaoImpl implements DoctorDao {
     public Doctor insertDoctor(Doctor doctor) {
         LOGGER.debug(className + ": Insert doctor = {}", doctor);
 
-        try (SqlSession session = getSession()) {
+        try (SqlSession session = super.getSession()) {
             try {
-                int cabinetId = getCommonMapper(session).getCabinetIdByName(doctor.getCabinet());
-                int specialityId = getCommonMapper(session).getDoctorSpecialityIdByName(doctor.getSpecialty());
+                int cabinetId = super.getCommonMapper(session).getCabinetIdByName(doctor.getCabinet());
+                int specialityId = super.getCommonMapper(session).getDoctorSpecialityIdByName(doctor.getSpecialty());
 
-                getUserMapper(session).insertUser(doctor);
-                getDoctorMapper(session).insertDoctor(doctor.getId(), cabinetId, specialityId);
+                super.getUserMapper(session).insertUser(doctor);
+                super.getDoctorMapper(session).insertDoctor(doctor.getId(), cabinetId, specialityId);
 
                 session.commit();
                 LOGGER.debug(className + ": Doctor = {} successfully inserted", doctor);
@@ -41,9 +43,9 @@ public class DoctorDaoImpl extends BaseDaoImpl implements DoctorDao {
     public void removeDoctor(int id) {
         LOGGER.debug(className + ": Delete doctor with id = {}", id);
 
-        try (SqlSession session = getSession()) {
+        try (SqlSession session = super.getSession()) {
             try {
-                getDoctorMapper(session).removeDoctor(id);
+                super.getDoctorMapper(session).removeDoctor(id);
 
                 session.commit();
                 LOGGER.debug(className + ": Doctor with id = {} successfully removed", id);
@@ -60,7 +62,7 @@ public class DoctorDaoImpl extends BaseDaoImpl implements DoctorDao {
     public List<Doctor> getAllDoctors() {
         LOGGER.debug(className + ": Get all doctors");
 
-        try (SqlSession session = getSession()) {
+        try (SqlSession session = super.getSession()) {
             return session.selectList("net.thumbtack.hospital.mapper.DoctorMapper.getAllDoctors");
         } catch (RuntimeException ex) {
             LOGGER.error(className + ": Can't get all doctors", ex);
@@ -73,7 +75,7 @@ public class DoctorDaoImpl extends BaseDaoImpl implements DoctorDao {
     public Doctor getDoctorById(int id) {
         LOGGER.debug(className + ": Get doctor by id");
 
-        try (SqlSession session = getSession()) {
+        try (SqlSession session = super.getSession()) {
             return session.selectOne("net.thumbtack.hospital.mapper.DoctorMapper.getDoctorById", id);
         } catch (RuntimeException ex) {
             LOGGER.error(className + ": Can't get doctor by id", ex);
