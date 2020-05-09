@@ -86,7 +86,6 @@ CREATE TABLE schedule_cell
     date     DATE NOT NULL,
 
     PRIMARY KEY (id),
-    UNIQUE KEY (date),
     FOREIGN KEY (doctorId) REFERENCES doctor (userId) ON DELETE CASCADE,
     KEY doctorId (doctorId)
 ) ENGINE = INNODB
@@ -99,7 +98,7 @@ CREATE TABLE time_cell
     patientId      INT DEFAULT NULL,
     duration       INT  NOT NULL,
 
-    PRIMARY KEY (ticketTime),
+    PRIMARY KEY (ticketTime, scheduleCellId),
     FOREIGN KEY (scheduleCellId) REFERENCES schedule_cell (id) ON DELETE CASCADE,
     FOREIGN KEY (patientId) REFERENCES patient (userId) ON DELETE SET NULL
 ) ENGINE = INNODB
