@@ -23,6 +23,8 @@ public class NameConstraintValidator implements ConstraintValidator<Name, String
          return true;
       }
 
-      return nameField.length() <= Integer.parseInt("constraints.maxNameLength") && nameField.matches("^[а-яА-ЯёЁa-zA-Z0-9]+$");
+      String regex = "^[а-яА-ЯёЁa-zA-Z0-9]+$";
+
+      return nameField.length() <= Integer.parseInt("constraints.maxNameLength") && nameField.matches(regex);
    }
 }
