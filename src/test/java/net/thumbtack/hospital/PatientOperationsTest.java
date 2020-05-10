@@ -94,7 +94,7 @@ public class PatientOperationsTest extends BaseTest {
         insertPatient(login, password, firstName, lastName, patronymic, email, address, phone);
     }
 
-    @Test(expected = RuntimeException.class)
+    @Test
     public void removePatientTest() {
         String login = "FrolovaBahiya454";
         String password = "10AFVcPBcmbY";
