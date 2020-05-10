@@ -17,16 +17,14 @@
 
         <collection property="tickets" column="scheduleCellId" javaType="java.util.List"
                     ofType="net.thumbtack.hospital.model.ScheduleCell">
-            <result property="id" column="scheduleCellId"/>
+            <id property="id" column="scheduleCellId"/>
             <result property="date" column="date"/>
             <association property="doctor" javaType="net.thumbtack.hospital.model.Doctor"/>
 
             <collection property="cells" column="timeCellId" javaType="java.util.List"
                         ofType="net.thumbtack.hospital.model.TimeCell">
-                <result property="time" column="time"/>
+                <id property="time" column="ticketTime"/>
                 <result property="duration" column="duration"/>
-                <association property="patient" javaType="net.thumbtack.hospital.model.Patient"
-                             resultMap="resultPatient"/>
             </collection>
         </collection>
     </resultMap>
@@ -41,10 +39,10 @@
                email,
                address,
                phone,
-               ticketTime,
                scheduleCellId,
-               duration,
-               date
+               date,
+               ticketTime,
+               duration
         FROM user
                  JOIN patient p ON user.id = p.userId
                  LEFT JOIN time_cell tc on p.userId = tc.patientId
