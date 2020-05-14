@@ -22,6 +22,16 @@ CREATE TABLE user
 ) ENGINE = INNODB
   DEFAULT CHARSET = utf8;
 
+CREATE TABLE login_user
+(
+    sessionId VARCHAR(40) NOT NULL,
+    userId    INT         NOT NULL,
+
+    PRIMARY KEY (sessionId),
+    FOREIGN KEY (userId) REFERENCES user (id) ON DELETE CASCADE
+) ENGINE = INNODB
+  DEFAULT CHARSET = utf8;
+
 CREATE TABLE administrator
 (
     userId   INT          NOT NULL,
@@ -104,6 +114,30 @@ CREATE TABLE time_cell
 ) ENGINE = INNODB
   DEFAULT CHARSET = utf8;
 
+CREATE TABLE medical_commission
+(
+    id        INT AUTO_INCREMENT,
+    date      DATE,
+    time      TIME,
+    patientId INT,
+
+    PRIMARY KEY (id),
+    UNIQUE KEY (date, time, patientId),
+    FOREIGN KEY (patientId) REFERENCES patient (userId) ON DELETE CASCADE
+) ENGINE = INNODB
+  DEFAULT CHARSET = utf8;
+
+CREATE TABLE commission_docotor
+(
+    commissionId INT NOT NULL,
+    doctorId     INT NOT NULL,
+
+    PRIMARY KEY (commissionId, doctorId),
+    FOREIGN KEY (commissionId) REFERENCES medical_commission (id) ON DELETE CASCADE,
+    FOREIGN KEY (doctorId) REFERENCES doctor (userId) ON DELETE CASCADE
+) ENGINE = INNODB
+  DEFAULT CHARSET = utf8;
+
 # Insert doctors specialities
 
 INSERT INTO doctor_specialty
@@ -137,4 +171,4 @@ VALUES (0, '407');
 INSERT INTO user
 VALUES (0, 'admin', 'admin', 'Roman', 'Belinsky', NULL);
 INSERT INTO administrator
-VALUES (1, 'Root admin');
+VALUES (last_insert_id(), 'Root admin');
