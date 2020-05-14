@@ -17,7 +17,8 @@ CREATE TABLE user
     UNIQUE KEY (login),
     KEY firstName (firstName),
     KEY lastName (lastName),
-    KEY patronymic (patronymic)
+    KEY patronymic (patronymic),
+    KEY password (password)
 ) ENGINE = INNODB
   DEFAULT CHARSET = utf8;
 
@@ -61,9 +62,7 @@ CREATE TABLE doctor
     PRIMARY KEY (userId),
     FOREIGN KEY (userId) REFERENCES user (id) ON DELETE CASCADE,
     FOREIGN KEY (specialtyId) REFERENCES doctor_specialty (id) ON DELETE CASCADE,
-    FOREIGN KEY (cabinetId) REFERENCES cabinet (id) ON DELETE SET NULL,
-    KEY specialtyName (specialtyId),
-    KEY cabinetId (cabinetId)
+    FOREIGN KEY (cabinetId) REFERENCES cabinet (id) ON DELETE SET NULL
 ) ENGINE = INNODB
   DEFAULT CHARSET = utf8;
 
@@ -87,7 +86,7 @@ CREATE TABLE schedule_cell
 
     PRIMARY KEY (id),
     FOREIGN KEY (doctorId) REFERENCES doctor (userId) ON DELETE CASCADE,
-    KEY doctorId (doctorId)
+    KEY date (date)
 ) ENGINE = INNODB
   DEFAULT CHARSET = utf8;
 
@@ -100,7 +99,8 @@ CREATE TABLE time_cell
 
     PRIMARY KEY (ticketTime, scheduleCellId),
     FOREIGN KEY (scheduleCellId) REFERENCES schedule_cell (id) ON DELETE CASCADE,
-    FOREIGN KEY (patientId) REFERENCES patient (userId) ON DELETE SET NULL
+    FOREIGN KEY (patientId) REFERENCES patient (userId) ON DELETE SET NULL,
+    KEY ticketTime (ticketTime)
 ) ENGINE = INNODB
   DEFAULT CHARSET = utf8;
 
