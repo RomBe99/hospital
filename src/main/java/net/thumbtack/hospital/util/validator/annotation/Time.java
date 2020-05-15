@@ -12,7 +12,7 @@ import java.lang.annotation.*;
 @Repeatable(Time.List.class)
 @Constraint(validatedBy = TimeConstraintValidator.class)
 public @interface Time {
-    String message() default "Time have invalid format.";
+    String message() default "INVALID_TIME";
 
     Class<?>[] groups() default {};
 

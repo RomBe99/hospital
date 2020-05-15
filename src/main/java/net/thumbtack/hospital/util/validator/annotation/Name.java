@@ -12,7 +12,7 @@ import java.lang.annotation.*;
 @Repeatable(Name.List.class)
 @Constraint(validatedBy = NameConstraintValidator.class)
 public @interface Name {
-    String message() default "Name can consist of capital/lowercase letters of the Latin alphabet/Cyrillic and be no more than 30 characters.";
+    String message() default "INVALID_NAME";
 
     Class<?>[] groups() default {};
 

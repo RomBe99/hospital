@@ -12,7 +12,7 @@ import java.lang.annotation.*;
 @Repeatable(Position.List.class)
 @Constraint(validatedBy = PositionConstraintValidator.class)
 public @interface Position {
-    String message() default "Position must be not empty and not larger then 200 characters.";
+    String message() default "INVALID_POSITION";
 
     Class<?>[] groups() default {};
 

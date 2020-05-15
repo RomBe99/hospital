@@ -12,7 +12,7 @@ import java.lang.annotation.*;
 @Repeatable(Duration.List.class)
 @Constraint(validatedBy = DurationConstraintValidator.class)
 public @interface Duration {
-    String message() default "Duration must be not empty and not larger then 30 characters.";
+    String message() default "INVALID_DURATION";
 
     Class<?>[] groups() default {};
 

@@ -16,6 +16,71 @@
       "name": "hospital.constraints.min-password-length",
       "type": "java.lang.Integer",
       "description": "Description for constraints.min-password-length."
+    },
+    {
+      "name": "hospital.errors.validations-error-codes-to-error-messages",
+      "type": "java.lang.String",
+      "description": "Description for hospital.errors.validations-error-codes-to-error-messages."
+    },
+    {
+      "name": "hospital.errors.invalid-address-code",
+      "type": "java.lang.String",
+      "description": "Description for hospital.errors.invalid-address-code."
+    },
+    {
+      "name": "hospital.errors.invalid-date-code",
+      "type": "java.lang.String",
+      "description": "Description for hospital.errors.invalid-date-code."
+    },
+    {
+      "name": "hospital.errors.invalid-duration-code",
+      "type": "java.lang.String",
+      "description": "Description for hospital.errors.invalid-duration-code."
+    },
+    {
+      "name": "hospital.errors.invalid-login-code",
+      "type": "java.lang.String",
+      "description": "Description for hospital.errors.invalid-login-code."
+    },
+    {
+      "name": "hospital.errors.invalid-name-code",
+      "type": "java.lang.String",
+      "description": "Description for hospital.errors.invalid-name-code."
+    },
+    {
+      "name": "hospital.errors.invalid-password-code",
+      "type": "java.lang.String",
+      "description": "Description for hospital.errors.invalid-password-code."
+    },
+    {
+      "name": "hospital.errors.invalid-phone-code",
+      "type": "java.lang.String",
+      "description": "Description for hospital.errors.invalid-phone-code."
+    },
+    {
+      "name": "hospital.errors.invalid-position-code",
+      "type": "java.lang.String",
+      "description": "Description for hospital.errors.invalid-position-code."
+    },
+    {
+      "name": "hospital.errors.invalid-room-code",
+      "type": "java.lang.String",
+      "description": "Description for hospital.errors.invalid-room-code."
+    },
+    {
+      "name": "hospital.errors.invalid-speciality-code",
+      "type": "java.lang.String",
+      "description": "Description for hospital.errors.invalid-speciality-code."
+    },
+    {
+      "name": "hospital.errors.invalid-time-code",
+      "type": "java.lang.String",
+      "description": "Description for hospital.errors.invalid-time-code."
+    },
+    {
+      "name": "hospital.errors.invalid-week-day-code",
+      "type": "java.lang.String",
+      "description": "Description for hospital.errors.invalid-week-day-code."
     }
   ]
 }

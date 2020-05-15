@@ -12,7 +12,7 @@ import java.lang.annotation.*;
 @Repeatable(Phone.List.class)
 @Constraint(validatedBy = PhoneConstraintValidator.class)
 public @interface Phone {
-    String message() default "Invalid phone format.";
+    String message() default "INVALID_PHONE";
 
     Class<?>[] groups() default {};
 

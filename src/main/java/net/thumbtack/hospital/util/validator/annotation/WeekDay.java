@@ -12,7 +12,7 @@ import java.lang.annotation.*;
 @Repeatable(WeekDay.List.class)
 @Constraint(validatedBy = WeekDayConstraintValidator.class)
 public @interface WeekDay {
-    String message() default "Week day must be number 1 - 7.";
+    String message() default "INVALID_WEEK_DAY";
 
     Class<?>[] groups() default {};
 
