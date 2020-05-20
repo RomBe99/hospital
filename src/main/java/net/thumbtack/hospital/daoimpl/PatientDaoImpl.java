@@ -1,6 +1,7 @@
 package net.thumbtack.hospital.daoimpl;
 
 import net.thumbtack.hospital.dao.PatientDao;
+import net.thumbtack.hospital.mapper.PatientMapper;
 import net.thumbtack.hospital.model.Patient;
 import org.apache.ibatis.session.SqlSession;
 import org.slf4j.Logger;
@@ -8,18 +9,23 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 @Component
-public class PatientDaoImpl extends BaseDaoImpl implements PatientDao {
+public class PatientDaoImpl extends UserDaoImpl implements PatientDao {
     private static final Logger LOGGER = LoggerFactory.getLogger(PatientDaoImpl.class);
     private static final String className = PatientDaoImpl.class.getSimpleName();
+
+    private PatientMapper getPatientMapper(SqlSession session) {
+        return session.getMapper(PatientMapper.class);
+    }
 
     @Override
     public Patient insertPatient(Patient patient) {
         LOGGER.debug(className + ": Insert patient = {}", patient);
 
-        try (SqlSession session = super.getSession()) {
+        try (SqlSession session = getSession()) {
             try {
-                super.getUserMapper(session).insertUser(patient);
-                super.getPatientMapper(session).insertPatient(patient);
+                PatientMapper mapper = getPatientMapper(session);
+                mapper.insertUser(patient);
+                mapper.insertPatient(patient);
 
                 session.commit();
                 LOGGER.debug(className + ": Patient = {} successfully inserted", patient);
@@ -38,10 +44,11 @@ public class PatientDaoImpl extends BaseDaoImpl implements PatientDao {
     public void updatePatient(Patient patient) {
         LOGGER.debug(className + ": Update patient = {}", patient);
 
-        try (SqlSession session = super.getSession()) {
+        try (SqlSession session = getSession()) {
             try {
-                super.getUserMapper(session).updateUser(patient);
-                super.getPatientMapper(session).updatePatient(patient);
+                PatientMapper mapper = getPatientMapper(session);
+                mapper.updateUser(patient);
+                mapper.updatePatient(patient);
 
                 session.commit();
                 LOGGER.debug(className + ": Patient = {} successfully updated", patient);
@@ -58,7 +65,7 @@ public class PatientDaoImpl extends BaseDaoImpl implements PatientDao {
     public Patient getPatientById(int id) {
         LOGGER.debug(className + ": Get patient with id = {}", id);
 
-        try (SqlSession session = super.getSession()) {
+        try (SqlSession session = getSession()) {
             return session.selectOne("net.thumbtack.hospital.mapper.PatientMapper.getPatientById", id);
         } catch (RuntimeException ex) {
             LOGGER.error(className + ": Can't get patient with id = {}", id, ex);
@@ -71,9 +78,9 @@ public class PatientDaoImpl extends BaseDaoImpl implements PatientDao {
     public void removePatient(int id) {
         LOGGER.debug(className + ": Remove patient with id = {}", id);
 
-        try (SqlSession session = super.getSession()) {
+        try (SqlSession session = getSession()) {
             try {
-                super.getPatientMapper(session).removePatient(id);
+                getPatientMapper(session).removePatient(id);
 
                 session.commit();
                 LOGGER.debug(className + ": Patient with id = {} successfully removed", id);

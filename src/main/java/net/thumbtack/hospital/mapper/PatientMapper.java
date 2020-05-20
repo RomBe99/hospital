@@ -5,7 +5,7 @@ import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Update;
 
-public interface PatientMapper {
+public interface PatientMapper extends UserMapper {
     @Insert("INSERT INTO patient VALUES (#{id}, #{email}, #{address}, #{phone});")
     void insertPatient(Patient patient);
 
@@ -14,7 +14,4 @@ public interface PatientMapper {
 
     @Delete("DELETE FROM patient WHERE userId = #{id};")
     void removePatient(int id);
-
-    @Delete("DELETE FROM patient;")
-    void deleteAll();
 }

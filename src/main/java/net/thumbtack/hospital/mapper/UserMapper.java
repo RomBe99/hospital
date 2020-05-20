@@ -14,13 +14,10 @@ public interface UserMapper {
     @Delete("DELETE FROM user WHERE id = #{id}")
     void removeUser(int id);
 
-    @Insert("INSERT INTO logged_in_users VALUES(#{sessionId, (SELECT id FROM user WHERE login = #{login} AND password = #{password})});")
+    @Insert("INSERT INTO logged_in_users VALUES(#{sessionId}, (SELECT id FROM user WHERE login = #{login} AND password = #{password}));")
     @Options(useGeneratedKeys = true, keyProperty = "userId")
     int loginUser(@Param("sessionId") String sessionId, @Param("login") String login, @Param("password") String password);
 
     @Delete("DELETE FROM logged_in_users WHERE sessionId = #{sessionId};")
     void logoutUser(String sessionId);
-
-    @Delete("DELETE FROM user;")
-    void deleteAll();
 }

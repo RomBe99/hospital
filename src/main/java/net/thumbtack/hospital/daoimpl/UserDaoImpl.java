@@ -1,6 +1,7 @@
 package net.thumbtack.hospital.daoimpl;
 
 import net.thumbtack.hospital.dao.UserDao;
+import net.thumbtack.hospital.mapper.UserMapper;
 import org.apache.ibatis.session.SqlSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,8 +12,12 @@ public class UserDaoImpl extends BaseDaoImpl implements UserDao {
     private static final Logger LOGGER = LoggerFactory.getLogger(AdminDaoImpl.class);
     private static final String className = UserDaoImpl.class.getSimpleName();
 
+    private UserMapper getUserMapper(SqlSession session) {
+        return session.getMapper(UserMapper.class);
+    }
+
     @Override
-    public int login(String sessionId, String login, String password) {
+    public final int login(String sessionId, String login, String password) {
         LOGGER.debug(className + ": Login user with login = {} and password = {}, session id = {}", login, password, sessionId);
 
         try (SqlSession session = getSession()) {
@@ -29,7 +34,7 @@ public class UserDaoImpl extends BaseDaoImpl implements UserDao {
     }
 
     @Override
-    public void logout(String sessionId) {
+    public final void logout(String sessionId) {
         LOGGER.debug(className + ": Logout user with session id = {}", sessionId);
 
         try (SqlSession session = getSession()) {

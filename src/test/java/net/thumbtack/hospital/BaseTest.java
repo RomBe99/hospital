@@ -15,6 +15,7 @@ public class BaseTest {
     protected CommonDao commonDao = new CommonDaoImpl();
     protected DoctorDao doctorDao = new DoctorDaoImpl();
     protected PatientDao patientDao = new PatientDaoImpl();
+    private final DebugDao debugDao = new DebugDaoImpl();
 
     private static boolean setUpIsDone = false;
 
@@ -33,7 +34,16 @@ public class BaseTest {
 
     @Before
     public void clearDatabase() {
-        commonDao.clear();
+        debugDao.clearUsers();
+        debugDao.clearAdministrators();
+        debugDao.clearDoctors();
+        debugDao.clearPatients();
+        debugDao.clearCommissionDoctors();
+        debugDao.clearLoggedInUsers();
+        debugDao.clearScheduleCells();
+        debugDao.clearTimeCells();
+        debugDao.clearUsers();
+        debugDao.clearMedicalCommissions();
     }
 
     protected Administrator insertAdministrator(String login, String password,

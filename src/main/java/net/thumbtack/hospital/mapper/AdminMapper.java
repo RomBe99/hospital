@@ -1,11 +1,9 @@
 package net.thumbtack.hospital.mapper;
 
 import net.thumbtack.hospital.model.Administrator;
-import org.apache.ibatis.annotations.Delete;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Update;
+import org.apache.ibatis.annotations.*;
 
-public interface AdminMapper {
+public interface AdminMapper extends UserMapper {
     @Insert("INSERT INTO administrator VALUES (#{id}, #{position});")
     void insertAdministrator(Administrator administrator);
 
@@ -14,7 +12,4 @@ public interface AdminMapper {
 
     @Delete("DELETE FROM administrator WHERE userId = #{id};")
     void removeAdministratorById(int id);
-
-    @Delete("DELETE FROM administrator;")
-    void deleteAll();
 }

@@ -15,8 +15,8 @@ public class CommonDaoImpl extends BaseDaoImpl implements CommonDao {
     public int getDoctorSpecialityIdByName(String name) {
         LOGGER.debug(className + ": Get doctor speciality id with name  = {}", name);
 
-        try (SqlSession session = super.getSession()) {
-            return super.getCommonMapper(session).getDoctorSpecialityIdByName(name);
+        try (SqlSession session = getSession()) {
+            return getCommonMapper(session).getDoctorSpecialityIdByName(name);
         } catch (RuntimeException ex) {
             LOGGER.error(className + ": Get doctor speciality id with name  = {}", name, ex);
 
@@ -28,34 +28,12 @@ public class CommonDaoImpl extends BaseDaoImpl implements CommonDao {
     public int getCabinetIdByName(String name) {
         LOGGER.debug(className + ": Get cabinet id with name  = {}", name);
 
-        try (SqlSession session = super.getSession()) {
-            return super.getCommonMapper(session).getCabinetIdByName(name);
+        try (SqlSession session = getSession()) {
+            return getCommonMapper(session).getCabinetIdByName(name);
         } catch (RuntimeException ex) {
             LOGGER.error(className + ": Get cabinet id with name  = {}", name, ex);
 
             throw ex;
-        }
-    }
-
-    @Override
-    public void clear() {
-        LOGGER.debug(className + ": Delete all tables from database");
-
-        try (SqlSession session = super.getSession()) {
-            try {
-                super.getDoctorMapper(session).deleteAll();
-                super.getAdminMapper(session).deleteAll();
-                super.getPatientMapper(session).deleteAll();
-                super.getUserMapper(session).deleteAll();
-
-                session.commit();
-                LOGGER.debug(className + ": All tables deleted from database");
-            } catch (RuntimeException ex) {
-                session.rollback();
-                LOGGER.error(className + ": Can't clear database", ex);
-
-                throw ex;
-            }
         }
     }
 }
