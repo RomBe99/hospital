@@ -22,9 +22,9 @@ CREATE TABLE user
 ) ENGINE = INNODB
   DEFAULT CHARSET = utf8;
 
-CREATE TABLE login_user
+CREATE TABLE logged_in_users
 (
-    sessionId VARCHAR(40) NOT NULL,
+    sessionId VARCHAR(36) NOT NULL,
     userId    INT         NOT NULL,
 
     PRIMARY KEY (sessionId),
@@ -127,7 +127,7 @@ CREATE TABLE medical_commission
 ) ENGINE = INNODB
   DEFAULT CHARSET = utf8;
 
-CREATE TABLE commission_docotor
+CREATE TABLE commission_doctor
 (
     commissionId INT NOT NULL,
     doctorId     INT NOT NULL,
