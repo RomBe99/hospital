@@ -3,6 +3,8 @@ package net.thumbtack.hospital.daoimpl;
 import net.thumbtack.hospital.dao.AdminDao;
 import net.thumbtack.hospital.mapper.AdminMapper;
 import net.thumbtack.hospital.model.Administrator;
+import net.thumbtack.hospital.util.error.PermissionDeniedErrorCodes;
+import net.thumbtack.hospital.util.error.PermissionDeniedException;
 import org.apache.ibatis.session.SqlSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -90,6 +92,19 @@ public class AdminDaoImpl extends UserDaoImpl implements AdminDao {
 
                 throw ex;
             }
+        }
+    }
+
+    @Override
+    public int hasPermissions(String sessionId) {
+        LOGGER.debug(className + ": Checking administrator permissions for session id = {}", sessionId);
+
+        try (SqlSession session = getSession()) {
+            return getAdminMapper(session).hasPermissions(sessionId);
+        } catch (RuntimeException ex) {
+            LOGGER.error(className + ": Can't check administrator permissions for session id = {}", sessionId, ex);
+
+            throw new PermissionDeniedException(PermissionDeniedErrorCodes.PERMISSION_DENIED);
         }
     }
 }

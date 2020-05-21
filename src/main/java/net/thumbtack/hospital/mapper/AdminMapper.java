@@ -12,4 +12,8 @@ public interface AdminMapper extends UserMapper {
 
     @Delete("DELETE FROM administrator WHERE userId = #{id};")
     void removeAdministratorById(int id);
+
+    @Select("SELECT userId FROM administrator WHERE userId = (SELECT userId FROM logged_in_users WHERE sessionId = #{sessionId});")
+    @Options(useGeneratedKeys = true, keyProperty = "userId")
+    int hasPermissions(String sessionId);
 }

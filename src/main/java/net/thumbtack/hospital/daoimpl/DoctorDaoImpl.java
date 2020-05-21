@@ -4,6 +4,8 @@ import net.thumbtack.hospital.mapper.CommonMapper;
 import net.thumbtack.hospital.mapper.DoctorMapper;
 import net.thumbtack.hospital.model.Doctor;
 import net.thumbtack.hospital.dao.DoctorDao;
+import net.thumbtack.hospital.util.error.PermissionDeniedErrorCodes;
+import net.thumbtack.hospital.util.error.PermissionDeniedException;
 import org.apache.ibatis.session.SqlSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -89,6 +91,19 @@ public class DoctorDaoImpl extends UserDaoImpl implements DoctorDao {
             LOGGER.error(className + ": Can't get doctor by id", ex);
 
             throw ex;
+        }
+    }
+
+    @Override
+    public int hasPermissions(String sessionId) {
+        LOGGER.debug(className + ": Checking doctor permissions for session id = {}", sessionId);
+
+        try (SqlSession session = getSession()) {
+            return getDoctorMapper(session).hasPermissions(sessionId);
+        } catch (RuntimeException ex) {
+            LOGGER.error(className + ": Can't check doctor permissions for session id = {}", sessionId, ex);
+
+            throw new PermissionDeniedException(PermissionDeniedErrorCodes.PERMISSION_DENIED);
         }
     }
 }

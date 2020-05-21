@@ -2,6 +2,8 @@ package net.thumbtack.hospital.daoimpl;
 
 import net.thumbtack.hospital.dao.UserDao;
 import net.thumbtack.hospital.mapper.UserMapper;
+import net.thumbtack.hospital.util.error.PermissionDeniedErrorCodes;
+import net.thumbtack.hospital.util.error.PermissionDeniedException;
 import org.apache.ibatis.session.SqlSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,6 +47,19 @@ public class UserDaoImpl extends BaseDaoImpl implements UserDao {
             LOGGER.error(className + ": User with session id = {} can't logout", sessionId, ex);
 
             throw ex;
+        }
+    }
+
+    @Override
+    public int hasPermissions(String sessionId) {
+        LOGGER.debug(className + ": Checking user permissions for session id = {}", sessionId);
+
+        try (SqlSession session = getSession()) {
+            return getUserMapper(session).hasPermissions(sessionId);
+        } catch (RuntimeException ex) {
+            LOGGER.error(className + ": Can't check user permissions for session id = {}", sessionId, ex);
+
+            throw new PermissionDeniedException(PermissionDeniedErrorCodes.PERMISSION_DENIED);
         }
     }
 }

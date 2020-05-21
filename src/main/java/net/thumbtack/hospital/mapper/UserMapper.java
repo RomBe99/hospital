@@ -11,7 +11,7 @@ public interface UserMapper {
     @Update("UPDATE user SET password = #{password}, firstName = #{firstName}, lastName = #{lastName}, patronymic = #{patronymic} WHERE id = #{id};")
     void updateUser(User user);
 
-    @Delete("DELETE FROM user WHERE id = #{id}")
+    @Delete("DELETE FROM user WHERE id = #{id};")
     void removeUser(int id);
 
     @Insert("INSERT INTO logged_in_users VALUES(#{sessionId}, (SELECT id FROM user WHERE login = #{login} AND password = #{password}));")
@@ -20,4 +20,8 @@ public interface UserMapper {
 
     @Delete("DELETE FROM logged_in_users WHERE sessionId = #{sessionId};")
     void logoutUser(String sessionId);
+
+    @Select("SELECT userId FROM logged_in_users WHERE sessionId = #{sessionId};")
+    @Options(useGeneratedKeys = true, keyProperty = "userId")
+    int hasPermissions(String sessionId);
 }

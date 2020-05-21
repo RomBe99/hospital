@@ -1,9 +1,7 @@
 package net.thumbtack.hospital.mapper;
 
 import net.thumbtack.hospital.model.Patient;
-import org.apache.ibatis.annotations.Delete;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Update;
+import org.apache.ibatis.annotations.*;
 
 public interface PatientMapper extends UserMapper {
     @Insert("INSERT INTO patient VALUES (#{id}, #{email}, #{address}, #{phone});")
@@ -14,4 +12,8 @@ public interface PatientMapper extends UserMapper {
 
     @Delete("DELETE FROM patient WHERE userId = #{id};")
     void removePatient(int id);
+
+    @Select("SELECT userId FROM patient WHERE userId = (SELECT userId FROM logged_in_users WHERE sessionId = #{sessionId});")
+    @Options(useGeneratedKeys = true, keyProperty = "userId")
+    int hasPermissions(String sessionId);
 }

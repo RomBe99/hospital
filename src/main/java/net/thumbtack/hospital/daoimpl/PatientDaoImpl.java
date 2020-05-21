@@ -3,6 +3,8 @@ package net.thumbtack.hospital.daoimpl;
 import net.thumbtack.hospital.dao.PatientDao;
 import net.thumbtack.hospital.mapper.PatientMapper;
 import net.thumbtack.hospital.model.Patient;
+import net.thumbtack.hospital.util.error.PermissionDeniedErrorCodes;
+import net.thumbtack.hospital.util.error.PermissionDeniedException;
 import org.apache.ibatis.session.SqlSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -90,6 +92,19 @@ public class PatientDaoImpl extends UserDaoImpl implements PatientDao {
 
                 throw ex;
             }
+        }
+    }
+
+    @Override
+    public int hasPermissions(String sessionId) {
+        LOGGER.debug(className + ": Checking patient permissions for session id = {}", sessionId);
+
+        try (SqlSession session = getSession()) {
+            return getPatientMapper(session).hasPermissions(sessionId);
+        } catch (RuntimeException ex) {
+            LOGGER.error(className + ": Can't check patient permissions for session id = {}", sessionId, ex);
+
+            throw new PermissionDeniedException(PermissionDeniedErrorCodes.PERMISSION_DENIED);
         }
     }
 }
