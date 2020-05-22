@@ -2,13 +2,11 @@ package net.thumbtack.hospital.service;
 
 import net.thumbtack.hospital.dao.AdminDao;
 import net.thumbtack.hospital.dao.DoctorDao;
-import net.thumbtack.hospital.dtorequest.admin.AdminRegistrationDtoRequest;
-import net.thumbtack.hospital.dtorequest.admin.DoctorRegistrationDtoRequest;
-import net.thumbtack.hospital.dtorequest.admin.EditAdminProfileDtoRequest;
-import net.thumbtack.hospital.dtorequest.admin.RemoveDoctorDtoRequest;
+import net.thumbtack.hospital.dtorequest.admin.*;
 import net.thumbtack.hospital.dtoresponse.admin.AdminRegistrationDtoResponse;
 import net.thumbtack.hospital.dtoresponse.admin.DoctorRegistrationDtoResponse;
 import net.thumbtack.hospital.dtoresponse.admin.EditAdminProfileDtoResponse;
+import net.thumbtack.hospital.dtoresponse.admin.EditDoctorScheduleDtoResponse;
 import net.thumbtack.hospital.dtoresponse.other.EmptyDtoResponse;
 import net.thumbtack.hospital.model.Administrator;
 import net.thumbtack.hospital.model.Doctor;
@@ -29,7 +27,9 @@ public class AdministratorService {
         this.doctorDao = doctorDao;
     }
 
-    public AdminRegistrationDtoResponse administratorRegistration(AdminRegistrationDtoRequest request) {
+    public AdminRegistrationDtoResponse administratorRegistration(String sessionId, AdminRegistrationDtoRequest request) {
+        adminDao.hasPermissions(sessionId);
+
         Administrator a =
                 new Administrator(request.getLogin(), request.getPassword(),
                         request.getFirstName(), request.getLastName(), request.getPatronymic(), request.getPosition());
@@ -40,7 +40,9 @@ public class AdministratorService {
                 a.getFirstName(), a.getLastName(), a.getPatronymic(), a.getPosition());
     }
 
-    public DoctorRegistrationDtoResponse doctorRegistration(DoctorRegistrationDtoRequest request) {
+    public DoctorRegistrationDtoResponse doctorRegistration(String sessionId, DoctorRegistrationDtoRequest request) {
+        adminDao.hasPermissions(sessionId);
+
         Doctor d =
                 new Doctor(request.getLogin(), request.getPassword(),
                         request.getFirstName(), request.getLastName(), request.getPatronymic(),
@@ -55,7 +57,9 @@ public class AdministratorService {
                         .collect(Collectors.toList()));
     }
 
-    public EditAdminProfileDtoResponse editAdministratorProfile(int adminId, EditAdminProfileDtoRequest request) {
+    public EditAdminProfileDtoResponse editAdministratorProfile(String sessionId, EditAdminProfileDtoRequest request) {
+        int adminId = adminDao.hasPermissions(sessionId);
+
         Administrator a =
                 new Administrator(adminId, request.getNewPassword(),
                 request.getFirstName(), request.getLastName(), request.getPatronymic(), request.getPosition());
@@ -66,7 +70,15 @@ public class AdministratorService {
                 request.getFirstName(), request.getLastName(), request.getPatronymic(), request.getPosition());
     }
 
-    public EmptyDtoResponse removeDoctor(int doctorId, RemoveDoctorDtoRequest request) {
+    // TODO
+    public EditDoctorScheduleDtoResponse editDoctorSchedule(String sessionId, int doctorId, EditDoctorScheduleDtoRequest request) {
+        adminDao.hasPermissions(sessionId);
+
+        return null;
+    }
+
+    public EmptyDtoResponse removeDoctor(String sessionId, int doctorId, RemoveDoctorDtoRequest request) {
+        adminDao.hasPermissions(sessionId);
         // TODO Что делать с датой увольнения из request?
         doctorDao.removeDoctor(doctorId);
 

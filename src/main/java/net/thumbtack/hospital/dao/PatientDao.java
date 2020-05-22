@@ -2,6 +2,9 @@ package net.thumbtack.hospital.dao;
 
 import net.thumbtack.hospital.model.Patient;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
+
 public interface PatientDao extends UserDao {
     Patient insertPatient(Patient patient);
 
@@ -10,4 +13,10 @@ public interface PatientDao extends UserDao {
     Patient getPatientById(int id);
 
     void removePatient(int id);
+
+    void appointmentToDoctor(int patientId, int doctorId, LocalDate date, LocalTime time);
+
+    void denyMedicalCommission(int patientId, int commissionTicketId);
+
+    void denyTicket(int patientId, int scheduleCellId);
 }

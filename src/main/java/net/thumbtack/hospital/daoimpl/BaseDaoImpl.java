@@ -1,6 +1,6 @@
 package net.thumbtack.hospital.daoimpl;
 
-import net.thumbtack.hospital.mapper.*;
+import net.thumbtack.hospital.mapper.CommonMapper;
 import net.thumbtack.hospital.util.mybatis.MyBatisUtils;
 import org.apache.ibatis.session.SqlSession;
 

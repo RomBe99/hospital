@@ -10,6 +10,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
+
 @Component
 public class PatientDaoImpl extends UserDaoImpl implements PatientDao {
     private static final Logger LOGGER = LoggerFactory.getLogger(PatientDaoImpl.class);
@@ -89,6 +92,68 @@ public class PatientDaoImpl extends UserDaoImpl implements PatientDao {
             } catch (RuntimeException ex) {
                 session.rollback();
                 LOGGER.error(className + ": Can't remove patient with id = {}", id, ex);
+
+                throw ex;
+            }
+        }
+    }
+
+    @Override
+    public void appointmentToDoctor(int patientId, int doctorId, LocalDate date, LocalTime time) {
+        LOGGER.debug(className + ": Patient = {} appointment to doctor = {} on date = {}, time = {}",
+                patientId, doctorId, date, time);
+
+        try (SqlSession session = getSession()) {
+            try {
+                getPatientMapper(session).appointmentToDoctor(patientId, doctorId, date, time);
+
+                session.commit();
+                LOGGER.debug(className + ": Patient = {} successfully appointment to doctor = {} on date = {}, time = {}",
+                        patientId, doctorId, date, time);
+            } catch (RuntimeException ex) {
+                session.rollback();
+                LOGGER.error(className + ": Patient = {} can't appointment to doctor = {} on date = {}, time = {}",
+                        patientId, doctorId, date, time);
+
+                throw ex;
+            }
+        }
+    }
+
+    @Override
+    public void denyMedicalCommission(int patientId, int commissionTicketId) {
+        LOGGER.debug(className + ": Patient = {} deny ticket to commission = {}", patientId, commissionTicketId);
+
+        try (SqlSession session = getSession()) {
+            try {
+                getPatientMapper(session).denyMedicalCommission(patientId, commissionTicketId);
+
+                session.commit();
+                LOGGER.debug(className + ": Patient = {} successfully deny ticket to commission = {}", patientId, commissionTicketId);
+            } catch (RuntimeException ex) {
+                session.rollback();
+                LOGGER.error(className + ": Patient = {} can't deny ticket to commission = {}", patientId, commissionTicketId, ex);
+
+                throw ex;
+            }
+        }
+    }
+
+    @Override
+    public void denyTicket(int patientId, int scheduleCellId) {
+        LOGGER.debug(className + ": Patient = {} deny ticket to appointment with scheduleCellId = {}", patientId, scheduleCellId);
+
+        try (SqlSession session = getSession()) {
+            try {
+                getPatientMapper(session).denyTicket(patientId, scheduleCellId);
+
+                session.commit();
+                LOGGER.debug(className + ": Patient = {} successfully deny ticket to appointment with scheduleCellId = {}",
+                        patientId, scheduleCellId);
+            } catch (RuntimeException ex) {
+                session.rollback();
+                LOGGER.error(className + ": Patient = {} can't deny ticket to appointment with scheduleCellId = {}",
+                        patientId, scheduleCellId, ex);
 
                 throw ex;
             }

@@ -1,22 +1,28 @@
 package net.thumbtack.hospital.controller;
 
 import net.thumbtack.hospital.dtorequest.admin.*;
+import net.thumbtack.hospital.dtoresponse.admin.AdminRegistrationDtoResponse;
+import net.thumbtack.hospital.dtoresponse.admin.DoctorRegistrationDtoResponse;
+import net.thumbtack.hospital.dtoresponse.admin.EditAdminProfileDtoResponse;
+import net.thumbtack.hospital.dtoresponse.admin.EditDoctorScheduleDtoResponse;
+import net.thumbtack.hospital.dtoresponse.other.EmptyDtoResponse;
 import net.thumbtack.hospital.service.AdministratorService;
+import net.thumbtack.hospital.util.cookie.CookieFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
-@RestController
+@RestController("AdministratorController")
 @RequestMapping("/api")
 public class AdministratorController {
-    private static final String administratorRegistrationUrl = "admins";
-    private static final String doctorRegistrationUrl = "doctors";
-    private static final String editAdministratorProfileUrl = "admins";
-    private static final String editDoctorScheduleUrl = "doctors/{doctorId}";
-    private static final String removeDoctorUrl = "doctors/{doctorId}";
+    public static final String administratorRegistrationUrl = "admins";
+    public static final String doctorRegistrationUrl = "doctors";
+    public static final String editAdministratorProfileUrl = "admins";
+    public static final String editDoctorScheduleUrl = "doctors/{doctorId}";
+    public static final String removeDoctorUrl = "doctors/{doctorId}";
 
     private final AdministratorService administratorService;
 
@@ -27,37 +33,48 @@ public class AdministratorController {
 
     @PostMapping(value = administratorRegistrationUrl,
             produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> administratorRegistration(@CookieValue(value = "JAVASESSIONID") int sessionId,
-                                                            @Valid @RequestBody AdminRegistrationDtoRequest request) {
-        return null;
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public AdminRegistrationDtoResponse administratorRegistration(@CookieValue(value = CookieFactory.JAVA_SESSION_ID) String sessionId,
+                                                                  @Valid @RequestBody AdminRegistrationDtoRequest request) {
+        return administratorService.administratorRegistration(sessionId, request);
     }
 
     @PostMapping(value = doctorRegistrationUrl,
             produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> doctorRegistration(@CookieValue(value = "JAVASESSIONID") int sessionId,
-                                                     @Valid @RequestBody DoctorRegistrationDtoRequest request) {
-        return null;
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public DoctorRegistrationDtoResponse doctorRegistration(@CookieValue(value = CookieFactory.JAVA_SESSION_ID) String sessionId,
+                                                            @Valid @RequestBody DoctorRegistrationDtoRequest request) {
+        return administratorService.doctorRegistration(sessionId, request);
     }
 
     @PutMapping(value = editAdministratorProfileUrl,
             produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> editAdministratorProfile(@CookieValue(value = "JAVASESSIONID") int sessionId,
-                                                           @Valid @RequestBody EditAdminProfileDtoRequest request) {
-        return null;
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public EditAdminProfileDtoResponse editAdministratorProfile(@CookieValue(value = CookieFactory.JAVA_SESSION_ID) String sessionId,
+                                                                @Valid @RequestBody EditAdminProfileDtoRequest request) {
+        return administratorService.editAdministratorProfile(sessionId, request);
     }
 
     @PutMapping(value = editDoctorScheduleUrl,
             produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> editDoctorSchedule(@PathVariable int doctorId,
-                                                     @Valid @RequestBody EditDoctorScheduleDtoRequest request) {
-        return null;
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public EditDoctorScheduleDtoResponse editDoctorSchedule(@CookieValue(value = CookieFactory.JAVA_SESSION_ID) String sessionId,
+                                                            @PathVariable int doctorId,
+                                                            @Valid @RequestBody EditDoctorScheduleDtoRequest request) {
+        return administratorService.editDoctorSchedule(sessionId, doctorId, request);
     }
 
     @DeleteMapping(value = removeDoctorUrl,
             produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> removeDoctor(@CookieValue(value = "JAVASESSIONID") int sessionId,
-                                               @PathVariable int doctorId,
-                                               @Valid @RequestBody RemoveDoctorDtoRequest request) {
-        return null;
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public EmptyDtoResponse removeDoctor(@CookieValue(value = CookieFactory.JAVA_SESSION_ID) String sessionId,
+                                         @PathVariable int doctorId,
+                                         @Valid @RequestBody RemoveDoctorDtoRequest request) {
+        return administratorService.removeDoctor(sessionId, doctorId, request);
     }
 }
