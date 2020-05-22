@@ -95,8 +95,8 @@ CREATE TABLE schedule_cell
     date     DATE NOT NULL,
 
     PRIMARY KEY (id),
-    FOREIGN KEY (doctorId) REFERENCES doctor (userId) ON DELETE CASCADE,
-    KEY date (date)
+    UNIQUE KEY (doctorId, date),
+    FOREIGN KEY (doctorId) REFERENCES doctor (userId) ON DELETE CASCADE
 ) ENGINE = INNODB
   DEFAULT CHARSET = utf8;
 
@@ -108,9 +108,9 @@ CREATE TABLE time_cell
     duration       INT  NOT NULL,
 
     PRIMARY KEY (ticketTime, scheduleCellId),
+    UNIQUE KEY (scheduleCellId, patientId),
     FOREIGN KEY (scheduleCellId) REFERENCES schedule_cell (id) ON DELETE CASCADE,
-    FOREIGN KEY (patientId) REFERENCES patient (userId) ON DELETE SET NULL,
-    KEY ticketTime (ticketTime)
+    FOREIGN KEY (patientId) REFERENCES patient (userId) ON DELETE SET NULL
 ) ENGINE = INNODB
   DEFAULT CHARSET = utf8;
 
