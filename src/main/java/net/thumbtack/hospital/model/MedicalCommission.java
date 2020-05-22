@@ -80,19 +80,19 @@ public class MedicalCommission {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (!(o instanceof MedicalCommission)) return false;
         MedicalCommission that = (MedicalCommission) o;
-        return id == that.id &&
-                patientId == that.patientId &&
-                duration == that.duration &&
-                Objects.equals(date, that.date) &&
-                Objects.equals(time, that.time) &&
-                Objects.equals(doctorIds, that.doctorIds);
+        return getId() == that.getId() &&
+                getPatientId() == that.getPatientId() &&
+                getDuration() == that.getDuration() &&
+                Objects.equals(getDate(), that.getDate()) &&
+                Objects.equals(getTime(), that.getTime()) &&
+                Objects.equals(getDoctorIds(), that.getDoctorIds());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, date, time, patientId, duration, doctorIds);
+        return Objects.hash(getId(), getDate(), getTime(), getPatientId(), getDuration(), getDoctorIds());
     }
 
     @Override

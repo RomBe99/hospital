@@ -10,6 +10,9 @@ public class AllTicketsDtoResponse {
         setTickets(tickets);
     }
 
+    public AllTicketsDtoResponse() {
+    }
+
     public void setTickets(List<TicketDtoResponse> tickets) {
         this.tickets = tickets;
     }
