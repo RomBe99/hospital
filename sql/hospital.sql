@@ -120,6 +120,7 @@ CREATE TABLE medical_commission
     date      DATE,
     time      TIME,
     patientId INT,
+    duration  INT,
 
     PRIMARY KEY (id),
     UNIQUE KEY (date, time, patientId),

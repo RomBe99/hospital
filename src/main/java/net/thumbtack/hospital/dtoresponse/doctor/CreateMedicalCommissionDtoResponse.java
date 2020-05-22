@@ -5,18 +5,18 @@ import java.util.Objects;
 
 public class CreateMedicalCommissionDtoResponse {
     private String ticket;
-    private String patientId;
+    private int patientId;
     private List<Integer> doctorIds;
     private String room;
     private String date;
     private String time;
-    private String duration;
+    private int duration;
 
     public CreateMedicalCommissionDtoResponse() {
     }
 
-    public CreateMedicalCommissionDtoResponse(String ticket, String patientId, List<Integer> doctorIds,
-                                              String room, String date, String time, String duration) {
+    public CreateMedicalCommissionDtoResponse(String ticket, int patientId, List<Integer> doctorIds,
+                                              String room, String date, String time, int duration) {
         setTicket(ticket);
         setPatientId(patientId);
         setDoctorIds(doctorIds);
@@ -30,7 +30,7 @@ public class CreateMedicalCommissionDtoResponse {
         this.ticket = ticket;
     }
 
-    public void setPatientId(String patientId) {
+    public void setPatientId(int patientId) {
         this.patientId = patientId;
     }
 
@@ -50,7 +50,7 @@ public class CreateMedicalCommissionDtoResponse {
         this.time = time;
     }
 
-    public void setDuration(String duration) {
+    public void setDuration(int duration) {
         this.duration = duration;
     }
 
@@ -58,7 +58,7 @@ public class CreateMedicalCommissionDtoResponse {
         return ticket;
     }
 
-    public String getPatientId() {
+    public int getPatientId() {
         return patientId;
     }
 
@@ -78,7 +78,7 @@ public class CreateMedicalCommissionDtoResponse {
         return time;
     }
 
-    public String getDuration() {
+    public int getDuration() {
         return duration;
     }
 
@@ -87,13 +87,13 @@ public class CreateMedicalCommissionDtoResponse {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         CreateMedicalCommissionDtoResponse that = (CreateMedicalCommissionDtoResponse) o;
-        return Objects.equals(ticket, that.ticket) &&
-                Objects.equals(patientId, that.patientId) &&
+        return patientId == that.patientId &&
+                duration == that.duration &&
+                Objects.equals(ticket, that.ticket) &&
                 Objects.equals(doctorIds, that.doctorIds) &&
                 Objects.equals(room, that.room) &&
                 Objects.equals(date, that.date) &&
-                Objects.equals(time, that.time) &&
-                Objects.equals(duration, that.duration);
+                Objects.equals(time, that.time);
     }
 
     @Override
@@ -105,12 +105,12 @@ public class CreateMedicalCommissionDtoResponse {
     public String toString() {
         return "CreateMedicalCommissionDtoResponse{" +
                 "ticket='" + ticket + '\'' +
-                ", patientId='" + patientId + '\'' +
+                ", patientId=" + patientId +
                 ", doctorIds=" + doctorIds +
                 ", room='" + room + '\'' +
                 ", date='" + date + '\'' +
                 ", time='" + time + '\'' +
-                ", duration='" + duration + '\'' +
+                ", duration=" + duration +
                 '}';
     }
 }
