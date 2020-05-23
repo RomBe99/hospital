@@ -2,6 +2,20 @@ DROP DATABASE IF EXISTS hospital;
 CREATE DATABASE hospital;
 USE hospital;
 
+CREATE TABLE user_type
+(
+    id   INT         NOT NULL AUTO_INCREMENT,
+    name VARCHAR(50) NOT NULL,
+
+    PRIMARY KEY (id),
+    UNIQUE KEY (name)
+) ENGINE = INNODB
+  DEFAULT CHARSET = utf8;
+
+INSERT INTO user_type VALUES (0, 'Administrator');
+INSERT INTO user_type VALUES (0, 'Doctor');
+INSERT INTO user_type VALUES (0, 'Patient');
+
 CREATE TABLE user
 (
     id         INT         NOT NULL AUTO_INCREMENT,
@@ -12,9 +26,11 @@ CREATE TABLE user
     firstName  VARCHAR(30) NOT NULL,
     lastName   VARCHAR(30) NOT NULL,
     patronymic VARCHAR(30) DEFAULT NULL,
+    userTypeId INT         DEFAULT NULL,
 
     PRIMARY KEY (id),
     UNIQUE KEY (login),
+    FOREIGN KEY (userTypeId) REFERENCES user_type (id) ON DELETE SET NULL,
     KEY firstName (firstName),
     KEY lastName (lastName),
     KEY patronymic (patronymic),
@@ -170,6 +186,6 @@ VALUES (0, '407');
 # Insert root admin
 
 INSERT INTO user
-VALUES (0, 'admin', 'admin', 'Roman', 'Belinsky', NULL);
+VALUES (0, 'admin', 'admin', 'Roman', 'Belinsky', NULL, (SELECT id FROM user_type WHERE name = 'Administrator'));
 INSERT INTO administrator
 VALUES (last_insert_id(), 'Root admin');

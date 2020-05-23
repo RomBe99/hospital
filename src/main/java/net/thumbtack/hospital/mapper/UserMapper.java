@@ -4,9 +4,9 @@ import net.thumbtack.hospital.model.User;
 import org.apache.ibatis.annotations.*;
 
 public interface UserMapper {
-    @Insert("INSERT INTO user VALUES (#{id}, #{login}, #{password}, #{firstName}, #{lastName}, #{patronymic});")
-    @Options(useGeneratedKeys = true, keyProperty = "id")
-    int insertUser(User user);
+    @Insert("INSERT INTO user VALUES (#{user.id}, #{user.login}, #{user.password}, #{user.firstName}, #{user.lastName}, #{user.patronymic}, #{userTypeId});")
+    @Options(useGeneratedKeys = true, keyProperty = "user.id")
+    int insertUser(@Param("user") User user, @Param("userTypeId") int userTypeId);
 
     @Update("UPDATE user SET password = #{password}, firstName = #{firstName}, lastName = #{lastName}, patronymic = #{patronymic} WHERE id = #{id};")
     void updateUser(User user);

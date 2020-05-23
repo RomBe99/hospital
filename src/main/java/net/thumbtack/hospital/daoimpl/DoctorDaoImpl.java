@@ -3,6 +3,7 @@ package net.thumbtack.hospital.daoimpl;
 import net.thumbtack.hospital.dao.DoctorDao;
 import net.thumbtack.hospital.mapper.CommonMapper;
 import net.thumbtack.hospital.mapper.DoctorMapper;
+import net.thumbtack.hospital.mapper.UserTypes;
 import net.thumbtack.hospital.model.Doctor;
 import net.thumbtack.hospital.model.MedicalCommission;
 import net.thumbtack.hospital.util.error.PermissionDeniedErrorCodes;
@@ -30,11 +31,12 @@ public class DoctorDaoImpl extends UserDaoImpl implements DoctorDao {
         try (SqlSession session = getSession()) {
             try {
                 CommonMapper commonMapper = getCommonMapper(session);
+                int userTypeId = getCommonMapper(session).getUserTypeId(UserTypes.DOCTOR.getType());
                 int cabinetId = commonMapper.getCabinetIdByName(doctor.getCabinet());
                 int specialityId = commonMapper.getDoctorSpecialityIdByName(doctor.getSpecialty());
 
                 DoctorMapper doctorMapper = getDoctorMapper(session);
-                doctorMapper.insertUser(doctor);
+                doctorMapper.insertUser(doctor, userTypeId);
                 doctorMapper.insertDoctor(doctor.getId(), cabinetId, specialityId);
 
                 session.commit();
