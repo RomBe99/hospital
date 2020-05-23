@@ -12,6 +12,7 @@ import net.thumbtack.hospital.dtoresponse.patient.ticket.AllTicketsDtoResponse;
 import net.thumbtack.hospital.service.PatientService;
 import net.thumbtack.hospital.service.UserService;
 import net.thumbtack.hospital.util.cookie.CookieFactory;
+import net.thumbtack.hospital.util.error.PermissionDeniedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -63,7 +64,7 @@ public class PatientController {
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public EditPatientProfileDtoResponse editPatientProfile(@CookieValue(value = CookieFactory.JAVA_SESSION_ID) String sessionId,
-                                                            @Valid @RequestBody EditPatientProfileDtoRequest request) {
+                                                            @Valid @RequestBody EditPatientProfileDtoRequest request) throws PermissionDeniedException {
         return patientService.editPatientProfile(sessionId, request);
     }
 
@@ -72,7 +73,7 @@ public class PatientController {
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public AppointmentToDoctorDtoResponse appointmentToDoctor(@CookieValue(value = CookieFactory.JAVA_SESSION_ID) String sessionId,
-                                                              @Valid @RequestBody AppointmentToDoctorDtoRequest request) {
+                                                              @Valid @RequestBody AppointmentToDoctorDtoRequest request) throws PermissionDeniedException {
         return patientService.appointmentToDoctor(sessionId, request);
     }
 
@@ -81,7 +82,7 @@ public class PatientController {
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public EmptyDtoResponse denyMedicalCommission(@CookieValue(value = CookieFactory.JAVA_SESSION_ID) String sessionId,
-                                                  @PathVariable int commissionTicketId) {
+                                                  @PathVariable int commissionTicketId) throws PermissionDeniedException {
         patientService.denyMedicalCommission(sessionId, commissionTicketId);
 
         return new EmptyDtoResponse();
@@ -92,7 +93,7 @@ public class PatientController {
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public EmptyDtoResponse denyTicket(@CookieValue(value = CookieFactory.JAVA_SESSION_ID) String sessionId,
-                                       @PathVariable String ticketNumber) {
+                                       @PathVariable String ticketNumber) throws PermissionDeniedException {
         patientService.denyTicket(sessionId, ticketNumber);
 
         return new EmptyDtoResponse();
@@ -102,7 +103,7 @@ public class PatientController {
             produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public AllTicketsDtoResponse getTickets(@CookieValue(value = CookieFactory.JAVA_SESSION_ID) String sessionId) {
+    public AllTicketsDtoResponse getTickets(@CookieValue(value = CookieFactory.JAVA_SESSION_ID) String sessionId) throws PermissionDeniedException {
         return patientService.getTickets(sessionId);
     }
 }

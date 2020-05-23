@@ -11,6 +11,7 @@ import net.thumbtack.hospital.dtoresponse.other.EmptyDtoResponse;
 import net.thumbtack.hospital.model.Administrator;
 import net.thumbtack.hospital.model.Doctor;
 import net.thumbtack.hospital.util.DtoAdapters;
+import net.thumbtack.hospital.util.error.PermissionDeniedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,7 +28,7 @@ public class AdministratorService {
         this.doctorDao = doctorDao;
     }
 
-    public AdminRegistrationDtoResponse administratorRegistration(String sessionId, AdminRegistrationDtoRequest request) {
+    public AdminRegistrationDtoResponse administratorRegistration(String sessionId, AdminRegistrationDtoRequest request) throws PermissionDeniedException {
         adminDao.hasPermissions(sessionId);
 
         Administrator admin =
@@ -40,7 +41,7 @@ public class AdministratorService {
                 admin.getFirstName(), admin.getLastName(), admin.getPatronymic(), admin.getPosition());
     }
 
-    public DoctorRegistrationDtoResponse doctorRegistration(String sessionId, DoctorRegistrationDtoRequest request) {
+    public DoctorRegistrationDtoResponse doctorRegistration(String sessionId, DoctorRegistrationDtoRequest request) throws PermissionDeniedException {
         adminDao.hasPermissions(sessionId);
 
         Doctor doctor =
@@ -57,7 +58,7 @@ public class AdministratorService {
                         .collect(Collectors.toList()));
     }
 
-    public EditAdminProfileDtoResponse editAdministratorProfile(String sessionId, EditAdminProfileDtoRequest request) {
+    public EditAdminProfileDtoResponse editAdministratorProfile(String sessionId, EditAdminProfileDtoRequest request) throws PermissionDeniedException {
         int adminId = adminDao.hasPermissions(sessionId);
 
         Administrator admin =
@@ -71,13 +72,13 @@ public class AdministratorService {
     }
 
     // TODO
-    public EditDoctorScheduleDtoResponse editDoctorSchedule(String sessionId, int doctorId, EditDoctorScheduleDtoRequest request) {
+    public EditDoctorScheduleDtoResponse editDoctorSchedule(String sessionId, int doctorId, EditDoctorScheduleDtoRequest request) throws PermissionDeniedException {
         adminDao.hasPermissions(sessionId);
 
         return null;
     }
 
-    public EmptyDtoResponse removeDoctor(String sessionId, int doctorId, RemoveDoctorDtoRequest request) {
+    public EmptyDtoResponse removeDoctor(String sessionId, int doctorId, RemoveDoctorDtoRequest request) throws PermissionDeniedException {
         adminDao.hasPermissions(sessionId);
         doctorDao.removeDoctor(doctorId);
 

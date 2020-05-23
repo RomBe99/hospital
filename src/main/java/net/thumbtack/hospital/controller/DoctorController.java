@@ -4,6 +4,7 @@ import net.thumbtack.hospital.dtorequest.doctor.CreateMedicalCommissionDtoReques
 import net.thumbtack.hospital.dtoresponse.doctor.CreateMedicalCommissionDtoResponse;
 import net.thumbtack.hospital.service.DoctorService;
 import net.thumbtack.hospital.util.cookie.CookieFactory;
+import net.thumbtack.hospital.util.error.PermissionDeniedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -28,7 +29,7 @@ public class DoctorController {
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public CreateMedicalCommissionDtoResponse createMedicalCommission(@CookieValue(value = CookieFactory.JAVA_SESSION_ID) String sessionId,
-                                                                      @Valid @RequestBody CreateMedicalCommissionDtoRequest request) {
+                                                                      @Valid @RequestBody CreateMedicalCommissionDtoRequest request) throws PermissionDeniedException {
         return doctorService.createMedicalCommission(sessionId, request);
     }
 }

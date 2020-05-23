@@ -1,6 +1,6 @@
 package net.thumbtack.hospital.util.error;
 
-public class PermissionDeniedException extends RuntimeException {
+public class PermissionDeniedException extends Exception {
     private final PermissionDeniedErrorCodes errorCode;
 
     public PermissionDeniedException(PermissionDeniedErrorCodes errorCode) {

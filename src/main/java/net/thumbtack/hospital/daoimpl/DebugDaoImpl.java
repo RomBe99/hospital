@@ -5,7 +5,9 @@ import net.thumbtack.hospital.mapper.DebugMapper;
 import org.apache.ibatis.session.SqlSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
+@Component("DebugDaoImpl")
 public class DebugDaoImpl extends BaseDaoImpl implements DebugDao {
     private static final Logger LOGGER = LoggerFactory.getLogger(DebugDaoImpl.class);
     private static final String className = DebugDaoImpl.class.getSimpleName();

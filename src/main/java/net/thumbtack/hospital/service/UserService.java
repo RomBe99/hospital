@@ -8,6 +8,8 @@ import net.thumbtack.hospital.dtoresponse.other.abstractresponse.LoginUserDtoRes
 import net.thumbtack.hospital.dtoresponse.other.abstractresponse.UserInformationDtoResponse;
 import net.thumbtack.hospital.dtoresponse.patient.PatientInformationDtoResponse;
 import net.thumbtack.hospital.model.Patient;
+import net.thumbtack.hospital.util.error.PermissionDeniedErrorCodes;
+import net.thumbtack.hospital.util.error.PermissionDeniedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -18,7 +20,7 @@ public class UserService {
     private final UserDao userDao;
 
     @Autowired
-    public UserService(PatientDao patientDao, @Qualifier("userDaoImpl") UserDao userDao) {
+    public UserService(PatientDao patientDao, @Qualifier("UserDaoImpl") UserDao userDao) {
         this.patientDao = patientDao;
         this.userDao = userDao;
     }
@@ -39,13 +41,17 @@ public class UserService {
         return null;
     }
 
-    // Вынести в другой сервис объеденяющий в себе полномочия администраторов и докторов?
-    // TODO Что в данном случае делать с sessionId?
-    public PatientInformationDtoResponse getPatientInformation(String sessionId, int patientId) {
-        Patient patient = patientDao.getPatientById(patientId);
+    public PatientInformationDtoResponse getPatientInformation(String sessionId, int patientId) throws PermissionDeniedException {
+        try {
+            patientDao.hasPermissions(sessionId);
 
-        return new PatientInformationDtoResponse(patientId,
-                patient.getFirstName(), patient.getLastName(), patient.getPatronymic(),
-                patient.getEmail(), patient.getAddress(), patient.getPhone());
+            throw new PermissionDeniedException(PermissionDeniedErrorCodes.PERMISSION_DENIED);
+        } catch (RuntimeException ex) {
+            Patient patient = patientDao.getPatientById(patientId);
+
+            return new PatientInformationDtoResponse(patientId,
+                    patient.getFirstName(), patient.getLastName(), patient.getPatronymic(),
+                    patient.getEmail(), patient.getAddress(), patient.getPhone());
+        }
     }
 }

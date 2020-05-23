@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-@Component
+@Component("PatientDaoImpl")
 public class PatientDaoImpl extends UserDaoImpl implements PatientDao {
     private static final Logger LOGGER = LoggerFactory.getLogger(PatientDaoImpl.class);
     private static final String className = PatientDaoImpl.class.getSimpleName();
@@ -162,7 +162,7 @@ public class PatientDaoImpl extends UserDaoImpl implements PatientDao {
     }
 
     @Override
-    public int hasPermissions(String sessionId) {
+    public int hasPermissions(String sessionId) throws PermissionDeniedException {
         LOGGER.debug(className + ": Checking patient permissions for session id = {}", sessionId);
 
         try (SqlSession session = getSession()) {

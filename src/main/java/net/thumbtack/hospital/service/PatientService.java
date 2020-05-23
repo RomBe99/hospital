@@ -13,6 +13,7 @@ import net.thumbtack.hospital.model.Doctor;
 import net.thumbtack.hospital.model.Patient;
 import net.thumbtack.hospital.model.TicketToDoctor;
 import net.thumbtack.hospital.util.TicketToDoctorBuilder;
+import net.thumbtack.hospital.util.error.PermissionDeniedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -43,7 +44,7 @@ public class PatientService {
                 patient.getEmail(), patient.getAddress(), patient.getPhone());
     }
 
-    public EditPatientProfileDtoResponse editPatientProfile(String sessionId, EditPatientProfileDtoRequest request) {
+    public EditPatientProfileDtoResponse editPatientProfile(String sessionId, EditPatientProfileDtoRequest request) throws PermissionDeniedException {
         int patientId = patientDao.hasPermissions(sessionId);
 
         Patient patient =
@@ -57,7 +58,7 @@ public class PatientService {
                 request.getEmail(), request.getAddress(), request.getPhone(), request.getNewPassword());
     }
 
-    public AppointmentToDoctorDtoResponse appointmentToDoctor(String sessionId, AppointmentToDoctorDtoRequest request) {
+    public AppointmentToDoctorDtoResponse appointmentToDoctor(String sessionId, AppointmentToDoctorDtoRequest request) throws PermissionDeniedException {
         int patientId = patientDao.hasPermissions(sessionId);
 
         Doctor doctor = doctorDao.getDoctorById(request.getDoctorId());
@@ -77,13 +78,13 @@ public class PatientService {
                 request.getDate(), request.getTime());
     }
 
-    public void denyMedicalCommission(String sessionId, int commissionTicketId) {
+    public void denyMedicalCommission(String sessionId, int commissionTicketId) throws PermissionDeniedException {
         int patientId = patientDao.hasPermissions(sessionId);
 
         patientDao.denyMedicalCommission(patientId, commissionTicketId);
     }
 
-    public void denyTicket(String sessionId, String ticketNumber) {
+    public void denyTicket(String sessionId, String ticketNumber) throws PermissionDeniedException {
         int patientId = patientDao.hasPermissions(sessionId);
 
         patientDao.denyTicket(patientId,
@@ -92,7 +93,7 @@ public class PatientService {
                 TicketToDoctorBuilder.getTimeFromTicketNumber(ticketNumber));
     }
 
-    public AllTicketsDtoResponse getTickets(String sessionId) {
+    public AllTicketsDtoResponse getTickets(String sessionId) throws PermissionDeniedException {
         int patientId = patientDao.hasPermissions(sessionId);
 
         // TODO

@@ -9,6 +9,7 @@ import net.thumbtack.hospital.dtoresponse.patient.PatientInformationDtoResponse;
 import net.thumbtack.hospital.dtoresponse.user.GetAllDoctorsDtoResponse;
 import net.thumbtack.hospital.service.UserService;
 import net.thumbtack.hospital.util.cookie.CookieFactory;
+import net.thumbtack.hospital.util.error.PermissionDeniedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -97,7 +98,7 @@ public class UserController {
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public PatientInformationDtoResponse getPatientInformation(@CookieValue(value = CookieFactory.JAVA_SESSION_ID) String sessionId,
-                                                               @PathVariable int patientId) {
+                                                               @PathVariable int patientId) throws PermissionDeniedException {
         return userService.getPatientInformation(sessionId, patientId);
     }
 }

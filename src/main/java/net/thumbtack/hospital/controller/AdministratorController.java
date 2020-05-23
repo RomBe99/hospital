@@ -8,6 +8,7 @@ import net.thumbtack.hospital.dtoresponse.admin.EditDoctorScheduleDtoResponse;
 import net.thumbtack.hospital.dtoresponse.other.EmptyDtoResponse;
 import net.thumbtack.hospital.service.AdministratorService;
 import net.thumbtack.hospital.util.cookie.CookieFactory;
+import net.thumbtack.hospital.util.error.PermissionDeniedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -36,7 +37,7 @@ public class AdministratorController {
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public AdminRegistrationDtoResponse administratorRegistration(@CookieValue(value = CookieFactory.JAVA_SESSION_ID) String sessionId,
-                                                                  @Valid @RequestBody AdminRegistrationDtoRequest request) {
+                                                                  @Valid @RequestBody AdminRegistrationDtoRequest request) throws PermissionDeniedException {
         return administratorService.administratorRegistration(sessionId, request);
     }
 
@@ -45,7 +46,7 @@ public class AdministratorController {
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public DoctorRegistrationDtoResponse doctorRegistration(@CookieValue(value = CookieFactory.JAVA_SESSION_ID) String sessionId,
-                                                            @Valid @RequestBody DoctorRegistrationDtoRequest request) {
+                                                            @Valid @RequestBody DoctorRegistrationDtoRequest request) throws PermissionDeniedException {
         return administratorService.doctorRegistration(sessionId, request);
     }
 
@@ -54,7 +55,7 @@ public class AdministratorController {
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public EditAdminProfileDtoResponse editAdministratorProfile(@CookieValue(value = CookieFactory.JAVA_SESSION_ID) String sessionId,
-                                                                @Valid @RequestBody EditAdminProfileDtoRequest request) {
+                                                                @Valid @RequestBody EditAdminProfileDtoRequest request) throws PermissionDeniedException {
         return administratorService.editAdministratorProfile(sessionId, request);
     }
 
@@ -64,7 +65,7 @@ public class AdministratorController {
     @ResponseBody
     public EditDoctorScheduleDtoResponse editDoctorSchedule(@CookieValue(value = CookieFactory.JAVA_SESSION_ID) String sessionId,
                                                             @PathVariable int doctorId,
-                                                            @Valid @RequestBody EditDoctorScheduleDtoRequest request) {
+                                                            @Valid @RequestBody EditDoctorScheduleDtoRequest request) throws PermissionDeniedException {
         return administratorService.editDoctorSchedule(sessionId, doctorId, request);
     }
 
@@ -74,7 +75,7 @@ public class AdministratorController {
     @ResponseBody
     public EmptyDtoResponse removeDoctor(@CookieValue(value = CookieFactory.JAVA_SESSION_ID) String sessionId,
                                          @PathVariable int doctorId,
-                                         @Valid @RequestBody RemoveDoctorDtoRequest request) {
+                                         @Valid @RequestBody RemoveDoctorDtoRequest request) throws PermissionDeniedException {
         return administratorService.removeDoctor(sessionId, doctorId, request);
     }
 }

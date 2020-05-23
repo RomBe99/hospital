@@ -3,7 +3,9 @@ package net.thumbtack.hospital.daoimpl;
 import net.thumbtack.hospital.mapper.CommonMapper;
 import net.thumbtack.hospital.util.mybatis.MyBatisUtils;
 import org.apache.ibatis.session.SqlSession;
+import org.springframework.stereotype.Component;
 
+@Component("BaseDaoImpl")
 public class BaseDaoImpl {
     public SqlSession getSession() {
         return MyBatisUtils.getSqlSessionFactory().openSession();

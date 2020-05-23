@@ -10,7 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
-@Component
+@Component("AdminDaoImpl")
 public class AdminDaoImpl extends UserDaoImpl implements AdminDao {
     private static final Logger LOGGER = LoggerFactory.getLogger(AdminDaoImpl.class);
     private static final String className = AdminDaoImpl.class.getSimpleName();
@@ -96,7 +96,7 @@ public class AdminDaoImpl extends UserDaoImpl implements AdminDao {
     }
 
     @Override
-    public int hasPermissions(String sessionId) {
+    public int hasPermissions(String sessionId) throws PermissionDeniedException {
         LOGGER.debug(className + ": Checking administrator permissions for session id = {}", sessionId);
 
         try (SqlSession session = getSession()) {

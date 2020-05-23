@@ -1,9 +1,9 @@
 package net.thumbtack.hospital.daoimpl;
 
+import net.thumbtack.hospital.dao.DoctorDao;
 import net.thumbtack.hospital.mapper.CommonMapper;
 import net.thumbtack.hospital.mapper.DoctorMapper;
 import net.thumbtack.hospital.model.Doctor;
-import net.thumbtack.hospital.dao.DoctorDao;
 import net.thumbtack.hospital.model.MedicalCommission;
 import net.thumbtack.hospital.util.error.PermissionDeniedErrorCodes;
 import net.thumbtack.hospital.util.error.PermissionDeniedException;
@@ -12,11 +12,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.List;
 
-@Component
+@Component("DoctorDaoImpl")
 public class DoctorDaoImpl extends UserDaoImpl implements DoctorDao {
     private static final Logger LOGGER = LoggerFactory.getLogger(DoctorDaoImpl.class);
     private static final String className = DoctorDaoImpl.class.getSimpleName();
@@ -123,7 +121,7 @@ public class DoctorDaoImpl extends UserDaoImpl implements DoctorDao {
     }
 
     @Override
-    public int hasPermissions(String sessionId) {
+    public int hasPermissions(String sessionId) throws PermissionDeniedException {
         LOGGER.debug(className + ": Checking doctor permissions for session id = {}", sessionId);
 
         try (SqlSession session = getSession()) {
