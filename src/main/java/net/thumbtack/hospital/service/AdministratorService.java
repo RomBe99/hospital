@@ -30,29 +30,29 @@ public class AdministratorService {
     public AdminRegistrationDtoResponse administratorRegistration(String sessionId, AdminRegistrationDtoRequest request) {
         adminDao.hasPermissions(sessionId);
 
-        Administrator a =
+        Administrator admin =
                 new Administrator(request.getLogin(), request.getPassword(),
                         request.getFirstName(), request.getLastName(), request.getPatronymic(), request.getPosition());
 
-        adminDao.insertAdministrator(a);
+        adminDao.insertAdministrator(admin);
 
-        return new AdminRegistrationDtoResponse(a.getId(),
-                a.getFirstName(), a.getLastName(), a.getPatronymic(), a.getPosition());
+        return new AdminRegistrationDtoResponse(admin.getId(),
+                admin.getFirstName(), admin.getLastName(), admin.getPatronymic(), admin.getPosition());
     }
 
     public DoctorRegistrationDtoResponse doctorRegistration(String sessionId, DoctorRegistrationDtoRequest request) {
         adminDao.hasPermissions(sessionId);
 
-        Doctor d =
+        Doctor doctor =
                 new Doctor(request.getLogin(), request.getPassword(),
                         request.getFirstName(), request.getLastName(), request.getPatronymic(),
                         "", request.getSpeciality());
 
-        doctorDao.insertDoctor(d);
+        doctorDao.insertDoctor(doctor);
 
-        return new DoctorRegistrationDtoResponse(d.getId(),
-                d.getFirstName(), d.getLastName(), d.getPatronymic(), d.getSpecialty(), d.getCabinet(),
-                d.getSchedule().stream()
+        return new DoctorRegistrationDtoResponse(doctor.getId(),
+                doctor.getFirstName(), doctor.getLastName(), doctor.getPatronymic(), doctor.getSpecialty(), doctor.getCabinet(),
+                doctor.getSchedule().stream()
                         .map(DtoAdapters::scheduleCellToScheduleCellResponse)
                         .collect(Collectors.toList()));
     }
@@ -60,11 +60,11 @@ public class AdministratorService {
     public EditAdminProfileDtoResponse editAdministratorProfile(String sessionId, EditAdminProfileDtoRequest request) {
         int adminId = adminDao.hasPermissions(sessionId);
 
-        Administrator a =
+        Administrator admin =
                 new Administrator(adminId, request.getNewPassword(),
                 request.getFirstName(), request.getLastName(), request.getPatronymic(), request.getPosition());
 
-        adminDao.updateAdministrator(a);
+        adminDao.updateAdministrator(admin);
 
         return new EditAdminProfileDtoResponse(adminId,
                 request.getFirstName(), request.getLastName(), request.getPatronymic(), request.getPosition());
@@ -79,7 +79,6 @@ public class AdministratorService {
 
     public EmptyDtoResponse removeDoctor(String sessionId, int doctorId, RemoveDoctorDtoRequest request) {
         adminDao.hasPermissions(sessionId);
-        // TODO Что делать с датой увольнения из request?
         doctorDao.removeDoctor(doctorId);
 
         return new EmptyDtoResponse();

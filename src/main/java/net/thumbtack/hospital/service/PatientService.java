@@ -30,27 +30,27 @@ public class PatientService {
     }
 
     public PatientRegistrationDtoResponse patientRegistration(PatientRegistrationDtoRequest request) {
-        Patient p =
+        Patient patient =
                 new Patient(request.getLogin(), request.getPassword(),
                         request.getFirstName(), request.getLastName(), request.getPatronymic(),
                         request.getEmail(), request.getAddress(), request.getPhone());
 
-        patientDao.insertPatient(p);
+        patientDao.insertPatient(patient);
 
-        return new PatientRegistrationDtoResponse(p.getId(),
-                p.getFirstName(), p.getLastName(), p.getPatronymic(),
-                p.getEmail(), p.getAddress(), p.getPhone());
+        return new PatientRegistrationDtoResponse(patient.getId(),
+                patient.getFirstName(), patient.getLastName(), patient.getPatronymic(),
+                patient.getEmail(), patient.getAddress(), patient.getPhone());
     }
 
     public EditPatientProfileDtoResponse editPatientProfile(String sessionId, EditPatientProfileDtoRequest request) {
         int patientId = patientDao.hasPermissions(sessionId);
 
-        Patient p =
+        Patient patient =
                 new Patient(patientId, request.getNewPassword(),
                         request.getFirstName(), request.getLastName(), request.getPatronymic(),
                         request.getEmail(), request.getAddress(), request.getPhone());
 
-        patientDao.updatePatient(p);
+        patientDao.updatePatient(patient);
 
         return new EditPatientProfileDtoResponse(request.getFirstName(), request.getLastName(), request.getPatronymic(),
                 request.getEmail(), request.getAddress(), request.getPhone(), request.getNewPassword());
@@ -59,19 +59,19 @@ public class PatientService {
     public AppointmentToDoctorDtoResponse appointmentToDoctor(String sessionId, AppointmentToDoctorDtoRequest request) {
         int patientId = patientDao.hasPermissions(sessionId);
 
-        Doctor d = doctorDao.getDoctorById(request.getDoctorId());
+        Doctor doctor = doctorDao.getDoctorById(request.getDoctorId());
 
         patientDao.appointmentToDoctor(patientId, request.getDoctorId(),
                 LocalDate.parse(request.getDate()), LocalTime.parse(request.getTime()));
 
         String ticket = new StringJoiner("-")
-                .add(String.valueOf(d.getId()))
+                .add(String.valueOf(doctor.getId()))
                 .add(request.getDate())
                 .add(request.getTime())
                 .toString();
 
-        return new AppointmentToDoctorDtoResponse(ticket, d.getId(),
-                d.getFirstName(), d.getLastName(), d.getPatronymic(), d.getSpecialty(), d.getCabinet(),
+        return new AppointmentToDoctorDtoResponse(ticket, doctor.getId(),
+                doctor.getFirstName(), doctor.getLastName(), doctor.getPatronymic(), doctor.getSpecialty(), doctor.getCabinet(),
                 request.getDate(), request.getTime());
     }
 

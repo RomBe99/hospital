@@ -23,10 +23,11 @@ public class DoctorService {
                                                                       CreateMedicalCommissionDtoRequest request) {
         doctorDao.hasPermissions(sessionId);
 
-        MedicalCommission c = new MedicalCommission(LocalDate.parse(request.getDate()), LocalTime.parse(request.getTime()),
+        MedicalCommission commission =
+                new MedicalCommission(LocalDate.parse(request.getDate()), LocalTime.parse(request.getTime()),
                 request.getPatientId(), Integer.parseInt(request.getDuration()), request.getDoctorIds());
 
-        int ticketId = doctorDao.createMedicalCommission(c);
+        int ticketId = doctorDao.createMedicalCommission(commission);
 
         return new CreateMedicalCommissionDtoResponse(String.valueOf(ticketId), request.getPatientId(),
                 request.getDoctorIds(), request.getRoom(), request.getDate(), request.getTime(),

@@ -42,10 +42,10 @@ public class UserService {
     // Вынести в другой сервис объеденяющий в себе полномочия администраторов и докторов?
     // TODO Что в данном случае делать с sessionId?
     public PatientInformationDtoResponse getPatientInformation(String sessionId, int patientId) {
-        Patient p = patientDao.getPatientById(patientId);
+        Patient patient = patientDao.getPatientById(patientId);
 
         return new PatientInformationDtoResponse(patientId,
-                p.getFirstName(), p.getLastName(), p.getPatronymic(),
-                p.getEmail(), p.getAddress(), p.getPhone());
+                patient.getFirstName(), patient.getLastName(), patient.getPatronymic(),
+                patient.getEmail(), patient.getAddress(), patient.getPhone());
     }
 }
