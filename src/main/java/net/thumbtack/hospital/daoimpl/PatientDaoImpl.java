@@ -140,20 +140,21 @@ public class PatientDaoImpl extends UserDaoImpl implements PatientDao {
     }
 
     @Override
-    public void denyTicket(int patientId, int scheduleCellId) {
-        LOGGER.debug(className + ": Patient = {} deny ticket to appointment with scheduleCellId = {}", patientId, scheduleCellId);
+    public void denyTicket(int patientId, int doctorId, LocalDate date, LocalTime time) {
+        LOGGER.debug(className + ": Patient = {} deny ticket to doctor = {} appointment on date = {} and time = {}",
+                patientId, doctorId, date, time);
 
         try (SqlSession session = getSession()) {
             try {
-                getPatientMapper(session).denyTicket(patientId, scheduleCellId);
+                getPatientMapper(session).denyTicket(patientId, doctorId, date, time);
 
                 session.commit();
-                LOGGER.debug(className + ": Patient = {} successfully deny ticket to appointment with scheduleCellId = {}",
-                        patientId, scheduleCellId);
+                LOGGER.debug(className + ": Patient = {} successfully deny ticket to doctor = {} appointment on date = {} and time = {}",
+                        patientId, doctorId, date, time);
             } catch (RuntimeException ex) {
                 session.rollback();
-                LOGGER.error(className + ": Patient = {} can't deny ticket to appointment with scheduleCellId = {}",
-                        patientId, scheduleCellId, ex);
+                LOGGER.error(className + ": Patient = {} can't deny ticket to doctor = {} appointment on date = {} and time = {}",
+                        patientId, doctorId, date, time, ex);
 
                 throw ex;
             }

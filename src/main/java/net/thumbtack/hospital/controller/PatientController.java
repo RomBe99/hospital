@@ -93,9 +93,7 @@ public class PatientController {
     @ResponseBody
     public EmptyDtoResponse denyTicket(@CookieValue(value = CookieFactory.JAVA_SESSION_ID) String sessionId,
                                        @PathVariable String ticketNumber) {
-        int scheduleCellId = Integer.parseInt(ticketNumber.split("-")[0]);
-
-        patientService.denyTicket(sessionId, scheduleCellId);
+        patientService.denyTicket(sessionId, ticketNumber);
 
         return new EmptyDtoResponse();
     }

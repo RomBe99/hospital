@@ -11,12 +11,13 @@ import net.thumbtack.hospital.dtoresponse.patient.PatientRegistrationDtoResponse
 import net.thumbtack.hospital.dtoresponse.patient.ticket.AllTicketsDtoResponse;
 import net.thumbtack.hospital.model.Doctor;
 import net.thumbtack.hospital.model.Patient;
+import net.thumbtack.hospital.model.TicketToDoctor;
+import net.thumbtack.hospital.util.TicketToDoctorBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.StringJoiner;
 
 @Service("PatientService")
 public class PatientService {
@@ -64,13 +65,14 @@ public class PatientService {
         patientDao.appointmentToDoctor(patientId, request.getDoctorId(),
                 LocalDate.parse(request.getDate()), LocalTime.parse(request.getTime()));
 
-        String ticket = new StringJoiner("-")
-                .add(String.valueOf(doctor.getId()))
-                .add(request.getDate())
-                .add(request.getTime())
-                .toString();
+        LocalDate ticketDate = LocalDate.parse(request.getDate());
+        LocalTime ticketTime = LocalTime.parse(request.getTime());
 
-        return new AppointmentToDoctorDtoResponse(ticket, doctor.getId(),
+        TicketToDoctor ticket =
+                new TicketToDoctor(TicketToDoctorBuilder.buildTicketTicketNumber(doctor.getId(), ticketDate, ticketTime),
+                        ticketDate, ticketTime, doctor);
+
+        return new AppointmentToDoctorDtoResponse(ticket.getNumber(), doctor.getId(),
                 doctor.getFirstName(), doctor.getLastName(), doctor.getPatronymic(), doctor.getSpecialty(), doctor.getCabinet(),
                 request.getDate(), request.getTime());
     }
@@ -81,10 +83,13 @@ public class PatientService {
         patientDao.denyMedicalCommission(patientId, commissionTicketId);
     }
 
-    public void denyTicket(String sessionId, int commissionTicketId) {
+    public void denyTicket(String sessionId, String ticketNumber) {
         int patientId = patientDao.hasPermissions(sessionId);
 
-        patientDao.denyTicket(patientId, commissionTicketId);
+        patientDao.denyTicket(patientId,
+                TicketToDoctorBuilder.getDoctorIdFromTicketNumber(ticketNumber),
+                TicketToDoctorBuilder.getDateFromTicketNumber(ticketNumber),
+                TicketToDoctorBuilder.getTimeFromTicketNumber(ticketNumber));
     }
 
     public AllTicketsDtoResponse getTickets(String sessionId) {

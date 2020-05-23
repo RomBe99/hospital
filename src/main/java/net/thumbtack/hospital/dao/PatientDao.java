@@ -18,5 +18,5 @@ public interface PatientDao extends UserDao {
 
     void denyMedicalCommission(int patientId, int commissionTicketId);
 
-    void denyTicket(int patientId, int scheduleCellId);
+    void denyTicket(int patientId, int doctorId, LocalDate date, LocalTime time);
 }

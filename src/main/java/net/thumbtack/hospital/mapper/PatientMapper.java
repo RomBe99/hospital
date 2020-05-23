@@ -27,6 +27,7 @@ public interface PatientMapper extends UserMapper {
     @Delete("DELETE FROM medical_commission WHERE patientId = #{patientId} AND id = #{ticketId};")
     void denyMedicalCommission(@Param("patientId") int patientId, @Param("ticketId") int commissionTicketId);
 
-    @Update("UPDATE time_cell SET patientId = NULL WHERE scheduleCellId = #{patientId} AND patientId = #{scheduleCellId};")
-    void denyTicket(@Param("patientId") int patientId, @Param("scheduleCellId") int scheduleCellId);
+    @Update("UPDATE time_cell SET patientId = NULL WHERE patientId = #{patientId} AND ticketTime = #{time} AND scheduleCellId = (SELECT id FROM schedule_cell WHERE doctorId = #{doctorId} AND date = #{date});")
+    void denyTicket(@Param("patientId") int patientId, @Param("doctorId") int doctorId,
+                    @Param("date") LocalDate date, @Param("time") LocalTime time);
 }
