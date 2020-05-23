@@ -18,11 +18,11 @@ import javax.validation.Valid;
 @RestController("AdministratorController")
 @RequestMapping("/api")
 public class AdministratorController {
-    public static final String administratorRegistrationUrl = "admins";
-    public static final String doctorRegistrationUrl = "doctors";
-    public static final String editAdministratorProfileUrl = "admins";
-    public static final String editDoctorScheduleUrl = "doctors/{doctorId}";
-    public static final String removeDoctorUrl = "doctors/{doctorId}";
+    public static final String ADMINISTRATOR_REGISTRATION_URL = "admins";
+    public static final String DOCTOR_REGISTRATION_URL = "doctors";
+    public static final String EDIT_ADMINISTRATOR_PROFILE_URL = "admins";
+    public static final String EDIT_DOCTOR_SCHEDULE_URL = "doctors/{doctorId}";
+    public static final String REMOVE_DOCTOR_URL = "doctors/{doctorId}";
 
     private final AdministratorService administratorService;
 
@@ -31,7 +31,7 @@ public class AdministratorController {
         this.administratorService = administratorService;
     }
 
-    @PostMapping(value = administratorRegistrationUrl,
+    @PostMapping(value = ADMINISTRATOR_REGISTRATION_URL,
             produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
@@ -40,7 +40,7 @@ public class AdministratorController {
         return administratorService.administratorRegistration(sessionId, request);
     }
 
-    @PostMapping(value = doctorRegistrationUrl,
+    @PostMapping(value = DOCTOR_REGISTRATION_URL,
             produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
@@ -49,7 +49,7 @@ public class AdministratorController {
         return administratorService.doctorRegistration(sessionId, request);
     }
 
-    @PutMapping(value = editAdministratorProfileUrl,
+    @PutMapping(value = EDIT_ADMINISTRATOR_PROFILE_URL,
             produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
@@ -58,7 +58,7 @@ public class AdministratorController {
         return administratorService.editAdministratorProfile(sessionId, request);
     }
 
-    @PutMapping(value = editDoctorScheduleUrl,
+    @PutMapping(value = EDIT_DOCTOR_SCHEDULE_URL,
             produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
@@ -68,7 +68,7 @@ public class AdministratorController {
         return administratorService.editDoctorSchedule(sessionId, doctorId, request);
     }
 
-    @DeleteMapping(value = removeDoctorUrl,
+    @DeleteMapping(value = REMOVE_DOCTOR_URL,
             produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody

@@ -21,12 +21,12 @@ import javax.validation.Valid;
 @RestController("UserController")
 @RequestMapping("/api")
 public class UserController {
-    public static final String loginUrl = "sessions";
-    public static final String logoutUrl = "sessions";
-    public static final String getUserInformationUrl = "account";
-    public static final String getDoctorInformationUrl = "doctors/{doctorId}";
-    public static final String getDoctorsInformationUrl = "doctors";
-    public static final String getPatientInformationUrl = "patients/{patientId}";
+    public static final String LOGIN_URL = "sessions";
+    public static final String LOGOUT_URL = "sessions";
+    public static final String GET_USER_INFORMATION_URL = "account";
+    public static final String GET_DOCTOR_INFORMATION_URL = "doctors/{doctorId}";
+    public static final String GET_DOCTORS_INFORMATION_URL = "doctors";
+    public static final String GET_PATIENT_INFORMATION_URL = "patients/{patientId}";
 
     private final UserService userService;
     private final CookieFactory cookieFactory;
@@ -37,7 +37,7 @@ public class UserController {
         this.cookieFactory = cookieFactory;
     }
 
-    @PostMapping(value = loginUrl,
+    @PostMapping(value = LOGIN_URL,
             produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
@@ -50,7 +50,7 @@ public class UserController {
         return dtoResponse;
     }
 
-    @DeleteMapping(value = logoutUrl,
+    @DeleteMapping(value = LOGOUT_URL,
             produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
@@ -58,7 +58,7 @@ public class UserController {
         return userService.logout(sessionId);
     }
 
-    @GetMapping(value = getUserInformationUrl,
+    @GetMapping(value = GET_USER_INFORMATION_URL,
             produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
@@ -66,7 +66,7 @@ public class UserController {
         return userService.getUserInformation(sessionId);
     }
 
-    @GetMapping(value = getDoctorInformationUrl,
+    @GetMapping(value = GET_DOCTOR_INFORMATION_URL,
             produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
@@ -79,7 +79,7 @@ public class UserController {
         return null;
     }
 
-    @GetMapping(value = getDoctorsInformationUrl,
+    @GetMapping(value = GET_DOCTORS_INFORMATION_URL,
             produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
@@ -92,7 +92,7 @@ public class UserController {
         return null;
     }
 
-    @GetMapping(value = getPatientInformationUrl,
+    @GetMapping(value = GET_PATIENT_INFORMATION_URL,
             produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody

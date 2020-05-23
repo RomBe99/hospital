@@ -14,7 +14,7 @@ import javax.validation.Valid;
 @RestController("DoctorController")
 @RequestMapping("/api")
 public class DoctorController {
-    public static final String createMedicalCommissionUrl = "commissions";
+    public static final String CREATE_MEDICAL_COMMISSION_URL = "commissions";
 
     private final DoctorService doctorService;
 
@@ -23,7 +23,7 @@ public class DoctorController {
         this.doctorService = doctorService;
     }
 
-    @PostMapping(value = createMedicalCommissionUrl,
+    @PostMapping(value = CREATE_MEDICAL_COMMISSION_URL,
             produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody

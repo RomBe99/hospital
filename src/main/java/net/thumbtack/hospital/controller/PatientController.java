@@ -24,12 +24,12 @@ import javax.validation.Valid;
 @RestController("PatientController")
 @RequestMapping("/api")
 public class PatientController {
-    public static final String patientRegistrationUrl = "patients";
-    public static final String editPatientProfileUrl = "patients";
-    public static final String appointmentToDoctorUrl = "tickets";
-    public static final String denyMedicalCommissionUrl = "commissions/{commissionTicketId}";
-    public static final String getTicketsUrl = "tickets";
-    public static final String denyTicketUrl = "tickets/{ticketNumber}";
+    public static final String PATIENT_REGISTRATION_URL = "patients";
+    public static final String EDIT_PATIENT_PROFILE_URL = "patients";
+    public static final String APPOINTMENT_TO_DOCTOR_URL = "tickets";
+    public static final String DENY_MEDICAL_COMMISSION_URL = "commissions/{commissionTicketId}";
+    public static final String GET_TICKETS_URL = "tickets";
+    public static final String DENY_TICKET_URL = "tickets/{ticketNumber}";
 
     private final PatientService patientService;
     private final UserService userService;
@@ -42,7 +42,7 @@ public class PatientController {
         this.cookieFactory = cookieFactory;
     }
 
-    @PostMapping(value = patientRegistrationUrl,
+    @PostMapping(value = PATIENT_REGISTRATION_URL,
             produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
@@ -58,7 +58,7 @@ public class PatientController {
         return dtoResponse;
     }
 
-    @PutMapping(value = editPatientProfileUrl,
+    @PutMapping(value = EDIT_PATIENT_PROFILE_URL,
             produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
@@ -67,7 +67,7 @@ public class PatientController {
         return patientService.editPatientProfile(sessionId, request);
     }
 
-    @PatchMapping(value = appointmentToDoctorUrl,
+    @PatchMapping(value = APPOINTMENT_TO_DOCTOR_URL,
             produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
@@ -76,7 +76,7 @@ public class PatientController {
         return patientService.appointmentToDoctor(sessionId, request);
     }
 
-    @PatchMapping(value = denyMedicalCommissionUrl,
+    @PatchMapping(value = DENY_MEDICAL_COMMISSION_URL,
             produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
@@ -87,7 +87,7 @@ public class PatientController {
         return new EmptyDtoResponse();
     }
 
-    @DeleteMapping(value = denyTicketUrl,
+    @DeleteMapping(value = DENY_TICKET_URL,
             produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
@@ -100,7 +100,7 @@ public class PatientController {
         return new EmptyDtoResponse();
     }
 
-    @GetMapping(value = getTicketsUrl,
+    @GetMapping(value = GET_TICKETS_URL,
             produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
