@@ -9,6 +9,9 @@ import net.thumbtack.hospital.dtoresponse.patient.AppointmentToDoctorDtoResponse
 import net.thumbtack.hospital.dtoresponse.patient.EditPatientProfileDtoResponse;
 import net.thumbtack.hospital.dtoresponse.patient.PatientRegistrationDtoResponse;
 import net.thumbtack.hospital.dtoresponse.patient.ticket.AllTicketsDtoResponse;
+import net.thumbtack.hospital.dtoresponse.patient.ticket.TicketDtoResponse;
+import net.thumbtack.hospital.dtoresponse.patient.ticket.TicketToDoctorDtoResponse;
+import net.thumbtack.hospital.dtoresponse.patient.ticket.TicketToMedicalCommissionDtoResponse;
 import net.thumbtack.hospital.model.Doctor;
 import net.thumbtack.hospital.model.Patient;
 import net.thumbtack.hospital.model.TicketToDoctor;
@@ -19,6 +22,9 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service("PatientService")
 public class PatientService {
@@ -96,8 +102,14 @@ public class PatientService {
     public AllTicketsDtoResponse getTickets(String sessionId) throws PermissionDeniedException {
         int patientId = patientDao.hasPermissions(sessionId);
 
-        // TODO
+        List<TicketDtoResponse> allTickets = patientDao.getTicketsToDoctor(patientId).stream()
+                .map(t -> new TicketToDoctorDtoResponse(
+                        TicketToDoctorBuilder.buildTicketTicketNumber(t.getDoctor().getId(), t.getDate(), t.getTime()),
+                        t.getDoctor().getCabinet(), t.getDate(), t.getTime(), t.getDoctor().getId(),
+                        t.getDoctor().getFirstName(), t.getDoctor().getLastName(), t.getDoctor().getPatronymic(),
+                        t.getDoctor().getSpecialty())).collect(Collectors.toList());
+        // TODO Сделать для врачебной комиссии
 
-        return new AllTicketsDtoResponse();
+        return new AllTicketsDtoResponse(allTickets);
     }
 }

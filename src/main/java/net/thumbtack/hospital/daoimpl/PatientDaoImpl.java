@@ -3,7 +3,9 @@ package net.thumbtack.hospital.daoimpl;
 import net.thumbtack.hospital.dao.PatientDao;
 import net.thumbtack.hospital.mapper.PatientMapper;
 import net.thumbtack.hospital.mapper.UserTypes;
+import net.thumbtack.hospital.model.MedicalCommission;
 import net.thumbtack.hospital.model.Patient;
+import net.thumbtack.hospital.model.TicketToDoctor;
 import net.thumbtack.hospital.util.error.PermissionDeniedErrorCodes;
 import net.thumbtack.hospital.util.error.PermissionDeniedException;
 import org.apache.ibatis.session.SqlSession;
@@ -13,6 +15,7 @@ import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
 
 @Component("PatientDaoImpl")
 public class PatientDaoImpl extends UserDaoImpl implements PatientDao {
@@ -161,6 +164,32 @@ public class PatientDaoImpl extends UserDaoImpl implements PatientDao {
 
                 throw ex;
             }
+        }
+    }
+
+    @Override
+    public List<TicketToDoctor> getTicketsToDoctor(int patientId) {
+        LOGGER.debug(className + ": Get all tickets to doctor for patient = {}", patientId);
+
+        try (SqlSession session = getSession()) {
+            return session.selectList("net.thumbtack.hospital.mapper.PatientMapper.getTicketsToDoctor", patientId);
+        } catch (RuntimeException ex) {
+            LOGGER.error(className + ": Can't get all tickets to doctor for patient = {}", patientId);
+
+            throw ex;
+        }
+    }
+
+    @Override
+    public List<MedicalCommission> getTicketsToMedicalCommission(int patientId) {
+        LOGGER.debug(className + ": Get all tickets to medical commission for patient = {}", patientId);
+
+        try (SqlSession session = getSession()) {
+            return session.selectList("net.thumbtack.hospital.mapper.PatientMapper.getTicketsToMedicalCommission", patientId);
+        } catch (RuntimeException ex) {
+            LOGGER.error(className + ": Can't get all tickets to medical commission for patient = {}", patientId);
+
+            throw ex;
         }
     }
 
