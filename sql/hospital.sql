@@ -12,9 +12,9 @@ CREATE TABLE user_type
 ) ENGINE = INNODB
   DEFAULT CHARSET = utf8;
 
-INSERT INTO user_type VALUES (0, 'Administrator');
-INSERT INTO user_type VALUES (0, 'Doctor');
-INSERT INTO user_type VALUES (0, 'Patient');
+INSERT INTO user_type VALUES (0, 'ADMINISTRATOR');
+INSERT INTO user_type VALUES (0, 'DOCTOR');
+INSERT INTO user_type VALUES (0, 'PATIENT');
 
 CREATE TABLE user
 (

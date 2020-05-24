@@ -1,9 +1,9 @@
 package net.thumbtack.hospital.mapper;
 
 public enum UserTypes {
-    ADMINISTRATOR("Administrator"),
-    PATIENT("Doctor"),
-    DOCTOR("Patient");
+    ADMINISTRATOR("ADMINISTRATOR"),
+    PATIENT("PATIENT"),
+    DOCTOR("DOCTOR");
 
     private final String type;
 
