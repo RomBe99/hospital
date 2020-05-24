@@ -14,15 +14,18 @@ public class MyBatisUtils {
     private static final Logger LOGGER = LoggerFactory.getLogger(MyBatisUtils.class);
 
     public static boolean initSqlSessionFactory() {
+        LOGGER.debug("Initializing SQL sessions factory");
+
         try (Reader reader = Resources.getResourceAsReader("mybatis-config.xml")) {
             sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
+            LOGGER.debug("SQL sessions factory successfully Initialized");
 
 // 		instead of setting here, it is possible to set in configuration XML file
 //      sqlSessionFactory.getConfiguration().setAggressiveLazyLoading(false);
 
             return true;
         } catch (Exception e) {
-            LOGGER.error("Error loading mybatis-config.xml", e);
+            LOGGER.error("Can't initialize SQL session factory, error loading mybatis-config.xml", e);
 
             return false;
         }
