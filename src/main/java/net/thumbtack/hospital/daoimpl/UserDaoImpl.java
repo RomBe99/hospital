@@ -47,13 +47,17 @@ public class UserDaoImpl extends BaseDaoImpl implements UserDao {
         LOGGER.debug(className + ": Logout user with session id = {}", sessionId);
 
         try (SqlSession session = getSession()) {
-            getUserMapper(session).logoutUser(sessionId);
+            try {
+                getUserMapper(session).logoutUser(sessionId);
 
-            LOGGER.debug(className + ": User with session id = {} successfully logout", sessionId);
-        } catch (RuntimeException ex) {
-            LOGGER.error(className + ": User with session id = {} can't logout", sessionId, ex);
+                session.commit();
+                LOGGER.debug(className + ": User with session id = {} successfully logout", sessionId);
+            } catch (RuntimeException ex) {
+                session.rollback();
+                LOGGER.error(className + ": User with session id = {} can't logout", sessionId, ex);
 
-            throw ex;
+                throw ex;
+            }
         }
     }
 
