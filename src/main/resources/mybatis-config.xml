@@ -28,7 +28,7 @@
         <mapper class="net.thumbtack.hospital.mapper.UserMapper"/>
         <mapper class="net.thumbtack.hospital.mapper.CommonMapper"/>
         <mapper class="net.thumbtack.hospital.mapper.DoctorMapper"/>
-        <mapper class="net.thumbtack.hospital.mapper.DebugMapper"/>
+        <mapper class="net.thumbtack.hospital.debug.DebugMapper"/>
         <mapper resource="net/thumbtack/hospital/mapper/DoctorMapper.xml"/>
         <mapper resource="net/thumbtack/hospital/mapper/AdminMapper.xml"/>
         <mapper resource="net/thumbtack/hospital/mapper/PatientMapper.xml"/>

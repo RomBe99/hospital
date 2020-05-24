@@ -1,7 +1,6 @@
-package net.thumbtack.hospital.daoimpl;
+package net.thumbtack.hospital.debug;
 
-import net.thumbtack.hospital.dao.DebugDao;
-import net.thumbtack.hospital.mapper.DebugMapper;
+import net.thumbtack.hospital.daoimpl.BaseDaoImpl;
 import org.apache.ibatis.session.SqlSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

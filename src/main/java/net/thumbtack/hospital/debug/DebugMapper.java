@@ -1,4 +1,4 @@
-package net.thumbtack.hospital.mapper;
+package net.thumbtack.hospital.debug;
 
 import org.apache.ibatis.annotations.Delete;
 

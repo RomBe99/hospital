@@ -1,4 +1,4 @@
-package net.thumbtack.hospital.dao;
+package net.thumbtack.hospital.debug;
 
 public interface DebugDao {
     void clearUsers();

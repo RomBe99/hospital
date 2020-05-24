@@ -2,6 +2,8 @@ package net.thumbtack.hospital;
 
 import net.thumbtack.hospital.dao.*;
 import net.thumbtack.hospital.daoimpl.*;
+import net.thumbtack.hospital.debug.DebugDao;
+import net.thumbtack.hospital.debug.DebugDaoImpl;
 import net.thumbtack.hospital.model.Administrator;
 import net.thumbtack.hospital.model.Doctor;
 import net.thumbtack.hospital.model.Patient;
