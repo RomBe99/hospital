@@ -1,7 +1,7 @@
 package net.thumbtack.hospital.dtorequest.other.schedulecell;
 
 import net.thumbtack.hospital.util.validator.annotation.Time;
-import net.thumbtack.hospital.util.validator.annotation.WeekDay;
+import net.thumbtack.hospital.util.validator.annotation.WeekDayInt;
 
 import javax.validation.constraints.NotEmpty;
 import java.util.List;
@@ -13,12 +13,12 @@ public class WeekScheduleCellDtoRequest {
     @Time
     private String timeEnd;
     @NotEmpty
-    private List<@WeekDay String> weekDays;
+    private List<@WeekDayInt Integer> weekDays;
 
     public WeekScheduleCellDtoRequest() {
     }
 
-    public WeekScheduleCellDtoRequest(String timeStart, String timeEnd, List<String> weekDays) {
+    public WeekScheduleCellDtoRequest(String timeStart, String timeEnd, List<Integer> weekDays) {
         setTimeStart(timeStart);
         setTimeEnd(timeEnd);
         setWeekDays(weekDays);
@@ -32,7 +32,7 @@ public class WeekScheduleCellDtoRequest {
         this.timeEnd = timeEnd;
     }
 
-    public void setWeekDays(List<String> weekDays) {
+    public void setWeekDays(List<Integer> weekDays) {
         this.weekDays = weekDays;
     }
 
@@ -44,7 +44,7 @@ public class WeekScheduleCellDtoRequest {
         return timeEnd;
     }
 
-    public List<String> getWeekDays() {
+    public List<Integer> getWeekDays() {
         return weekDays;
     }
 

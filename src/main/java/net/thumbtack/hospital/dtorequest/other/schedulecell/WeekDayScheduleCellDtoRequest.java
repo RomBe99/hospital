@@ -1,12 +1,12 @@
 package net.thumbtack.hospital.dtorequest.other.schedulecell;
 
 import net.thumbtack.hospital.util.validator.annotation.Date;
-import net.thumbtack.hospital.util.validator.annotation.WeekDay;
+import net.thumbtack.hospital.util.validator.annotation.WeekDayString;
 
 import java.util.Objects;
 
 public class WeekDayScheduleCellDtoRequest {
-    @WeekDay
+    @WeekDayString
     private String weekDay;
     @Date
     private String timeStart;
