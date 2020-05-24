@@ -3,10 +3,10 @@ package net.thumbtack.hospital.mapper;
 import org.apache.ibatis.annotations.Delete;
 
 public interface DebugMapper {
-    @Delete("DELETE FROM user;")
+    @Delete("DELETE FROM user WHERE login <> 'admin';")
     void clearUsers();
 
-    @Delete("DELETE FROM administrator;")
+    @Delete("DELETE FROM administrator WHERE userId <> 1;")
     void clearAdministrators();
 
     @Delete("DELETE FROM doctor;")
