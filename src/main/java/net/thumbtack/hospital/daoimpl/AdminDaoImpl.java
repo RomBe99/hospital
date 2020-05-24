@@ -4,12 +4,17 @@ import net.thumbtack.hospital.dao.AdminDao;
 import net.thumbtack.hospital.mapper.AdminMapper;
 import net.thumbtack.hospital.mapper.UserTypes;
 import net.thumbtack.hospital.model.Administrator;
+import net.thumbtack.hospital.model.ScheduleCell;
+import net.thumbtack.hospital.model.TimeCell;
 import net.thumbtack.hospital.util.error.PermissionDeniedErrorCodes;
 import net.thumbtack.hospital.util.error.PermissionDeniedException;
 import org.apache.ibatis.session.SqlSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+
+import java.time.LocalDate;
+import java.util.List;
 
 @Component("AdminDaoImpl")
 public class AdminDaoImpl extends UserDaoImpl implements AdminDao {
@@ -92,6 +97,39 @@ public class AdminDaoImpl extends UserDaoImpl implements AdminDao {
             } catch (RuntimeException ex) {
                 session.rollback();
                 LOGGER.error(className + ": Can't remove administrator with id = {}", id, ex);
+
+                throw ex;
+            }
+        }
+    }
+
+    @Override
+    public void editDoctorSchedule(LocalDate dateStart, LocalDate dateEnd, int doctorId, List<ScheduleCell> schedule) {
+        LOGGER.debug(className + ": Inserting schedule = {} for doctor with id = {} (date start = {} date end = {})",
+                schedule, doctorId, dateStart, dateEnd);
+        try (SqlSession session = getSession()) {
+            try {
+                if (session.<Integer>selectOne("net.thumbtack.hospital.mapper.CommonMapper.containPatientIdOnDateInterval") != 0) {
+                    throw new RuntimeException("This period contains patients with tickets");
+                }
+
+                AdminMapper mapper = getAdminMapper(session);
+
+                for (ScheduleCell s : schedule) {
+                    mapper.insertScheduleCell(doctorId, s);
+
+                    for (TimeCell c : s.getCells()) {
+                        mapper.insertTimeCell(c.getPatient().getId(), s.getId(), c);
+                    }
+                }
+
+                session.commit();
+                LOGGER.debug(className + ": Schedule = {} for doctor with id = {} successfully inserted (date start = {} date end = {})",
+                        schedule, doctorId, dateStart, dateEnd);
+            } catch (RuntimeException ex) {
+                session.rollback();
+                LOGGER.error(className + ": Can't insert schedule = {} for doctor with id = {} (date start = {} date end = {})",
+                        schedule, doctorId, dateStart, dateEnd);
 
                 throw ex;
             }
