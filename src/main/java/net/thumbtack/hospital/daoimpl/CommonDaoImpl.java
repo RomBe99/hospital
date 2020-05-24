@@ -18,7 +18,7 @@ public class CommonDaoImpl extends BaseDaoImpl implements CommonDao {
         try (SqlSession session = getSession()) {
             return getCommonMapper(session).getDoctorSpecialityIdByName(name);
         } catch (RuntimeException ex) {
-            LOGGER.error(className + ": Get doctor speciality id with name  = {}", name, ex);
+            LOGGER.error(className + ": Can't get doctor speciality id with name  = {}", name, ex);
 
             throw ex;
         }
@@ -31,7 +31,20 @@ public class CommonDaoImpl extends BaseDaoImpl implements CommonDao {
         try (SqlSession session = getSession()) {
             return getCommonMapper(session).getCabinetIdByName(name);
         } catch (RuntimeException ex) {
-            LOGGER.error(className + ": Get cabinet id with name  = {}", name, ex);
+            LOGGER.error(className + ": Can't get cabinet id with name  = {}", name, ex);
+
+            throw ex;
+        }
+    }
+
+    @Override
+    public String getUserTypeByUserId(int userId) {
+        LOGGER.debug(className + ": Get user type by user id = {}", userId);
+
+        try (SqlSession session = getSession()) {
+            return getCommonMapper(session).getUserTypeByUserId(userId);
+        } catch (RuntimeException ex) {
+            LOGGER.error(className + ": Can't get user type by user id  = {}", userId, ex);
 
             throw ex;
         }

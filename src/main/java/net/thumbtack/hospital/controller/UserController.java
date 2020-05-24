@@ -63,7 +63,7 @@ public class UserController {
             produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public UserInformationDtoResponse getUserInformation(@CookieValue(value = CookieFactory.JAVA_SESSION_ID) String sessionId) {
+    public UserInformationDtoResponse getUserInformation(@CookieValue(value = CookieFactory.JAVA_SESSION_ID) String sessionId) throws PermissionDeniedException {
         return userService.getUserInformation(sessionId);
     }
 
