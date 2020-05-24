@@ -7,11 +7,11 @@ import org.springframework.stereotype.Component;
 
 @Component("BaseDaoImpl")
 public class BaseDaoImpl {
-    public SqlSession getSession() {
+    protected SqlSession getSession() {
         return MyBatisUtils.getSqlSessionFactory().openSession();
     }
 
-    public CommonMapper getCommonMapper(SqlSession session) {
+    protected CommonMapper getCommonMapper(SqlSession session) {
         return session.getMapper(CommonMapper.class);
     }
 }
