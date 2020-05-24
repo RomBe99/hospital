@@ -23,15 +23,22 @@ public class UserDaoImpl extends BaseDaoImpl implements UserDao {
         LOGGER.debug(className + ": Login user with login = {} and password = {}, session id = {}", login, password, sessionId);
 
         try (SqlSession session = getSession()) {
-            int id = getUserMapper(session).loginUser(sessionId, login, password);
+            try {
+                UserMapper mapper = getUserMapper(session);
+                int userId = mapper.getUserIdByLoginAndPassword(login, password);
+                mapper.loginUser(sessionId, userId);
 
-            LOGGER.debug(className + ": User with login = {} and password = {}, id = {}, session id = {} successfully logged in", login, password, id, session);
+                session.commit();
+                LOGGER.debug(className + ": User with login = {} and password = {}, id = {}, session id = {} successfully logged in",
+                        login, password, userId, session);
 
-            return id;
-        } catch (RuntimeException ex) {
-            LOGGER.error(className + ": Can't login user with login = {} and password = {}, session id = {}", login, password, sessionId);
+                return userId;
+            } catch (RuntimeException ex) {
+                session.rollback();
+                LOGGER.error(className + ": Can't login user with login = {} and password = {}, session id = {}", login, password, sessionId);
 
-            throw ex;
+                throw ex;
+            }
         }
     }
 
