@@ -1,7 +1,11 @@
 package net.thumbtack.hospital;
 
-import net.thumbtack.hospital.dao.*;
-import net.thumbtack.hospital.daoimpl.*;
+import net.thumbtack.hospital.dao.AdminDao;
+import net.thumbtack.hospital.dao.DoctorDao;
+import net.thumbtack.hospital.dao.PatientDao;
+import net.thumbtack.hospital.daoimpl.AdminDaoImpl;
+import net.thumbtack.hospital.daoimpl.DoctorDaoImpl;
+import net.thumbtack.hospital.daoimpl.PatientDaoImpl;
 import net.thumbtack.hospital.debug.DebugDao;
 import net.thumbtack.hospital.debug.DebugDaoImpl;
 import net.thumbtack.hospital.model.Administrator;
@@ -14,7 +18,6 @@ import org.junit.BeforeClass;
 
 public class BaseTest {
     protected AdminDao adminDao = new AdminDaoImpl();
-    protected CommonDao commonDao = new CommonDaoImpl();
     protected DoctorDao doctorDao = new DoctorDaoImpl();
     protected PatientDao patientDao = new PatientDaoImpl();
     private final DebugDao debugDao = new DebugDaoImpl();
@@ -79,19 +82,5 @@ public class BaseTest {
         Assert.assertNotEquals(0, patient.getId());
 
         return patient;
-    }
-
-    protected int getDoctorSpecialityIdByName(String name) {
-        int id = commonDao.getDoctorSpecialityIdByName(name);
-
-        Assert.assertNotEquals(0, id);
-        return id;
-    }
-
-    protected int getCabinetIdByName(String name) {
-        int id = commonDao.getCabinetIdByName(name);
-
-        Assert.assertNotEquals(0, id);
-        return id;
     }
 }
