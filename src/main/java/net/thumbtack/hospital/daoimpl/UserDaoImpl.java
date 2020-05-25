@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -80,7 +81,7 @@ public class UserDaoImpl extends BaseDaoImpl implements UserDao {
     }
 
     @Override
-    public Doctor getDoctorInformation(int patientId, int doctorId, String startDate, String endDate) {
+    public Doctor getDoctorInformation(int patientId, int doctorId, LocalDate startDate, LocalDate endDate) {
         LOGGER.debug(className + ": Get information about doctor = {} for patient id = {} with schedule where start date = {} to end date = {}",
                 doctorId, patientId, startDate, endDate);
 

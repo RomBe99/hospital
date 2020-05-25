@@ -24,7 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-import javax.print.Doc;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -141,7 +141,7 @@ public class UserService {
         Doctor doctor;
 
         if (schedule != null && !schedule.isEmpty() && schedule.toLowerCase().equals("yes")) {
-            doctor = userDao.getDoctorInformation(patientId, doctorId, startDate, endDate);
+            doctor = userDao.getDoctorInformation(patientId, doctorId, LocalDate.parse(startDate), LocalDate.parse(endDate));
         } else {
             doctor = userDao.getDoctorInformation(patientId, doctorId, null, null);
         }

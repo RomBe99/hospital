@@ -10,11 +10,11 @@ public interface AdminMapper extends UserMapper {
     void insertAdministrator(Administrator administrator);
 
     @Insert("INSERT INTO schedule_cell VALUES (#{cell.id}, #{doctorId}, #{cell.date});")
-    @Options(useGeneratedKeys = true, keyProperty = "id")
+    @Options(useGeneratedKeys = true, keyProperty = "cell.id")
     void insertScheduleCell(@Param("doctorId") int doctorId, @Param("cell") ScheduleCell scheduleCell);
 
-    @Insert("INSERT INTO time_cell VALUES (#{cell.time}, #{scheduleCellId}, #{patientId}, #{cell.duration});")
-    void insertTimeCell(@Param("patientId") int patientId, @Param("scheduleCellId") int scheduleCellId, @Param("cell") TimeCell timeCell);
+    @Insert("INSERT INTO time_cell VALUES (#{cell.time}, #{scheduleCellId}, NULL, #{cell.duration});")
+    void insertTimeCell(@Param("scheduleCellId") int scheduleCellId, @Param("cell") TimeCell timeCell);
 
     @Update("UPDATE administrator SET position = #{position} WHERE userId = #{id};")
     void updateAdministrator(Administrator administrator);

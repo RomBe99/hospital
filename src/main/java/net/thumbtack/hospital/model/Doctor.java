@@ -1,5 +1,7 @@
 package net.thumbtack.hospital.model;
 
+import org.apache.ibatis.annotations.AutomapConstructor;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -12,6 +14,7 @@ public class Doctor extends User {
     public Doctor() {
     }
 
+    @AutomapConstructor
     public Doctor(int id,
                   String login, String password,
                   String firstName, String lastName, String patronymic,

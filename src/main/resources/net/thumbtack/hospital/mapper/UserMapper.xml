@@ -29,6 +29,8 @@
                     <result property="email" column="email"/>
                     <result property="address" column="address"/>
                     <result property="phone" column="phone"/>
+                    <collection property="tickets" javaType="java.util.List"
+                                ofType="net.thumbtack.hospital.model.ScheduleCell"/>
                 </association>
             </collection>
         </collection>
@@ -59,6 +61,8 @@
                     <result property="email" column="email"/>
                     <result property="address" column="address"/>
                     <result property="phone" column="phone"/>
+                    <collection property="tickets" javaType="java.util.List"
+                                ofType="net.thumbtack.hospital.model.ScheduleCell"/>
                 </association>
             </collection>
         </collection>
@@ -92,7 +96,8 @@
                  LEFT JOIN patient p ON u.id = p.userId
         WHERE doctorId = #{doctorId} AND (patientId = #{patientId} OR patientId IS NULL)
         <if test="startDate != null"> AND date >= #{startDate} </if>
-        <if test="endDate != null"> AND #{endDate} >= date </if>;
+        <if test="endDate != null"> AND #{endDate} >= date </if>
+        ORDER BY date, ticketTime;
     </select>
 
     <select id="getDoctorsInformation" parameterType="java.util.Map" resultMap="resultDoctorsInformation">
@@ -124,6 +129,7 @@
         WHERE (patientId = #{patientId} OR patientId IS NULL)
         <if test="speciality != null"> AND ds.name == #{speciality} </if>
         <if test="startDate != null"> AND date >= #{startDate} </if>
-        <if test="endDate != null"> AND #{endDate} >= date </if>;
+        <if test="endDate != null"> AND #{endDate} >= date </if>
+        ORDER BY date, ticketTime;
     </select>
 </mapper>

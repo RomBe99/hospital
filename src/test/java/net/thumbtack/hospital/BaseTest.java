@@ -10,9 +10,7 @@ import net.thumbtack.hospital.daoimpl.PatientDaoImpl;
 import net.thumbtack.hospital.daoimpl.UserDaoImpl;
 import net.thumbtack.hospital.debug.DebugDao;
 import net.thumbtack.hospital.debug.DebugDaoImpl;
-import net.thumbtack.hospital.model.Administrator;
-import net.thumbtack.hospital.model.Doctor;
-import net.thumbtack.hospital.model.Patient;
+import net.thumbtack.hospital.model.*;
 import net.thumbtack.hospital.util.error.PermissionDeniedException;
 import net.thumbtack.hospital.util.mybatis.MyBatisUtils;
 import org.junit.Assert;
@@ -20,14 +18,17 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import java.time.LocalDate;
+import java.util.Comparator;
+import java.util.List;
 import java.util.UUID;
 
 public class BaseTest {
-    protected AdminDao adminDao = new AdminDaoImpl();
-    protected DoctorDao doctorDao = new DoctorDaoImpl();
-    protected PatientDao patientDao = new PatientDaoImpl();
+    protected final AdminDao adminDao = new AdminDaoImpl();
+    protected final DoctorDao doctorDao = new DoctorDaoImpl();
+    protected final PatientDao patientDao = new PatientDaoImpl();
+    protected final UserDao userDao = new UserDaoImpl();
     private final DebugDao debugDao = new DebugDaoImpl();
-    private final UserDao userDao = new UserDaoImpl();
 
     private static boolean setUpIsDone = false;
 
@@ -122,5 +123,23 @@ public class BaseTest {
         Assert.assertNotEquals(0, patient.getId());
 
         return patient;
+    }
+
+    protected List<ScheduleCell> insertSchedule(List<ScheduleCell> schedule, int doctorId) {
+        schedule.sort(Comparator.comparing(ScheduleCell::getDate));
+        schedule.forEach(sc -> sc.getCells().sort(Comparator.comparing(TimeCell::getTime)));
+
+        try {
+            LocalDate startDate = schedule.stream().min(Comparator.comparing(ScheduleCell::getDate)).orElseThrow(Exception::new).getDate();
+            LocalDate endDate = schedule.stream().max(Comparator.comparing(ScheduleCell::getDate)).orElseThrow(Exception::new).getDate();
+
+            adminDao.editDoctorSchedule(startDate, endDate, doctorId, schedule);
+
+            schedule.forEach(sc -> Assert.assertNotEquals(0, sc.getId()));
+        } catch (Exception e) {
+            Assert.fail();
+        }
+
+        return schedule;
     }
 }

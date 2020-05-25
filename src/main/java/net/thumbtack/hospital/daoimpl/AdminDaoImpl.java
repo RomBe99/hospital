@@ -107,6 +107,7 @@ public class AdminDaoImpl extends UserDaoImpl implements AdminDao {
     public void editDoctorSchedule(LocalDate dateStart, LocalDate dateEnd, int doctorId, List<ScheduleCell> schedule) {
         LOGGER.debug(className + ": Inserting schedule = {} for doctor with id = {} (date start = {} date end = {})",
                 schedule, doctorId, dateStart, dateEnd);
+
         try (SqlSession session = getSession()) {
             try {
                 if (session.<Integer>selectOne("net.thumbtack.hospital.mapper.CommonMapper.containPatientIdOnDateInterval") != 0) {
@@ -119,7 +120,7 @@ public class AdminDaoImpl extends UserDaoImpl implements AdminDao {
                     mapper.insertScheduleCell(doctorId, s);
 
                     for (TimeCell c : s.getCells()) {
-                        mapper.insertTimeCell(c.getPatient().getId(), s.getId(), c);
+                        mapper.insertTimeCell(s.getId(), c);
                     }
                 }
 
@@ -129,7 +130,7 @@ public class AdminDaoImpl extends UserDaoImpl implements AdminDao {
             } catch (RuntimeException ex) {
                 session.rollback();
                 LOGGER.error(className + ": Can't insert schedule = {} for doctor with id = {} (date start = {} date end = {})",
-                        schedule, doctorId, dateStart, dateEnd);
+                        schedule, doctorId, dateStart, dateEnd, ex);
 
                 throw ex;
             }
