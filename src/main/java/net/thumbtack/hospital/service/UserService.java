@@ -12,6 +12,7 @@ import net.thumbtack.hospital.dtoresponse.other.abstractresponse.UserInformation
 import net.thumbtack.hospital.dtoresponse.patient.FullPatientInformationDtoResponse;
 import net.thumbtack.hospital.dtoresponse.patient.PatientInformationDtoResponse;
 import net.thumbtack.hospital.dtoresponse.patient.PatientLoginDtoResponse;
+import net.thumbtack.hospital.dtoresponse.user.GetAllDoctorsDtoResponse;
 import net.thumbtack.hospital.mapper.UserTypes;
 import net.thumbtack.hospital.model.Administrator;
 import net.thumbtack.hospital.model.Doctor;
@@ -23,6 +24,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
+import javax.print.Doc;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Service("UserService")
@@ -131,5 +134,44 @@ public class UserService {
                     patient.getFirstName(), patient.getLastName(), patient.getPatronymic(),
                     patient.getEmail(), patient.getAddress(), patient.getPhone());
         }
+    }
+
+    public DoctorInformationDtoResponse getDoctorInformation(String sessionId, int doctorId, String schedule, String startDate, String endDate) throws PermissionDeniedException {
+        int patientId = patientDao.hasPermissions(sessionId);
+        Doctor doctor;
+
+        if (schedule != null && !schedule.isEmpty() && schedule.toLowerCase().equals("yes")) {
+            doctor = userDao.getDoctorInformation(patientId, doctorId, startDate, endDate);
+        } else {
+            doctor = userDao.getDoctorInformation(patientId, doctorId, null, null);
+        }
+
+        return new DoctorInformationDtoResponse(doctor.getId(),
+                doctor.getLogin(), doctor.getPassword(),
+                doctor.getFirstName(), doctor.getLastName(), doctor.getPatronymic(),
+                doctor.getSpecialty(), doctor.getCabinet(),
+                doctor.getSchedule().stream()
+                        .map(DtoAdapters::scheduleCellToScheduleCellResponse)
+                        .collect(Collectors.toList()));
+    }
+
+    public GetAllDoctorsDtoResponse getDoctorsInformation(String sessionId, String schedule, String speciality, String startDate, String endDate) throws PermissionDeniedException {
+        int patientId = patientDao.hasPermissions(sessionId);
+        List<Doctor> doctors;
+
+        if (schedule != null && !schedule.isEmpty() && schedule.toLowerCase().equals("yes")) {
+            doctors = userDao.getDoctorsInformation(patientId, speciality, startDate, endDate);
+        } else {
+            doctors = userDao.getDoctorsInformation(patientId, speciality, null, null);
+        }
+
+        return new GetAllDoctorsDtoResponse(doctors.stream()
+                .map(d -> new DoctorInformationDtoResponse(d.getId(),
+                        d.getLogin(), d.getPassword(),
+                        d.getFirstName(), d.getLastName(), d.getPatronymic(),
+                        d.getSpecialty(), d.getCabinet(),
+                        d.getSchedule().stream()
+                                .map(DtoAdapters::scheduleCellToScheduleCellResponse)
+                                .collect(Collectors.toList()))).collect(Collectors.toList()));
     }
 }

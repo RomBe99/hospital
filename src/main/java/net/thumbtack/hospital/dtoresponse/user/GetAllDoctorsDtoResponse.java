@@ -1,23 +1,25 @@
 package net.thumbtack.hospital.dtoresponse.user;
 
+import net.thumbtack.hospital.dtoresponse.doctor.DoctorInformationDtoResponse;
+
 import java.util.List;
 import java.util.Objects;
 
 public class GetAllDoctorsDtoResponse {
-    private List<GetDoctorDtoResponse> doctors;
+    private List<DoctorInformationDtoResponse> doctors;
 
     public GetAllDoctorsDtoResponse() {
     }
 
-    public GetAllDoctorsDtoResponse(List<GetDoctorDtoResponse> doctors) {
+    public GetAllDoctorsDtoResponse(List<DoctorInformationDtoResponse> doctors) {
         setDoctors(doctors);
     }
 
-    public void setDoctors(List<GetDoctorDtoResponse> doctors) {
+    public void setDoctors(List<DoctorInformationDtoResponse> doctors) {
         this.doctors = doctors;
     }
 
-    public List<GetDoctorDtoResponse> getDoctors() {
+    public List<DoctorInformationDtoResponse> getDoctors() {
         return doctors;
     }
 

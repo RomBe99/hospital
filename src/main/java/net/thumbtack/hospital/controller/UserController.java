@@ -75,9 +75,8 @@ public class UserController {
                                                              @PathVariable int doctorId,
                                                              @RequestParam(value = "schedule") String schedule,
                                                              @RequestParam(value = "startDate", required = false) String startDate,
-                                                             @RequestParam(value = "endDate", required = false) String endDate) {
-        // TODO
-        return null;
+                                                             @RequestParam(value = "endDate", required = false) String endDate) throws PermissionDeniedException {
+        return userService.getDoctorInformation(sessionId, doctorId, schedule, startDate, endDate);
     }
 
     @GetMapping(value = GET_DOCTORS_INFORMATION_URL,
@@ -88,9 +87,8 @@ public class UserController {
                                                           @RequestParam(value = "schedule") String schedule,
                                                           @RequestParam(value = "speciality", required = false) String speciality,
                                                           @RequestParam(value = "startDate", required = false) String startDate,
-                                                          @RequestParam(value = "endDate", required = false) String endDate) {
-        // TODO
-        return null;
+                                                          @RequestParam(value = "endDate", required = false) String endDate) throws PermissionDeniedException {
+        return userService.getDoctorsInformation(sessionId, schedule, speciality, startDate, endDate);
     }
 
     @GetMapping(value = GET_PATIENT_INFORMATION_URL,

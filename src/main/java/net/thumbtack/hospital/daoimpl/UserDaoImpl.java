@@ -2,12 +2,17 @@ package net.thumbtack.hospital.daoimpl;
 
 import net.thumbtack.hospital.dao.UserDao;
 import net.thumbtack.hospital.mapper.UserMapper;
+import net.thumbtack.hospital.model.Doctor;
 import net.thumbtack.hospital.util.error.PermissionDeniedErrorCodes;
 import net.thumbtack.hospital.util.error.PermissionDeniedException;
 import org.apache.ibatis.session.SqlSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Component("UserDaoImpl")
 public class UserDaoImpl extends BaseDaoImpl implements UserDao {
@@ -71,6 +76,48 @@ public class UserDaoImpl extends BaseDaoImpl implements UserDao {
             LOGGER.error(className + ": Can't check user permissions for session id = {}", sessionId, ex);
 
             throw new PermissionDeniedException(PermissionDeniedErrorCodes.PERMISSION_DENIED);
+        }
+    }
+
+    @Override
+    public Doctor getDoctorInformation(int patientId, int doctorId, String startDate, String endDate) {
+        LOGGER.debug(className + ": Get information about doctor = {} for patient id = {} with schedule where start date = {} to end date = {}",
+                doctorId, patientId, startDate, endDate);
+
+        Map<String, Object> params = new HashMap<>();
+        params.put("patientId", patientId);
+        params.put("doctorId", doctorId);
+        params.put("startDate", startDate);
+        params.put("endDate", endDate);
+
+        try (SqlSession session = getSession()) {
+            return session.selectOne("net.thumbtack.hospital.mapper.UserMapper.getDoctorInformation", params);
+        } catch (RuntimeException ex) {
+            LOGGER.error(className + ": Can't get information about doctor = {} for patient id = {} with schedule where start date = {} to end date = {}",
+                    doctorId, patientId, startDate, endDate);
+
+            throw ex;
+        }
+    }
+
+    @Override
+    public List<Doctor> getDoctorsInformation(int patientId, String speciality, String startDate, String endDate) {
+        LOGGER.debug(className + ": Get information about all doctors with speciality = {} for patient id = {} with schedule where start date = {} to end date = {}",
+                speciality, patientId, startDate, endDate);
+
+        Map<String, Object> params = new HashMap<>();
+        params.put("patientId", patientId);
+        params.put("speciality", speciality);
+        params.put("startDate", startDate);
+        params.put("endDate", endDate);
+
+        try (SqlSession session = getSession()) {
+            return session.selectOne("net.thumbtack.hospital.mapper.UserMapper.getDoctorsInformation", params);
+        } catch (RuntimeException ex) {
+            LOGGER.error(className + ": Can't get information about all doctors with speciality = {} for patient id = {} with schedule where start date = {} to end date = {}",
+                    speciality, patientId, startDate, endDate);
+
+            throw ex;
         }
     }
 }
