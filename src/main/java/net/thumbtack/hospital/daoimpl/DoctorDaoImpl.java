@@ -106,8 +106,8 @@ public class DoctorDaoImpl extends UserDaoImpl implements DoctorDao {
                 DoctorMapper mapper = getDoctorMapper(session);
                 int commissionId = mapper.createMedicalCommission(medicalCommission);
 
-                for (int id : medicalCommission.getDoctorIds()) {
-                    mapper.insertDoctorInMedicalCommission(commissionId, id);
+                for (Doctor d : medicalCommission.getDoctors()) {
+                    mapper.insertDoctorInMedicalCommission(commissionId, d.getId());
                 }
 
                 LOGGER.debug(className + ": Medical commission = {} successfully created", medicalCommission);

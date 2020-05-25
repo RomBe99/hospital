@@ -11,22 +11,22 @@ public class MedicalCommission {
     private LocalTime time;
     private int patientId;
     private int duration;
-    private List<Integer> doctorIds;
+    private List<Doctor> doctors;
 
     public MedicalCommission() {
     }
 
-    public MedicalCommission(int id, LocalDate date, LocalTime time, int patientId, int duration, List<Integer> doctorIds) {
+    public MedicalCommission(int id, LocalDate date, LocalTime time, int patientId, int duration, List<Doctor> doctors) {
         setId(id);
         setDate(date);
         setTime(time);
         setPatientId(patientId);
         setDuration(duration);
-        setDoctorIds(doctorIds);
+        setDoctors(doctors);
     }
 
-    public MedicalCommission(LocalDate date, LocalTime time, int patientId, int duration, List<Integer> doctorIds) {
-        this(0, date, time, patientId, duration, doctorIds);
+    public MedicalCommission(LocalDate date, LocalTime time, int patientId, int duration, List<Doctor> doctors) {
+        this(0, date, time, patientId, duration, doctors);
     }
 
     public void setId(int id) {
@@ -49,8 +49,8 @@ public class MedicalCommission {
         this.duration = duration;
     }
 
-    public void setDoctorIds(List<Integer> doctorIds) {
-        this.doctorIds = doctorIds;
+    public void setDoctors(List<Doctor> doctors) {
+        this.doctors = doctors;
     }
 
     public int getId() {
@@ -73,26 +73,26 @@ public class MedicalCommission {
         return duration;
     }
 
-    public List<Integer> getDoctorIds() {
-        return doctorIds;
+    public List<Doctor> getDoctors() {
+        return doctors;
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof MedicalCommission)) return false;
+        if (o == null || getClass() != o.getClass()) return false;
         MedicalCommission that = (MedicalCommission) o;
-        return getId() == that.getId() &&
-                getPatientId() == that.getPatientId() &&
-                getDuration() == that.getDuration() &&
-                Objects.equals(getDate(), that.getDate()) &&
-                Objects.equals(getTime(), that.getTime()) &&
-                Objects.equals(getDoctorIds(), that.getDoctorIds());
+        return id == that.id &&
+                patientId == that.patientId &&
+                duration == that.duration &&
+                Objects.equals(date, that.date) &&
+                Objects.equals(time, that.time) &&
+                Objects.equals(doctors, that.doctors);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId(), getDate(), getTime(), getPatientId(), getDuration(), getDoctorIds());
+        return Objects.hash(id, date, time, patientId, duration, doctors);
     }
 
     @Override
@@ -103,7 +103,7 @@ public class MedicalCommission {
                 ", time=" + time +
                 ", patientId=" + patientId +
                 ", duration=" + duration +
-                ", doctorIds=" + doctorIds +
+                ", doctorIds=" + doctors +
                 '}';
     }
 }

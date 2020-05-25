@@ -11,7 +11,6 @@ import net.thumbtack.hospital.dtoresponse.patient.PatientRegistrationDtoResponse
 import net.thumbtack.hospital.dtoresponse.patient.ticket.AllTicketsDtoResponse;
 import net.thumbtack.hospital.dtoresponse.patient.ticket.TicketDtoResponse;
 import net.thumbtack.hospital.dtoresponse.patient.ticket.TicketToDoctorDtoResponse;
-import net.thumbtack.hospital.dtoresponse.patient.ticket.TicketToMedicalCommissionDtoResponse;
 import net.thumbtack.hospital.model.Doctor;
 import net.thumbtack.hospital.model.Patient;
 import net.thumbtack.hospital.model.TicketToDoctor;
@@ -22,7 +21,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 

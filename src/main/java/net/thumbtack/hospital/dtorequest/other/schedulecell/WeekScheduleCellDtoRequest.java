@@ -4,6 +4,7 @@ import net.thumbtack.hospital.util.validator.annotation.Time;
 import net.thumbtack.hospital.util.validator.annotation.WeekDayInt;
 
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.Objects;
 
@@ -12,7 +13,7 @@ public class WeekScheduleCellDtoRequest {
     private String timeStart;
     @Time
     private String timeEnd;
-    @NotEmpty
+    @NotNull
     private List<@WeekDayInt Integer> weekDays;
 
     public WeekScheduleCellDtoRequest() {
