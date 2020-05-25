@@ -11,12 +11,14 @@ import net.thumbtack.hospital.dtoresponse.other.EmptyDtoResponse;
 import net.thumbtack.hospital.model.Administrator;
 import net.thumbtack.hospital.model.Doctor;
 import net.thumbtack.hospital.model.ScheduleCell;
+import net.thumbtack.hospital.model.TimeCell;
 import net.thumbtack.hospital.util.DtoAdapters;
 import net.thumbtack.hospital.util.error.PermissionDeniedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -50,9 +52,15 @@ public class AdministratorService {
         Doctor doctor =
                 new Doctor(request.getLogin(), request.getPassword(),
                         request.getFirstName(), request.getLastName(), request.getPatronymic(),
-                        "", request.getSpeciality());
+                        request.getRoom(), request.getSpeciality());
 
         doctorDao.insertDoctor(doctor);
+
+        doctor.getSchedule().sort(Comparator.comparing(ScheduleCell::getDate));
+        doctor.getSchedule().forEach(sc -> sc.getCells().sort(Comparator.comparing(TimeCell::getTime)));
+
+        adminDao.editDoctorSchedule(LocalDate.parse(request.getDateStart()),
+                LocalDate.parse(request.getDateEnd()), doctor.getId(), doctor.getSchedule());
 
         return new DoctorRegistrationDtoResponse(doctor.getId(),
                 doctor.getFirstName(), doctor.getLastName(), doctor.getPatronymic(), doctor.getSpecialty(), doctor.getCabinet(),
