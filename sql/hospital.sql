@@ -181,7 +181,16 @@ INSERT INTO cabinet
 VALUES (0, '306');
 
 INSERT INTO cabinet
-VALUES (0, '407');
+VALUES (0, '124');
+
+INSERT INTO cabinet
+VALUES (0, '261');
+
+INSERT INTO cabinet
+VALUES (0, '342');
+
+INSERT INTO cabinet
+VALUES (0, '471');
 
 # Insert root admin
 
