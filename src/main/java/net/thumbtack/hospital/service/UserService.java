@@ -160,7 +160,7 @@ public class UserService {
         List<Doctor> doctors;
 
         if (schedule != null && !schedule.isEmpty() && schedule.toLowerCase().equals("yes")) {
-            doctors = userDao.getDoctorsInformation(patientId, speciality, startDate, endDate);
+            doctors = userDao.getDoctorsInformation(patientId, speciality, LocalDate.parse(startDate), LocalDate.parse(endDate));
         } else {
             doctors = userDao.getDoctorsInformation(patientId, speciality, null, null);
         }

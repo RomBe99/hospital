@@ -20,7 +20,7 @@ public interface PatientMapper extends UserMapper {
     @Options(useGeneratedKeys = true, keyProperty = "userId")
     int hasPermissions(String sessionId);
 
-    @Update("UPDATE time_cell SET patientId = #{patientId} WHERE patientId IS NOT NULL, scheduleCellId = (SELECT id FROM schedule_cell WHERE doctorId = #{doctorId} AND date = #{date}) AND ticketTime = #{time};")
+    @Update("UPDATE time_cell SET patientId = #{patientId} WHERE patientId IS NULL AND scheduleCellId = (SELECT id FROM schedule_cell WHERE doctorId = #{doctorId} AND date = #{date}) AND ticketTime = #{time};")
     void appointmentToDoctor(@Param("patientId") int patientId, @Param("doctorId") int doctorId,
                              @Param("date") LocalDate date, @Param("time") LocalTime time);
 

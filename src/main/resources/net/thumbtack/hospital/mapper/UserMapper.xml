@@ -36,7 +36,7 @@
         </collection>
     </resultMap>
 
-    <resultMap id="resultDoctorsInformation" type="java.util.List">
+    <resultMap id="resultDoctorsInformation" type="net.thumbtack.hospital.model.Doctor">
         <id property="id" column="doctorId"/>
         <result property="firstName" column="docFirstName"/>
         <result property="lastName" column="docLastName"/>
@@ -61,8 +61,6 @@
                     <result property="email" column="email"/>
                     <result property="address" column="address"/>
                     <result property="phone" column="phone"/>
-                    <collection property="tickets" javaType="java.util.List"
-                                ofType="net.thumbtack.hospital.model.ScheduleCell"/>
                 </association>
             </collection>
         </collection>
@@ -127,7 +125,7 @@
         LEFT JOIN user u ON u.id = tc.patientId
         LEFT JOIN patient p ON u.id = p.userId
         WHERE (patientId = #{patientId} OR patientId IS NULL)
-        <if test="speciality != null"> AND ds.name == #{speciality} </if>
+        <if test="speciality != null"> AND ds.name = #{speciality} </if>
         <if test="startDate != null"> AND date >= #{startDate} </if>
         <if test="endDate != null"> AND #{endDate} >= date </if>
         ORDER BY date, ticketTime;

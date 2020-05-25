@@ -102,7 +102,7 @@ public class UserDaoImpl extends BaseDaoImpl implements UserDao {
     }
 
     @Override
-    public List<Doctor> getDoctorsInformation(int patientId, String speciality, String startDate, String endDate) {
+    public List<Doctor> getDoctorsInformation(int patientId, String speciality, LocalDate startDate, LocalDate endDate) {
         LOGGER.debug(className + ": Get information about all doctors with speciality = {} for patient id = {} with schedule where start date = {} to end date = {}",
                 speciality, patientId, startDate, endDate);
 
@@ -113,7 +113,7 @@ public class UserDaoImpl extends BaseDaoImpl implements UserDao {
         params.put("endDate", endDate);
 
         try (SqlSession session = getSession()) {
-            return session.selectOne("net.thumbtack.hospital.mapper.UserMapper.getDoctorsInformation", params);
+            return session.selectList("net.thumbtack.hospital.mapper.UserMapper.getDoctorsInformation", params);
         } catch (RuntimeException ex) {
             LOGGER.error(className + ": Can't get information about all doctors with speciality = {} for patient id = {} with schedule where start date = {} to end date = {}",
                     speciality, patientId, startDate, endDate);
