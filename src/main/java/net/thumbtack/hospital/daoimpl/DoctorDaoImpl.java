@@ -37,7 +37,7 @@ public class DoctorDaoImpl extends UserDaoImpl implements DoctorDao {
 
                 DoctorMapper doctorMapper = getDoctorMapper(session);
                 doctorMapper.insertUser(doctor, userTypeId);
-                doctorMapper.insertDoctor(doctor.getId(), cabinetId, specialityId);
+                doctorMapper.insertDoctor(doctor.getId(), specialityId, cabinetId);
 
                 session.commit();
                 LOGGER.debug(className + ": Doctor = {} successfully inserted", doctor);

@@ -5,12 +5,13 @@ import net.thumbtack.hospital.model.Patient;
 import net.thumbtack.hospital.model.ScheduleCell;
 import net.thumbtack.hospital.model.TimeCell;
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class DoctorOperationsTest extends BaseTest {
     @Test
@@ -62,8 +63,7 @@ public class DoctorOperationsTest extends BaseTest {
         }
     }
 
-    // FIXME Тест написан верно, ошибка где-то в xml-маппере
-    @Ignore
+    @Test
     public void getDoctorsWithSchedules1() {
         List<Integer> durations = Arrays.asList(15, 30, 45);
         int daysCount = 2;
@@ -95,7 +95,7 @@ public class DoctorOperationsTest extends BaseTest {
         LocalTime ticketTime = sc2.get(1).getCells().get(1).getTime();
         patientDao.appointmentToDoctor(patient.getId(), doctor2.getId(), ticketDate, ticketTime);
 
-        List<Doctor> actualDoctors = userDao.getDoctorsInformation(0, null, startDate, startDate.plusDays(daysCount));
+        List<Doctor> actualDoctors = userDao.getDoctorsInformation(patient.getId(), null, startDate, startDate.plusDays(daysCount));
         actualDoctors.sort(Comparator.comparingInt(Doctor::getId));
 
         List<Doctor> expectedDoctors = Arrays.asList(doctor1, doctor2, doctor3);
@@ -121,22 +121,22 @@ public class DoctorOperationsTest extends BaseTest {
         Assert.assertEquals(ticketTime, timeCellWithPatient.getTime());
     }
 
-    // FIXME Тест написан верно, ошибка где-то в xml-маппере
-    @Ignore
+    @Test
     public void getDoctorsWithSchedules2() {
         List<Integer> durations = Arrays.asList(15, 30, 45);
         int daysCount = 2;
+        String speciality = "Surgeon";
         LocalDate startDate = LocalDate.now();
 
         Doctor doctor1 = insertDoctor("GogolZulfiya56", "hJBcK9QR5nio",
                 "Зульфия", "Гоголь", "Алексеевна",
-                "104", "Surgeon");
+                "104", speciality);
         List<ScheduleCell> sc1 = insertSchedule(ScheduleOperationsTest.generateSchedule(durations, daysCount, startDate, doctor1), doctor1.getId());
         doctor1.setSchedule(sc1);
 
         Doctor doctor2 = insertDoctor("DobronravovArbis265", "byz3H8W1I0ZE",
                 "Арбис", "Добронравов", "Юрьевич",
-                "205", "Surgeon");
+                "205", speciality);
         List<ScheduleCell> sc2 = insertSchedule(ScheduleOperationsTest.generateSchedule(durations, daysCount, startDate, doctor2), doctor2.getId());
         doctor2.setSchedule(sc2);
 
@@ -146,12 +146,13 @@ public class DoctorOperationsTest extends BaseTest {
         List<ScheduleCell> sc3 = insertSchedule(ScheduleOperationsTest.generateSchedule(durations, daysCount, startDate, doctor3), doctor3.getId());
         doctor3.setSchedule(sc3);
 
-        String speciality = "Surgeon";
         List<Doctor> actualDoctors = userDao.getDoctorsInformation(0, speciality, null, null);
         actualDoctors.sort(Comparator.comparingInt(Doctor::getId));
 
-        List<Doctor> expectedDoctors = Arrays.asList(doctor1, doctor2);
-        expectedDoctors.sort(Comparator.comparingInt(Doctor::getId));
+        List<Doctor> expectedDoctors = Stream.of(doctor1, doctor2, doctor3)
+                .filter(d -> d.getSpecialty().equals(speciality))
+                .sorted(Comparator.comparingInt(Doctor::getId))
+                .collect(Collectors.toList());
 
         Assert.assertEquals(expectedDoctors.size(), actualDoctors.size());
 

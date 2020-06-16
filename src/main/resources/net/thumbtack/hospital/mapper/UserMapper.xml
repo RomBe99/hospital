@@ -11,7 +11,7 @@
         <result property="patronymic" column="docPatronymic"/>
         <result property="cabinet" column="cabinet"/>
         <result property="specialty" column="specialty"/>
-        
+
         <collection property="schedule" column="scheduleCellId" javaType="java.util.List"
                     ofType="net.thumbtack.hospital.model.ScheduleCell">
             <result property="id" column="scheduleCellId"/>
@@ -68,33 +68,33 @@
 
     <select id="getDoctorInformation" parameterType="java.util.Map" resultMap="resultDoctorInformation">
         SELECT doctorId,
-               user.firstName docFirstName,
-               user.lastName docLastName,
-               user.patronymic docPatronymic,
-               c.name cabinet,
-               ds.name specialty,
-               scheduleCellId,
-               date,
-               ticketTime time,
-               duration,
-               patientId,
-               u.firstName pFirstName,
-               u.lastName pLastName,
-               u.patronymic pPatronymic,
-               email,
-               address,
-               phone
+        user.firstName docFirstName,
+        user.lastName docLastName,
+        user.patronymic docPatronymic,
+        c.name cabinet,
+        ds.name specialty,
+        scheduleCellId,
+        date,
+        ticketTime time,
+        duration,
+        patientId,
+        u.firstName pFirstName,
+        u.lastName pLastName,
+        u.patronymic pPatronymic,
+        email,
+        address,
+        phone
         FROM user
-                 JOIN doctor d ON user.id = d.userId
-                 JOIN cabinet c ON d.cabinetId = c.id
-                 JOIN doctor_specialty ds ON d.specialtyId = ds.id
-                 LEFT JOIN schedule_cell sc ON d.userId = sc.doctorId
-                 LEFT JOIN time_cell tc ON sc.id = tc.scheduleCellId
-                 LEFT JOIN user u ON u.id = tc.patientId
-                 LEFT JOIN patient p ON u.id = p.userId
+        JOIN doctor d ON user.id = d.userId
+        JOIN cabinet c ON d.cabinetId = c.id
+        JOIN doctor_specialty ds ON d.specialtyId = ds.id
+        LEFT JOIN schedule_cell sc ON d.userId = sc.doctorId
+        LEFT JOIN time_cell tc ON sc.id = tc.scheduleCellId
+        LEFT JOIN user u ON u.id = tc.patientId
+        LEFT JOIN patient p ON u.id = p.userId
         WHERE doctorId = #{doctorId} AND (patientId = #{patientId} OR patientId IS NULL)
-        <if test="startDate != null"> AND date >= #{startDate} </if>
-        <if test="endDate != null"> AND #{endDate} >= date </if>
+        <if test="startDate != null">AND date >= #{startDate}</if>
+        <if test="endDate != null">AND #{endDate} >= date</if>
         ORDER BY date, ticketTime;
     </select>
 
@@ -124,7 +124,7 @@
         LEFT JOIN time_cell tc ON sc.id = tc.scheduleCellId
         LEFT JOIN user u ON u.id = tc.patientId
         LEFT JOIN patient p ON u.id = p.userId
-        WHERE (patientId = #{patientId} OR patientId IS NULL)
+        WHERE (patientId IS NULL OR patientId = #{patientId})
         <if test="speciality != null"> AND ds.name = #{speciality} </if>
         <if test="startDate != null"> AND date >= #{startDate} </if>
         <if test="endDate != null"> AND #{endDate} >= date </if>
