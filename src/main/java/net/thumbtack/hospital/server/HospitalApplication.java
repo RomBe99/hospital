@@ -11,7 +11,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.PropertySource;
 
 @SpringBootApplication(scanBasePackages = "net.thumbtack.hospital")
-@PropertySource(value = "classpath:application.properties")
+@PropertySource("classpath:application.properties")
 @EnableConfigurationProperties(ErrorMessageFactory.class)
 public class HospitalApplication {
     private static final Logger LOGGER = LoggerFactory.getLogger(AdminDaoImpl.class);

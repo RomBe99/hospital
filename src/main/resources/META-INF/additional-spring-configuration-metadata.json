@@ -10,77 +10,77 @@
     {
       "name": "hospital.constraints.max-name-length",
       "type": "java.lang.Integer",
-      "description": "Description for constraints.max-name-length."
+      "description": "Maximum name length."
     },
     {
       "name": "hospital.constraints.min-password-length",
       "type": "java.lang.Integer",
-      "description": "Description for constraints.min-password-length."
+      "description": "Minimum password length."
     },
     {
       "name": "hospital.errors.validations-error-codes-to-error-messages",
       "type": "java.lang.String",
-      "description": "Description for hospital.errors.validations-error-codes-to-error-messages."
+      "description": "Map error codes to error messages."
     },
     {
       "name": "hospital.errors.invalid-address-code",
       "type": "java.lang.String",
-      "description": "Description for hospital.errors.invalid-address-code."
+      "description": "Error code for invalid address."
     },
     {
       "name": "hospital.errors.invalid-date-code",
       "type": "java.lang.String",
-      "description": "Description for hospital.errors.invalid-date-code."
+      "description": "Error code for invalid date."
     },
     {
       "name": "hospital.errors.invalid-duration-code",
       "type": "java.lang.String",
-      "description": "Description for hospital.errors.invalid-duration-code."
+      "description": "Error code for invalid duration."
     },
     {
       "name": "hospital.errors.invalid-login-code",
       "type": "java.lang.String",
-      "description": "Description for hospital.errors.invalid-login-code."
+      "description": "Error code for invalid user login."
     },
     {
       "name": "hospital.errors.invalid-name-code",
       "type": "java.lang.String",
-      "description": "Description for hospital.errors.invalid-name-code."
+      "description": "Error code for invalid name."
     },
     {
       "name": "hospital.errors.invalid-password-code",
       "type": "java.lang.String",
-      "description": "Description for hospital.errors.invalid-password-code."
+      "description": "Error code for invalid password."
     },
     {
       "name": "hospital.errors.invalid-phone-code",
       "type": "java.lang.String",
-      "description": "Description for hospital.errors.invalid-phone-code."
+      "description": "Error code for invalid phone number."
     },
     {
       "name": "hospital.errors.invalid-position-code",
       "type": "java.lang.String",
-      "description": "Description for hospital.errors.invalid-position-code."
+      "description": "Error code for invalid administrator position."
     },
     {
       "name": "hospital.errors.invalid-room-code",
       "type": "java.lang.String",
-      "description": "Description for hospital.errors.invalid-room-code."
+      "description": "Error code for invalid room."
     },
     {
       "name": "hospital.errors.invalid-speciality-code",
       "type": "java.lang.String",
-      "description": "Description for hospital.errors.invalid-speciality-code."
+      "description": "Error code for invalid doctor speciality."
     },
     {
       "name": "hospital.errors.invalid-time-code",
       "type": "java.lang.String",
-      "description": "Description for hospital.errors.invalid-time-code."
+      "description": "Error code for invalid time."
     },
     {
       "name": "hospital.errors.invalid-week-day-code",
       "type": "java.lang.String",
-      "description": "Description for hospital.errors.invalid-week-day-code."
+      "description": "Error code for invalid week day."
     }
   ]
 }
