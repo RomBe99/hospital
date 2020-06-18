@@ -23,8 +23,9 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 @RestController("PatientController")
-@RequestMapping("/api")
+@RequestMapping(PatientController.PREFIX_URL)
 public class PatientController {
+    public static final String PREFIX_URL = "/api";
     public static final String PATIENT_REGISTRATION_URL = "patients";
     public static final String EDIT_PATIENT_PROFILE_URL = "patients";
     public static final String APPOINTMENT_TO_DOCTOR_URL = "tickets";

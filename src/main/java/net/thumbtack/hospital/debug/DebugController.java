@@ -7,8 +7,9 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 @RestController("DebugController")
-@RequestMapping("/api/debug")
+@RequestMapping(DebugController.PREFIX_URL)
 public class DebugController {
+    public static final String PREFIX_URL = "/api/debug";
     public static final String DEBUG_CLEAR_URL = "clear";
 
     private final DebugService debugService;

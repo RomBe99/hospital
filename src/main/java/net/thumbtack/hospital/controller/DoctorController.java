@@ -13,8 +13,9 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 
 @RestController("DoctorController")
-@RequestMapping("/api")
+@RequestMapping(DoctorController.PREFIX_URL)
 public class DoctorController {
+    public static final String PREFIX_URL = "/api";
     public static final String CREATE_MEDICAL_COMMISSION_URL = "commissions";
 
     private final DoctorService doctorService;

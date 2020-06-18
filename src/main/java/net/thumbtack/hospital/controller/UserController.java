@@ -20,8 +20,9 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 @RestController("UserController")
-@RequestMapping("/api")
+@RequestMapping(UserController.PREFIX_URL)
 public class UserController {
+    public static final String PREFIX_URL = "/api";
     public static final String LOGIN_URL = "sessions";
     public static final String LOGOUT_URL = "sessions";
     public static final String GET_USER_INFORMATION_URL = "account";

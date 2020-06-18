@@ -17,8 +17,9 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 
 @RestController("AdministratorController")
-@RequestMapping("/api")
+@RequestMapping(AdministratorController.PREFIX_URL)
 public class AdministratorController {
+    public static final String PREFIX_URL = "/api";
     public static final String ADMINISTRATOR_REGISTRATION_URL = "admins";
     public static final String DOCTOR_REGISTRATION_URL = "doctors";
     public static final String EDIT_ADMINISTRATOR_PROFILE_URL = "admins";
