@@ -90,14 +90,14 @@ public class EditDoctorScheduleDtoResponse {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        EditDoctorScheduleDtoResponse that = (EditDoctorScheduleDtoResponse) o;
-        return id == that.id &&
-                Objects.equals(firstName, that.firstName) &&
-                Objects.equals(lastName, that.lastName) &&
-                Objects.equals(patronymic, that.patronymic) &&
-                Objects.equals(speciality, that.speciality) &&
-                Objects.equals(room, that.room) &&
-                Objects.equals(schedule, that.schedule);
+        EditDoctorScheduleDtoResponse response = (EditDoctorScheduleDtoResponse) o;
+        return id == response.id &&
+                Objects.equals(firstName, response.firstName) &&
+                Objects.equals(lastName, response.lastName) &&
+                Objects.equals(patronymic, response.patronymic) &&
+                Objects.equals(speciality, response.speciality) &&
+                Objects.equals(room, response.room) &&
+                Objects.equals(schedule, response.schedule);
     }
 
     @Override

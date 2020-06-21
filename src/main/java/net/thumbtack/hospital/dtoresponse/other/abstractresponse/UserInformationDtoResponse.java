@@ -74,13 +74,13 @@ public abstract class UserInformationDtoResponse {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        UserInformationDtoResponse that = (UserInformationDtoResponse) o;
-        return id == that.id &&
-                Objects.equals(login, that.login) &&
-                Objects.equals(password, that.password) &&
-                Objects.equals(firstName, that.firstName) &&
-                Objects.equals(lastName, that.lastName) &&
-                Objects.equals(patronymic, that.patronymic);
+        UserInformationDtoResponse response = (UserInformationDtoResponse) o;
+        return id == response.id &&
+                Objects.equals(login, response.login) &&
+                Objects.equals(password, response.password) &&
+                Objects.equals(firstName, response.firstName) &&
+                Objects.equals(lastName, response.lastName) &&
+                Objects.equals(patronymic, response.patronymic);
     }
 
     @Override

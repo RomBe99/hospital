@@ -39,7 +39,7 @@ public class TicketToMedicalCommissionDtoResponse extends TicketDtoResponse{
 
     @Override
     public String toString() {
-        return super.toString() + " TicketToMedicalCommission{" +
+        return super.toString() + " TicketToMedicalCommissionDtoResponse{" +
                 "tickets=" + tickets +
                 '}';
     }

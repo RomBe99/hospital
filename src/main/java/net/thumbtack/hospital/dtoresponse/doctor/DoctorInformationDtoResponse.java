@@ -55,10 +55,10 @@ public class DoctorInformationDtoResponse extends UserInformationDtoResponse {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         if (!super.equals(o)) return false;
-        DoctorInformationDtoResponse that = (DoctorInformationDtoResponse) o;
-        return Objects.equals(speciality, that.speciality) &&
-                Objects.equals(room, that.room) &&
-                Objects.equals(schedule, that.schedule);
+        DoctorInformationDtoResponse response = (DoctorInformationDtoResponse) o;
+        return Objects.equals(speciality, response.speciality) &&
+                Objects.equals(room, response.room) &&
+                Objects.equals(schedule, response.schedule);
     }
 
     @Override

@@ -82,7 +82,7 @@ public class TicketToDoctorDtoResponse extends TicketDtoResponse {
 
     @Override
     public String toString() {
-        return super.toString() + " TicketToDoctor{" +
+        return super.toString() + " TicketToDoctorDtoResponse{" +
                 "doctorId=" + doctorId +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +

@@ -91,7 +91,7 @@ public class DoctorRegistrationDtoResponse {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         DoctorRegistrationDtoResponse that = (DoctorRegistrationDtoResponse) o;
-        return Objects.equals(id, that.id) &&
+        return id == that.id &&
                 Objects.equals(firstName, that.firstName) &&
                 Objects.equals(lastName, that.lastName) &&
                 Objects.equals(patronymic, that.patronymic) &&
@@ -108,7 +108,7 @@ public class DoctorRegistrationDtoResponse {
     @Override
     public String toString() {
         return "DoctorRegistrationDtoResponse{" +
-                "id='" + id + '\'' +
+                "id=" + id +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", patronymic='" + patronymic + '\'' +

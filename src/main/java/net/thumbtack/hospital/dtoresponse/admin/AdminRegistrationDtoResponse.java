@@ -64,12 +64,12 @@ public class AdminRegistrationDtoResponse {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        AdminRegistrationDtoResponse that = (AdminRegistrationDtoResponse) o;
-        return id == that.id &&
-                Objects.equals(firstName, that.firstName) &&
-                Objects.equals(lastName, that.lastName) &&
-                Objects.equals(patronymic, that.patronymic) &&
-                Objects.equals(position, that.position);
+        AdminRegistrationDtoResponse response = (AdminRegistrationDtoResponse) o;
+        return id == response.id &&
+                Objects.equals(firstName, response.firstName) &&
+                Objects.equals(lastName, response.lastName) &&
+                Objects.equals(patronymic, response.patronymic) &&
+                Objects.equals(position, response.position);
     }
 
     @Override
