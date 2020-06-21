@@ -24,6 +24,22 @@ public class DoctorLoginDtoResponse extends LoginUserDtoResponse {
         setSchedule(schedule);
     }
 
+    public DoctorLoginDtoResponse(int id,
+                                  String firstName, String lastName,
+                                  String speciality, String room, List<ScheduleCellResponse> schedule) {
+        this(id, firstName, lastName, null, speciality, room, schedule);
+    }
+
+    public DoctorLoginDtoResponse(String firstName, String lastName, String patronymic,
+                                  String speciality, String room, List<ScheduleCellResponse> schedule) {
+        this(0, firstName, lastName, patronymic, speciality, room, schedule);
+    }
+
+    public DoctorLoginDtoResponse(String firstName, String lastName,
+                                  String speciality, String room, List<ScheduleCellResponse> schedule) {
+        this(firstName, lastName, null, speciality, room, schedule);
+    }
+
     public void setSpeciality(String speciality) {
         this.speciality = speciality;
     }

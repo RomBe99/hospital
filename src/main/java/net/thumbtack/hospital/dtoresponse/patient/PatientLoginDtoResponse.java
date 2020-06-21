@@ -12,12 +12,30 @@ public class PatientLoginDtoResponse extends LoginUserDtoResponse {
     public PatientLoginDtoResponse() {
     }
 
-    public PatientLoginDtoResponse(int id, String firstName, String lastName, String patronymic, String email, String address, String phone) {
+    public PatientLoginDtoResponse(int id,
+                                   String firstName, String lastName, String patronymic,
+                                   String email, String address, String phone) {
         super(id, firstName, lastName, patronymic);
 
         setEmail(email);
         setAddress(address);
         setPhone(phone);
+    }
+
+    public PatientLoginDtoResponse(int id,
+                                   String firstName, String lastName,
+                                   String email, String address, String phone) {
+        this(id, firstName, lastName, null, email, address, phone);
+    }
+
+    public PatientLoginDtoResponse(String firstName, String lastName, String patronymic,
+                                   String email, String address, String phone) {
+        this(0, firstName, lastName, patronymic, email, address, phone);
+    }
+
+    public PatientLoginDtoResponse(String firstName, String lastName,
+                                   String email, String address, String phone) {
+        this(firstName, lastName, null, email, address, phone);
     }
 
     public void setEmail(String email) {
