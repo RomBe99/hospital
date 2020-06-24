@@ -34,6 +34,10 @@ public class AdminRegistrationDtoRequest {
         setPassword(password);
     }
 
+    public AdminRegistrationDtoRequest(String firstName, String lastName, String position, String login, String password) {
+        this(firstName, lastName, null, position, login, password);
+    }
+
     public void setFirstName(String firstName) {
         this.firstName = firstName;
     }

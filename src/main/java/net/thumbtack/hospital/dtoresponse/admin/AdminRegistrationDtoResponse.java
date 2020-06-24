@@ -20,6 +20,18 @@ public class AdminRegistrationDtoResponse {
         setPosition(position);
     }
 
+    public AdminRegistrationDtoResponse(int id, String firstName, String lastName, String position) {
+        this(id, firstName, lastName, null, position);
+    }
+
+    public AdminRegistrationDtoResponse(String firstName, String lastName, String patronymic, String position) {
+        this(0, firstName, lastName, patronymic, position);
+    }
+
+    public AdminRegistrationDtoResponse(String firstName, String lastName, String position) {
+        this(firstName, lastName, null, position);
+    }
+
     public void setId(int id) {
         this.id = id;
     }
