@@ -31,7 +31,7 @@ public class AdminDaoImpl extends UserDaoImpl implements AdminDao {
 
         try (SqlSession session = getSession()) {
             try {
-                int userTypeId = getCommonMapper(session).getUserTypeId(UserTypes.PATIENT.getType());
+                int userTypeId = getCommonMapper(session).getUserTypeId(UserTypes.ADMINISTRATOR.getType());
 
                 AdminMapper mapper = getAdminMapper(session);
                 mapper.insertUser(administrator, userTypeId);
