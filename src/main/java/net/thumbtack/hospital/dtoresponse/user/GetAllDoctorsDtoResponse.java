@@ -2,11 +2,12 @@ package net.thumbtack.hospital.dtoresponse.user;
 
 import net.thumbtack.hospital.dtoresponse.doctor.DoctorInformationDtoResponse;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 public class GetAllDoctorsDtoResponse {
-    private List<DoctorInformationDtoResponse> doctors;
+    private List<DoctorInformationDtoResponse> doctors = new ArrayList<>();
 
     public GetAllDoctorsDtoResponse() {
     }

@@ -30,6 +30,25 @@ public class EditDoctorScheduleDtoResponse {
         setSchedule(schedule);
     }
 
+    public EditDoctorScheduleDtoResponse(int id,
+                                         String firstName, String lastName,
+                                         String speciality, String room,
+                                         List<ScheduleCellResponse> schedule) {
+        this(id, firstName, lastName, null, speciality, room, schedule);
+    }
+
+    public EditDoctorScheduleDtoResponse(String firstName, String lastName, String patronymic,
+                                         String speciality, String room,
+                                         List<ScheduleCellResponse> schedule) {
+        this(0, firstName, lastName, patronymic, speciality, room, schedule);
+    }
+
+    public EditDoctorScheduleDtoResponse(String firstName, String lastName,
+                                         String speciality, String room,
+                                         List<ScheduleCellResponse> schedule) {
+        this(firstName, lastName, null, speciality, room, schedule);
+    }
+
     public void setId(int id) {
         this.id = id;
     }

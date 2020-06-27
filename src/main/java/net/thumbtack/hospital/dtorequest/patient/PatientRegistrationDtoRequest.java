@@ -39,6 +39,12 @@ public class PatientRegistrationDtoRequest {
         setPassword(password);
     }
 
+    public PatientRegistrationDtoRequest(String firstName, String lastName,
+                                         String email, String address, String phone,
+                                         String login, String password) {
+        this(firstName, lastName, null, email, address, phone, login, password);
+    }
+
     public void setFirstName(String firstName) {
         this.firstName = firstName;
     }

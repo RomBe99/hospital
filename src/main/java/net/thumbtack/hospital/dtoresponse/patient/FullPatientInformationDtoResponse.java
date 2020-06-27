@@ -23,6 +23,12 @@ public class FullPatientInformationDtoResponse extends UserInformationDtoRespons
         setPhone(phone);
     }
 
+    public FullPatientInformationDtoResponse(String login, String password,
+                                             String firstName, String lastName, String patronymic,
+                                             String email, String address, String phone) {
+        this(0, login, password, firstName, lastName, patronymic, email, address, phone);
+    }
+
     public void setEmail(String email) {
         this.email = email;
     }

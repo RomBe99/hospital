@@ -32,14 +32,20 @@ public class EditPatientProfileDtoRequest {
     public EditPatientProfileDtoRequest(String firstName, String lastName, String patronymic,
                                         String email, String address, String phone,
                                         String oldPassword, String newPassword) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.patronymic = patronymic;
-        this.email = email;
-        this.address = address;
-        this.phone = phone;
-        this.oldPassword = oldPassword;
-        this.newPassword = newPassword;
+        setFirstName(firstName);
+        setLastName(lastName);
+        setPatronymic(patronymic);
+        setEmail(email);
+        setAddress(address);
+        setPhone(phone);
+        setOldPassword(oldPassword);
+        setNewPassword(newPassword);
+    }
+
+    public EditPatientProfileDtoRequest(String firstName, String lastName,
+                                        String email, String address, String phone,
+                                        String oldPassword, String newPassword) {
+        this(firstName, lastName, null, email, address, phone, oldPassword, newPassword);
     }
 
     public void setFirstName(String firstName) {

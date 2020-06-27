@@ -25,6 +25,11 @@ public class PatientRegistrationDtoResponse {
         setPhone(phone);
     }
 
+    public PatientRegistrationDtoResponse(String firstName, String lastName, String patronymic,
+                                          String email, String address, String phone) {
+        this(0, firstName, lastName, patronymic, email, address, phone);
+    }
+
     public void setId(int id) {
         this.id = id;
     }

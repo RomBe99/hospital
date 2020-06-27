@@ -34,6 +34,11 @@ public class EditAdminProfileDtoRequest {
         setNewPassword(newPassword);
     }
 
+    public EditAdminProfileDtoRequest(String firstName, String lastName, String position,
+                                      String oldPassword, String newPassword) {
+        this(firstName, lastName, null, position, oldPassword, newPassword);
+    }
+
     public void setFirstName(String firstName) {
         this.firstName = firstName;
     }

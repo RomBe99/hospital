@@ -26,6 +26,12 @@ public class EditPatientProfileDtoResponse {
         setPassword(password);
     }
 
+    public EditPatientProfileDtoResponse(String firstName, String lastName,
+                                         String email, String address, String phone,
+                                         String password) {
+        this(firstName, lastName, null, email, address, phone, password);
+    }
+
     public void setFirstName(String firstName) {
         this.firstName = firstName;
     }

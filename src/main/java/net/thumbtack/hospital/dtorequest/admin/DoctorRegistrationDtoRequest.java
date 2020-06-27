@@ -29,18 +29,18 @@ public class DoctorRegistrationDtoRequest {
     private List<WeekScheduleCellDtoRequest> weekSchedule;
     private List<WeekDayScheduleCellDtoRequest> weekDaysSchedule;
     @Duration
-    private String duration;
+    private int duration;
 
     public DoctorRegistrationDtoRequest() {
     }
 
-    private DoctorRegistrationDtoRequest(String firstName, String lastName, String patronymic,
+    public DoctorRegistrationDtoRequest(String firstName, String lastName, String patronymic,
                                         String speciality, String room,
                                         String login, String password,
                                         String dateStart, String dateEnd,
                                         List<WeekScheduleCellDtoRequest> weekSchedule,
                                         List<WeekDayScheduleCellDtoRequest> weekDaysSchedule,
-                                        String duration) {
+                                        int duration) {
         setFirstName(firstName);
         setLastName(lastName);
         setPatronymic(patronymic);
@@ -53,6 +53,17 @@ public class DoctorRegistrationDtoRequest {
         setWeekSchedule(weekSchedule);
         setWeekDaysSchedule(weekDaysSchedule);
         setDuration(duration);
+    }
+
+    public DoctorRegistrationDtoRequest(String firstName, String lastName,
+                                        String speciality, String room,
+                                        String login, String password,
+                                        String dateStart, String dateEnd,
+                                        List<WeekScheduleCellDtoRequest> weekSchedule,
+                                        List<WeekDayScheduleCellDtoRequest> weekDaysSchedule,
+                                        int duration) {
+        this(firstName, lastName, null,
+                speciality, room, login, password, dateStart, dateEnd, weekSchedule, weekDaysSchedule, duration);
     }
 
     public void setFirstName(String firstName) {
@@ -99,7 +110,7 @@ public class DoctorRegistrationDtoRequest {
         this.weekDaysSchedule = weekDaysSchedule;
     }
 
-    public void setDuration(String duration) {
+    public void setDuration(int duration) {
         this.duration = duration;
     }
 
@@ -147,7 +158,7 @@ public class DoctorRegistrationDtoRequest {
         return weekDaysSchedule;
     }
 
-    public String getDuration() {
+    public int getDuration() {
         return duration;
     }
 
@@ -156,7 +167,8 @@ public class DoctorRegistrationDtoRequest {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         DoctorRegistrationDtoRequest that = (DoctorRegistrationDtoRequest) o;
-        return Objects.equals(firstName, that.firstName) &&
+        return duration == that.duration &&
+                Objects.equals(firstName, that.firstName) &&
                 Objects.equals(lastName, that.lastName) &&
                 Objects.equals(patronymic, that.patronymic) &&
                 Objects.equals(speciality, that.speciality) &&
@@ -166,8 +178,7 @@ public class DoctorRegistrationDtoRequest {
                 Objects.equals(dateStart, that.dateStart) &&
                 Objects.equals(dateEnd, that.dateEnd) &&
                 Objects.equals(weekSchedule, that.weekSchedule) &&
-                Objects.equals(weekDaysSchedule, that.weekDaysSchedule) &&
-                Objects.equals(duration, that.duration);
+                Objects.equals(weekDaysSchedule, that.weekDaysSchedule);
     }
 
     @Override
@@ -189,7 +200,7 @@ public class DoctorRegistrationDtoRequest {
                 ", dateEnd='" + dateEnd + '\'' +
                 ", weekSchedule=" + weekSchedule +
                 ", weekDaysSchedule=" + weekDaysSchedule +
-                ", duration='" + duration + '\'' +
+                ", duration=" + duration +
                 '}';
     }
 }
