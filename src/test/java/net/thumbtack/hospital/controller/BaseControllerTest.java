@@ -12,6 +12,9 @@ import net.thumbtack.hospital.dtorequest.user.LoginDtoRequest;
 import net.thumbtack.hospital.dtoresponse.admin.*;
 import net.thumbtack.hospital.dtoresponse.doctor.CreateMedicalCommissionDtoResponse;
 import net.thumbtack.hospital.dtoresponse.doctor.DoctorInformationDtoResponse;
+import net.thumbtack.hospital.dtoresponse.doctor.DoctorLoginDtoResponse;
+import net.thumbtack.hospital.dtoresponse.other.EmptyDtoResponse;
+import net.thumbtack.hospital.dtoresponse.other.abstractresponse.LoginUserDtoResponse;
 import net.thumbtack.hospital.dtoresponse.other.abstractresponse.UserInformationDtoResponse;
 import net.thumbtack.hospital.dtoresponse.patient.*;
 import net.thumbtack.hospital.dtoresponse.patient.ticket.AllTicketsDtoResponse;
@@ -27,12 +30,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import javax.servlet.http.Cookie;
+import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 @SpringBootTest(classes = HospitalApplication.class)
@@ -69,7 +76,7 @@ public abstract class BaseControllerTest {
                 .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andReturn().getResponse().getContentAsString();
 
-        String expectedJsonResponse = "{}";
+        String expectedJsonResponse = mapToJson(new EmptyDtoResponse());
 
         Assert.assertEquals(expectedJsonResponse, actualJsonResponse);
     }
@@ -84,37 +91,60 @@ public abstract class BaseControllerTest {
 
     // User controller methods
 
-    public String login(String login, String password) throws Exception {
+    public String login(String login, String password, LoginUserDtoResponse expectedResponse, UserTypes userType) throws Exception {
         String url = UserController.PREFIX_URL + "/" + UserController.LOGIN_URL;
         LoginDtoRequest request = new LoginDtoRequest(login, password);
         String json = mapToJson(request);
 
-        String sessionId = Objects.requireNonNull(mvc
-                .perform(MockMvcRequestBuilders
+        MockHttpServletResponse response = mvc.perform(
+                MockMvcRequestBuilders
                         .post(url)
                         .contentType(MediaType.APPLICATION_JSON_VALUE).content(json))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.cookie().exists(CookieFactory.JAVA_SESSION_ID))
-                .andReturn().getResponse().getCookie(CookieFactory.JAVA_SESSION_ID)).getValue();
+                .andReturn().getResponse();
+        response.setCharacterEncoding(StandardCharsets.UTF_8.name());
 
+        Map<UserTypes, Class<? extends LoginUserDtoResponse>> dtoClasses = new HashMap<>();
+        dtoClasses.put(UserTypes.ADMINISTRATOR, AdminLoginDtoResponse.class);
+        dtoClasses.put(UserTypes.DOCTOR, DoctorLoginDtoResponse.class);
+        dtoClasses.put(UserTypes.PATIENT, PatientLoginDtoResponse.class);
+
+        LoginUserDtoResponse actualResponse = mapFromJson(response.getContentAsString(), dtoClasses.get(userType));
+        Assert.assertNotNull(actualResponse);
+        Assert.assertNotEquals(0, actualResponse.getId());
+
+        expectedResponse.setId(actualResponse.getId());
+        Assert.assertEquals(expectedResponse, actualResponse);
+
+        String sessionId = Objects.requireNonNull(response.getCookie(CookieFactory.JAVA_SESSION_ID)).getValue();
         Assert.assertFalse(sessionId.isEmpty());
 
         return sessionId;
     }
 
+    public String loginRootAdmin() throws Exception {
+        String login = "admin";
+        String password = "admin";
+        LoginUserDtoResponse expectedResponse = new AdminLoginDtoResponse("Roman", "Belinsky", "Root admin");
+
+        return login(login, password, expectedResponse, UserTypes.ADMINISTRATOR);
+    }
+
     public void logout(String sessionId) throws Exception {
         String url = UserController.PREFIX_URL + "/" + UserController.LOGOUT_URL;
 
-        String actualJsonResponse = mvc.perform(
+        MockHttpServletResponse response = mvc.perform(
                 MockMvcRequestBuilders
                         .delete(url)
                         .cookie(new Cookie(CookieFactory.JAVA_SESSION_ID, sessionId)))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON_VALUE))
-                .andReturn().getResponse().getContentAsString();
+                .andReturn().getResponse();
+        response.setCharacterEncoding(StandardCharsets.UTF_8.name());
 
-        String expectedJsonResponse = "{}";
-
+        String actualJsonResponse = response.getContentAsString();
+        String expectedJsonResponse = mapToJson(new EmptyDtoResponse());
         Assert.assertEquals(expectedJsonResponse, actualJsonResponse);
     }
 
@@ -122,64 +152,59 @@ public abstract class BaseControllerTest {
                                    UserInformationDtoResponse expectedResponse) throws Exception {
         String url = UserController.PREFIX_URL + "/" + UserController.GET_USER_INFORMATION_URL;
 
-        String jsonResponse = mvc.perform(
+        MockHttpServletResponse response = mvc.perform(
                 MockMvcRequestBuilders
                         .get(url)
                         .cookie(new Cookie(CookieFactory.JAVA_SESSION_ID, sessionId)))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON_VALUE))
-                .andReturn().getResponse().getContentAsString();
+                .andReturn().getResponse();
+        response.setCharacterEncoding(StandardCharsets.UTF_8.name());
+
+        String jsonResponse = response.getContentAsString();
 
         Assert.assertFalse(jsonResponse.isEmpty());
 
-        UserInformationDtoResponse actualResponse = null;
+        Map<UserTypes, Class<? extends UserInformationDtoResponse>> dtoClasses = new HashMap<>();
+        dtoClasses.put(UserTypes.ADMINISTRATOR, AdminInformationDtoResponse.class);
+        dtoClasses.put(UserTypes.DOCTOR, DoctorInformationDtoResponse.class);
+        dtoClasses.put(UserTypes.PATIENT, FullPatientInformationDtoResponse.class);
 
-        if (UserTypes.PATIENT.equals(userType)) {
-            actualResponse = mapFromJson(jsonResponse, FullPatientInformationDtoResponse.class);
-        }
-
-        if (UserTypes.ADMINISTRATOR.equals(userType)) {
-            actualResponse = mapFromJson(jsonResponse, AdminInformationDtoResponse.class);
-        }
-
-        if (UserTypes.DOCTOR.equals(userType)) {
-            actualResponse = mapFromJson(jsonResponse, DoctorInformationDtoResponse.class);
-        }
-
+        UserInformationDtoResponse actualResponse = mapFromJson(jsonResponse, dtoClasses.get(userType));
         Assert.assertEquals(expectedResponse, actualResponse);
     }
 
     public void getDoctorInformation(String sessionId, int doctorId, String schedule, String startDate, String endDate,
                                      DoctorInformationDtoResponse expectedResponse) throws Exception {
         String url = UserController.PREFIX_URL + "/" + UserController.GET_DOCTOR_INFORMATION_URL.replace("{doctorId}", String.valueOf(doctorId));
+
         MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders
                 .get(url)
                 .cookie(new Cookie(CookieFactory.JAVA_SESSION_ID, sessionId))
                 .queryParam("schedule", schedule);
 
-        if (startDate != null) {
+        if (startDate != null && endDate != null) {
             requestBuilder.queryParam("startDate", startDate);
-        }
-
-        if (endDate != null) {
             requestBuilder.queryParam("endDate", endDate);
         }
 
-        String jsonResponse = mvc.perform(requestBuilder)
+        MockHttpServletResponse response = mvc.perform(requestBuilder)
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON_VALUE))
-                .andReturn().getResponse().getContentAsString();
+                .andReturn().getResponse();
+        response.setCharacterEncoding(StandardCharsets.UTF_8.name());
 
+        String jsonResponse = response.getContentAsString();
         Assert.assertFalse(jsonResponse.isEmpty());
 
         DoctorInformationDtoResponse actualResponse = mapFromJson(jsonResponse, DoctorInformationDtoResponse.class);
-
         Assert.assertEquals(expectedResponse, actualResponse);
     }
 
     public void getDoctorsInformation(String sessionId, String schedule, String speciality, String startDate, String endDate,
                                       GetAllDoctorsDtoResponse expectedResponse) throws Exception {
         String url = UserController.PREFIX_URL + "/" + UserController.GET_DOCTORS_INFORMATION_URL;
+
         MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders
                 .get(url)
                 .cookie(new Cookie(CookieFactory.JAVA_SESSION_ID, sessionId))
@@ -189,23 +214,21 @@ public abstract class BaseControllerTest {
             requestBuilder.queryParam("speciality", speciality);
         }
 
-        if (startDate != null) {
+        if (startDate != null && endDate != null) {
             requestBuilder.queryParam("startDate", startDate);
-        }
-
-        if (endDate != null) {
             requestBuilder.queryParam("endDate", endDate);
         }
 
-        String jsonResponse = mvc.perform(requestBuilder)
+        MockHttpServletResponse response = mvc.perform(requestBuilder)
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON_VALUE))
-                .andReturn().getResponse().getContentAsString();
+                .andReturn().getResponse();
+        response.setCharacterEncoding(StandardCharsets.UTF_8.name());
 
+        String jsonResponse = response.getContentAsString();
         Assert.assertFalse(jsonResponse.isEmpty());
 
         GetAllDoctorsDtoResponse actualResponse = mapFromJson(jsonResponse, GetAllDoctorsDtoResponse.class);
-
         Assert.assertEquals(expectedResponse, actualResponse);
     }
 
@@ -213,18 +236,19 @@ public abstract class BaseControllerTest {
                                       PatientInformationDtoResponse expectedResponse) throws Exception {
         String url = UserController.PREFIX_URL + "/" + UserController.GET_PATIENT_INFORMATION_URL.replace("{patientId}", String.valueOf(patientId));
 
-        String jsonResponse = mvc.perform(
+        MockHttpServletResponse response = mvc.perform(
                 MockMvcRequestBuilders
                         .get(url)
                         .cookie(new Cookie(CookieFactory.JAVA_SESSION_ID, sessionId)))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON_VALUE))
-                .andReturn().getResponse().getContentAsString();
+                .andReturn().getResponse();
+        response.setCharacterEncoding(StandardCharsets.UTF_8.name());
 
+        String jsonResponse = response.getContentAsString();
         Assert.assertFalse(jsonResponse.isEmpty());
 
         PatientInformationDtoResponse actualResponse = mapFromJson(jsonResponse, PatientInformationDtoResponse.class);
-
         Assert.assertEquals(expectedResponse, actualResponse);
     }
 
@@ -235,19 +259,22 @@ public abstract class BaseControllerTest {
         String url = AdministratorController.PREFIX_URL + "/" + AdministratorController.ADMINISTRATOR_REGISTRATION_URL;
         String json = mapToJson(request);
 
-        String actualJsonResponse  = mvc.perform(
+        MockHttpServletResponse response = mvc.perform(
                 MockMvcRequestBuilders
                         .post(url)
                         .cookie(new Cookie(CookieFactory.JAVA_SESSION_ID, sessionId))
                         .contentType(MediaType.APPLICATION_JSON_VALUE).content(json))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON_VALUE))
-                .andReturn().getResponse().getContentAsString();
+                .andReturn().getResponse();
+        response.setCharacterEncoding(StandardCharsets.UTF_8.name());
 
+        String actualJsonResponse = response.getContentAsString();
         Assert.assertFalse(actualJsonResponse.isEmpty());
 
         AdminRegistrationDtoResponse actualResponse = mapFromJson(actualJsonResponse, AdminRegistrationDtoResponse.class);
-
+        Assert.assertNotEquals(0, actualResponse.getId());
+        expectedResponse.setId(actualResponse.getId());
         Assert.assertEquals(expectedResponse, actualResponse);
     }
 
@@ -256,19 +283,22 @@ public abstract class BaseControllerTest {
         String url = AdministratorController.PREFIX_URL + "/" + AdministratorController.DOCTOR_REGISTRATION_URL;
         String json = mapToJson(request);
 
-        String actualJsonResponse = mvc.perform(
+        MockHttpServletResponse response = mvc.perform(
                 MockMvcRequestBuilders
                         .post(url)
                         .cookie(new Cookie(CookieFactory.JAVA_SESSION_ID, sessionId))
                         .contentType(MediaType.APPLICATION_JSON_VALUE).content(json))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON_VALUE))
-                .andReturn().getResponse().getContentAsString();
+                .andReturn().getResponse();
+        response.setCharacterEncoding(StandardCharsets.UTF_8.name());
 
+        String actualJsonResponse = response.getContentAsString();
         Assert.assertFalse(actualJsonResponse.isEmpty());
 
         DoctorRegistrationDtoResponse actualResponse = mapFromJson(actualJsonResponse, DoctorRegistrationDtoResponse.class);
-
+        Assert.assertNotEquals(0, actualResponse.getId());
+        expectedResponse.setId(actualResponse.getId());
         Assert.assertEquals(expectedResponse, actualResponse);
     }
 
@@ -277,19 +307,21 @@ public abstract class BaseControllerTest {
         String url = AdministratorController.PREFIX_URL + "/" + AdministratorController.EDIT_ADMINISTRATOR_PROFILE_URL;
         String json = mapToJson(request);
 
-        String actualJsonResponse = mvc.perform(
+        MockHttpServletResponse response = mvc.perform(
                 MockMvcRequestBuilders
                         .put(url)
                         .cookie(new Cookie(CookieFactory.JAVA_SESSION_ID, sessionId))
                         .contentType(MediaType.APPLICATION_JSON_VALUE).content(json))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON_VALUE))
-                .andReturn().getResponse().getContentAsString();
+                .andReturn().getResponse();
 
+        response.setCharacterEncoding(StandardCharsets.UTF_8.name());
+
+        String actualJsonResponse = response.getContentAsString();
         Assert.assertFalse(actualJsonResponse.isEmpty());
 
         EditAdminProfileDtoResponse actualResponse = mapFromJson(actualJsonResponse, EditAdminProfileDtoResponse.class);
-
         Assert.assertEquals(expectedResponse, actualResponse);
     }
 
@@ -298,19 +330,20 @@ public abstract class BaseControllerTest {
         String url = AdministratorController.PREFIX_URL + "/" + AdministratorController.EDIT_DOCTOR_SCHEDULE_URL.replace("{doctorId}", String.valueOf(doctorId));
         String json = mapToJson(request);
 
-        String actualJsonResponse = mvc.perform(
+        MockHttpServletResponse response = mvc.perform(
                 MockMvcRequestBuilders
                         .put(url)
                         .cookie(new Cookie(CookieFactory.JAVA_SESSION_ID, sessionId))
                         .contentType(MediaType.APPLICATION_JSON_VALUE).content(json))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON_VALUE))
-                .andReturn().getResponse().getContentAsString();
+                .andReturn().getResponse();
+        response.setCharacterEncoding(StandardCharsets.UTF_8.name());
 
+        String actualJsonResponse = response.getContentAsString();
         Assert.assertFalse(actualJsonResponse.isEmpty());
 
         EditDoctorScheduleDtoResponse actualResponse = mapFromJson(actualJsonResponse, EditDoctorScheduleDtoResponse.class);
-
         Assert.assertEquals(expectedResponse, actualResponse);
     }
 
@@ -318,17 +351,18 @@ public abstract class BaseControllerTest {
         String url = AdministratorController.PREFIX_URL + "/" + AdministratorController.REMOVE_DOCTOR_URL.replace("{doctorId}", String.valueOf(doctorId));
         String json = mapToJson(request);
 
-        String actualJsonResponse = mvc.perform(
+        MockHttpServletResponse response = mvc.perform(
                 MockMvcRequestBuilders
                         .delete(url)
                         .cookie(new Cookie(CookieFactory.JAVA_SESSION_ID, sessionId))
                         .contentType(MediaType.APPLICATION_JSON_VALUE).content(json))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON_VALUE))
-                .andReturn().getResponse().getContentAsString();
+                .andReturn().getResponse();
+        response.setCharacterEncoding(StandardCharsets.UTF_8.name());
 
-        String expectedJsonResponse = "{}";
-
+        String actualJsonResponse = response.getContentAsString();
+        String expectedJsonResponse = mapToJson(new EmptyDtoResponse());
         Assert.assertEquals(expectedJsonResponse, actualJsonResponse);
     }
 
@@ -339,18 +373,19 @@ public abstract class BaseControllerTest {
         String url = PatientController.PREFIX_URL + "/" + PatientController.PATIENT_REGISTRATION_URL;
         String json = mapToJson(request);
 
-        String actualJsonResponse = mvc.perform(
+        MockHttpServletResponse response = mvc.perform(
                 MockMvcRequestBuilders
                         .post(url)
                         .contentType(MediaType.APPLICATION_JSON_VALUE).content(json))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON_VALUE))
-                .andReturn().getResponse().getContentAsString();
+                .andReturn().getResponse();
+        response.setCharacterEncoding(StandardCharsets.UTF_8.name());
 
+        String actualJsonResponse = response.getContentAsString();
         Assert.assertFalse(actualJsonResponse.isEmpty());
 
         PatientRegistrationDtoResponse actualResponse = mapFromJson(actualJsonResponse, PatientRegistrationDtoResponse.class);
-
         Assert.assertEquals(expectedResponse, actualResponse);
     }
 
@@ -359,19 +394,20 @@ public abstract class BaseControllerTest {
         String url = PatientController.PREFIX_URL + "/" + PatientController.EDIT_PATIENT_PROFILE_URL;
         String json = mapToJson(request);
 
-        String actualJsonResponse = mvc.perform(
+        MockHttpServletResponse response = mvc.perform(
                 MockMvcRequestBuilders
                         .put(url)
                         .cookie(new Cookie(CookieFactory.JAVA_SESSION_ID, sessionId))
                         .contentType(MediaType.APPLICATION_JSON_VALUE).content(json))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON_VALUE))
-                .andReturn().getResponse().getContentAsString();
+                .andReturn().getResponse();
+        response.setCharacterEncoding(StandardCharsets.UTF_8.name());
 
+        String actualJsonResponse = response.getContentAsString();
         Assert.assertFalse(actualJsonResponse.isEmpty());
 
         EditPatientProfileDtoResponse actualResponse = mapFromJson(actualJsonResponse, EditPatientProfileDtoResponse.class);
-
         Assert.assertEquals(expectedResponse, actualResponse);
     }
 
@@ -380,37 +416,39 @@ public abstract class BaseControllerTest {
         String url = PatientController.PREFIX_URL + "/" + PatientController.APPOINTMENT_TO_DOCTOR_URL;
         String json = mapToJson(request);
 
-        String actualJsonResponse = mvc.perform(
+        MockHttpServletResponse response = mvc.perform(
                 MockMvcRequestBuilders
                         .patch(url)
                         .cookie(new Cookie(CookieFactory.JAVA_SESSION_ID, sessionId))
                         .contentType(MediaType.APPLICATION_JSON_VALUE).content(json))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON_VALUE))
-                .andReturn().getResponse().getContentAsString();
+                .andReturn().getResponse();
+        response.setCharacterEncoding(StandardCharsets.UTF_8.name());
 
+        String actualJsonResponse = response.getContentAsString();
         Assert.assertFalse(actualJsonResponse.isEmpty());
 
         AppointmentToDoctorDtoResponse actualResponse = mapFromJson(actualJsonResponse, AppointmentToDoctorDtoResponse.class);
-
         Assert.assertEquals(expectedResponse, actualResponse);
     }
 
     public void getTickets(String sessionId, AllTicketsDtoResponse expectedResponse) throws Exception {
         String url = PatientController.PREFIX_URL + "/" + PatientController.GET_TICKETS_URL;
 
-        String actualJsonResponse = mvc.perform(
+        MockHttpServletResponse response = mvc.perform(
                 MockMvcRequestBuilders
                         .get(url)
                         .cookie(new Cookie(CookieFactory.JAVA_SESSION_ID, sessionId)))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON_VALUE))
-                .andReturn().getResponse().getContentAsString();
+                .andReturn().getResponse();
+        response.setCharacterEncoding(StandardCharsets.UTF_8.name());
 
+        String actualJsonResponse = response.getContentAsString();
         Assert.assertFalse(actualJsonResponse.isEmpty());
 
         AllTicketsDtoResponse actualResponse = mapFromJson(actualJsonResponse, AllTicketsDtoResponse.class);
-
         Assert.assertEquals(expectedResponse, actualResponse);
     }
 
@@ -421,19 +459,20 @@ public abstract class BaseControllerTest {
         String url = DoctorController.PREFIX_URL + "/" + DoctorController.CREATE_MEDICAL_COMMISSION_URL;
         String json = mapToJson(request);
 
-        String actualJsonResponse = mvc.perform(
+        MockHttpServletResponse response = mvc.perform(
                 MockMvcRequestBuilders
                         .post(url)
                         .cookie(new Cookie(CookieFactory.JAVA_SESSION_ID, sessionId))
                         .contentType(MediaType.APPLICATION_JSON_VALUE).content(json))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON_VALUE))
-                .andReturn().getResponse().getContentAsString();
+                .andReturn().getResponse();
+        response.setCharacterEncoding(StandardCharsets.UTF_8.name());
 
+        String actualJsonResponse = response.getContentAsString();
         Assert.assertFalse(actualJsonResponse.isEmpty());
 
         CreateMedicalCommissionDtoResponse actualResponse = mapFromJson(actualJsonResponse, CreateMedicalCommissionDtoResponse.class);
-
         Assert.assertEquals(expectedResponse, actualResponse);
     }
 }
