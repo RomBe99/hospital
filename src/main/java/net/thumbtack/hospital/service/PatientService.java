@@ -29,6 +29,16 @@ public class PatientService {
     private final PatientDao patientDao;
     private final DoctorDao doctorDao;
 
+    public static String phoneTransformer(String phone) {
+        String emptyStr = "";
+
+        return phone
+                .replace(" ", emptyStr)
+                .replace("-", emptyStr)
+                .replace("(", emptyStr)
+                .replace(")", emptyStr);
+    }
+
     @Autowired
     public PatientService(PatientDao patientDao, DoctorDao doctorDao) {
         this.patientDao = patientDao;
@@ -36,6 +46,8 @@ public class PatientService {
     }
 
     public PatientRegistrationDtoResponse patientRegistration(PatientRegistrationDtoRequest request) {
+        request.setPhone(phoneTransformer(request.getPhone()));
+
         Patient patient =
                 new Patient(request.getLogin(), request.getPassword(),
                         request.getFirstName(), request.getLastName(), request.getPatronymic(),
@@ -50,6 +62,8 @@ public class PatientService {
 
     public EditPatientProfileDtoResponse editPatientProfile(String sessionId, EditPatientProfileDtoRequest request) throws PermissionDeniedException {
         int patientId = patientDao.hasPermissions(sessionId);
+
+        request.setPhone(phoneTransformer(request.getPhone()));
 
         Patient patient =
                 new Patient(patientId, request.getNewPassword(),
