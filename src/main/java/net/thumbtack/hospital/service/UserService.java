@@ -25,7 +25,10 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 @Service("UserService")
@@ -49,33 +52,27 @@ public class UserService {
         int userId = userDao.login(sessionId, request.getLogin(), request.getPassword());
         UserTypes userType = UserTypes.valueOf(commonDao.getUserTypeByUserId(userId));
 
-        if (userType == UserTypes.PATIENT) {
-            Patient patient = patientDao.getPatientById(userId);
+        Map<UserTypes, Supplier<? extends LoginUserDtoResponse>> responseMap = new HashMap<>();
+        responseMap.put(UserTypes.PATIENT, () -> {
+            Patient p = patientDao.getPatientById(userId);
 
-            return new PatientLoginDtoResponse(patient.getId(),
-                    patient.getFirstName(), patient.getLastName(), patient.getPatronymic(),
-                    patient.getEmail(), patient.getAddress(), patient.getPhone());
-        }
+            return new PatientLoginDtoResponse(p.getId(), p.getFirstName(), p.getLastName(), p.getPatronymic(), p.getEmail(), p.getAddress(), p.getPhone());
+        });
+        responseMap.put(UserTypes.ADMINISTRATOR, () -> {
+            Administrator a = adminDao.getAdministratorById(userId);
 
-        if (userType == UserTypes.ADMINISTRATOR) {
-            Administrator admin = adminDao.getAdministratorById(userId);
+            return new AdminLoginDtoResponse(a.getId(), a.getFirstName(), a.getLastName(), a.getPatronymic(), a.getPosition());
+        });
+        responseMap.put(UserTypes.DOCTOR, () -> {
+            Doctor d = doctorDao.getDoctorById(userId);
 
-            return new AdminLoginDtoResponse(admin.getId(),
-                    admin.getFirstName(), admin.getLastName(), admin.getPatronymic(), admin.getPosition());
-        }
-
-        if (userType == UserTypes.DOCTOR) {
-            Doctor doctor = doctorDao.getDoctorById(userId);
-
-            return new DoctorLoginDtoResponse(doctor.getId(),
-                    doctor.getFirstName(), doctor.getLastName(), doctor.getPatronymic(),
-                    doctor.getSpecialty(), doctor.getCabinet(),
-                    doctor.getSchedule().stream()
-                            .map(DtoAdapters::scheduleCellToScheduleCellResponse)
+            return new DoctorLoginDtoResponse(d.getId(), d.getFirstName(), d.getLastName(), d.getPatronymic(), d.getSpecialty(), d.getCabinet(),
+                    d.getSchedule().stream()
+                            .map(DtoAdapters::transform)
                             .collect(Collectors.toList()));
-        }
+        });
 
-        throw new RuntimeException("Can't create login response");
+        return responseMap.get(userType).get();
     }
 
     public EmptyDtoResponse logout(String sessionId) {
@@ -90,24 +87,23 @@ public class UserService {
 
         userDao.logout(sessionId);
 
-        if (userType == UserTypes.PATIENT) {
+        Map<UserTypes, Supplier<? extends UserInformationDtoResponse>> responseMap = new HashMap<>();
+        responseMap.put(UserTypes.PATIENT, () -> {
             Patient patient = patientDao.getPatientById(userId);
 
             return new FullPatientInformationDtoResponse(patient.getId(),
                     patient.getLogin(), patient.getPassword(),
                     patient.getFirstName(), patient.getLastName(), patient.getPatronymic(),
                     patient.getEmail(), patient.getAddress(), patient.getPhone());
-        }
-
-        if (userType == UserTypes.ADMINISTRATOR) {
+        });
+        responseMap.put(UserTypes.ADMINISTRATOR, () -> {
             Administrator admin = adminDao.getAdministratorById(userId);
 
             return new AdminInformationDtoResponse(admin.getId(),
                     admin.getLogin(), admin.getPassword(),
                     admin.getFirstName(), admin.getLastName(), admin.getPatronymic(), admin.getPosition());
-        }
-
-        if (userType == UserTypes.DOCTOR) {
+        });
+        responseMap.put(UserTypes.DOCTOR, () -> {
             Doctor doctor = doctorDao.getDoctorById(userId);
 
             return new DoctorInformationDtoResponse(doctor.getId(),
@@ -115,11 +111,11 @@ public class UserService {
                     doctor.getFirstName(), doctor.getLastName(), doctor.getPatronymic(),
                     doctor.getSpecialty(), doctor.getCabinet(),
                     doctor.getSchedule().stream()
-                            .map(DtoAdapters::scheduleCellToScheduleCellResponse)
+                            .map(DtoAdapters::transform)
                             .collect(Collectors.toList()));
-        }
+        });
 
-        throw new RuntimeException("Can't create user information response");
+        return responseMap.get(userType).get();
     }
 
     public PatientInformationDtoResponse getPatientInformation(String sessionId, int patientId) throws PermissionDeniedException {
@@ -136,34 +132,22 @@ public class UserService {
         }
     }
 
-    public DoctorInformationDtoResponse getDoctorInformation(String sessionId, int doctorId, String schedule, String startDate, String endDate) throws PermissionDeniedException {
+    public DoctorInformationDtoResponse getDoctorInformation(String sessionId, int doctorId, LocalDate startDate, LocalDate endDate) throws PermissionDeniedException {
         int patientId = patientDao.hasPermissions(sessionId);
-        Doctor doctor;
-
-        if (schedule != null && !schedule.isEmpty() && schedule.toLowerCase().equals("yes")) {
-            doctor = userDao.getDoctorInformation(patientId, doctorId, LocalDate.parse(startDate), LocalDate.parse(endDate));
-        } else {
-            doctor = userDao.getDoctorInformation(patientId, doctorId, null, null);
-        }
+        Doctor doctor = userDao.getDoctorInformation(patientId, doctorId, startDate, endDate);
 
         return new DoctorInformationDtoResponse(doctor.getId(),
                 doctor.getLogin(), doctor.getPassword(),
                 doctor.getFirstName(), doctor.getLastName(), doctor.getPatronymic(),
                 doctor.getSpecialty(), doctor.getCabinet(),
                 doctor.getSchedule().stream()
-                        .map(DtoAdapters::scheduleCellToScheduleCellResponse)
+                        .map(DtoAdapters::transform)
                         .collect(Collectors.toList()));
     }
 
-    public GetAllDoctorsDtoResponse getDoctorsInformation(String sessionId, String schedule, String speciality, String startDate, String endDate) throws PermissionDeniedException {
+    public GetAllDoctorsDtoResponse getDoctorsInformation(String sessionId, String speciality, LocalDate startDate, LocalDate endDate) throws PermissionDeniedException {
         int patientId = patientDao.hasPermissions(sessionId);
-        List<Doctor> doctors;
-
-        if (schedule != null && !schedule.isEmpty() && schedule.toLowerCase().equals("yes")) {
-            doctors = userDao.getDoctorsInformation(patientId, speciality, LocalDate.parse(startDate), LocalDate.parse(endDate));
-        } else {
-            doctors = userDao.getDoctorsInformation(patientId, speciality, null, null);
-        }
+        List<Doctor> doctors = userDao.getDoctorsInformation(patientId, speciality, startDate, endDate);
 
         return new GetAllDoctorsDtoResponse(doctors.stream()
                 .map(d -> new DoctorInformationDtoResponse(d.getId(),
@@ -171,7 +155,8 @@ public class UserService {
                         d.getFirstName(), d.getLastName(), d.getPatronymic(),
                         d.getSpecialty(), d.getCabinet(),
                         d.getSchedule().stream()
-                                .map(DtoAdapters::scheduleCellToScheduleCellResponse)
-                                .collect(Collectors.toList()))).collect(Collectors.toList()));
+                                .map(DtoAdapters::transform)
+                                .collect(Collectors.toList())))
+                .collect(Collectors.toList()));
     }
 }

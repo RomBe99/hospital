@@ -13,32 +13,32 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class DtoAdapters {
-    public static ScheduleTimeCellResponse timeCellToScheduleTimeCellResponse(TimeCell tc) {
+    public static ScheduleTimeCellResponse transform(TimeCell tc) {
         return new ScheduleTimeCellResponse(tc.getTime().toString(),
-                patientToPatientInformationDtoResponse(tc.getPatient()),
+                transform(tc.getPatient()),
                 tc.getDuration());
     }
 
-    public static ScheduleCellResponse scheduleCellToScheduleCellResponse(ScheduleCell sc) {
+    public static ScheduleCellResponse transform(ScheduleCell sc) {
         return new ScheduleCellResponse(sc.getDate().toString(),
                 sc.getCells().stream()
-                        .map(DtoAdapters::timeCellToScheduleTimeCellResponse)
+                        .map(DtoAdapters::transform)
                         .collect(Collectors.toList()));
     }
 
-    public static PatientInformationDtoResponse patientToPatientInformationDtoResponse(Patient patient) {
+    public static PatientInformationDtoResponse transform(Patient patient) {
         return new PatientInformationDtoResponse(patient.getId(),
                 patient.getFirstName(), patient.getLastName(), patient.getPatronymic(),
                 patient.getEmail(), patient.getAddress(), patient.getPhone());
     }
 
-    public static List<ScheduleCell> weekScheduleCellsToScheduleCells(List<WeekScheduleCellDtoRequest> sc) {
-        // TODO
+    @Deprecated
+    public static List<ScheduleCell> transformWSC(List<WeekScheduleCellDtoRequest> sc) {
         return null;
     }
 
-    public static List<ScheduleCell> weekDayScheduleCellsToScheduleCells(List<WeekDayScheduleCellDtoRequest> sc) {
-        // TODO
+    @Deprecated
+    public static List<ScheduleCell> transformWDSC(List<WeekDayScheduleCellDtoRequest> sc) {
         return null;
     }
 }

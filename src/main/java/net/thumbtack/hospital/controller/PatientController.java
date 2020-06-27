@@ -78,8 +78,8 @@ public class PatientController {
         return patientService.appointmentToDoctor(sessionId, request);
     }
 
-    @PatchMapping(value = DENY_MEDICAL_COMMISSION_URL,
-            produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    // FIXME Продолжить разработку теста и метода после тестирования остальных частей приложения
+    @PatchMapping(value = DENY_MEDICAL_COMMISSION_URL, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public EmptyDtoResponse denyMedicalCommission(@CookieValue(value = CookieFactory.JAVA_SESSION_ID) String sessionId,
@@ -89,8 +89,8 @@ public class PatientController {
         return new EmptyDtoResponse();
     }
 
-    @DeleteMapping(value = DENY_TICKET_URL,
-            produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    // FIXME Продолжить разработку теста и метода после тестирования остальных частей приложения
+    @DeleteMapping(value = DENY_TICKET_URL, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public EmptyDtoResponse denyTicket(@CookieValue(value = CookieFactory.JAVA_SESSION_ID) String sessionId,
@@ -100,8 +100,7 @@ public class PatientController {
         return new EmptyDtoResponse();
     }
 
-    @GetMapping(value = GET_TICKETS_URL,
-            produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = GET_TICKETS_URL, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public AllTicketsDtoResponse getTickets(@CookieValue(value = CookieFactory.JAVA_SESSION_ID) String sessionId) throws PermissionDeniedException {

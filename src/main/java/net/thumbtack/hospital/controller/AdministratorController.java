@@ -37,7 +37,7 @@ public class AdministratorController {
             produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public AdminRegistrationDtoResponse administratorRegistration(@CookieValue(value = CookieFactory.JAVA_SESSION_ID) String sessionId,
+    public AdminRegistrationDtoResponse administratorRegistration(@CookieValue(CookieFactory.JAVA_SESSION_ID) String sessionId,
                                                                   @Valid @RequestBody AdminRegistrationDtoRequest request) throws PermissionDeniedException {
         return administratorService.administratorRegistration(sessionId, request);
     }
@@ -46,7 +46,7 @@ public class AdministratorController {
             produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public DoctorRegistrationDtoResponse doctorRegistration(@CookieValue(value = CookieFactory.JAVA_SESSION_ID) String sessionId,
+    public DoctorRegistrationDtoResponse doctorRegistration(@CookieValue(CookieFactory.JAVA_SESSION_ID) String sessionId,
                                                             @Valid @RequestBody DoctorRegistrationDtoRequest request) throws PermissionDeniedException {
         return administratorService.doctorRegistration(sessionId, request);
     }
@@ -55,7 +55,7 @@ public class AdministratorController {
             produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public EditAdminProfileDtoResponse editAdministratorProfile(@CookieValue(value = CookieFactory.JAVA_SESSION_ID) String sessionId,
+    public EditAdminProfileDtoResponse editAdministratorProfile(@CookieValue(CookieFactory.JAVA_SESSION_ID) String sessionId,
                                                                 @Valid @RequestBody EditAdminProfileDtoRequest request) throws PermissionDeniedException {
         return administratorService.editAdministratorProfile(sessionId, request);
     }
@@ -64,7 +64,7 @@ public class AdministratorController {
             produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public EditDoctorScheduleDtoResponse editDoctorSchedule(@CookieValue(value = CookieFactory.JAVA_SESSION_ID) String sessionId,
+    public EditDoctorScheduleDtoResponse editDoctorSchedule(@CookieValue(CookieFactory.JAVA_SESSION_ID) String sessionId,
                                                             @PathVariable int doctorId,
                                                             @Valid @RequestBody EditDoctorScheduleDtoRequest request) throws PermissionDeniedException {
         return administratorService.editDoctorSchedule(sessionId, doctorId, request);
@@ -74,7 +74,7 @@ public class AdministratorController {
             produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public EmptyDtoResponse removeDoctor(@CookieValue(value = CookieFactory.JAVA_SESSION_ID) String sessionId,
+    public EmptyDtoResponse removeDoctor(@CookieValue(CookieFactory.JAVA_SESSION_ID) String sessionId,
                                          @PathVariable int doctorId,
                                          @Valid @RequestBody RemoveDoctorDtoRequest request) throws PermissionDeniedException {
         return administratorService.removeDoctor(sessionId, doctorId, request);

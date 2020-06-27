@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.time.LocalDate;
+import java.util.function.Supplier;
 
 @RestController("UserController")
 @RequestMapping(UserController.PREFIX_URL)
@@ -52,51 +54,56 @@ public class UserController {
         return dtoResponse;
     }
 
-    @DeleteMapping(value = LOGOUT_URL,
-            produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @DeleteMapping(value = LOGOUT_URL, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public EmptyDtoResponse logout(@CookieValue(value = CookieFactory.JAVA_SESSION_ID) String sessionId) {
+    public EmptyDtoResponse logout(@CookieValue(CookieFactory.JAVA_SESSION_ID) String sessionId) {
         return userService.logout(sessionId);
     }
 
-    @GetMapping(value = GET_USER_INFORMATION_URL,
-            produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = GET_USER_INFORMATION_URL, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public UserInformationDtoResponse getUserInformation(@CookieValue(value = CookieFactory.JAVA_SESSION_ID) String sessionId) throws PermissionDeniedException {
+    public UserInformationDtoResponse getUserInformation(@CookieValue(CookieFactory.JAVA_SESSION_ID) String sessionId) throws PermissionDeniedException {
         return userService.getUserInformation(sessionId);
     }
 
-    @GetMapping(value = GET_DOCTOR_INFORMATION_URL,
-            produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = GET_DOCTOR_INFORMATION_URL, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public DoctorInformationDtoResponse getDoctorInformation(@CookieValue(value = CookieFactory.JAVA_SESSION_ID) String sessionId,
+    public DoctorInformationDtoResponse getDoctorInformation(@CookieValue(CookieFactory.JAVA_SESSION_ID) String sessionId,
                                                              @PathVariable int doctorId,
-                                                             @RequestParam(value = "schedule") String schedule,
+                                                             @RequestParam("schedule") String schedule,
                                                              @RequestParam(value = "startDate", required = false) String startDate,
                                                              @RequestParam(value = "endDate", required = false) String endDate) throws PermissionDeniedException {
-        return userService.getDoctorInformation(sessionId, doctorId, schedule, startDate, endDate);
+        if (schedule != null && !schedule.isEmpty() && schedule.toLowerCase().equals("yes")) {
+            return userService.getDoctorInformation(sessionId, doctorId, LocalDate.parse(startDate), LocalDate.parse(endDate));
+        }
+
+        return userService.getDoctorInformation(sessionId, doctorId, null, null);
     }
 
-    @GetMapping(value = GET_DOCTORS_INFORMATION_URL,
-            produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = GET_DOCTORS_INFORMATION_URL, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public GetAllDoctorsDtoResponse getDoctorsInformation(@CookieValue(value = CookieFactory.JAVA_SESSION_ID) String sessionId,
-                                                          @RequestParam(value = "schedule") String schedule,
+    public GetAllDoctorsDtoResponse getDoctorsInformation(@CookieValue(CookieFactory.JAVA_SESSION_ID) String sessionId,
+                                                          @RequestParam("schedule") String schedule,
                                                           @RequestParam(value = "speciality", required = false) String speciality,
                                                           @RequestParam(value = "startDate", required = false) String startDate,
                                                           @RequestParam(value = "endDate", required = false) String endDate) throws PermissionDeniedException {
-        return userService.getDoctorsInformation(sessionId, schedule, speciality, startDate, endDate);
+        Supplier<String> specialitySupplier = () -> speciality == null || speciality.isEmpty() ? null : speciality;
+
+        if (schedule != null && !schedule.isEmpty() && schedule.toLowerCase().equals("yes")) {
+            return userService.getDoctorsInformation(sessionId, specialitySupplier.get(), LocalDate.parse(startDate), LocalDate.parse(endDate));
+        }
+
+        return userService.getDoctorsInformation(sessionId, specialitySupplier.get(), null, null);
     }
 
-    @GetMapping(value = GET_PATIENT_INFORMATION_URL,
-            produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = GET_PATIENT_INFORMATION_URL, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public PatientInformationDtoResponse getPatientInformation(@CookieValue(value = CookieFactory.JAVA_SESSION_ID) String sessionId,
+    public PatientInformationDtoResponse getPatientInformation(@CookieValue(CookieFactory.JAVA_SESSION_ID) String sessionId,
                                                                @PathVariable int patientId) throws PermissionDeniedException {
         return userService.getPatientInformation(sessionId, patientId);
     }

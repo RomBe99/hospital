@@ -65,7 +65,7 @@ public class AdministratorService {
         return new DoctorRegistrationDtoResponse(doctor.getId(),
                 doctor.getFirstName(), doctor.getLastName(), doctor.getPatronymic(), doctor.getSpecialty(), doctor.getCabinet(),
                 doctor.getSchedule().stream()
-                        .map(DtoAdapters::scheduleCellToScheduleCellResponse)
+                        .map(DtoAdapters::transform)
                         .collect(Collectors.toList()));
     }
 
@@ -88,9 +88,9 @@ public class AdministratorService {
         List<ScheduleCell> scheduleCells;
 
         if (request.getWeekSchedule() != null && !request.getWeekSchedule().isEmpty()) {
-            scheduleCells = DtoAdapters.weekScheduleCellsToScheduleCells(request.getWeekSchedule());
+            scheduleCells = DtoAdapters.transformWSC(request.getWeekSchedule());
         } else if (request.getWeekDaysSchedule() != null && !request.getWeekDaysSchedule().isEmpty()) {
-            scheduleCells = DtoAdapters.weekDayScheduleCellsToScheduleCells(request.getWeekDaysSchedule());
+            scheduleCells = DtoAdapters.transformWDSC(request.getWeekDaysSchedule());
         } else {
             throw new RuntimeException("Request contains empty schedules");
         }
@@ -104,7 +104,7 @@ public class AdministratorService {
                 doctor.getFirstName(), doctor.getLastName(), doctor.getPatronymic(),
                 doctor.getSpecialty(), doctor.getCabinet(),
                 doctor.getSchedule().stream()
-                        .map(DtoAdapters::scheduleCellToScheduleCellResponse)
+                        .map(DtoAdapters::transform)
                         .collect(Collectors.toList()));
     }
 
