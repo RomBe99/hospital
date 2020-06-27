@@ -85,8 +85,6 @@ public class UserService {
         int userId = userDao.hasPermissions(sessionId);
         UserTypes userType = UserTypes.valueOf(commonDao.getUserTypeByUserId(userId));
 
-        userDao.logout(sessionId);
-
         Map<UserTypes, Supplier<? extends UserInformationDtoResponse>> responseMap = new HashMap<>();
         responseMap.put(UserTypes.PATIENT, () -> {
             Patient patient = patientDao.getPatientById(userId);
