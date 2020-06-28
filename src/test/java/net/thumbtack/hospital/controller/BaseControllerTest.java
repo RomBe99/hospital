@@ -71,7 +71,8 @@ public abstract class BaseControllerTest {
 
         String actualJsonResponse = mvc.perform(
                 MockMvcRequestBuilders
-                        .post(url))
+                        .post(url)
+                        .characterEncoding(StandardCharsets.UTF_8.name()))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andReturn().getResponse().getContentAsString();
@@ -99,7 +100,8 @@ public abstract class BaseControllerTest {
         MockHttpServletResponse response = mvc.perform(
                 MockMvcRequestBuilders
                         .post(url)
-                        .contentType(MediaType.APPLICATION_JSON_VALUE).content(json))
+                        .contentType(MediaType.APPLICATION_JSON_VALUE).content(json)
+                        .characterEncoding(StandardCharsets.UTF_8.name()))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.cookie().exists(CookieFactory.JAVA_SESSION_ID))
                 .andReturn().getResponse();
@@ -117,10 +119,10 @@ public abstract class BaseControllerTest {
         expectedResponse.setId(actualResponse.getId());
         Assert.assertEquals(expectedResponse, actualResponse);
 
-        String sessionId = Objects.requireNonNull(response.getCookie(CookieFactory.JAVA_SESSION_ID)).getValue();
-        Assert.assertFalse(sessionId.isEmpty());
+        String userSessionId = Objects.requireNonNull(response.getCookie(CookieFactory.JAVA_SESSION_ID)).getValue();
+        Assert.assertFalse(userSessionId.isEmpty());
 
-        return sessionId;
+        return userSessionId;
     }
 
     public String loginRootAdmin() throws Exception {
@@ -137,7 +139,8 @@ public abstract class BaseControllerTest {
         MockHttpServletResponse response = mvc.perform(
                 MockMvcRequestBuilders
                         .delete(url)
-                        .cookie(new Cookie(CookieFactory.JAVA_SESSION_ID, sessionId)))
+                        .cookie(new Cookie(CookieFactory.JAVA_SESSION_ID, sessionId))
+                        .characterEncoding(StandardCharsets.UTF_8.name()))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andReturn().getResponse();
@@ -155,7 +158,8 @@ public abstract class BaseControllerTest {
         MockHttpServletResponse response = mvc.perform(
                 MockMvcRequestBuilders
                         .get(url)
-                        .cookie(new Cookie(CookieFactory.JAVA_SESSION_ID, sessionId)))
+                        .cookie(new Cookie(CookieFactory.JAVA_SESSION_ID, sessionId))
+                        .characterEncoding(StandardCharsets.UTF_8.name()))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andReturn().getResponse();
@@ -171,6 +175,14 @@ public abstract class BaseControllerTest {
         dtoClasses.put(UserTypes.PATIENT, FullPatientInformationDtoResponse.class);
 
         UserInformationDtoResponse actualResponse = mapFromJson(jsonResponse, dtoClasses.get(userType));
+        Assert.assertNotEquals(0, actualResponse.getId());
+        expectedResponse.setId(actualResponse.getId());
+
+        if (UserTypes.PATIENT.equals(userType)) {
+            ((FullPatientInformationDtoResponse) expectedResponse)
+                    .setPhone(((FullPatientInformationDtoResponse) actualResponse).getPhone());
+        }
+
         Assert.assertEquals(expectedResponse, actualResponse);
     }
 
@@ -181,6 +193,7 @@ public abstract class BaseControllerTest {
         MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders
                 .get(url)
                 .cookie(new Cookie(CookieFactory.JAVA_SESSION_ID, sessionId))
+                .characterEncoding(StandardCharsets.UTF_8.name())
                 .queryParam("schedule", schedule);
 
         if (startDate != null && endDate != null) {
@@ -208,6 +221,7 @@ public abstract class BaseControllerTest {
         MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders
                 .get(url)
                 .cookie(new Cookie(CookieFactory.JAVA_SESSION_ID, sessionId))
+                .characterEncoding(StandardCharsets.UTF_8.name())
                 .queryParam("schedule", schedule);
 
         if (speciality != null) {
@@ -239,7 +253,8 @@ public abstract class BaseControllerTest {
         MockHttpServletResponse response = mvc.perform(
                 MockMvcRequestBuilders
                         .get(url)
-                        .cookie(new Cookie(CookieFactory.JAVA_SESSION_ID, sessionId)))
+                        .cookie(new Cookie(CookieFactory.JAVA_SESSION_ID, sessionId))
+                        .characterEncoding(StandardCharsets.UTF_8.name()))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andReturn().getResponse();
@@ -263,7 +278,8 @@ public abstract class BaseControllerTest {
                 MockMvcRequestBuilders
                         .post(url)
                         .cookie(new Cookie(CookieFactory.JAVA_SESSION_ID, sessionId))
-                        .contentType(MediaType.APPLICATION_JSON_VALUE).content(json))
+                        .contentType(MediaType.APPLICATION_JSON_VALUE).content(json)
+                        .characterEncoding(StandardCharsets.UTF_8.name()))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andReturn().getResponse();
@@ -287,7 +303,8 @@ public abstract class BaseControllerTest {
                 MockMvcRequestBuilders
                         .post(url)
                         .cookie(new Cookie(CookieFactory.JAVA_SESSION_ID, sessionId))
-                        .contentType(MediaType.APPLICATION_JSON_VALUE).content(json))
+                        .contentType(MediaType.APPLICATION_JSON_VALUE).content(json)
+                        .characterEncoding(StandardCharsets.UTF_8.name()))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andReturn().getResponse();
@@ -311,7 +328,8 @@ public abstract class BaseControllerTest {
                 MockMvcRequestBuilders
                         .put(url)
                         .cookie(new Cookie(CookieFactory.JAVA_SESSION_ID, sessionId))
-                        .contentType(MediaType.APPLICATION_JSON_VALUE).content(json))
+                        .contentType(MediaType.APPLICATION_JSON_VALUE).content(json)
+                        .characterEncoding(StandardCharsets.UTF_8.name()))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andReturn().getResponse();
@@ -334,7 +352,8 @@ public abstract class BaseControllerTest {
                 MockMvcRequestBuilders
                         .put(url)
                         .cookie(new Cookie(CookieFactory.JAVA_SESSION_ID, sessionId))
-                        .contentType(MediaType.APPLICATION_JSON_VALUE).content(json))
+                        .contentType(MediaType.APPLICATION_JSON_VALUE).content(json)
+                        .characterEncoding(StandardCharsets.UTF_8.name()))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andReturn().getResponse();
@@ -355,7 +374,8 @@ public abstract class BaseControllerTest {
                 MockMvcRequestBuilders
                         .delete(url)
                         .cookie(new Cookie(CookieFactory.JAVA_SESSION_ID, sessionId))
-                        .contentType(MediaType.APPLICATION_JSON_VALUE).content(json))
+                        .contentType(MediaType.APPLICATION_JSON_VALUE).content(json)
+                        .characterEncoding(StandardCharsets.UTF_8.name()))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andReturn().getResponse();
@@ -368,7 +388,7 @@ public abstract class BaseControllerTest {
 
     // Patient controller methods
 
-    public void patientRegistration(PatientRegistrationDtoRequest request,
+    public String patientRegistration(PatientRegistrationDtoRequest request,
                                     PatientRegistrationDtoResponse expectedResponse) throws Exception {
         String url = PatientController.PREFIX_URL + "/" + PatientController.PATIENT_REGISTRATION_URL;
         String json = mapToJson(request);
@@ -376,17 +396,28 @@ public abstract class BaseControllerTest {
         MockHttpServletResponse response = mvc.perform(
                 MockMvcRequestBuilders
                         .post(url)
-                        .contentType(MediaType.APPLICATION_JSON_VALUE).content(json))
+                        .contentType(MediaType.APPLICATION_JSON_VALUE).content(json)
+                        .characterEncoding(StandardCharsets.UTF_8.name()))
                 .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.cookie().exists(CookieFactory.JAVA_SESSION_ID))
                 .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andReturn().getResponse();
         response.setCharacterEncoding(StandardCharsets.UTF_8.name());
+
+        String patientSessionId = Objects.requireNonNull(response.getCookie(CookieFactory.JAVA_SESSION_ID)).getValue();
+        Assert.assertFalse(patientSessionId.isEmpty());
 
         String actualJsonResponse = response.getContentAsString();
         Assert.assertFalse(actualJsonResponse.isEmpty());
 
         PatientRegistrationDtoResponse actualResponse = mapFromJson(actualJsonResponse, PatientRegistrationDtoResponse.class);
+        Assert.assertNotEquals(0, actualResponse.getId());
+        expectedResponse.setId(actualResponse.getId());
+        expectedResponse.setPhone(actualResponse.getPhone());
+        request.setPhone(actualResponse.getPhone());
         Assert.assertEquals(expectedResponse, actualResponse);
+
+        return patientSessionId;
     }
 
     public void editPatientProfile(String sessionId, EditPatientProfileDtoRequest request,
@@ -398,7 +429,8 @@ public abstract class BaseControllerTest {
                 MockMvcRequestBuilders
                         .put(url)
                         .cookie(new Cookie(CookieFactory.JAVA_SESSION_ID, sessionId))
-                        .contentType(MediaType.APPLICATION_JSON_VALUE).content(json))
+                        .contentType(MediaType.APPLICATION_JSON_VALUE).content(json)
+                        .characterEncoding(StandardCharsets.UTF_8.name()))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andReturn().getResponse();
@@ -408,6 +440,8 @@ public abstract class BaseControllerTest {
         Assert.assertFalse(actualJsonResponse.isEmpty());
 
         EditPatientProfileDtoResponse actualResponse = mapFromJson(actualJsonResponse, EditPatientProfileDtoResponse.class);
+        request.setPhone(actualResponse.getPhone());
+        expectedResponse.setPhone(actualResponse.getPhone());
         Assert.assertEquals(expectedResponse, actualResponse);
     }
 
@@ -420,7 +454,8 @@ public abstract class BaseControllerTest {
                 MockMvcRequestBuilders
                         .patch(url)
                         .cookie(new Cookie(CookieFactory.JAVA_SESSION_ID, sessionId))
-                        .contentType(MediaType.APPLICATION_JSON_VALUE).content(json))
+                        .contentType(MediaType.APPLICATION_JSON_VALUE).content(json)
+                        .characterEncoding(StandardCharsets.UTF_8.name()))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andReturn().getResponse();
@@ -439,7 +474,8 @@ public abstract class BaseControllerTest {
         MockHttpServletResponse response = mvc.perform(
                 MockMvcRequestBuilders
                         .get(url)
-                        .cookie(new Cookie(CookieFactory.JAVA_SESSION_ID, sessionId)))
+                        .cookie(new Cookie(CookieFactory.JAVA_SESSION_ID, sessionId))
+                        .characterEncoding(StandardCharsets.UTF_8.name()))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andReturn().getResponse();
@@ -463,7 +499,8 @@ public abstract class BaseControllerTest {
                 MockMvcRequestBuilders
                         .post(url)
                         .cookie(new Cookie(CookieFactory.JAVA_SESSION_ID, sessionId))
-                        .contentType(MediaType.APPLICATION_JSON_VALUE).content(json))
+                        .contentType(MediaType.APPLICATION_JSON_VALUE).content(json)
+                        .characterEncoding(StandardCharsets.UTF_8.name()))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andReturn().getResponse();

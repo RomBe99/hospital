@@ -4,10 +4,7 @@ import net.thumbtack.hospital.dtorequest.admin.AdminRegistrationDtoRequest;
 import net.thumbtack.hospital.dtorequest.admin.DoctorRegistrationDtoRequest;
 import net.thumbtack.hospital.dtorequest.admin.EditAdminProfileDtoRequest;
 import net.thumbtack.hospital.dtorequest.admin.RemoveDoctorDtoRequest;
-import net.thumbtack.hospital.dtoresponse.admin.AdminLoginDtoResponse;
-import net.thumbtack.hospital.dtoresponse.admin.AdminRegistrationDtoResponse;
-import net.thumbtack.hospital.dtoresponse.admin.DoctorRegistrationDtoResponse;
-import net.thumbtack.hospital.dtoresponse.admin.EditAdminProfileDtoResponse;
+import net.thumbtack.hospital.dtoresponse.admin.*;
 import net.thumbtack.hospital.mapper.UserTypes;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -32,6 +29,11 @@ public class AdministratorControllerTest extends BaseControllerTest {
         String testAdminSessionId = login(registrationRequest.getLogin(), registrationRequest.getPassword(),
                 new AdminLoginDtoResponse(registrationRequest.getFirstName(), registrationRequest.getLastName(), registrationRequest.getPatronymic(), registrationRequest.getPosition()),
                 UserTypes.ADMINISTRATOR);
+
+        getUserInformation(testAdminSessionId, UserTypes.ADMINISTRATOR,
+                new AdminInformationDtoResponse(registrationRequest.getLogin(), registrationRequest.getPassword(),
+                        registrationRequest.getFirstName(), registrationRequest.getLastName(), registrationRequest.getPatronymic(),
+                        registrationRequest.getPosition()));
 
         logout(rootAdminSessionId);
         logout(testAdminSessionId);
@@ -62,6 +64,11 @@ public class AdministratorControllerTest extends BaseControllerTest {
 
         editAdministratorProfile(testAdminSessionId, editAdminProfileRequest,
                 new EditAdminProfileDtoResponse(adminLoginResponse.getId(), editAdminProfileRequest.getFirstName(), editAdminProfileRequest.getLastName(), editAdminProfileRequest.getPatronymic(), editAdminProfileRequest.getPosition()));
+
+        getUserInformation(testAdminSessionId, UserTypes.ADMINISTRATOR,
+                new AdminInformationDtoResponse(registrationRequest.getLogin(), editAdminProfileRequest.getNewPassword(),
+                        editAdminProfileRequest.getFirstName(), editAdminProfileRequest.getLastName(), editAdminProfileRequest.getPatronymic(),
+                        editAdminProfileRequest.getPosition()));
 
         logout(rootAdminSessionId);
         logout(testAdminSessionId);
