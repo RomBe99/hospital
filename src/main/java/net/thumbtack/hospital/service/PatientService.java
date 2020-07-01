@@ -31,12 +31,13 @@ public class PatientService {
 
     public static String phoneTransformer(String phone) {
         String emptyStr = "";
+        String clearPhoneNumberRegexp = "\\D+";
 
-        return phone
-                .replace(" ", emptyStr)
-                .replace("-", emptyStr)
-                .replace("(", emptyStr)
-                .replace(")", emptyStr);
+        if (phone.startsWith("7")) {
+            return '+' + phone.replaceAll(clearPhoneNumberRegexp, emptyStr);
+        }
+
+        return phone.replaceAll(clearPhoneNumberRegexp, emptyStr);
     }
 
     @Autowired
