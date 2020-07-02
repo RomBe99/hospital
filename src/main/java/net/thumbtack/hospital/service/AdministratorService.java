@@ -73,7 +73,7 @@ public class AdministratorService {
         int adminId = adminDao.hasPermissions(sessionId);
 
         Administrator admin =
-                new Administrator(adminId, request.getNewPassword(),
+                new Administrator(adminId, null, request.getNewPassword(),
                 request.getFirstName(), request.getLastName(), request.getPatronymic(), request.getPosition());
 
         adminDao.updateAdministrator(admin);

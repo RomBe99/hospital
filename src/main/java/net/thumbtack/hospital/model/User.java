@@ -24,10 +24,6 @@ public abstract class User {
         setPatronymic(patronymic);
     }
 
-    public User(String login, String password, String firstName, String lastName, String patronymic) {
-        this(0, login, password, firstName, lastName, patronymic);
-    }
-
     public void setId(int id) {
         this.id = id;
     }
