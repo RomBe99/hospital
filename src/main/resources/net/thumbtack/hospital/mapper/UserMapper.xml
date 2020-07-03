@@ -21,6 +21,8 @@
                         ofType="net.thumbtack.hospital.model.TimeCell">
                 <result property="time" column="time"/>
                 <result property="duration" column="duration"/>
+                <result property="ticket" column="ticket"/>
+
                 <association property="patient" javaType="net.thumbtack.hospital.model.Patient">
                     <id property="id" column="patientId"/>
                     <result property="firstName" column="pFirstName"/>
@@ -29,8 +31,6 @@
                     <result property="email" column="email"/>
                     <result property="address" column="address"/>
                     <result property="phone" column="phone"/>
-                    <collection property="tickets" javaType="java.util.List"
-                                ofType="net.thumbtack.hospital.model.ScheduleCell"/>
                 </association>
             </collection>
         </collection>
@@ -53,6 +53,8 @@
                         ofType="net.thumbtack.hospital.model.TimeCell">
                 <result property="time" column="time"/>
                 <result property="duration" column="duration"/>
+                <result property="ticket" column="ticket"/>
+
                 <association property="patient" javaType="net.thumbtack.hospital.model.Patient">
                     <id property="id" column="patientId"/>
                     <result property="firstName" column="pFirstName"/>
@@ -75,7 +77,8 @@
         ds.name specialty,
         scheduleCellId,
         date,
-        ticketTime time,
+        time,
+        ticket,
         duration,
         patientId,
         u.firstName pFirstName,
@@ -95,7 +98,7 @@
         WHERE doctorId = #{doctorId} AND (patientId = #{patientId} OR patientId IS NULL)
         <if test="startDate != null">AND date >= #{startDate}</if>
         <if test="endDate != null">AND #{endDate} >= date</if>
-        ORDER BY date, ticketTime;
+        ORDER BY date, time;
     </select>
 
     <select id="getDoctorsInformation" parameterType="java.util.Map" resultMap="resultDoctorsInformation">
@@ -107,7 +110,8 @@
         ds.name specialty,
         scheduleCellId,
         date,
-        ticketTime time,
+        time,
+        ticket,
         duration,
         patientId,
         u.firstName pFirstName,
@@ -128,6 +132,6 @@
         <if test="speciality != null"> AND ds.name = #{speciality} </if>
         <if test="startDate != null"> AND date >= #{startDate} </if>
         <if test="endDate != null"> AND #{endDate} >= date </if>
-        ORDER BY date, ticketTime;
+        ORDER BY date, time;
     </select>
 </mapper>

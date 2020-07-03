@@ -13,12 +13,15 @@ import net.thumbtack.hospital.debug.DebugDaoImpl;
 import net.thumbtack.hospital.model.*;
 import net.thumbtack.hospital.util.error.PermissionDeniedException;
 import net.thumbtack.hospital.util.mybatis.MyBatisUtils;
+import net.thumbtack.hospital.util.ticket.TicketFactory;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
@@ -138,6 +141,32 @@ public class BaseTest {
             schedule.forEach(sc -> Assert.assertNotEquals(0, sc.getId()));
         } catch (Exception e) {
             Assert.fail();
+        }
+
+        return schedule;
+    }
+
+
+    protected static List<ScheduleCell> generateSchedule(List<Integer> durations, int daysCount, LocalDate startDate, Doctor doctor) {
+        LocalTime startTime = LocalTime.now().withNano(0).withSecond(0);
+
+        List<ScheduleCell> schedule = new ArrayList<>(daysCount);
+        List<TimeCell> timeCells;
+        LocalDate tempDate;
+        LocalTime tempTime;
+
+        for (int i = 0; i < daysCount; i++) {
+            timeCells = new ArrayList<>(durations.size());
+            tempDate = startDate.plusDays(i);
+
+            for (int d : durations) {
+                tempTime = startTime.plusMinutes(d);
+
+                timeCells.add(new TimeCell(tempTime, null, d,
+                        TicketFactory.buildTicketToDoctor(doctor.getId(), tempDate, tempTime)));
+            }
+
+            schedule.add(new ScheduleCell(0, doctor, tempDate, timeCells));
         }
 
         return schedule;

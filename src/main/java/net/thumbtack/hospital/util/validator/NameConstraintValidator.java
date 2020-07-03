@@ -23,12 +23,12 @@ public class NameConstraintValidator implements ConstraintValidator<Name, String
 
    @Override
    public boolean isValid(String nameField, ConstraintValidatorContext context) {
-      if (nameField == null) {
-         return false;
+      if (isPatronymic && (nameField == null || nameField.isEmpty())) {
+         return true;
       }
 
-      if (isPatronymic && nameField.isEmpty()) {
-         return true;
+      if (nameField == null) {
+         return false;
       }
 
       String regex = "^[а-яА-ЯёЁa-zA-Z0-9]+$";

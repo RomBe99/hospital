@@ -12,6 +12,7 @@ public interface UserMapper {
     void updateUser(User user);
 
     @Delete("DELETE FROM user WHERE id = #{id};")
+    @Deprecated
     void removeUser(int id);
 
     @Insert("INSERT INTO logged_in_users VALUES(#{sessionId}, #{userId});")

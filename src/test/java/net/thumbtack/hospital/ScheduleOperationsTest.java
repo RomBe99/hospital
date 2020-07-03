@@ -2,36 +2,14 @@ package net.thumbtack.hospital;
 
 import net.thumbtack.hospital.model.Doctor;
 import net.thumbtack.hospital.model.ScheduleCell;
-import net.thumbtack.hospital.model.TimeCell;
 import org.junit.Assert;
 import org.junit.Test;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 public class ScheduleOperationsTest extends BaseTest {
-    public static List<ScheduleCell> generateSchedule(List<Integer> durations, int daysCount, LocalDate startDate, Doctor doctor) {
-        LocalTime startTime = LocalTime.now().withNano(0);
-        List<TimeCell> timeCells = new ArrayList<>(durations.size());
-
-        for (int d : durations) {
-            timeCells.add(new TimeCell(startTime, d));
-            startTime = startTime.plusMinutes(d);
-        }
-
-        List<ScheduleCell> schedule = new ArrayList<>(daysCount);
-
-        for (int i = 0; i < daysCount; i++) {
-            schedule.add(new ScheduleCell(0, doctor, startDate, timeCells));
-            startDate = startDate.plusDays(1);
-        }
-
-        return schedule;
-    }
-
     @Test
     public void insertNewScheduleTest1() {
         Doctor expectedDoctor = insertDoctor("FrolovaBahiya454", "10AFVcPBcmbY",

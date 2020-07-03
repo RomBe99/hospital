@@ -1,9 +1,8 @@
 package net.thumbtack.hospital.dao;
 
-import net.thumbtack.hospital.model.MedicalCommission;
 import net.thumbtack.hospital.model.Patient;
-import net.thumbtack.hospital.model.ScheduleCell;
-import net.thumbtack.hospital.model.TicketToDoctor;
+import net.thumbtack.hospital.model.ticket.TicketToMedicalCommission;
+import net.thumbtack.hospital.model.ticket.TicketToDoctor;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -20,11 +19,11 @@ public interface PatientDao extends UserDao {
 
     void appointmentToDoctor(int patientId, int doctorId, LocalDate date, LocalTime time);
 
-    void denyMedicalCommission(int patientId, int commissionTicketId);
+    void denyMedicalCommission(String ticket);
 
-    void denyTicket(int patientId, int doctorId, LocalDate date, LocalTime time);
+    void denyTicket(String ticket);
 
     List<TicketToDoctor> getTicketsToDoctor(int patientId);
 
-    List<MedicalCommission> getTicketsToMedicalCommission(int patientId);
+    List<TicketToMedicalCommission> getTicketsToMedicalCommission(int patientId);
 }

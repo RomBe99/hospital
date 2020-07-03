@@ -29,7 +29,7 @@ public class PatientController {
     public static final String PATIENT_REGISTRATION_URL = "patients";
     public static final String EDIT_PATIENT_PROFILE_URL = "patients";
     public static final String APPOINTMENT_TO_DOCTOR_URL = "tickets";
-    public static final String DENY_MEDICAL_COMMISSION_URL = "commissions/{commissionTicketId}";
+    public static final String DENY_MEDICAL_COMMISSION_URL = "commissions/{ticket}";
     public static final String GET_TICKETS_URL = "tickets";
     public static final String DENY_TICKET_URL = "tickets/{ticketNumber}";
 
@@ -78,18 +78,16 @@ public class PatientController {
         return patientService.appointmentToDoctor(sessionId, request);
     }
 
-    // FIXME Продолжить разработку теста и метода после тестирования остальных частей приложения
     @PatchMapping(value = DENY_MEDICAL_COMMISSION_URL, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public EmptyDtoResponse denyMedicalCommission(@CookieValue(value = CookieFactory.JAVA_SESSION_ID) String sessionId,
-                                                  @PathVariable int commissionTicketId) throws PermissionDeniedException {
-        patientService.denyMedicalCommission(sessionId, commissionTicketId);
+                                                  @PathVariable String ticket) throws PermissionDeniedException {
+        patientService.denyMedicalCommission(sessionId, ticket);
 
         return new EmptyDtoResponse();
     }
 
-    // FIXME Продолжить разработку теста и метода после тестирования остальных частей приложения
     @DeleteMapping(value = DENY_TICKET_URL, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody

@@ -22,13 +22,13 @@ public class CreateMedicalCommissionDtoRequest {
     @Time
     private String time;
     @Duration
-    private String duration;
+    private int duration;
 
     public CreateMedicalCommissionDtoRequest() {
     }
 
     public CreateMedicalCommissionDtoRequest(int patientId, List<Integer> doctorIds,
-                                             String room, String date, String time, String duration) {
+                                             String room, String date, String time, int duration) {
         setPatientId(patientId);
         setDoctorIds(doctorIds);
         setRoom(room);
@@ -57,7 +57,7 @@ public class CreateMedicalCommissionDtoRequest {
         this.time = time;
     }
 
-    public void setDuration(String duration) {
+    public void setDuration(int duration) {
         this.duration = duration;
     }
 
@@ -81,7 +81,7 @@ public class CreateMedicalCommissionDtoRequest {
         return time;
     }
 
-    public String getDuration() {
+    public int getDuration() {
         return duration;
     }
 
@@ -91,11 +91,11 @@ public class CreateMedicalCommissionDtoRequest {
         if (o == null || getClass() != o.getClass()) return false;
         CreateMedicalCommissionDtoRequest that = (CreateMedicalCommissionDtoRequest) o;
         return patientId == that.patientId &&
+                duration == that.duration &&
                 Objects.equals(doctorIds, that.doctorIds) &&
                 Objects.equals(room, that.room) &&
                 Objects.equals(date, that.date) &&
-                Objects.equals(time, that.time) &&
-                Objects.equals(duration, that.duration);
+                Objects.equals(time, that.time);
     }
 
     @Override
@@ -111,7 +111,7 @@ public class CreateMedicalCommissionDtoRequest {
                 ", room='" + room + '\'' +
                 ", date='" + date + '\'' +
                 ", time='" + time + '\'' +
-                ", duration='" + duration + '\'' +
+                ", duration=" + duration +
                 '}';
     }
 }

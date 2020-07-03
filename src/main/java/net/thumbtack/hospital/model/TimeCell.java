@@ -8,26 +8,20 @@ public class TimeCell {
     private LocalTime time;
     private Patient patient;
     private int duration;
+    private String ticket;
 
     public TimeCell() {
     }
 
-    public TimeCell(LocalTime time, Patient patient, int duration) {
+    public TimeCell(LocalTime time, Patient patient, int duration, String ticket) {
         setTime(time);
         setPatient(patient);
         setDuration(duration);
+        setTicket(ticket);
     }
 
-    public TimeCell(Time time, Patient patient, int duration) {
-        this(time.toLocalTime(), patient, duration);
-    }
-
-    public TimeCell(LocalTime time,  int duration) {
-        this(time, null, duration);
-    }
-
-    public TimeCell(Time time,  int duration) {
-        this(time.toLocalTime(), null, duration);
+    public TimeCell(Time time, Patient patient, int duration, String ticket) {
+        this(time.toLocalTime(), patient, duration, ticket);
     }
 
     public void setTime(LocalTime time) {
@@ -42,6 +36,10 @@ public class TimeCell {
         this.duration = duration;
     }
 
+    public void setTicket(String ticket) {
+        this.ticket = ticket;
+    }
+
     public LocalTime getTime() {
         return time;
     }
@@ -54,6 +52,10 @@ public class TimeCell {
         return duration;
     }
 
+    public String getTicket() {
+        return ticket;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -61,12 +63,13 @@ public class TimeCell {
         TimeCell timeCell = (TimeCell) o;
         return getDuration() == timeCell.getDuration() &&
                 Objects.equals(getTime(), timeCell.getTime()) &&
-                Objects.equals(getPatient(), timeCell.getPatient());
+                Objects.equals(getPatient(), timeCell.getPatient()) &&
+                Objects.equals(getTicket(), timeCell.getTicket());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getTime(), getPatient(), getDuration());
+        return Objects.hash(getTime(), getPatient(), getDuration(), getTicket());
     }
 
     @Override
@@ -75,6 +78,7 @@ public class TimeCell {
                 "time=" + time +
                 ", patient=" + patient +
                 ", duration=" + duration +
+                ", ticketName='" + ticket + '\'' +
                 '}';
     }
 }

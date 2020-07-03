@@ -32,7 +32,6 @@
         <mapper resource="net/thumbtack/hospital/mapper/DoctorMapper.xml"/>
         <mapper resource="net/thumbtack/hospital/mapper/AdminMapper.xml"/>
         <mapper resource="net/thumbtack/hospital/mapper/PatientMapper.xml"/>
-        <mapper resource="net/thumbtack/hospital/mapper/CommonMapper.xml"/>
         <mapper resource="net/thumbtack/hospital/mapper/UserMapper.xml"/>
     </mappers>
 </configuration>

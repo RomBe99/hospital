@@ -110,10 +110,6 @@ public class AdminDaoImpl extends UserDaoImpl implements AdminDao {
 
         try (SqlSession session = getSession()) {
             try {
-                if (session.<Integer>selectOne("net.thumbtack.hospital.mapper.CommonMapper.containPatientIdOnDateInterval") != 0) {
-                    throw new RuntimeException("This period contains patients with tickets");
-                }
-
                 AdminMapper mapper = getAdminMapper(session);
 
                 for (ScheduleCell s : schedule) {

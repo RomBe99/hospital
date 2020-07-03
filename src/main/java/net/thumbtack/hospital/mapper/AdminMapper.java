@@ -13,7 +13,7 @@ public interface AdminMapper extends UserMapper {
     @Options(useGeneratedKeys = true, keyProperty = "cell.id")
     void insertScheduleCell(@Param("doctorId") int doctorId, @Param("cell") ScheduleCell scheduleCell);
 
-    @Insert("INSERT INTO time_cell VALUES (#{cell.time}, #{scheduleCellId}, NULL, #{cell.duration});")
+    @Insert("INSERT INTO time_cell VALUES (#{cell.time}, #{cell.ticket}, #{scheduleCellId}, NULL, #{cell.duration});")
     void insertTimeCell(@Param("scheduleCellId") int scheduleCellId, @Param("cell") TimeCell timeCell);
 
     @Update("UPDATE administrator SET position = #{position} WHERE userId = #{id};")

@@ -8,6 +8,21 @@ import javax.validation.ConstraintValidatorContext;
 public class PhoneConstraintValidator implements ConstraintValidator<Phone, String> {
     @Override
     public boolean isValid(String phoneField, ConstraintValidatorContext constraintValidatorContext) {
-        return phoneField != null && phoneField.matches("^((8|\\+7)[\\- ]?)?(\\(?\\d{3}\\)?[\\- ]?)?[\\d\\- ]{7,10}$");
+        if (phoneField == null) {
+            return false;
+        }
+
+        int phoneLength = 11;
+        String regex = "^((8|\\+7)[\\- ]?)?(\\(?\\d{3}\\)?[\\- ]?)?[\\d\\- ]{7,10}$";
+
+        if (phoneField.startsWith("8") && phoneField.length() >= phoneLength) {
+            return phoneField.matches(regex);
+        }
+
+        if (phoneField.startsWith("+7") && phoneField.length() >= phoneLength + 1) {
+            return phoneField.matches(regex);
+        }
+
+        return false;
     }
 }

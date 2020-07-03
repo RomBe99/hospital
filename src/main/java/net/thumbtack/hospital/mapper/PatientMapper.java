@@ -20,14 +20,13 @@ public interface PatientMapper extends UserMapper {
     @Options(useGeneratedKeys = true, keyProperty = "userId")
     int hasPermissions(String sessionId);
 
-    @Update("UPDATE time_cell SET patientId = #{patientId} WHERE patientId IS NULL AND scheduleCellId = (SELECT id FROM schedule_cell WHERE doctorId = #{doctorId} AND date = #{date}) AND ticketTime = #{time};")
+    @Update("UPDATE time_cell SET patientId = #{patientId} WHERE patientId IS NULL AND scheduleCellId = (SELECT id FROM schedule_cell WHERE doctorId = #{doctorId} AND date = #{date}) AND time = #{time};")
     void appointmentToDoctor(@Param("patientId") int patientId, @Param("doctorId") int doctorId,
                              @Param("date") LocalDate date, @Param("time") LocalTime time);
 
-    @Delete("DELETE FROM medical_commission WHERE patientId = #{patientId} AND id = #{ticketId};")
-    void denyMedicalCommission(@Param("patientId") int patientId, @Param("ticketId") int commissionTicketId);
+    @Delete("DELETE FROM medical_commission WHERE ticket = #{ticket};")
+    void denyMedicalCommission(String ticket);
 
-    @Update("UPDATE time_cell SET patientId = NULL WHERE patientId = #{patientId} AND ticketTime = #{time} AND scheduleCellId = (SELECT id FROM schedule_cell WHERE doctorId = #{doctorId} AND date = #{date});")
-    void denyTicket(@Param("patientId") int patientId, @Param("doctorId") int doctorId,
-                    @Param("date") LocalDate date, @Param("time") LocalTime time);
+    @Update("UPDATE time_cell SET patientId = NULL WHERE ticket = #{ticket};")
+    void denyTicket(String ticket);
 }

@@ -1,19 +1,23 @@
-package net.thumbtack.hospital.dtoresponse.patient.ticket;
+package net.thumbtack.hospital.model.ticket;
 
+import java.sql.Date;
+import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Objects;
 
-public class TicketToDoctorDtoResponse extends TicketDtoResponse {
+public class TicketToDoctor extends Ticket {
     private int doctorId;
     private String doctorFirstName;
     private String doctorLastName;
     private String doctorPatronymic;
     private String speciality;
 
-    public TicketToDoctorDtoResponse(String ticket, String room, LocalDate date, LocalTime time,
-                                     int doctorId, String doctorFirstName, String doctorLastName, String doctorPatronymic,
-                                     String speciality) {
+    public TicketToDoctor() {
+    }
+
+    public TicketToDoctor(String ticket, String room, LocalDate date, LocalTime time,
+                          int doctorId, String doctorFirstName, String doctorLastName, String doctorPatronymic, String speciality) {
         super(ticket, room, date, time);
 
         setDoctorId(doctorId);
@@ -21,6 +25,12 @@ public class TicketToDoctorDtoResponse extends TicketDtoResponse {
         setDoctorLastName(doctorLastName);
         setDoctorPatronymic(doctorPatronymic);
         setSpeciality(speciality);
+    }
+
+    public TicketToDoctor(String ticket, String room, Date date, Time time,
+                          int doctorId, String doctorFirstName, String doctorLastName, String doctorPatronymic, String speciality) {
+        this(ticket, room, date.toLocalDate(), time.toLocalTime(),
+                doctorId, doctorFirstName, doctorLastName, doctorPatronymic, speciality);
     }
 
     public void setDoctorId(int doctorId) {
@@ -66,24 +76,24 @@ public class TicketToDoctorDtoResponse extends TicketDtoResponse {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (!(o instanceof TicketToDoctor)) return false;
         if (!super.equals(o)) return false;
-        TicketToDoctorDtoResponse that = (TicketToDoctorDtoResponse) o;
-        return doctorId == that.doctorId &&
-                Objects.equals(doctorFirstName, that.doctorFirstName) &&
-                Objects.equals(doctorLastName, that.doctorLastName) &&
-                Objects.equals(doctorPatronymic, that.doctorPatronymic) &&
-                Objects.equals(speciality, that.speciality);
+        TicketToDoctor that = (TicketToDoctor) o;
+        return getDoctorId() == that.getDoctorId() &&
+                Objects.equals(getDoctorFirstName(), that.getDoctorFirstName()) &&
+                Objects.equals(getDoctorLastName(), that.getDoctorLastName()) &&
+                Objects.equals(getDoctorPatronymic(), that.getDoctorPatronymic()) &&
+                Objects.equals(getSpeciality(), that.getSpeciality());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), doctorId, doctorFirstName, doctorLastName, doctorPatronymic, speciality);
+        return Objects.hash(super.hashCode(), getDoctorId(), getDoctorFirstName(), getDoctorLastName(), getDoctorPatronymic(), getSpeciality());
     }
 
     @Override
     public String toString() {
-        return super.toString() + " TicketToDoctorDtoResponse{" +
+        return super.toString() + " TicketToDoctor{" +
                 "doctorId=" + doctorId +
                 ", firstName='" + doctorFirstName + '\'' +
                 ", lastName='" + doctorLastName + '\'' +

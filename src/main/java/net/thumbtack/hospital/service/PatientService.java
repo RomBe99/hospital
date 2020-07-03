@@ -11,16 +11,19 @@ import net.thumbtack.hospital.dtoresponse.patient.PatientRegistrationDtoResponse
 import net.thumbtack.hospital.dtoresponse.patient.ticket.AllTicketsDtoResponse;
 import net.thumbtack.hospital.dtoresponse.patient.ticket.TicketDtoResponse;
 import net.thumbtack.hospital.dtoresponse.patient.ticket.TicketToDoctorDtoResponse;
+import net.thumbtack.hospital.dtoresponse.patient.ticket.TicketToMedicalCommissionDtoResponse;
 import net.thumbtack.hospital.model.Doctor;
 import net.thumbtack.hospital.model.Patient;
-import net.thumbtack.hospital.model.TicketToDoctor;
-import net.thumbtack.hospital.util.TicketToDoctorBuilder;
+import net.thumbtack.hospital.model.ticket.TicketToMedicalCommission;
+import net.thumbtack.hospital.model.ticket.TicketToDoctor;
 import net.thumbtack.hospital.util.error.PermissionDeniedException;
+import net.thumbtack.hospital.util.ticket.TicketFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -67,7 +70,7 @@ public class PatientService {
         request.setPhone(phoneTransformer(request.getPhone()));
 
         Patient patient =
-                new Patient(patientId, request.getNewPassword(),
+                new Patient(patientId, null, request.getNewPassword(),
                         request.getFirstName(), request.getLastName(), request.getPatronymic(),
                         request.getEmail(), request.getAddress(), request.getPhone());
 
@@ -82,47 +85,50 @@ public class PatientService {
 
         Doctor doctor = doctorDao.getDoctorById(request.getDoctorId());
 
-        patientDao.appointmentToDoctor(patientId, request.getDoctorId(),
-                LocalDate.parse(request.getDate()), LocalTime.parse(request.getTime()));
-
         LocalDate ticketDate = LocalDate.parse(request.getDate());
         LocalTime ticketTime = LocalTime.parse(request.getTime());
 
-        TicketToDoctor ticket =
-                new TicketToDoctor(TicketToDoctorBuilder.buildTicketTicketNumber(doctor.getId(), ticketDate, ticketTime),
-                        ticketDate, ticketTime, doctor);
+        patientDao.appointmentToDoctor(patientId, request.getDoctorId(), ticketDate, ticketTime);
 
-        return new AppointmentToDoctorDtoResponse(ticket.getNumber(), doctor.getId(),
+        return new AppointmentToDoctorDtoResponse(TicketFactory.buildTicketToDoctor(request.getDoctorId(), ticketDate, ticketTime),
+                request.getDoctorId(),
                 doctor.getFirstName(), doctor.getLastName(), doctor.getPatronymic(), doctor.getSpecialty(), doctor.getCabinet(),
-                request.getDate(), request.getTime());
+                ticketDate.toString(), ticketTime.toString());
     }
 
-    public void denyMedicalCommission(String sessionId, int commissionTicketId) throws PermissionDeniedException {
-        int patientId = patientDao.hasPermissions(sessionId);
+    public void denyMedicalCommission(String sessionId, String ticket) throws PermissionDeniedException {
+        patientDao.hasPermissions(sessionId);
 
-        patientDao.denyMedicalCommission(patientId, commissionTicketId);
+        patientDao.denyMedicalCommission(ticket);
     }
 
-    public void denyTicket(String sessionId, String ticketNumber) throws PermissionDeniedException {
-        int patientId = patientDao.hasPermissions(sessionId);
+    public void denyTicket(String sessionId, String ticket) throws PermissionDeniedException {
+        patientDao.hasPermissions(sessionId);
 
-        patientDao.denyTicket(patientId,
-                TicketToDoctorBuilder.getDoctorIdFromTicketNumber(ticketNumber),
-                TicketToDoctorBuilder.getDateFromTicketNumber(ticketNumber),
-                TicketToDoctorBuilder.getTimeFromTicketNumber(ticketNumber));
+        patientDao.denyTicket(ticket);
     }
 
     public AllTicketsDtoResponse getTickets(String sessionId) throws PermissionDeniedException {
         int patientId = patientDao.hasPermissions(sessionId);
 
-        List<TicketDtoResponse> allTickets = patientDao.getTicketsToDoctor(patientId).stream()
-                .map(t -> new TicketToDoctorDtoResponse(
-                        TicketToDoctorBuilder.buildTicketTicketNumber(t.getDoctor().getId(), t.getDate(), t.getTime()),
-                        t.getDoctor().getCabinet(), t.getDate(), t.getTime(), t.getDoctor().getId(),
-                        t.getDoctor().getFirstName(), t.getDoctor().getLastName(), t.getDoctor().getPatronymic(),
-                        t.getDoctor().getSpecialty())).collect(Collectors.toList());
-        // TODO Сделать для врачебной комиссии
+        List<TicketToDoctor> ticketsToDoctors = patientDao.getTicketsToDoctor(patientId);
+        List<TicketToMedicalCommission> ticketsToMedicalCommission = patientDao.getTicketsToMedicalCommission(patientId);
 
-        return new AllTicketsDtoResponse(allTickets);
+        List<TicketDtoResponse> tickets = new ArrayList<>(ticketsToDoctors.size() + ticketsToMedicalCommission.size());
+
+        tickets.addAll(ticketsToDoctors.stream()
+                .map(t -> new TicketToDoctorDtoResponse(
+                        t.getTicket(), t.getRoom(), t.getDate(), t.getTime(), t.getDoctorId(),
+                        t.getDoctorFirstName(), t.getDoctorLastName(), t.getDoctorPatronymic(),
+                        t.getSpeciality()))
+                .collect(Collectors.toList()));
+
+        tickets.addAll(ticketsToMedicalCommission.stream()
+                .map(t -> new TicketToMedicalCommissionDtoResponse(
+                        t.getTicket(), t.getRoom(), t.getDate(), t.getTime(),
+                        t.getPatientId(), t.getDoctorIds(), t.getDuration()))
+                .collect(Collectors.toList()));
+
+        return new AllTicketsDtoResponse(tickets);
     }
 }

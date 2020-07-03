@@ -24,6 +24,8 @@
                         ofType="net.thumbtack.hospital.model.TimeCell">
                 <result property="time" column="time"/>
                 <result property="duration" column="duration"/>
+                <result property="ticket" column="ticket"/>
+
                 <association property="patient" javaType="net.thumbtack.hospital.model.Patient">
                     <id property="id" column="patientId"/>
                     <result property="firstName" column="patientFirstName"/>
@@ -32,8 +34,6 @@
                     <result property="email" column="patientEmail"/>
                     <result property="address" column="patientAddress"/>
                     <result property="phone" column="patientPhone"/>
-                    <collection property="tickets" javaType="java.util.List"
-                                ofType="net.thumbtack.hospital.model.TimeCell"/>
                 </association>
             </collection>
         </collection>
@@ -50,7 +50,8 @@
                c.name     AS cabinet,
                sc.id      AS scheduleCellId,
                date,
-               ticketTime AS time,
+               time,
+               ticket,
                duration,
                firstName  AS patientFirstName,
                lastName   AS patientLastName,
@@ -78,7 +79,8 @@
                c.name     AS cabinet,
                sc.id      AS scheduleCellId,
                date,
-               ticketTime AS time,
+               time,
+               ticket,
                duration,
                firstName  AS patientFirstName,
                lastName   AS patientLastName,

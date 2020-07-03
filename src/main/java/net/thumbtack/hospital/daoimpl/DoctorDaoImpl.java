@@ -5,7 +5,7 @@ import net.thumbtack.hospital.mapper.CommonMapper;
 import net.thumbtack.hospital.mapper.DoctorMapper;
 import net.thumbtack.hospital.mapper.UserTypes;
 import net.thumbtack.hospital.model.Doctor;
-import net.thumbtack.hospital.model.MedicalCommission;
+import net.thumbtack.hospital.model.ticket.TicketToMedicalCommission;
 import net.thumbtack.hospital.util.error.PermissionDeniedErrorCodes;
 import net.thumbtack.hospital.util.error.PermissionDeniedException;
 import org.apache.ibatis.session.SqlSession;
@@ -98,24 +98,22 @@ public class DoctorDaoImpl extends UserDaoImpl implements DoctorDao {
     }
 
     @Override
-    public int createMedicalCommission(MedicalCommission medicalCommission) {
-        LOGGER.debug(className + ": Creating medical commission = {}", medicalCommission);
+    public void createMedicalCommission(TicketToMedicalCommission ticketToMedicalCommission) {
+        LOGGER.debug(className + ": Creating medical commission = {}", ticketToMedicalCommission);
 
         try (SqlSession session = getSession()) {
             try {
                 DoctorMapper mapper = getDoctorMapper(session);
-                int commissionId = mapper.createMedicalCommission(medicalCommission);
+                mapper.createMedicalCommission(ticketToMedicalCommission);
 
-                for (Doctor d : medicalCommission.getDoctors()) {
-                    mapper.insertDoctorInMedicalCommission(commissionId, d.getId());
+                for (int id : ticketToMedicalCommission.getDoctorIds()) {
+                    mapper.insertDoctorInMedicalCommission(ticketToMedicalCommission.getTicket(), id);
                 }
 
-                LOGGER.debug(className + ": Medical commission = {} successfully created", medicalCommission);
-
-                return commissionId;
+                LOGGER.debug(className + ": Medical commission = {} successfully created", ticketToMedicalCommission);
             } catch (RuntimeException ex) {
                 session.rollback();
-                LOGGER.error(className + ": Can't create medical commission = {}", medicalCommission, ex);
+                LOGGER.error(className + ": Can't create medical commission = {}", ticketToMedicalCommission, ex);
 
                 throw ex;
             }

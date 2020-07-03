@@ -6,11 +6,11 @@ import java.util.Objects;
 public class AllTicketsDtoResponse {
     private List<TicketDtoResponse> tickets;
 
-    public AllTicketsDtoResponse(List<TicketDtoResponse> tickets) {
-        setTickets(tickets);
+    public AllTicketsDtoResponse() {
     }
 
-    public AllTicketsDtoResponse() {
+    public AllTicketsDtoResponse(List<TicketDtoResponse> tickets) {
+        setTickets(tickets);
     }
 
     public void setTickets(List<TicketDtoResponse> tickets) {

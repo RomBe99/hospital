@@ -1,7 +1,7 @@
 package net.thumbtack.hospital.dao;
 
 import net.thumbtack.hospital.model.Doctor;
-import net.thumbtack.hospital.model.MedicalCommission;
+import net.thumbtack.hospital.model.ticket.TicketToMedicalCommission;
 
 import java.util.List;
 
@@ -14,5 +14,5 @@ public interface DoctorDao extends UserDao {
 
     Doctor getDoctorById(int id);
 
-    int createMedicalCommission(MedicalCommission medicalCommission);
+    void createMedicalCommission(TicketToMedicalCommission ticketToMedicalCommission);
 }

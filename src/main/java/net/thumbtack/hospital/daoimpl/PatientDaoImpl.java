@@ -3,9 +3,9 @@ package net.thumbtack.hospital.daoimpl;
 import net.thumbtack.hospital.dao.PatientDao;
 import net.thumbtack.hospital.mapper.PatientMapper;
 import net.thumbtack.hospital.mapper.UserTypes;
-import net.thumbtack.hospital.model.MedicalCommission;
 import net.thumbtack.hospital.model.Patient;
-import net.thumbtack.hospital.model.TicketToDoctor;
+import net.thumbtack.hospital.model.ticket.TicketToMedicalCommission;
+import net.thumbtack.hospital.model.ticket.TicketToDoctor;
 import net.thumbtack.hospital.util.error.PermissionDeniedErrorCodes;
 import net.thumbtack.hospital.util.error.PermissionDeniedException;
 import org.apache.ibatis.session.SqlSession;
@@ -127,18 +127,18 @@ public class PatientDaoImpl extends UserDaoImpl implements PatientDao {
     }
 
     @Override
-    public void denyMedicalCommission(int patientId, int commissionTicketId) {
-        LOGGER.debug(className + ": Patient = {} deny ticket to commission = {}", patientId, commissionTicketId);
+    public void denyMedicalCommission(String ticket) {
+        LOGGER.debug(className + ": Deny ticket = {} to commission", ticket);
 
         try (SqlSession session = getSession()) {
             try {
-                getPatientMapper(session).denyMedicalCommission(patientId, commissionTicketId);
+                getPatientMapper(session).denyMedicalCommission(ticket);
 
                 session.commit();
-                LOGGER.debug(className + ": Patient = {} successfully deny ticket to commission = {}", patientId, commissionTicketId);
+                LOGGER.debug(className + ": Successfully deny ticket = {} to commission", ticket);
             } catch (RuntimeException ex) {
                 session.rollback();
-                LOGGER.error(className + ": Patient = {} can't deny ticket to commission = {}", patientId, commissionTicketId, ex);
+                LOGGER.error(className + ": Can't deny ticket = {} to commission", ticket, ex);
 
                 throw ex;
             }
@@ -146,21 +146,18 @@ public class PatientDaoImpl extends UserDaoImpl implements PatientDao {
     }
 
     @Override
-    public void denyTicket(int patientId, int doctorId, LocalDate date, LocalTime time) {
-        LOGGER.debug(className + ": Patient = {} deny ticket to doctor = {} appointment on date = {} and time = {}",
-                patientId, doctorId, date, time);
+    public void denyTicket(String ticket) {
+        LOGGER.debug(className + ": Deny ticket = {} ", ticket);
 
         try (SqlSession session = getSession()) {
             try {
-                getPatientMapper(session).denyTicket(patientId, doctorId, date, time);
+                getPatientMapper(session).denyTicket(ticket);
 
                 session.commit();
-                LOGGER.debug(className + ": Patient = {} successfully deny ticket to doctor = {} appointment on date = {} and time = {}",
-                        patientId, doctorId, date, time);
+                LOGGER.debug(className + ": Successfully deny ticket = {}", ticket);
             } catch (RuntimeException ex) {
                 session.rollback();
-                LOGGER.error(className + ": Patient = {} can't deny ticket to doctor = {} appointment on date = {} and time = {}",
-                        patientId, doctorId, date, time, ex);
+                LOGGER.error(className + ": Can't deny ticket = {}", ticket, ex);
 
                 throw ex;
             }
@@ -181,7 +178,7 @@ public class PatientDaoImpl extends UserDaoImpl implements PatientDao {
     }
 
     @Override
-    public List<MedicalCommission> getTicketsToMedicalCommission(int patientId) {
+    public List<TicketToMedicalCommission> getTicketsToMedicalCommission(int patientId) {
         LOGGER.debug(className + ": Get all tickets to medical commission for patient = {}", patientId);
 
         try (SqlSession session = getSession()) {

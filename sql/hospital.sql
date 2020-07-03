@@ -12,9 +12,12 @@ CREATE TABLE user_type
 ) ENGINE = INNODB
   DEFAULT CHARSET = utf8;
 
-INSERT INTO user_type VALUES (0, 'ADMINISTRATOR');
-INSERT INTO user_type VALUES (0, 'DOCTOR');
-INSERT INTO user_type VALUES (0, 'PATIENT');
+INSERT INTO user_type
+VALUES (0, 'ADMINISTRATOR');
+INSERT INTO user_type
+VALUES (0, 'DOCTOR');
+INSERT INTO user_type
+VALUES (0, 'PATIENT');
 
 CREATE TABLE user
 (
@@ -118,12 +121,13 @@ CREATE TABLE schedule_cell
 
 CREATE TABLE time_cell
 (
-    ticketTime     TIME NOT NULL,
-    scheduleCellId INT  NOT NULL,
+    time           TIME         NOT NULL,
+    ticket         VARCHAR(100) NOT NULL,
+    scheduleCellId INT          NOT NULL,
     patientId      INT DEFAULT NULL,
-    duration       INT  NOT NULL,
+    duration       INT          NOT NULL,
 
-    PRIMARY KEY (ticketTime, scheduleCellId),
+    PRIMARY KEY (ticket),
     UNIQUE KEY (scheduleCellId, patientId),
     FOREIGN KEY (scheduleCellId) REFERENCES schedule_cell (id) ON DELETE CASCADE,
     FOREIGN KEY (patientId) REFERENCES patient (userId) ON DELETE SET NULL
@@ -132,25 +136,27 @@ CREATE TABLE time_cell
 
 CREATE TABLE medical_commission
 (
-    id        INT AUTO_INCREMENT,
-    date      DATE,
-    time      TIME,
-    patientId INT,
-    duration  INT,
+    ticket    VARCHAR(200) NOT NULL,
+    date      DATE         NOT NULL,
+    time      TIME         NOT NULL,
+    patientId INT          NOT NULL,
+    duration  INT          NOT NULL,
+    cabinetId INT          NOT NULL,
 
-    PRIMARY KEY (id),
+    PRIMARY KEY (ticket),
     UNIQUE KEY (date, time, patientId),
-    FOREIGN KEY (patientId) REFERENCES patient (userId) ON DELETE CASCADE
+    FOREIGN KEY (patientId) REFERENCES patient (userId) ON DELETE CASCADE,
+    FOREIGN KEY (cabinetId) REFERENCES cabinet (id) ON DELETE CASCADE
 ) ENGINE = INNODB
   DEFAULT CHARSET = utf8;
 
 CREATE TABLE commission_doctor
 (
-    commissionId INT NOT NULL,
-    doctorId     INT NOT NULL,
+    commissionTicket VARCHAR(200) NOT NULL,
+    doctorId         INT          NOT NULL,
 
-    PRIMARY KEY (commissionId, doctorId),
-    FOREIGN KEY (commissionId) REFERENCES medical_commission (id) ON DELETE CASCADE,
+    PRIMARY KEY (commissionTicket, doctorId),
+    FOREIGN KEY (commissionTicket) REFERENCES medical_commission (ticket) ON DELETE CASCADE,
     FOREIGN KEY (doctorId) REFERENCES doctor (userId) ON DELETE CASCADE
 ) ENGINE = INNODB
   DEFAULT CHARSET = utf8;
@@ -195,6 +201,6 @@ VALUES (0, '471');
 # Insert root admin
 
 INSERT INTO user
-VALUES (0, 'admin', 'admin', 'Roman', 'Belinsky', NULL, (SELECT id FROM user_type WHERE name = 'Administrator'));
+VALUES (0, 'admin', 'admin', 'Roman', 'Belinsky', NULL, (SELECT id FROM user_type WHERE name = 'ADMINISTRATOR'));
 INSERT INTO administrator
 VALUES (last_insert_id(), 'Root admin');

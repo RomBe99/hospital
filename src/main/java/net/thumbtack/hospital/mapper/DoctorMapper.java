@@ -1,6 +1,6 @@
 package net.thumbtack.hospital.mapper;
 
-import net.thumbtack.hospital.model.MedicalCommission;
+import net.thumbtack.hospital.model.ticket.TicketToMedicalCommission;
 import org.apache.ibatis.annotations.*;
 
 public interface DoctorMapper extends UserMapper {
@@ -14,10 +14,9 @@ public interface DoctorMapper extends UserMapper {
     @Options(useGeneratedKeys = true, keyProperty = "userId")
     int hasPermissions(String sessionId);
 
-    @Insert("INSERT INTO medical_commission VALUES (#{id}, #{date}, #{time}, #{patientId}, #{duration});")
-    @Options(useGeneratedKeys = true, keyProperty = "id")
-    int createMedicalCommission(MedicalCommission medicalCommission);
+    @Insert("INSERT INTO medical_commission VALUES (#{ticket}, #{date}, #{time}, #{patientId}, #{duration}, (SELECT id FROM cabinet WHERE name = #{room}));")
+    void createMedicalCommission(TicketToMedicalCommission ticketToMedicalCommission);
 
-    @Insert("INSERT INTO commission_doctor VALUES (#{commissionId}, #{doctorId});")
-    void insertDoctorInMedicalCommission(@Param("commissionId") int commissionId, @Param("doctorId") int doctorId);
+    @Insert("INSERT INTO commission_doctor VALUES (#{commissionTicket}, #{doctorId});")
+    void insertDoctorInMedicalCommission(@Param("commissionTicket") String commissionTicket, @Param("doctorId") int doctorId);
 }

@@ -5,7 +5,7 @@
 
 <mapper namespace="net.thumbtack.hospital.mapper.PatientMapper">
     <resultMap id="resultPatient" type="net.thumbtack.hospital.model.Patient">
-        <id property="id" column="userId"/>
+        <id property="id" column="id"/>
         <result property="login" column="login"/>
         <result property="password" column="password"/>
         <result property="firstName" column="firstName"/>
@@ -14,45 +14,34 @@
         <result property="email" column="email"/>
         <result property="address" column="address"/>
         <result property="phone" column="phone"/>
-
-        <collection property="tickets" column="scheduleCellId" javaType="java.util.List"
-                    ofType="net.thumbtack.hospital.model.ScheduleCell">
-            <id property="id" column="scheduleCellId"/>
-            <result property="date" column="date"/>
-            <association property="doctor" javaType="net.thumbtack.hospital.model.Doctor"/>
-
-            <collection property="cells" column="timeCellId" javaType="java.util.List"
-                        ofType="net.thumbtack.hospital.model.TimeCell">
-                <id property="time" column="ticketTime"/>
-                <result property="duration" column="duration"/>
-            </collection>
-        </collection>
     </resultMap>
 
-    <resultMap id="resultTicketToDoctor" type="net.thumbtack.hospital.model.ScheduleCell">
-        <id property="number" column="scheduleCellId"/>
-        <result property="date" column="date"/>
-        <result property="time" column="ticketTime"/>
-        <association property="doctor" javaType="net.thumbtack.hospital.model.Doctor">
-            <id property="id" column="userId"/>
-            <result property="firstName" column="firstName"/>
-            <result property="lastName" column="lastName"/>
-            <result property="patronymic" column="patronymic"/>
-            <result property="cabinet" column="cabinetName"/>
-            <result property="specialty" column="specialityName"/>
-        </association>
-    </resultMap>
-
-    <resultMap id="resultTicketToMedicalCommission" type="net.thumbtack.hospital.model.MedicalCommission">
-        <id property="id" column="commissionId"/>
+    <resultMap id="resultTicketToDoctor" type="net.thumbtack.hospital.model.ticket.TicketToDoctor">
+        <id property="ticket" column="ticket"/>
+        <result property="room" column="room"/>
         <result property="date" column="date"/>
         <result property="time" column="time"/>
+        <result property="doctorId" column="doctorId"/>
+        <result property="doctorFirstName" column="doctorFirstName"/>
+        <result property="doctorLastName" column="doctorLastName"/>
+        <result property="doctorPatronymic" column="doctorPatronymic"/>
+        <result property="speciality" column="speciality"/>
+    </resultMap>
+
+    <resultMap id="resultTicketToMedicalCommission"
+               type="net.thumbtack.hospital.model.ticket.TicketToMedicalCommission">
+        <id property="ticket" column="ticket"/>
+        <result property="room" column="room"/>
+        <result property="date" column="date"/>
+        <result property="time" column="time"/>
+        <result property="patientId" column="patientId"/>
         <result property="duration" column="duration"/>
+
         <collection property="doctorIds" column="doctorId" javaType="java.util.List" ofType="java.lang.Integer"/>
     </resultMap>
 
     <select id="getPatientById" parameterType="int" resultMap="resultPatient">
-        SELECT user.id AS userId,
+        SELECT user.id id,
                login,
                password,
                firstName,
@@ -60,45 +49,42 @@
                patronymic,
                email,
                address,
-               phone,
-               scheduleCellId,
-               date,
-               ticketTime,
-               duration
+               phone
         FROM user
                  JOIN patient p ON user.id = p.userId
-                 LEFT JOIN time_cell tc on p.userId = tc.patientId
-                 LEFT JOIN schedule_cell sc on tc.scheduleCellId = sc.id
         WHERE userId = #{id};
     </select>
 
     <select id="getTicketsToDoctor" parameterType="int" resultMap="resultTicketToDoctor">
-        SELECT userId,
-               firstName,
-               lastName,
-               patronymic,
-               c.name cabinetName,
-               ds.name specialityName,
+        SELECT ticket,
+               c.name     room,
                date,
-               ticketTime,
-               scheduleCellId
+               time,
+               doctorId,
+               firstName  doctorFirstName,
+               lastName   doctorLastName,
+               patronymic doctorPatronymic,
+               ds.name    speciality
         FROM schedule_cell
                  JOIN time_cell tc ON schedule_cell.id = tc.scheduleCellId
                  JOIN doctor d ON schedule_cell.doctorId = d.userId
-                 JOIN user u ON d.userId = u.id
-                 JOIN cabinet c ON d.cabinetId = c.id
                  JOIN doctor_specialty ds ON d.specialtyId = ds.id
+                 JOIN cabinet c ON d.cabinetId = c.id
+                 JOIN user u ON d.userId = u.id
         WHERE patientId = #{patientId};
     </select>
 
     <select id="getTicketsToMedicalCommission" parameterType="int" resultMap="resultTicketToMedicalCommission">
-        SELECT medical_commission.id commissionId,
+        SELECT ticket,
+               name room,
                date,
                time,
+               patientId,
                duration,
                doctorId
-        FROM medical_commission
-            JOIN commission_doctor cd ON medical_commission.id = cd.commissionId
+        FROM medical_commission mc
+                 JOIN commission_doctor cd ON mc.ticket = cd.commissionTicket
+                 JOIN cabinet c ON mc.cabinetId = c.id
         WHERE patientId = #{patientId};
     </select>
 </mapper>
