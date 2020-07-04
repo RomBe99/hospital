@@ -1,6 +1,7 @@
-package net.thumbtack.hospital.model;
+package net.thumbtack.hospital.model.schedule;
 
-import java.sql.Time;
+import net.thumbtack.hospital.model.user.Patient;
+
 import java.time.LocalTime;
 import java.util.Objects;
 
@@ -18,10 +19,6 @@ public class TimeCell {
         setPatient(patient);
         setDuration(duration);
         setTicket(ticket);
-    }
-
-    public TimeCell(Time time, Patient patient, int duration, String ticket) {
-        this(time.toLocalTime(), patient, duration, ticket);
     }
 
     public void setTime(LocalTime time) {

@@ -1,4 +1,4 @@
-package net.thumbtack.hospital.dtorequest.other.schedulecell;
+package net.thumbtack.hospital.dtorequest.schedule;
 
 import net.thumbtack.hospital.util.validator.annotation.Date;
 import net.thumbtack.hospital.util.validator.annotation.WeekDayString;

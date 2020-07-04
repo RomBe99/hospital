@@ -4,7 +4,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="net.thumbtack.hospital.mapper.UserMapper">
-    <resultMap id="resultDoctorInformation" type="net.thumbtack.hospital.model.Doctor">
+    <resultMap id="resultDoctorInformation" type="net.thumbtack.hospital.model.user.Doctor">
         <id property="id" column="doctorId"/>
         <result property="firstName" column="docFirstName"/>
         <result property="lastName" column="docLastName"/>
@@ -13,17 +13,17 @@
         <result property="specialty" column="specialty"/>
 
         <collection property="schedule" column="scheduleCellId" javaType="java.util.List"
-                    ofType="net.thumbtack.hospital.model.ScheduleCell">
+                    ofType="net.thumbtack.hospital.model.schedule.ScheduleCell">
             <result property="id" column="scheduleCellId"/>
             <result property="date" column="date"/>
 
             <collection property="cells" column="scheduleCellId" javaType="java.util.List"
-                        ofType="net.thumbtack.hospital.model.TimeCell">
+                        ofType="net.thumbtack.hospital.model.schedule.TimeCell">
                 <result property="time" column="time"/>
                 <result property="duration" column="duration"/>
                 <result property="ticket" column="ticket"/>
 
-                <association property="patient" javaType="net.thumbtack.hospital.model.Patient">
+                <association property="patient" javaType="net.thumbtack.hospital.model.user.Patient">
                     <id property="id" column="patientId"/>
                     <result property="firstName" column="pFirstName"/>
                     <result property="lastName" column="pLastName"/>
@@ -36,7 +36,7 @@
         </collection>
     </resultMap>
 
-    <resultMap id="resultDoctorsInformation" type="net.thumbtack.hospital.model.Doctor">
+    <resultMap id="resultDoctorsInformation" type="net.thumbtack.hospital.model.user.Doctor">
         <id property="id" column="doctorId"/>
         <result property="firstName" column="docFirstName"/>
         <result property="lastName" column="docLastName"/>
@@ -45,17 +45,17 @@
         <result property="specialty" column="specialty"/>
 
         <collection property="schedule" column="scheduleCellId" javaType="java.util.List"
-                    ofType="net.thumbtack.hospital.model.ScheduleCell">
+                    ofType="net.thumbtack.hospital.model.schedule.ScheduleCell">
             <result property="id" column="scheduleCellId"/>
             <result property="date" column="date"/>
 
             <collection property="cells" column="scheduleCellId" javaType="java.util.List"
-                        ofType="net.thumbtack.hospital.model.TimeCell">
+                        ofType="net.thumbtack.hospital.model.schedule.TimeCell">
                 <result property="time" column="time"/>
                 <result property="duration" column="duration"/>
                 <result property="ticket" column="ticket"/>
 
-                <association property="patient" javaType="net.thumbtack.hospital.model.Patient">
+                <association property="patient" javaType="net.thumbtack.hospital.model.user.Patient">
                     <id property="id" column="patientId"/>
                     <result property="firstName" column="pFirstName"/>
                     <result property="lastName" column="pLastName"/>

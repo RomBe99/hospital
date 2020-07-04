@@ -16,16 +16,8 @@ public class AdminLoginDtoResponse extends LoginUserDtoResponse {
         setPosition(position);
     }
 
-    public AdminLoginDtoResponse(int id, String firstName, String lastName, String position) {
-        this(id, firstName, lastName, null, position);
-    }
-
     public AdminLoginDtoResponse(String firstName, String lastName, String patronymic, String position) {
         this(0, firstName, lastName, patronymic, position);
-    }
-
-    public AdminLoginDtoResponse(String firstName, String lastName, String position) {
-        this(firstName, lastName, null, position);
     }
 
     public void setPosition(String position) {

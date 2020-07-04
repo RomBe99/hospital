@@ -1,4 +1,6 @@
-package net.thumbtack.hospital.model;
+package net.thumbtack.hospital.model.schedule;
+
+import net.thumbtack.hospital.model.user.Doctor;
 
 import java.sql.Date;
 import java.time.LocalDate;
@@ -21,8 +23,8 @@ public class ScheduleCell {
         setCells(cells);
     }
 
-    public ScheduleCell(int id, Doctor doctor, Date date, List<TimeCell> cells) {
-        this(id, doctor, date.toLocalDate(), cells);
+    public ScheduleCell(Doctor doctor, LocalDate date, List<TimeCell> cells) {
+        this(0, doctor, date, cells);
     }
 
     public void setId(int id) {

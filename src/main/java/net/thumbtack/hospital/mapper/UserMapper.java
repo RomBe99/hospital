@@ -1,6 +1,6 @@
 package net.thumbtack.hospital.mapper;
 
-import net.thumbtack.hospital.model.User;
+import net.thumbtack.hospital.model.user.User;
 import org.apache.ibatis.annotations.*;
 
 public interface UserMapper {

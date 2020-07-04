@@ -1,7 +1,7 @@
 package net.thumbtack.hospital.dtorequest.admin;
 
-import net.thumbtack.hospital.dtorequest.other.schedulecell.WeekDayScheduleCellDtoRequest;
-import net.thumbtack.hospital.dtorequest.other.schedulecell.WeekScheduleCellDtoRequest;
+import net.thumbtack.hospital.dtorequest.schedule.WeekDayScheduleCellDtoRequest;
+import net.thumbtack.hospital.dtorequest.schedule.WeekScheduleCellDtoRequest;
 import net.thumbtack.hospital.util.validator.annotation.Date;
 
 import java.util.List;

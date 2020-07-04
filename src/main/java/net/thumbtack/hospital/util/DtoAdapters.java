@@ -1,13 +1,13 @@
 package net.thumbtack.hospital.util;
 
-import net.thumbtack.hospital.dtorequest.other.schedulecell.WeekDayScheduleCellDtoRequest;
-import net.thumbtack.hospital.dtorequest.other.schedulecell.WeekScheduleCellDtoRequest;
-import net.thumbtack.hospital.dtoresponse.other.schedulecell.ScheduleCellResponse;
-import net.thumbtack.hospital.dtoresponse.other.schedulecell.ScheduleTimeCellResponse;
+import net.thumbtack.hospital.dtorequest.schedule.WeekDayScheduleCellDtoRequest;
+import net.thumbtack.hospital.dtorequest.schedule.WeekScheduleCellDtoRequest;
+import net.thumbtack.hospital.dtoresponse.schedule.ScheduleCellResponse;
+import net.thumbtack.hospital.dtoresponse.schedule.ScheduleTimeCellResponse;
 import net.thumbtack.hospital.dtoresponse.patient.PatientInformationDtoResponse;
-import net.thumbtack.hospital.model.Patient;
-import net.thumbtack.hospital.model.ScheduleCell;
-import net.thumbtack.hospital.model.TimeCell;
+import net.thumbtack.hospital.model.user.Patient;
+import net.thumbtack.hospital.model.schedule.ScheduleCell;
+import net.thumbtack.hospital.model.schedule.TimeCell;
 
 import java.util.List;
 import java.util.stream.Collectors;

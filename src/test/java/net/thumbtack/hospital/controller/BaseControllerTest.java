@@ -128,7 +128,7 @@ public abstract class BaseControllerTest {
     public String loginRootAdmin() throws Exception {
         String login = "admin";
         String password = "admin";
-        LoginUserDtoResponse expectedResponse = new AdminLoginDtoResponse("Roman", "Belinsky", "Root admin");
+        LoginUserDtoResponse expectedResponse = new AdminLoginDtoResponse("Roman", "Belinsky", null, "Root admin");
 
         return login(login, password, expectedResponse, UserTypes.ADMINISTRATOR);
     }

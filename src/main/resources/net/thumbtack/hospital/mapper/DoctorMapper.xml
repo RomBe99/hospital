@@ -4,7 +4,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="net.thumbtack.hospital.mapper.DoctorMapper">
-    <select id="getAllDoctors" resultType="net.thumbtack.hospital.model.Doctor">
+    <select id="getAllDoctors" resultType="net.thumbtack.hospital.model.user.Doctor">
         SELECT user.id    AS doctorId,
                login,
                password,
@@ -33,7 +33,7 @@
                  LEFT JOIN patient p ON tc.patientId = p.userId;
     </select>
 
-    <select id="getDoctorById" parameterType="int" resultType="net.thumbtack.hospital.model.Doctor">
+    <select id="getDoctorById" parameterType="int" resultType="net.thumbtack.hospital.model.user.Doctor">
         SELECT user.id    AS doctorId,
                login,
                password,

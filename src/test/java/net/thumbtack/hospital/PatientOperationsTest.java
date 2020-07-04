@@ -1,6 +1,6 @@
 package net.thumbtack.hospital;
 
-import net.thumbtack.hospital.model.Patient;
+import net.thumbtack.hospital.model.user.Patient;
 import org.junit.Assert;
 import org.junit.Test;
 

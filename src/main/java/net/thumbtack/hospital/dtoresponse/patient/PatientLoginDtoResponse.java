@@ -22,20 +22,9 @@ public class PatientLoginDtoResponse extends LoginUserDtoResponse {
         setPhone(phone);
     }
 
-    public PatientLoginDtoResponse(int id,
-                                   String firstName, String lastName,
-                                   String email, String address, String phone) {
-        this(id, firstName, lastName, null, email, address, phone);
-    }
-
     public PatientLoginDtoResponse(String firstName, String lastName, String patronymic,
                                    String email, String address, String phone) {
         this(0, firstName, lastName, patronymic, email, address, phone);
-    }
-
-    public PatientLoginDtoResponse(String firstName, String lastName,
-                                   String email, String address, String phone) {
-        this(firstName, lastName, null, email, address, phone);
     }
 
     public void setEmail(String email) {

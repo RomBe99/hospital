@@ -1,12 +1,13 @@
 package net.thumbtack.hospital;
 
-import net.thumbtack.hospital.model.Administrator;
-import net.thumbtack.hospital.model.Doctor;
-import net.thumbtack.hospital.model.Patient;
+import net.thumbtack.hospital.model.user.Administrator;
+import net.thumbtack.hospital.model.user.Doctor;
+import net.thumbtack.hospital.model.user.Patient;
 import net.thumbtack.hospital.util.error.PermissionDeniedException;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.UUID;
 
 public class AdminOperationsTest extends BaseTest {
@@ -154,7 +155,7 @@ public class AdminOperationsTest extends BaseTest {
         String cabinet = "306";
         String speciality = "Surgeon";
 
-        Doctor expectedDoctor = new Doctor(login, password, firstName, lastName, patronymic, cabinet, speciality);
+        Doctor expectedDoctor = new Doctor(login, password, firstName, lastName, patronymic, cabinet, speciality, new ArrayList<>());
 
         try {
             Doctor insertedDoctor = insertDoctor(login, password, firstName, lastName, patronymic, cabinet, speciality);

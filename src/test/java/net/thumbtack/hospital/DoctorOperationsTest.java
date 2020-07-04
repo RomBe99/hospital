@@ -1,9 +1,9 @@
 package net.thumbtack.hospital;
 
-import net.thumbtack.hospital.model.Doctor;
-import net.thumbtack.hospital.model.Patient;
-import net.thumbtack.hospital.model.ScheduleCell;
-import net.thumbtack.hospital.model.TimeCell;
+import net.thumbtack.hospital.model.user.Doctor;
+import net.thumbtack.hospital.model.user.Patient;
+import net.thumbtack.hospital.model.schedule.ScheduleCell;
+import net.thumbtack.hospital.model.schedule.TimeCell;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -24,7 +24,7 @@ public class DoctorOperationsTest extends BaseTest {
         String specialty = "Surgeon";
         String cabinet = "306";
 
-        Doctor expectedDoctor = new Doctor(login, password, firstName, lastName, patronymic, cabinet, specialty);
+        Doctor expectedDoctor = new Doctor(login, password, firstName, lastName, patronymic, cabinet, specialty, new ArrayList<>());
 
         try {
             Doctor insertedDoctor = insertDoctor(login, password, firstName, lastName, patronymic, cabinet, specialty);
@@ -46,7 +46,7 @@ public class DoctorOperationsTest extends BaseTest {
         String specialty = "Surgeon";
         String cabinet = "306";
 
-        Doctor expectedDoctor = new Doctor(login, password, firstName, lastName, patronymic, cabinet, specialty);
+        Doctor expectedDoctor = new Doctor(login, password, firstName, lastName, patronymic, cabinet, specialty, new ArrayList<>());
 
         try {
             Doctor insertedDoctor = insertDoctor(login, password, firstName, lastName, patronymic, cabinet, specialty);

@@ -25,19 +25,9 @@ public class PatientInformationDtoResponse {
         setPhone(phone);
     }
 
-    public PatientInformationDtoResponse(int id, String firstName, String lastName,
-                                         String email, String address, String phone) {
-        this(id, firstName, lastName, null, email, address, phone);
-    }
-
     public PatientInformationDtoResponse(String firstName, String lastName, String patronymic,
                                          String email, String address, String phone) {
         this(0, firstName, lastName, patronymic, email, address, phone);
-    }
-
-    public PatientInformationDtoResponse(String firstName, String lastName,
-                                         String email, String address, String phone) {
-        this(0, firstName, lastName, null, email, address, phone);
     }
 
     public void setId(int id) {

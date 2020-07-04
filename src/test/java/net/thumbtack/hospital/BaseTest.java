@@ -10,7 +10,11 @@ import net.thumbtack.hospital.daoimpl.PatientDaoImpl;
 import net.thumbtack.hospital.daoimpl.UserDaoImpl;
 import net.thumbtack.hospital.debug.DebugDao;
 import net.thumbtack.hospital.debug.DebugDaoImpl;
-import net.thumbtack.hospital.model.*;
+import net.thumbtack.hospital.model.schedule.ScheduleCell;
+import net.thumbtack.hospital.model.schedule.TimeCell;
+import net.thumbtack.hospital.model.user.Administrator;
+import net.thumbtack.hospital.model.user.Doctor;
+import net.thumbtack.hospital.model.user.Patient;
 import net.thumbtack.hospital.util.error.PermissionDeniedException;
 import net.thumbtack.hospital.util.mybatis.MyBatisUtils;
 import net.thumbtack.hospital.util.ticket.TicketFactory;
@@ -109,7 +113,7 @@ public class BaseTest {
     protected Doctor insertDoctor(String login, String password,
                                   String firstName, String lastName, String patronymic,
                                   String cabinetName, String doctorSpecialtyName) {
-        Doctor doctor = new Doctor(login, password, firstName, lastName, patronymic, cabinetName, doctorSpecialtyName);
+        Doctor doctor = new Doctor(login, password, firstName, lastName, patronymic, cabinetName, doctorSpecialtyName, new ArrayList<>());
         doctorDao.insertDoctor(doctor);
 
         Assert.assertNotEquals(0, doctor.getId());

@@ -1,6 +1,6 @@
 package net.thumbtack.hospital.dao;
 
-import net.thumbtack.hospital.model.Patient;
+import net.thumbtack.hospital.model.user.Patient;
 import net.thumbtack.hospital.model.ticket.TicketToMedicalCommission;
 import net.thumbtack.hospital.model.ticket.TicketToDoctor;
 

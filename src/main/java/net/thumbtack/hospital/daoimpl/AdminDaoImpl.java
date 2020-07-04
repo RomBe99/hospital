@@ -3,9 +3,9 @@ package net.thumbtack.hospital.daoimpl;
 import net.thumbtack.hospital.dao.AdminDao;
 import net.thumbtack.hospital.mapper.AdminMapper;
 import net.thumbtack.hospital.mapper.UserTypes;
-import net.thumbtack.hospital.model.Administrator;
-import net.thumbtack.hospital.model.ScheduleCell;
-import net.thumbtack.hospital.model.TimeCell;
+import net.thumbtack.hospital.model.user.Administrator;
+import net.thumbtack.hospital.model.schedule.ScheduleCell;
+import net.thumbtack.hospital.model.schedule.TimeCell;
 import net.thumbtack.hospital.util.error.PermissionDeniedErrorCodes;
 import net.thumbtack.hospital.util.error.PermissionDeniedException;
 import org.apache.ibatis.session.SqlSession;
@@ -26,7 +26,7 @@ public class AdminDaoImpl extends UserDaoImpl implements AdminDao {
     }
 
     @Override
-    public Administrator insertAdministrator(Administrator administrator) {
+    public void insertAdministrator(Administrator administrator) {
         LOGGER.debug(className + ": Insert administrator = {}", administrator);
 
         try (SqlSession session = getSession()) {
@@ -39,8 +39,6 @@ public class AdminDaoImpl extends UserDaoImpl implements AdminDao {
 
                 session.commit();
                 LOGGER.debug(className + ": Administrator = {} successfully inserted", administrator);
-
-                return administrator;
             } catch (RuntimeException ex) {
                 session.rollback();
                 LOGGER.error(className + ": Can't insert administrator = {}", administrator, ex);

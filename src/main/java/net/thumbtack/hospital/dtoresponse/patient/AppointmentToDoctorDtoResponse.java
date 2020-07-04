@@ -30,12 +30,6 @@ public class AppointmentToDoctorDtoResponse {
         setTime(time);
     }
 
-    public AppointmentToDoctorDtoResponse(String ticket, int doctorId,
-                                          String firstName, String lastName,
-                                          String speciality, String room, String date, String time) {
-        this(ticket, doctorId, firstName, lastName, null, speciality, room, date, time);
-    }
-
     public void setTicket(String ticket) {
         this.ticket = ticket;
     }

@@ -1,6 +1,6 @@
 package net.thumbtack.hospital.dao;
 
-import net.thumbtack.hospital.model.Doctor;
+import net.thumbtack.hospital.model.user.Doctor;
 import net.thumbtack.hospital.util.error.PermissionDeniedException;
 
 import java.time.LocalDate;

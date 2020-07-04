@@ -1,8 +1,8 @@
 package net.thumbtack.hospital.mapper;
 
-import net.thumbtack.hospital.model.Administrator;
-import net.thumbtack.hospital.model.ScheduleCell;
-import net.thumbtack.hospital.model.TimeCell;
+import net.thumbtack.hospital.model.user.Administrator;
+import net.thumbtack.hospital.model.schedule.ScheduleCell;
+import net.thumbtack.hospital.model.schedule.TimeCell;
 import org.apache.ibatis.annotations.*;
 
 public interface AdminMapper extends UserMapper {

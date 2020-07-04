@@ -1,4 +1,4 @@
-package net.thumbtack.hospital.model;
+package net.thumbtack.hospital.model.user;
 
 import java.util.Objects;
 

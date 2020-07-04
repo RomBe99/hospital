@@ -1,6 +1,6 @@
 package net.thumbtack.hospital.mapper;
 
-import net.thumbtack.hospital.model.Patient;
+import net.thumbtack.hospital.model.user.Patient;
 import org.apache.ibatis.annotations.*;
 
 import java.time.LocalDate;

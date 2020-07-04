@@ -20,16 +20,8 @@ public class EditAdminProfileDtoResponse {
         setPosition(position);
     }
 
-    public EditAdminProfileDtoResponse(int id, String firstName, String lastName, String position) {
-        this(id, firstName, lastName, null, position);
-    }
-
     public EditAdminProfileDtoResponse(String firstName, String lastName, String patronymic, String position) {
         this(0, firstName, lastName, patronymic, position);
-    }
-
-    public EditAdminProfileDtoResponse(String firstName, String lastName, String position) {
-        this(firstName, lastName, null, position);
     }
 
     public void setId(int id) {

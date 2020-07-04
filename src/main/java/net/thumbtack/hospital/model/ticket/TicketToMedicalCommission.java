@@ -1,9 +1,7 @@
 package net.thumbtack.hospital.model.ticket;
 
-import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.sql.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -22,11 +20,6 @@ public class TicketToMedicalCommission extends Ticket {
         setPatientId(patientId);
         setDoctorIds(doctorIds);
         setDuration(duration);
-    }
-
-    public TicketToMedicalCommission(String ticket, String room, Date date, Time time,
-                                     int patientId, List<Integer> doctorIds, int duration) {
-        this(ticket, room, date.toLocalDate(), time.toLocalTime(), patientId, doctorIds, duration);
     }
 
     public void setPatientId(int patientId) {

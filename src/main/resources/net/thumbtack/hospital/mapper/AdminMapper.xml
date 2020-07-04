@@ -4,7 +4,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="net.thumbtack.hospital.mapper.AdminMapper">
-    <select id="getAdminById" parameterType="int" resultType="net.thumbtack.hospital.model.Administrator">
+    <select id="getAdminById" parameterType="int" resultType="net.thumbtack.hospital.model.user.Administrator">
         SELECT *
         FROM user
                  JOIN administrator a ON user.id = a.userId

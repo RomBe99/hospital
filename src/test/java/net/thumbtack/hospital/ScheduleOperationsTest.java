@@ -1,7 +1,7 @@
 package net.thumbtack.hospital;
 
-import net.thumbtack.hospital.model.Doctor;
-import net.thumbtack.hospital.model.ScheduleCell;
+import net.thumbtack.hospital.model.user.Doctor;
+import net.thumbtack.hospital.model.schedule.ScheduleCell;
 import org.junit.Assert;
 import org.junit.Test;
 

@@ -2,7 +2,7 @@ package net.thumbtack.hospital.daoimpl;
 
 import net.thumbtack.hospital.dao.UserDao;
 import net.thumbtack.hospital.mapper.UserMapper;
-import net.thumbtack.hospital.model.Doctor;
+import net.thumbtack.hospital.model.user.Doctor;
 import net.thumbtack.hospital.util.error.PermissionDeniedErrorCodes;
 import net.thumbtack.hospital.util.error.PermissionDeniedException;
 import org.apache.ibatis.session.SqlSession;

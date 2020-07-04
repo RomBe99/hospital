@@ -1,7 +1,8 @@
 package net.thumbtack.hospital.dtoresponse.admin;
 
-import net.thumbtack.hospital.dtoresponse.other.schedulecell.ScheduleCellResponse;
+import net.thumbtack.hospital.dtoresponse.schedule.ScheduleCellResponse;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -12,7 +13,7 @@ public class DoctorRegistrationDtoResponse {
      private String patronymic;
      private String speciality;
      private String room;
-     private List<ScheduleCellResponse> schedule;
+     private List<ScheduleCellResponse> schedule = new ArrayList<>();
 
     public DoctorRegistrationDtoResponse() {
     }
@@ -30,23 +31,10 @@ public class DoctorRegistrationDtoResponse {
         setSchedule(schedule);
     }
 
-    public DoctorRegistrationDtoResponse(int id,
-                                         String firstName, String lastName,
-                                         String speciality, String room,
-                                         List<ScheduleCellResponse> schedule) {
-        this(id, firstName, lastName, null, speciality, room, schedule);
-    }
-
     public DoctorRegistrationDtoResponse(String firstName, String lastName, String patronymic,
                                          String speciality, String room,
                                          List<ScheduleCellResponse> schedule) {
         this(0, firstName, lastName, patronymic, speciality, room, schedule);
-    }
-
-    public DoctorRegistrationDtoResponse(String firstName, String lastName,
-                                         String speciality, String room,
-                                         List<ScheduleCellResponse> schedule) {
-        this(firstName, lastName, null, speciality, room, schedule);
     }
 
     public void setId(int id) {

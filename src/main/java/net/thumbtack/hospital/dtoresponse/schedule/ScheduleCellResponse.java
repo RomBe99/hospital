@@ -1,11 +1,12 @@
-package net.thumbtack.hospital.dtoresponse.other.schedulecell;
+package net.thumbtack.hospital.dtoresponse.schedule;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 public class ScheduleCellResponse {
     private String date;
-    private List<ScheduleTimeCellResponse> daySchedule;
+    private List<ScheduleTimeCellResponse> daySchedule = new ArrayList<>();
 
     public ScheduleCellResponse() {
     }

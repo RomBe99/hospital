@@ -7,6 +7,7 @@ import net.thumbtack.hospital.util.validator.annotation.Time;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Positive;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -14,7 +15,7 @@ public class CreateMedicalCommissionDtoRequest {
     @Positive
     private int patientId;
     @NotEmpty
-    private List<@Positive Integer> doctorIds;
+    private List<@Positive Integer> doctorIds = new ArrayList<>();
     @Room
     private String room;
     @Date

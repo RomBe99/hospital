@@ -1,4 +1,4 @@
-package net.thumbtack.hospital.dtoresponse.other.schedulecell;
+package net.thumbtack.hospital.dtoresponse.schedule;
 
 import net.thumbtack.hospital.dtoresponse.patient.PatientInformationDtoResponse;
 

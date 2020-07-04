@@ -3,7 +3,7 @@ package net.thumbtack.hospital.daoimpl;
 import net.thumbtack.hospital.dao.PatientDao;
 import net.thumbtack.hospital.mapper.PatientMapper;
 import net.thumbtack.hospital.mapper.UserTypes;
-import net.thumbtack.hospital.model.Patient;
+import net.thumbtack.hospital.model.user.Patient;
 import net.thumbtack.hospital.model.ticket.TicketToMedicalCommission;
 import net.thumbtack.hospital.model.ticket.TicketToDoctor;
 import net.thumbtack.hospital.util.error.PermissionDeniedErrorCodes;

@@ -1,15 +1,16 @@
 package net.thumbtack.hospital.dtoresponse.doctor;
 
 import net.thumbtack.hospital.dtoresponse.other.abstractresponse.UserInformationDtoResponse;
-import net.thumbtack.hospital.dtoresponse.other.schedulecell.ScheduleCellResponse;
+import net.thumbtack.hospital.dtoresponse.schedule.ScheduleCellResponse;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 public class DoctorInformationDtoResponse extends UserInformationDtoResponse {
     private String speciality;
     private String room;
-    private List<ScheduleCellResponse> schedule;
+    private List<ScheduleCellResponse> schedule = new ArrayList<>();
 
     public DoctorInformationDtoResponse() {
     }
@@ -24,6 +25,13 @@ public class DoctorInformationDtoResponse extends UserInformationDtoResponse {
         setSpeciality(speciality);
         setRoom(room);
         setSchedule(schedule);
+    }
+
+    public DoctorInformationDtoResponse(String login, String password,
+                                        String firstName, String lastName, String patronymic,
+                                        String speciality, String room,
+                                        List<ScheduleCellResponse> schedule) {
+        this(0, login, password, firstName, lastName, patronymic, speciality, room, schedule);
     }
 
     public void setSpeciality(String speciality) {
