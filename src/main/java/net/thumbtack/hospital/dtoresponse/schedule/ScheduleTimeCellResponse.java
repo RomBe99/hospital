@@ -2,23 +2,24 @@ package net.thumbtack.hospital.dtoresponse.schedule;
 
 import net.thumbtack.hospital.dtoresponse.patient.PatientInformationDtoResponse;
 
+import java.time.LocalTime;
 import java.util.Objects;
 
 public class ScheduleTimeCellResponse {
-    private String time;
+    private LocalTime time;
     private PatientInformationDtoResponse patient;
     private int duration;
 
     public ScheduleTimeCellResponse() {
     }
 
-    public ScheduleTimeCellResponse(String time, PatientInformationDtoResponse patient, int duration) {
+    public ScheduleTimeCellResponse(LocalTime time, PatientInformationDtoResponse patient, int duration) {
         setTime(time);
         setPatient(patient);
         setDuration(duration);
     }
 
-    public void setTime(String time) {
+    public void setTime(LocalTime time) {
         this.time = time;
     }
 
@@ -30,7 +31,7 @@ public class ScheduleTimeCellResponse {
         this.duration = duration;
     }
 
-    public String getTime() {
+    public LocalTime getTime() {
         return time;
     }
 
@@ -60,7 +61,7 @@ public class ScheduleTimeCellResponse {
     @Override
     public String toString() {
         return "ScheduleTimeCellResponse{" +
-                "time='" + time + '\'' +
+                "time=" + time +
                 ", patient=" + patient +
                 ", duration=" + duration +
                 '}';

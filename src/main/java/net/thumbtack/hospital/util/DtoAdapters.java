@@ -14,13 +14,13 @@ import java.util.stream.Collectors;
 
 public class DtoAdapters {
     public static ScheduleTimeCellResponse transform(TimeCell tc) {
-        return new ScheduleTimeCellResponse(tc.getTime().toString(),
+        return new ScheduleTimeCellResponse(tc.getTime(),
                 transform(tc.getPatient()),
                 tc.getDuration());
     }
 
     public static ScheduleCellResponse transform(ScheduleCell sc) {
-        return new ScheduleCellResponse(sc.getDate().toString(),
+        return new ScheduleCellResponse(sc.getDate(),
                 sc.getCells().stream()
                         .map(DtoAdapters::transform)
                         .collect(Collectors.toList()));

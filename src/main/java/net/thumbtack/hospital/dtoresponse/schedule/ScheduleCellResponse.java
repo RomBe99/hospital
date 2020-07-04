@@ -1,22 +1,23 @@
 package net.thumbtack.hospital.dtoresponse.schedule;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 public class ScheduleCellResponse {
-    private String date;
+    private LocalDate date;
     private List<ScheduleTimeCellResponse> daySchedule = new ArrayList<>();
 
     public ScheduleCellResponse() {
     }
 
-    public ScheduleCellResponse(String date, List<ScheduleTimeCellResponse> daySchedule) {
+    public ScheduleCellResponse(LocalDate date, List<ScheduleTimeCellResponse> daySchedule) {
         setDate(date);
         setDaySchedule(daySchedule);
     }
 
-    public void setDate(String date) {
+    public void setDate(LocalDate date) {
         this.date = date;
     }
 
@@ -24,7 +25,7 @@ public class ScheduleCellResponse {
         this.daySchedule = daySchedule;
     }
 
-    public String getDate() {
+    public LocalDate getDate() {
         return date;
     }
 
@@ -49,7 +50,7 @@ public class ScheduleCellResponse {
     @Override
     public String toString() {
         return "ScheduleCellResponse{" +
-                "date='" + date + '\'' +
+                "date=" + date +
                 ", daySchedule=" + daySchedule +
                 '}';
     }
