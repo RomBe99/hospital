@@ -4,42 +4,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="net.thumbtack.hospital.mapper.DoctorMapper">
-    <resultMap id="resultDoctor" type="net.thumbtack.hospital.model.Doctor">
-        <id property="id" column="doctorId"/>
-        <result property="login" column="login"/>
-        <result property="password" column="password"/>
-        <result property="firstName" column="firstName"/>
-        <result property="lastName" column="lastName"/>
-        <result property="patronymic" column="patronymic"/>
-        <result property="cabinet" column="cabinet"/>
-        <result property="specialty" column="specialty"/>
-
-        <collection property="schedule" column="scheduleCellId" javaType="java.util.List"
-                    ofType="net.thumbtack.hospital.model.ScheduleCell">
-            <result property="id" column="scheduleCellId"/>
-            <result property="date" column="date"/>
-            <association property="doctor" javaType="net.thumbtack.hospital.model.Doctor"/>
-
-            <collection property="cells" column="timeCellId" javaType="java.util.List"
-                        ofType="net.thumbtack.hospital.model.TimeCell">
-                <result property="time" column="time"/>
-                <result property="duration" column="duration"/>
-                <result property="ticket" column="ticket"/>
-
-                <association property="patient" javaType="net.thumbtack.hospital.model.Patient">
-                    <id property="id" column="patientId"/>
-                    <result property="firstName" column="patientFirstName"/>
-                    <result property="lastName" column="patientLastName"/>
-                    <result property="patronymic" column="patientPatronymic"/>
-                    <result property="email" column="patientEmail"/>
-                    <result property="address" column="patientAddress"/>
-                    <result property="phone" column="patientPhone"/>
-                </association>
-            </collection>
-        </collection>
-    </resultMap>
-
-    <select id="getAllDoctors" resultMap="resultDoctor">
+    <select id="getAllDoctors" resultType="net.thumbtack.hospital.model.Doctor">
         SELECT user.id    AS doctorId,
                login,
                password,
@@ -68,7 +33,7 @@
                  LEFT JOIN patient p ON tc.patientId = p.userId;
     </select>
 
-    <select id="getDoctorById" parameterType="int" resultMap="resultDoctor">
+    <select id="getDoctorById" parameterType="int" resultType="net.thumbtack.hospital.model.Doctor">
         SELECT user.id    AS doctorId,
                login,
                password,

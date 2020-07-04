@@ -4,17 +4,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="net.thumbtack.hospital.mapper.AdminMapper">
-    <resultMap id="resultAdmin" type="net.thumbtack.hospital.model.Administrator">
-        <id property="id" column="id"/>
-        <result property="login" column="login"/>
-        <result property="password" column="password"/>
-        <result property="firstName" column="firstName"/>
-        <result property="lastName" column="lastName"/>
-        <result property="patronymic" column="patronymic"/>
-        <result property="position" column="position"/>
-    </resultMap>
-
-    <select id="getAdminById" parameterType="int" resultMap="resultAdmin">
+    <select id="getAdminById" parameterType="int" resultType="net.thumbtack.hospital.model.Administrator">
         SELECT *
         FROM user
                  JOIN administrator a ON user.id = a.userId
