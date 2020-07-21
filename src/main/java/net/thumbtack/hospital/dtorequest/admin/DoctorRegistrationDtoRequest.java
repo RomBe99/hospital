@@ -1,13 +1,14 @@
 package net.thumbtack.hospital.dtorequest.admin;
 
-import net.thumbtack.hospital.dtorequest.schedule.WeekDayScheduleCellDtoRequest;
-import net.thumbtack.hospital.dtorequest.schedule.WeekScheduleCellDtoRequest;
+import net.thumbtack.hospital.dtorequest.schedule.DayScheduleDtoRequest;
+import net.thumbtack.hospital.dtorequest.schedule.DtoRequestWithSchedule;
+import net.thumbtack.hospital.dtorequest.schedule.WeekScheduleDtoRequest;
 import net.thumbtack.hospital.util.validator.annotation.*;
 
 import java.util.List;
 import java.util.Objects;
 
-public class DoctorRegistrationDtoRequest {
+public class DoctorRegistrationDtoRequest extends DtoRequestWithSchedule {
     @Name
     private String firstName;
     @Name
@@ -22,25 +23,16 @@ public class DoctorRegistrationDtoRequest {
     private String login;
     @Password
     private String password;
-    @Date
-    private String dateStart;
-    @Date
-    private String dateEnd;
-    private List<WeekScheduleCellDtoRequest> weekSchedule;
-    private List<WeekDayScheduleCellDtoRequest> weekDaysSchedule;
-    @Duration
-    private int duration;
 
     public DoctorRegistrationDtoRequest() {
     }
 
-    public DoctorRegistrationDtoRequest(String firstName, String lastName, String patronymic,
+    public DoctorRegistrationDtoRequest(String dateStart, String dateEnd, int duration, WeekScheduleDtoRequest weekSchedule,
+                                        String firstName, String lastName, String patronymic,
                                         String speciality, String room,
-                                        String login, String password,
-                                        String dateStart, String dateEnd,
-                                        List<WeekScheduleCellDtoRequest> weekSchedule,
-                                        List<WeekDayScheduleCellDtoRequest> weekDaysSchedule,
-                                        int duration) {
+                                        String login, String password) {
+        super(dateStart, dateEnd, duration, weekSchedule);
+
         setFirstName(firstName);
         setLastName(lastName);
         setPatronymic(patronymic);
@@ -48,22 +40,21 @@ public class DoctorRegistrationDtoRequest {
         setRoom(room);
         setLogin(login);
         setPassword(password);
-        setDateStart(dateStart);
-        setDateEnd(dateEnd);
-        setWeekSchedule(weekSchedule);
-        setWeekDaysSchedule(weekDaysSchedule);
-        setDuration(duration);
     }
 
-    public DoctorRegistrationDtoRequest(String firstName, String lastName,
+    public DoctorRegistrationDtoRequest(String dateStart, String dateEnd, int duration, List<DayScheduleDtoRequest> weekDaysSchedule,
+                                        String firstName, String lastName, String patronymic,
                                         String speciality, String room,
-                                        String login, String password,
-                                        String dateStart, String dateEnd,
-                                        List<WeekScheduleCellDtoRequest> weekSchedule,
-                                        List<WeekDayScheduleCellDtoRequest> weekDaysSchedule,
-                                        int duration) {
-        this(firstName, lastName, null,
-                speciality, room, login, password, dateStart, dateEnd, weekSchedule, weekDaysSchedule, duration);
+                                        String login, String password) {
+        super(dateStart, dateEnd, duration, weekDaysSchedule);
+
+        setFirstName(firstName);
+        setLastName(lastName);
+        setPatronymic(patronymic);
+        setSpeciality(speciality);
+        setRoom(room);
+        setLogin(login);
+        setPassword(password);
     }
 
     public void setFirstName(String firstName) {
@@ -94,26 +85,6 @@ public class DoctorRegistrationDtoRequest {
         this.password = password;
     }
 
-    public void setDateStart(String dateStart) {
-        this.dateStart = dateStart;
-    }
-
-    public void setDateEnd(String dateEnd) {
-        this.dateEnd = dateEnd;
-    }
-
-    public void setWeekSchedule(List<WeekScheduleCellDtoRequest> weekSchedule) {
-        this.weekSchedule = weekSchedule;
-    }
-
-    public void setWeekDaysSchedule(List<WeekDayScheduleCellDtoRequest> weekDaysSchedule) {
-        this.weekDaysSchedule = weekDaysSchedule;
-    }
-
-    public void setDuration(int duration) {
-        this.duration = duration;
-    }
-
     public String getFirstName() {
         return firstName;
     }
@@ -142,53 +113,29 @@ public class DoctorRegistrationDtoRequest {
         return password;
     }
 
-    public String getDateStart() {
-        return dateStart;
-    }
-
-    public String getDateEnd() {
-        return dateEnd;
-    }
-
-    public List<WeekScheduleCellDtoRequest> getWeekSchedule() {
-        return weekSchedule;
-    }
-
-    public List<WeekDayScheduleCellDtoRequest> getWeekDaysSchedule() {
-        return weekDaysSchedule;
-    }
-
-    public int getDuration() {
-        return duration;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
         DoctorRegistrationDtoRequest that = (DoctorRegistrationDtoRequest) o;
-        return duration == that.duration &&
-                Objects.equals(firstName, that.firstName) &&
+        return Objects.equals(firstName, that.firstName) &&
                 Objects.equals(lastName, that.lastName) &&
                 Objects.equals(patronymic, that.patronymic) &&
                 Objects.equals(speciality, that.speciality) &&
                 Objects.equals(room, that.room) &&
                 Objects.equals(login, that.login) &&
-                Objects.equals(password, that.password) &&
-                Objects.equals(dateStart, that.dateStart) &&
-                Objects.equals(dateEnd, that.dateEnd) &&
-                Objects.equals(weekSchedule, that.weekSchedule) &&
-                Objects.equals(weekDaysSchedule, that.weekDaysSchedule);
+                Objects.equals(password, that.password);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(firstName, lastName, patronymic, speciality, room, login, password, dateStart, dateEnd, weekSchedule, weekDaysSchedule, duration);
+        return Objects.hash(super.hashCode(), firstName, lastName, patronymic, speciality, room, login, password);
     }
 
     @Override
     public String toString() {
-        return "DoctorRegistrationDtoRequest{" +
+        return super.toString() + " DoctorRegistrationDtoRequest{" +
                 "firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", patronymic='" + patronymic + '\'' +
@@ -196,11 +143,6 @@ public class DoctorRegistrationDtoRequest {
                 ", room='" + room + '\'' +
                 ", login='" + login + '\'' +
                 ", password='" + password + '\'' +
-                ", dateStart='" + dateStart + '\'' +
-                ", dateEnd='" + dateEnd + '\'' +
-                ", weekSchedule=" + weekSchedule +
-                ", weekDaysSchedule=" + weekDaysSchedule +
-                ", duration=" + duration +
                 '}';
     }
 }

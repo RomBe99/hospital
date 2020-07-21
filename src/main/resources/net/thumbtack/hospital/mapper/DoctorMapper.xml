@@ -4,61 +4,98 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="net.thumbtack.hospital.mapper.DoctorMapper">
-    <select id="getAllDoctors" resultType="net.thumbtack.hospital.model.user.Doctor">
-        SELECT user.id    AS doctorId,
-               login,
-               password,
-               firstName,
-               lastName,
-               patronymic,
-               ds.name    AS specialty,
-               c.name     AS cabinet,
-               sc.id      AS scheduleCellId,
+    <resultMap id="resultDoctor" type="net.thumbtack.hospital.model.user.Doctor">
+        <id property="id" column="doctorId"/>
+        <result property="login" column="login"/>
+        <result property="password" column="password"/>
+        <result property="firstName" column="firstName"/>
+        <result property="lastName" column="lastName"/>
+        <result property="patronymic" column="patronymic"/>
+        <result property="cabinet" column="cabinet"/>
+        <result property="specialty" column="specialty"/>
+
+        <collection property="schedule" column="scheduleCellId" javaType="java.util.List"
+                    ofType="net.thumbtack.hospital.model.schedule.ScheduleCell">
+            <result property="id" column="scheduleCellId"/>
+            <result property="date" column="date"/>
+
+            <collection property="cells" column="ticket" javaType="java.util.List"
+                        ofType="net.thumbtack.hospital.model.schedule.TimeCell">
+                <result property="ticket" column="ticket"/>
+                <result property="time" column="time"/>
+                <result property="duration" column="duration"/>
+                <association property="patient" javaType="net.thumbtack.hospital.model.user.Patient">
+                    <id property="id" column="patientId"/>
+                    <result property="firstName" column="patientFirstName"/>
+                    <result property="lastName" column="patientLastName"/>
+                    <result property="patronymic" column="patientPatronymic"/>
+                    <result property="email" column="email"/>
+                    <result property="address" column="address"/>
+                    <result property="phone" column="phone"/>
+                </association>
+            </collection>
+        </collection>
+    </resultMap>
+
+    <select id="getAllDoctors" resultMap="resultDoctor">
+        SELECT u.id          doctorId,
+               u.login,
+               u.password,
+               u.firstName,
+               u.lastName,
+               u.patronymic,
+               ds.name       specialty,
+               c.name        cabinet,
+               sc.id         scheduleCellId,
                date,
                time,
                ticket,
                duration,
-               firstName  AS patientFirstName,
-               lastName   AS patientLastName,
-               patronymic AS patientPatronymic,
-               email      AS patientEmail,
-               address    AS patientAddress,
-               phone      AS patientPhone
-        FROM user
-                 JOIN doctor d ON user.id = d.userId
+               p.userId      patientId,
+               pu.firstName  patientFirstName,
+               pu.lastName   patientLastName,
+               pu.patronymic patientPatronymic,
+               email,
+               address,
+               phone
+        FROM user u
+                 JOIN doctor d ON u.id = d.userId
                  JOIN doctor_specialty ds ON d.specialtyId = ds.id
                  LEFT JOIN cabinet c ON d.cabinetId = c.id
                  LEFT JOIN schedule_cell sc ON d.userId = sc.doctorId
                  JOIN time_cell tc ON sc.id = tc.scheduleCellId
+                 LEFT JOIN user pu ON pu.id = tc.patientId
                  LEFT JOIN patient p ON tc.patientId = p.userId;
     </select>
 
-    <select id="getDoctorById" parameterType="int" resultType="net.thumbtack.hospital.model.user.Doctor">
-        SELECT user.id    AS doctorId,
-               login,
-               password,
-               firstName,
-               lastName,
-               patronymic,
-               ds.name    AS specialty,
-               c.name     AS cabinet,
-               sc.id      AS scheduleCellId,
+    <select id="getDoctorById" parameterType="int" resultMap="resultDoctor">
+        SELECT u.id          doctorId,
+               u.login,
+               u.password,
+               u.firstName,
+               u.lastName,
+               u.patronymic,
+               ds.name       specialty,
+               c.name        cabinet,
+               sc.id         scheduleCellId,
                date,
                time,
                ticket,
                duration,
-               firstName  AS patientFirstName,
-               lastName   AS patientLastName,
-               patronymic AS patientPatronymic,
-               email      AS patientEmail,
-               address    AS patientAddress,
-               phone      AS patientPhone
-        FROM user
-                 JOIN doctor d ON user.id = d.userId
+               p.userId      patientId,
+               pu.firstName  patientFirstName,
+               pu.lastName   patientLastName,
+               pu.patronymic patientPatronymic,
+               email,
+               address,
+               phone
+        FROM user u
+                 JOIN doctor d ON u.id = d.userId
                  JOIN doctor_specialty ds ON d.specialtyId = ds.id
                  LEFT JOIN cabinet c ON d.cabinetId = c.id
                  LEFT JOIN schedule_cell sc ON d.userId = sc.doctorId
                  JOIN time_cell tc ON sc.id = tc.scheduleCellId
+                 LEFT JOIN user pu ON pu.id = tc.patientId
                  LEFT JOIN patient p ON tc.patientId = p.userId
         WHERE doctorId = #{id};
     </select>

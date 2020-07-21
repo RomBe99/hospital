@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="net.thumbtack.hospital.mapper.DebugMapper">
+    <resultMap id="doctorSchedule" type="net.thumbtack.hospital.model.schedule.ScheduleCell">
+        <id property="id" column="id"/>
+        <result property="date" column="date"/>
+        <collection property="cells" column="ticket" javaType="java.util.List"
+                    ofType="net.thumbtack.hospital.model.schedule.TimeCell">
+            <result property="ticket" column="ticket"/>
+            <result property="time" column="time"/>
+            <result property="duration" column="duration"/>
+        </collection>
+    </resultMap>
+
+    <select id="getScheduleByDoctorId" parameterType="int" resultMap="doctorSchedule">
+        SELECT id,
+               date,
+               time,
+               ticket,
+               duration
+        FROM schedule_cell
+                 JOIN time_cell tc on schedule_cell.id = tc.scheduleCellId
+        WHERE doctorId = #{doctorId}
+        ORDER BY date, time;
+    </select>
+</mapper>

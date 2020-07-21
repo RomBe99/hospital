@@ -16,12 +16,7 @@ public class DateConstraintValidator implements ConstraintValidator<Date, String
 
       try {
          LocalDate.parse(dateField);
-      } catch (DateTimeParseException ignored) {
-      }
-
-      try {
-         java.sql.Date.valueOf(dateField);
-      } catch (IllegalArgumentException ex) {
+      } catch (DateTimeParseException ex) {
          return false;
       }
 

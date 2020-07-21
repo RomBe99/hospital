@@ -1,10 +1,13 @@
 package net.thumbtack.hospital.debug;
 
 import net.thumbtack.hospital.daoimpl.BaseDaoImpl;
+import net.thumbtack.hospital.model.schedule.ScheduleCell;
 import org.apache.ibatis.session.SqlSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 @Component("DebugDaoImpl")
 public class DebugDaoImpl extends BaseDaoImpl implements DebugDao {
@@ -165,6 +168,19 @@ public class DebugDaoImpl extends BaseDaoImpl implements DebugDao {
 
                 throw ex;
             }
+        }
+    }
+
+    @Override
+    public List<ScheduleCell> getScheduleByDoctorId(int doctorId) {
+        try (SqlSession session = getSession()) {
+            LOGGER.debug(className + ": Try get full schedule for doctor with id = {}", doctorId);
+
+            return session.selectList("net.thumbtack.hospital.mapper.DebugMapper.getScheduleByDoctorId", doctorId);
+        } catch (RuntimeException ex) {
+            LOGGER.error(className + ": Can't clear commissions doctors from database", ex);
+
+            throw ex;
         }
     }
 }

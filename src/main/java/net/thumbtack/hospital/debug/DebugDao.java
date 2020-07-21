@@ -1,5 +1,9 @@
 package net.thumbtack.hospital.debug;
 
+import net.thumbtack.hospital.model.schedule.ScheduleCell;
+
+import java.util.List;
+
 public interface DebugDao {
     void clearUsers();
 
@@ -18,4 +22,6 @@ public interface DebugDao {
     void clearMedicalCommissions();
 
     void clearCommissionDoctors();
+
+    List<ScheduleCell> getScheduleByDoctorId(int doctorId);
 }

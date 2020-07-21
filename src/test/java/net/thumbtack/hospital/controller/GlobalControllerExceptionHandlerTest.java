@@ -7,7 +7,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 @RunWith(SpringRunner.class)
-public class GlobalControllerExceptionHandlerTest extends BaseControllerTest {
+public class GlobalControllerExceptionHandlerTest extends ControllerTestApi {
     @Test
     public void incorrectPostUrlTest() throws Exception {
         String url = "/incorrect_url";

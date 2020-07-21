@@ -1,10 +1,9 @@
 package net.thumbtack.hospital.controller;
 
-import net.thumbtack.hospital.dtorequest.admin.AdminRegistrationDtoRequest;
-import net.thumbtack.hospital.dtorequest.admin.DoctorRegistrationDtoRequest;
-import net.thumbtack.hospital.dtorequest.admin.EditAdminProfileDtoRequest;
-import net.thumbtack.hospital.dtorequest.admin.RemoveDoctorDtoRequest;
+import net.thumbtack.hospital.dtorequest.admin.*;
+import net.thumbtack.hospital.dtorequest.schedule.DtoRequestWithSchedule;
 import net.thumbtack.hospital.dtoresponse.admin.*;
+import net.thumbtack.hospital.dtoresponse.doctor.DoctorLoginDtoResponse;
 import net.thumbtack.hospital.mapper.UserTypes;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -12,9 +11,11 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 @RunWith(SpringRunner.class)
-public class AdministratorControllerTest extends BaseControllerTest {
+public class AdministratorControllerTest extends ControllerTestApi {
     @Test
     public void administratorRegistrationTest() throws Exception {
         String rootAdminSessionId = loginRootAdmin();
@@ -27,8 +28,7 @@ public class AdministratorControllerTest extends BaseControllerTest {
         administratorRegistration(rootAdminSessionId, registrationRequest, expectedResponse);
 
         String testAdminSessionId = login(registrationRequest.getLogin(), registrationRequest.getPassword(),
-                new AdminLoginDtoResponse(registrationRequest.getFirstName(), registrationRequest.getLastName(), registrationRequest.getPatronymic(), registrationRequest.getPosition()),
-                UserTypes.ADMINISTRATOR);
+                new AdminLoginDtoResponse(registrationRequest.getFirstName(), registrationRequest.getLastName(), registrationRequest.getPatronymic(), registrationRequest.getPosition()));
 
         getUserInformation(testAdminSessionId, UserTypes.ADMINISTRATOR,
                 new AdminInformationDtoResponse(registrationRequest.getLogin(), registrationRequest.getPassword(),
@@ -55,8 +55,7 @@ public class AdministratorControllerTest extends BaseControllerTest {
                         registrationRequest.getPatronymic(), registrationRequest.getPosition());
 
         String testAdminSessionId = login(registrationRequest.getLogin(), registrationRequest.getPassword(),
-                adminLoginResponse,
-                UserTypes.ADMINISTRATOR);
+                adminLoginResponse);
 
         EditAdminProfileDtoRequest editAdminProfileRequest =
                 new EditAdminProfileDtoRequest("Алимад", "Федоров",
@@ -77,18 +76,52 @@ public class AdministratorControllerTest extends BaseControllerTest {
     @Test
     public void removeDoctorTest() throws Exception {
         String rootAdminSessionId = loginRootAdmin();
+
+        LocalDate dateStart = LocalDate.now();
+        LocalDate dateEnd = dateStart.plusDays(5);
+
         DoctorRegistrationDtoRequest doctorRegistrationRequest =
-                new DoctorRegistrationDtoRequest("Саркис", "Семёнов", "Вениаминович",
-                        "Surgeon", "205", "SarkisSemenov585", "xjNE6QK6d3b9",
-                        LocalDate.now().toString(), LocalDate.now().plusDays(5).toString(), new ArrayList<>(), null, 15);
-        DoctorRegistrationDtoResponse doctorRegistrationResponse = new DoctorRegistrationDtoResponse(doctorRegistrationRequest.getFirstName(), doctorRegistrationRequest.getLastName(), doctorRegistrationRequest.getPatronymic(),
-                doctorRegistrationRequest.getSpeciality(), doctorRegistrationRequest.getRoom(), new ArrayList<>());
+                new DoctorRegistrationDtoRequest(dateStart.toString(), dateEnd.toString(), 15, new ArrayList<>(),
+                        "Саркис", "Семёнов", "Вениаминович",
+                        "Surgeon", "205", "SarkisSemenov585", "xjNE6QK6d3b9");
+        DoctorRegistrationDtoResponse doctorRegistrationResponse =
+                new DoctorRegistrationDtoResponse(doctorRegistrationRequest.getFirstName(), doctorRegistrationRequest.getLastName(), doctorRegistrationRequest.getPatronymic(),
+                        doctorRegistrationRequest.getSpeciality(), doctorRegistrationRequest.getRoom(), new ArrayList<>());
 
         doctorRegistration(rootAdminSessionId, doctorRegistrationRequest, doctorRegistrationResponse);
 
         RemoveDoctorDtoRequest removeDoctorRequest = new RemoveDoctorDtoRequest(LocalDate.now().toString());
         removeDoctor(rootAdminSessionId, doctorRegistrationResponse.getId(), removeDoctorRequest);
 
+        logout(rootAdminSessionId);
+    }
+
+    @Test
+    public void insertDoctorWithWeekScheduleTest() throws Exception {
+        String rootAdminSessionId = loginRootAdmin();
+
+        int duration = 15;
+        int durationPerDay = 4;
+        int daysCount = 7;
+        List<Integer> weekDays = Arrays.asList(1, 2, 3);
+
+        DtoRequestWithSchedule generatedSchedule = generateWeekSchedule(duration, durationPerDay, daysCount, weekDays);
+
+        DoctorRegistrationDtoRequest doctorRegistrationRequest =
+                new DoctorRegistrationDtoRequest(generatedSchedule.getDateStart(), generatedSchedule.getDateEnd(), duration,
+                        generatedSchedule.getWeekSchedule(),
+                        "Саркис", "Семёнов", "Вениаминович",
+                        "Surgeon", "205", "SarkisSemenov585", "xjNE6QK6d3b9");
+        DoctorRegistrationDtoResponse expectedDoctorRegistrationResponse = new DoctorRegistrationDtoResponse(
+                doctorRegistrationRequest.getFirstName(), doctorRegistrationRequest.getLastName(), doctorRegistrationRequest.getPatronymic(),
+                doctorRegistrationRequest.getSpeciality(), doctorRegistrationRequest.getRoom(), null);
+        doctorRegistration(rootAdminSessionId, doctorRegistrationRequest, expectedDoctorRegistrationResponse);
+
+        String doctorSessionId = login(doctorRegistrationRequest.getLogin(), doctorRegistrationRequest.getPassword(),
+                new DoctorLoginDtoResponse(expectedDoctorRegistrationResponse.getFirstName(), expectedDoctorRegistrationResponse.getLastName(), expectedDoctorRegistrationResponse.getPatronymic(),
+                        expectedDoctorRegistrationResponse.getSpeciality(), expectedDoctorRegistrationResponse.getRoom(), expectedDoctorRegistrationResponse.getSchedule()));
+
+        logout(doctorSessionId);
         logout(rootAdminSessionId);
     }
 }

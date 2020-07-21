@@ -2,16 +2,22 @@ package net.thumbtack.hospital.service;
 
 import net.thumbtack.hospital.dao.AdminDao;
 import net.thumbtack.hospital.dao.DoctorDao;
-import net.thumbtack.hospital.dtorequest.admin.*;
+import net.thumbtack.hospital.dtorequest.admin.AdminRegistrationDtoRequest;
+import net.thumbtack.hospital.dtorequest.admin.DoctorRegistrationDtoRequest;
+import net.thumbtack.hospital.dtorequest.admin.EditAdminProfileDtoRequest;
+import net.thumbtack.hospital.dtorequest.admin.RemoveDoctorDtoRequest;
+import net.thumbtack.hospital.dtorequest.schedule.DtoRequestWithSchedule;
 import net.thumbtack.hospital.dtoresponse.admin.AdminRegistrationDtoResponse;
 import net.thumbtack.hospital.dtoresponse.admin.DoctorRegistrationDtoResponse;
 import net.thumbtack.hospital.dtoresponse.admin.EditAdminProfileDtoResponse;
 import net.thumbtack.hospital.dtoresponse.admin.EditDoctorScheduleDtoResponse;
 import net.thumbtack.hospital.dtoresponse.other.EmptyDtoResponse;
-import net.thumbtack.hospital.model.user.Administrator;
-import net.thumbtack.hospital.model.user.Doctor;
+import net.thumbtack.hospital.dtoresponse.schedule.DtoResponseWithSchedule;
+import net.thumbtack.hospital.dtoresponse.schedule.ScheduleCellResponse;
 import net.thumbtack.hospital.model.schedule.ScheduleCell;
 import net.thumbtack.hospital.model.schedule.TimeCell;
+import net.thumbtack.hospital.model.user.Administrator;
+import net.thumbtack.hospital.model.user.Doctor;
 import net.thumbtack.hospital.util.DtoAdapters;
 import net.thumbtack.hospital.util.error.PermissionDeniedException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +38,74 @@ public class AdministratorService {
     public AdministratorService(AdminDao adminDao, DoctorDao doctorDao) {
         this.adminDao = adminDao;
         this.doctorDao = doctorDao;
+    }
+
+    private DtoResponseWithSchedule insertSchedule(DtoRequestWithSchedule request, int doctorId) {
+        // TODO Что делать, если в запросе присутсвуют несколько видов расписаний?
+        List<ScheduleCell> schedule = DtoAdapters.transform(request, doctorId);
+
+        if (doctorId == 0 || schedule.isEmpty()) {
+            return new DtoResponseWithSchedule() {
+                @Override
+                public void setSchedule(List<ScheduleCellResponse> schedule) {
+                    super.setSchedule(schedule);
+                }
+
+                @Override
+                public List<ScheduleCellResponse> getSchedule() {
+                    return super.getSchedule();
+                }
+
+                @Override
+                public boolean equals(Object o) {
+                    return super.equals(o);
+                }
+
+                @Override
+                public int hashCode() {
+                    return super.hashCode();
+                }
+
+                @Override
+                public String toString() {
+                    return super.toString();
+                }
+            };
+        }
+
+        schedule.sort(Comparator.comparing(ScheduleCell::getDate));
+        schedule.forEach(sc -> sc.getCells().sort(Comparator.comparing(TimeCell::getTime)));
+
+        adminDao.editDoctorSchedule(LocalDate.parse(request.getDateStart()), LocalDate.parse(request.getDateEnd()), doctorId, schedule);
+
+        return new DtoResponseWithSchedule(schedule.stream()
+                .map(DtoAdapters::transform)
+                .collect(Collectors.toList())) {
+            @Override
+            public void setSchedule(List<ScheduleCellResponse> schedule) {
+                super.setSchedule(schedule);
+            }
+
+            @Override
+            public List<ScheduleCellResponse> getSchedule() {
+                return super.getSchedule();
+            }
+
+            @Override
+            public boolean equals(Object o) {
+                return super.equals(o);
+            }
+
+            @Override
+            public int hashCode() {
+                return super.hashCode();
+            }
+
+            @Override
+            public String toString() {
+                return super.toString();
+            }
+        };
     }
 
     public AdminRegistrationDtoResponse administratorRegistration(String sessionId, AdminRegistrationDtoRequest request) throws PermissionDeniedException {
@@ -57,17 +131,11 @@ public class AdministratorService {
 
         doctorDao.insertDoctor(doctor);
 
-        doctor.getSchedule().sort(Comparator.comparing(ScheduleCell::getDate));
-        doctor.getSchedule().forEach(sc -> sc.getCells().sort(Comparator.comparing(TimeCell::getTime)));
-
-        adminDao.editDoctorSchedule(LocalDate.parse(request.getDateStart()),
-                LocalDate.parse(request.getDateEnd()), doctor.getId(), doctor.getSchedule());
+        DtoResponseWithSchedule responseWithSchedule = insertSchedule(request, doctor.getId());
 
         return new DoctorRegistrationDtoResponse(doctor.getId(),
-                doctor.getFirstName(), doctor.getLastName(), doctor.getPatronymic(), doctor.getSpecialty(), doctor.getCabinet(),
-                doctor.getSchedule().stream()
-                        .map(DtoAdapters::transform)
-                        .collect(Collectors.toList()));
+                doctor.getFirstName(), doctor.getLastName(), doctor.getPatronymic(),
+                doctor.getSpecialty(), doctor.getCabinet(), responseWithSchedule.getSchedule());
     }
 
     public EditAdminProfileDtoResponse editAdministratorProfile(String sessionId, EditAdminProfileDtoRequest request) throws PermissionDeniedException {
@@ -75,7 +143,7 @@ public class AdministratorService {
 
         Administrator admin =
                 new Administrator(adminId, null, request.getNewPassword(),
-                request.getFirstName(), request.getLastName(), request.getPatronymic(), request.getPosition());
+                        request.getFirstName(), request.getLastName(), request.getPatronymic(), request.getPosition());
 
         adminDao.updateAdministrator(admin);
 
@@ -83,30 +151,16 @@ public class AdministratorService {
                 request.getFirstName(), request.getLastName(), request.getPatronymic(), request.getPosition());
     }
 
-    public EditDoctorScheduleDtoResponse editDoctorSchedule(String sessionId, int doctorId, EditDoctorScheduleDtoRequest request) throws PermissionDeniedException {
+    public EditDoctorScheduleDtoResponse editDoctorSchedule(String sessionId, int doctorId, DtoRequestWithSchedule request) throws PermissionDeniedException {
         adminDao.hasPermissions(sessionId);
-
-        List<ScheduleCell> scheduleCells;
-
-        if (request.getWeekSchedule() != null && !request.getWeekSchedule().isEmpty()) {
-            scheduleCells = DtoAdapters.transformWSC(request.getWeekSchedule());
-        } else if (request.getWeekDaysSchedule() != null && !request.getWeekDaysSchedule().isEmpty()) {
-            scheduleCells = DtoAdapters.transformWDSC(request.getWeekDaysSchedule());
-        } else {
-            throw new RuntimeException("Request contains empty schedules");
-        }
-
-        adminDao.editDoctorSchedule(LocalDate.parse(request.getDateStart()),
-                LocalDate.parse(request.getDateEnd()), doctorId, scheduleCells);
 
         Doctor doctor = doctorDao.getDoctorById(doctorId);
 
+        DtoResponseWithSchedule responseWithSchedule = insertSchedule(request, doctor.getId());
+
         return new EditDoctorScheduleDtoResponse(doctor.getId(),
                 doctor.getFirstName(), doctor.getLastName(), doctor.getPatronymic(),
-                doctor.getSpecialty(), doctor.getCabinet(),
-                doctor.getSchedule().stream()
-                        .map(DtoAdapters::transform)
-                        .collect(Collectors.toList()));
+                doctor.getSpecialty(), doctor.getCabinet(), responseWithSchedule.getSchedule());
     }
 
     public EmptyDtoResponse removeDoctor(String sessionId, int doctorId, RemoveDoctorDtoRequest request) throws PermissionDeniedException {

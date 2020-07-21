@@ -1,28 +1,21 @@
 package net.thumbtack.hospital.dtorequest.schedule;
 
 import net.thumbtack.hospital.util.validator.annotation.Time;
-import net.thumbtack.hospital.util.validator.annotation.WeekDayInt;
 
-import javax.validation.constraints.NotNull;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
-public class WeekScheduleCellDtoRequest {
+public abstract class ScheduleDtoRequest {
     @Time
     private String timeStart;
     @Time
     private String timeEnd;
-    @NotNull
-    private List<@WeekDayInt Integer> weekDays = new ArrayList<>();
 
-    public WeekScheduleCellDtoRequest() {
+    public ScheduleDtoRequest() {
     }
 
-    public WeekScheduleCellDtoRequest(String timeStart, String timeEnd, List<Integer> weekDays) {
+    public ScheduleDtoRequest(String timeStart, String timeEnd) {
         setTimeStart(timeStart);
         setTimeEnd(timeEnd);
-        setWeekDays(weekDays);
     }
 
     public void setTimeStart(String timeStart) {
@@ -33,10 +26,6 @@ public class WeekScheduleCellDtoRequest {
         this.timeEnd = timeEnd;
     }
 
-    public void setWeekDays(List<Integer> weekDays) {
-        this.weekDays = weekDays;
-    }
-
     public String getTimeStart() {
         return timeStart;
     }
@@ -45,31 +34,25 @@ public class WeekScheduleCellDtoRequest {
         return timeEnd;
     }
 
-    public List<Integer> getWeekDays() {
-        return weekDays;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        WeekScheduleCellDtoRequest that = (WeekScheduleCellDtoRequest) o;
+        ScheduleDtoRequest that = (ScheduleDtoRequest) o;
         return Objects.equals(timeStart, that.timeStart) &&
-                Objects.equals(timeEnd, that.timeEnd) &&
-                Objects.equals(weekDays, that.weekDays);
+                Objects.equals(timeEnd, that.timeEnd);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(timeStart, timeEnd, weekDays);
+        return Objects.hash(timeStart, timeEnd);
     }
 
     @Override
     public String toString() {
-        return "WeekScheduleCellDtoRequest{" +
+        return "WeekScheduleDtoRequest{" +
                 "timeStart='" + timeStart + '\'' +
                 ", timeEnd='" + timeEnd + '\'' +
-                ", weekDays=" + weekDays +
                 '}';
     }
 }

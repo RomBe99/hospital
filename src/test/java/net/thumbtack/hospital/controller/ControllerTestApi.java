@@ -3,24 +3,29 @@ package net.thumbtack.hospital.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import net.thumbtack.hospital.debug.DebugController;
+import net.thumbtack.hospital.debug.dtoresponse.schedule.GetScheduleByDoctorIdDtoResponse;
 import net.thumbtack.hospital.dtorequest.admin.*;
 import net.thumbtack.hospital.dtorequest.doctor.CreateMedicalCommissionDtoRequest;
 import net.thumbtack.hospital.dtorequest.patient.AppointmentToDoctorDtoRequest;
 import net.thumbtack.hospital.dtorequest.patient.EditPatientProfileDtoRequest;
 import net.thumbtack.hospital.dtorequest.patient.PatientRegistrationDtoRequest;
+import net.thumbtack.hospital.dtorequest.schedule.DayScheduleDtoRequest;
+import net.thumbtack.hospital.dtorequest.schedule.DtoRequestWithSchedule;
+import net.thumbtack.hospital.dtorequest.schedule.WeekScheduleDtoRequest;
 import net.thumbtack.hospital.dtorequest.user.LoginDtoRequest;
 import net.thumbtack.hospital.dtoresponse.admin.*;
 import net.thumbtack.hospital.dtoresponse.doctor.CreateMedicalCommissionDtoResponse;
 import net.thumbtack.hospital.dtoresponse.doctor.DoctorInformationDtoResponse;
-import net.thumbtack.hospital.dtoresponse.doctor.DoctorLoginDtoResponse;
 import net.thumbtack.hospital.dtoresponse.other.EmptyDtoResponse;
 import net.thumbtack.hospital.dtoresponse.other.abstractresponse.LoginUserDtoResponse;
 import net.thumbtack.hospital.dtoresponse.other.abstractresponse.UserInformationDtoResponse;
 import net.thumbtack.hospital.dtoresponse.patient.*;
 import net.thumbtack.hospital.dtoresponse.patient.ticket.AllTicketsDtoResponse;
+import net.thumbtack.hospital.dtoresponse.schedule.DtoResponseWithSchedule;
 import net.thumbtack.hospital.dtoresponse.user.GetAllDoctorsDtoResponse;
 import net.thumbtack.hospital.mapper.UserTypes;
 import net.thumbtack.hospital.server.HospitalApplication;
+import net.thumbtack.hospital.util.DtoAdapters;
 import net.thumbtack.hospital.util.cookie.CookieFactory;
 import net.thumbtack.hospital.util.mybatis.MyBatisUtils;
 import org.junit.Assert;
@@ -38,13 +43,14 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import javax.servlet.http.Cookie;
 import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @SpringBootTest(classes = HospitalApplication.class)
 @AutoConfigureMockMvc
-public abstract class BaseControllerTest {
+public abstract class ControllerTestApi {
     @Autowired
     protected MockMvc mvc;
     @Autowired
@@ -90,9 +96,106 @@ public abstract class BaseControllerTest {
         return objectMapper.readValue(json, clazz);
     }
 
+    public DtoRequestWithSchedule generateWeekSchedule(int duration, int durationPerDay, int daysCount, List<Integer> weekDays) {
+        LocalDate dateStart = LocalDate.now();
+        LocalDate dateEnd = dateStart.plusDays(daysCount);
+
+        LocalTime timeStart = LocalTime.now().withNano(0).withSecond(0);
+        LocalTime timeEnd = timeStart.plusMinutes(durationPerDay * duration);
+
+        WeekScheduleDtoRequest weekSchedule = new WeekScheduleDtoRequest(timeStart.toString(), timeEnd.toString(), weekDays);
+
+        return new DtoRequestWithSchedule(dateStart.toString(), dateEnd.toString(), duration, weekSchedule) {
+            @Override
+            public void setDateStart(String dateStart) {
+                super.setDateStart(dateStart);
+            }
+
+            @Override
+            public void setDateEnd(String dateEnd) {
+                super.setDateEnd(dateEnd);
+            }
+
+            @Override
+            public void setDuration(int duration) {
+                super.setDuration(duration);
+            }
+
+            @Override
+            public void setWeekSchedule(WeekScheduleDtoRequest weekSchedule) {
+                super.setWeekSchedule(weekSchedule);
+            }
+
+            @Override
+            public void setWeekDaysSchedule(List<DayScheduleDtoRequest> weekDaysSchedule) {
+                super.setWeekDaysSchedule(weekDaysSchedule);
+            }
+
+            @Override
+            public String getDateStart() {
+                return super.getDateStart();
+            }
+
+            @Override
+            public String getDateEnd() {
+                return super.getDateEnd();
+            }
+
+            @Override
+            public int getDuration() {
+                return super.getDuration();
+            }
+
+            @Override
+            public WeekScheduleDtoRequest getWeekSchedule() {
+                return super.getWeekSchedule();
+            }
+
+            @Override
+            public List<DayScheduleDtoRequest> getWeekDaysSchedule() {
+                return super.getWeekDaysSchedule();
+            }
+
+            @Override
+            public boolean equals(Object o) {
+                return super.equals(o);
+            }
+
+            @Override
+            public int hashCode() {
+                return super.hashCode();
+            }
+
+            @Override
+            public String toString() {
+                return super.toString();
+            }
+        };
+    }
+
+    // Debug controller methods
+
+    private void getScheduleByDoctorId(int doctorId, DtoResponseWithSchedule expectedResponse) throws Exception {
+        String url = DebugController.PREFIX_URL + "/" + DebugController.GET_SCHEDULE_BY_DOCTOR_ID_URL.replace("{doctorId}", String.valueOf(doctorId));
+
+        MockHttpServletResponse response = mvc.perform(
+                MockMvcRequestBuilders
+                        .get(url)
+                        .characterEncoding(StandardCharsets.UTF_8.name()))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn().getResponse();
+        response.setCharacterEncoding(StandardCharsets.UTF_8.name());
+
+        String jsonResponse = response.getContentAsString();
+        Assert.assertFalse(jsonResponse.isEmpty());
+
+        GetScheduleByDoctorIdDtoResponse actualResponse = mapFromJson(jsonResponse, GetScheduleByDoctorIdDtoResponse.class);
+        Assert.assertEquals(expectedResponse.getSchedule(), actualResponse.getSchedule());
+    }
+
     // User controller methods
 
-    public String login(String login, String password, LoginUserDtoResponse expectedResponse, UserTypes userType) throws Exception {
+    public String login(String login, String password, LoginUserDtoResponse expectedResponse) throws Exception {
         String url = UserController.PREFIX_URL + "/" + UserController.LOGIN_URL;
         LoginDtoRequest request = new LoginDtoRequest(login, password);
         String json = mapToJson(request);
@@ -107,12 +210,7 @@ public abstract class BaseControllerTest {
                 .andReturn().getResponse();
         response.setCharacterEncoding(StandardCharsets.UTF_8.name());
 
-        Map<UserTypes, Class<? extends LoginUserDtoResponse>> dtoClasses = new HashMap<>();
-        dtoClasses.put(UserTypes.ADMINISTRATOR, AdminLoginDtoResponse.class);
-        dtoClasses.put(UserTypes.DOCTOR, DoctorLoginDtoResponse.class);
-        dtoClasses.put(UserTypes.PATIENT, PatientLoginDtoResponse.class);
-
-        LoginUserDtoResponse actualResponse = mapFromJson(response.getContentAsString(), dtoClasses.get(userType));
+        LoginUserDtoResponse actualResponse = mapFromJson(response.getContentAsString(), expectedResponse.getClass());
         Assert.assertNotNull(actualResponse);
         Assert.assertNotEquals(0, actualResponse.getId());
 
@@ -130,7 +228,7 @@ public abstract class BaseControllerTest {
         String password = "admin";
         LoginUserDtoResponse expectedResponse = new AdminLoginDtoResponse("Roman", "Belinsky", null, "Root admin");
 
-        return login(login, password, expectedResponse, UserTypes.ADMINISTRATOR);
+        return login(login, password, expectedResponse);
     }
 
     public void logout(String sessionId) throws Exception {
@@ -316,7 +414,12 @@ public abstract class BaseControllerTest {
         DoctorRegistrationDtoResponse actualResponse = mapFromJson(actualJsonResponse, DoctorRegistrationDtoResponse.class);
         Assert.assertNotEquals(0, actualResponse.getId());
         expectedResponse.setId(actualResponse.getId());
+        expectedResponse.setSchedule(DtoAdapters.transform(request, actualResponse.getId()).stream()
+                .map(DtoAdapters::transform)
+                .collect(Collectors.toList()));
         Assert.assertEquals(expectedResponse, actualResponse);
+
+        getScheduleByDoctorId(expectedResponse.getId(), expectedResponse);
     }
 
     public void editAdministratorProfile(String sessionId, EditAdminProfileDtoRequest request,
@@ -389,7 +492,7 @@ public abstract class BaseControllerTest {
     // Patient controller methods
 
     public String patientRegistration(PatientRegistrationDtoRequest request,
-                                    PatientRegistrationDtoResponse expectedResponse) throws Exception {
+                                      PatientRegistrationDtoResponse expectedResponse) throws Exception {
         String url = PatientController.PREFIX_URL + "/" + PatientController.PATIENT_REGISTRATION_URL;
         String json = mapToJson(request);
 

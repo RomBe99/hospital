@@ -1,19 +1,18 @@
 package net.thumbtack.hospital.dtoresponse.admin;
 
+import net.thumbtack.hospital.dtoresponse.schedule.DtoResponseWithSchedule;
 import net.thumbtack.hospital.dtoresponse.schedule.ScheduleCellResponse;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class DoctorRegistrationDtoResponse {
-     private int id;
-     private String firstName;
-     private String lastName;
-     private String patronymic;
-     private String speciality;
-     private String room;
-     private List<ScheduleCellResponse> schedule = new ArrayList<>();
+public class DoctorRegistrationDtoResponse extends DtoResponseWithSchedule {
+    private int id;
+    private String firstName;
+    private String lastName;
+    private String patronymic;
+    private String speciality;
+    private String room;
 
     public DoctorRegistrationDtoResponse() {
     }
@@ -22,13 +21,14 @@ public class DoctorRegistrationDtoResponse {
                                          String firstName, String lastName, String patronymic,
                                          String speciality, String room,
                                          List<ScheduleCellResponse> schedule) {
+        super(schedule);
+
         setId(id);
         setFirstName(firstName);
         setLastName(lastName);
         setPatronymic(patronymic);
         setSpeciality(speciality);
         setRoom(room);
-        setSchedule(schedule);
     }
 
     public DoctorRegistrationDtoResponse(String firstName, String lastName, String patronymic,
@@ -61,10 +61,6 @@ public class DoctorRegistrationDtoResponse {
         this.room = room;
     }
 
-    public void setSchedule(List<ScheduleCellResponse> schedule) {
-        this.schedule = schedule;
-    }
-
     public int getId() {
         return id;
     }
@@ -89,10 +85,6 @@ public class DoctorRegistrationDtoResponse {
         return room;
     }
 
-    public List<ScheduleCellResponse> getSchedule() {
-        return schedule;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -103,25 +95,23 @@ public class DoctorRegistrationDtoResponse {
                 Objects.equals(lastName, that.lastName) &&
                 Objects.equals(patronymic, that.patronymic) &&
                 Objects.equals(speciality, that.speciality) &&
-                Objects.equals(room, that.room) &&
-                Objects.equals(schedule, that.schedule);
+                Objects.equals(room, that.room);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, firstName, lastName, patronymic, speciality, room, schedule);
+        return Objects.hash(id, firstName, lastName, patronymic, speciality, room);
     }
 
     @Override
     public String toString() {
-        return "DoctorRegistrationDtoResponse{" +
+        return super.toString() + " DoctorRegistrationDtoResponse{" +
                 "id=" + id +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", patronymic='" + patronymic + '\'' +
                 ", speciality='" + speciality + '\'' +
                 ", room='" + room + '\'' +
-                ", schedule=" + schedule +
                 '}';
     }
 }

@@ -20,6 +20,7 @@ public class LoginConstraintValidator implements ConstraintValidator<Login, Stri
         // Set of letters and numbers (latin + cyrillic)
         String regex = "^[а-яА-ЯёЁa-zA-Z0-9]+$";
 
-        return loginField != null && loginField.length() <= constraints.getMaxNameLength() && loginField.matches(regex);
+        return loginField != null && !loginField.isEmpty() && loginField.length() <= constraints.getMaxNameLength() &&
+                loginField.matches(regex);
     }
 }

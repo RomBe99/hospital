@@ -8,6 +8,6 @@ import javax.validation.ConstraintValidatorContext;
 public class AddressConstraintValidator implements ConstraintValidator<Address, String> {
    @Override
    public boolean isValid(String addressField, ConstraintValidatorContext context) {
-      return addressField != null && addressField.length() <= 200;
+      return addressField != null && !addressField.isEmpty() && addressField.length() <= 200;
    }
 }

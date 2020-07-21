@@ -21,6 +21,10 @@ public class TimeCell {
         setTicket(ticket);
     }
 
+    public TimeCell(LocalTime time, int duration, String ticket) {
+        this(time, null, duration, ticket);
+    }
+
     public void setTime(LocalTime time) {
         this.time = time;
     }

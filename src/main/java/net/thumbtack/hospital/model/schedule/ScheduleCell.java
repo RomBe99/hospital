@@ -2,7 +2,6 @@ package net.thumbtack.hospital.model.schedule;
 
 import net.thumbtack.hospital.model.user.Doctor;
 
-import java.sql.Date;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
