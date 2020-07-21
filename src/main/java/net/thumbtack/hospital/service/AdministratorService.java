@@ -13,7 +13,7 @@ import net.thumbtack.hospital.dtoresponse.admin.EditAdminProfileDtoResponse;
 import net.thumbtack.hospital.dtoresponse.admin.EditDoctorScheduleDtoResponse;
 import net.thumbtack.hospital.dtoresponse.other.EmptyDtoResponse;
 import net.thumbtack.hospital.dtoresponse.schedule.DtoResponseWithSchedule;
-import net.thumbtack.hospital.dtoresponse.schedule.ScheduleCellResponse;
+import net.thumbtack.hospital.dtoresponse.schedule.ScheduleCellDtoResponse;
 import net.thumbtack.hospital.model.schedule.ScheduleCell;
 import net.thumbtack.hospital.model.schedule.TimeCell;
 import net.thumbtack.hospital.model.user.Administrator;
@@ -47,12 +47,12 @@ public class AdministratorService {
         if (doctorId == 0 || schedule.isEmpty()) {
             return new DtoResponseWithSchedule() {
                 @Override
-                public void setSchedule(List<ScheduleCellResponse> schedule) {
+                public void setSchedule(List<ScheduleCellDtoResponse> schedule) {
                     super.setSchedule(schedule);
                 }
 
                 @Override
-                public List<ScheduleCellResponse> getSchedule() {
+                public List<ScheduleCellDtoResponse> getSchedule() {
                     return super.getSchedule();
                 }
 
@@ -82,12 +82,12 @@ public class AdministratorService {
                 .map(DtoAdapters::transform)
                 .collect(Collectors.toList())) {
             @Override
-            public void setSchedule(List<ScheduleCellResponse> schedule) {
+            public void setSchedule(List<ScheduleCellDtoResponse> schedule) {
                 super.setSchedule(schedule);
             }
 
             @Override
-            public List<ScheduleCellResponse> getSchedule() {
+            public List<ScheduleCellDtoResponse> getSchedule() {
                 return super.getSchedule();
             }
 

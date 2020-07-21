@@ -5,15 +5,15 @@ import net.thumbtack.hospital.dtoresponse.patient.PatientInformationDtoResponse;
 import java.time.LocalTime;
 import java.util.Objects;
 
-public class ScheduleTimeCellResponse {
+public class ScheduleTimeCellDtoResponse {
     private LocalTime time;
     private PatientInformationDtoResponse patient;
     private int duration;
 
-    public ScheduleTimeCellResponse() {
+    public ScheduleTimeCellDtoResponse() {
     }
 
-    public ScheduleTimeCellResponse(LocalTime time, PatientInformationDtoResponse patient, int duration) {
+    public ScheduleTimeCellDtoResponse(LocalTime time, PatientInformationDtoResponse patient, int duration) {
         setTime(time);
         setPatient(patient);
         setDuration(duration);
@@ -47,7 +47,7 @@ public class ScheduleTimeCellResponse {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        ScheduleTimeCellResponse that = (ScheduleTimeCellResponse) o;
+        ScheduleTimeCellDtoResponse that = (ScheduleTimeCellDtoResponse) o;
         return duration == that.duration &&
                 Objects.equals(time, that.time) &&
                 Objects.equals(patient, that.patient);

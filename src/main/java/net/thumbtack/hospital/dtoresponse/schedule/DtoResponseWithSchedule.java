@@ -5,20 +5,20 @@ import java.util.List;
 import java.util.Objects;
 
 public abstract class DtoResponseWithSchedule {
-    private List<ScheduleCellResponse> schedule = new ArrayList<>();
+    private List<ScheduleCellDtoResponse> schedule = new ArrayList<>();
 
     public DtoResponseWithSchedule() {
     }
 
-    public DtoResponseWithSchedule(List<ScheduleCellResponse> schedule) {
+    public DtoResponseWithSchedule(List<ScheduleCellDtoResponse> schedule) {
         setSchedule(schedule);
     }
 
-    public void setSchedule(List<ScheduleCellResponse> schedule) {
+    public void setSchedule(List<ScheduleCellDtoResponse> schedule) {
         this.schedule = schedule == null ? new ArrayList<>() : schedule;
     }
 
-    public List<ScheduleCellResponse> getSchedule() {
+    public List<ScheduleCellDtoResponse> getSchedule() {
         return schedule;
     }
 

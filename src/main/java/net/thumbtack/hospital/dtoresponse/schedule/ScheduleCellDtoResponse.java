@@ -5,14 +5,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class ScheduleCellResponse {
+public class ScheduleCellDtoResponse {
     private LocalDate date;
-    private List<ScheduleTimeCellResponse> daySchedule = new ArrayList<>();
+    private List<ScheduleTimeCellDtoResponse> daySchedule = new ArrayList<>();
 
-    public ScheduleCellResponse() {
+    public ScheduleCellDtoResponse() {
     }
 
-    public ScheduleCellResponse(LocalDate date, List<ScheduleTimeCellResponse> daySchedule) {
+    public ScheduleCellDtoResponse(LocalDate date, List<ScheduleTimeCellDtoResponse> daySchedule) {
         setDate(date);
         setDaySchedule(daySchedule);
     }
@@ -21,7 +21,7 @@ public class ScheduleCellResponse {
         this.date = date;
     }
 
-    public void setDaySchedule(List<ScheduleTimeCellResponse> daySchedule) {
+    public void setDaySchedule(List<ScheduleTimeCellDtoResponse> daySchedule) {
         this.daySchedule = daySchedule;
     }
 
@@ -29,7 +29,7 @@ public class ScheduleCellResponse {
         return date;
     }
 
-    public List<ScheduleTimeCellResponse> getDaySchedule() {
+    public List<ScheduleTimeCellDtoResponse> getDaySchedule() {
         return daySchedule;
     }
 
@@ -37,7 +37,7 @@ public class ScheduleCellResponse {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        ScheduleCellResponse that = (ScheduleCellResponse) o;
+        ScheduleCellDtoResponse that = (ScheduleCellDtoResponse) o;
         return Objects.equals(date, that.date) &&
                 Objects.equals(daySchedule, that.daySchedule);
     }

@@ -3,8 +3,8 @@ package net.thumbtack.hospital.util;
 import net.thumbtack.hospital.dtorequest.schedule.DayScheduleDtoRequest;
 import net.thumbtack.hospital.dtorequest.schedule.DtoRequestWithSchedule;
 import net.thumbtack.hospital.dtoresponse.patient.PatientInformationDtoResponse;
-import net.thumbtack.hospital.dtoresponse.schedule.ScheduleCellResponse;
-import net.thumbtack.hospital.dtoresponse.schedule.ScheduleTimeCellResponse;
+import net.thumbtack.hospital.dtoresponse.schedule.ScheduleCellDtoResponse;
+import net.thumbtack.hospital.dtoresponse.schedule.ScheduleTimeCellDtoResponse;
 import net.thumbtack.hospital.model.schedule.ScheduleCell;
 import net.thumbtack.hospital.model.schedule.TimeCell;
 import net.thumbtack.hospital.model.user.Patient;
@@ -21,14 +21,14 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public class DtoAdapters {
-    public static ScheduleTimeCellResponse transform(TimeCell tc) {
-        return new ScheduleTimeCellResponse(tc.getTime(),
+    public static ScheduleTimeCellDtoResponse transform(TimeCell tc) {
+        return new ScheduleTimeCellDtoResponse(tc.getTime(),
                 tc.getPatient() == null ? null : transform(tc.getPatient()),
                 tc.getDuration());
     }
 
-    public static ScheduleCellResponse transform(ScheduleCell sc) {
-        return new ScheduleCellResponse(sc.getDate(),
+    public static ScheduleCellDtoResponse transform(ScheduleCell sc) {
+        return new ScheduleCellDtoResponse(sc.getDate(),
                 sc.getCells() == null ? null : sc.getCells().stream()
                         .map(DtoAdapters::transform)
                         .collect(Collectors.toList()));

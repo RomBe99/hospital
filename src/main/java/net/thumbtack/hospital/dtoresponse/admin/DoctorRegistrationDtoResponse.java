@@ -1,7 +1,7 @@
 package net.thumbtack.hospital.dtoresponse.admin;
 
 import net.thumbtack.hospital.dtoresponse.schedule.DtoResponseWithSchedule;
-import net.thumbtack.hospital.dtoresponse.schedule.ScheduleCellResponse;
+import net.thumbtack.hospital.dtoresponse.schedule.ScheduleCellDtoResponse;
 
 import java.util.List;
 import java.util.Objects;
@@ -20,7 +20,7 @@ public class DoctorRegistrationDtoResponse extends DtoResponseWithSchedule {
     public DoctorRegistrationDtoResponse(int id,
                                          String firstName, String lastName, String patronymic,
                                          String speciality, String room,
-                                         List<ScheduleCellResponse> schedule) {
+                                         List<ScheduleCellDtoResponse> schedule) {
         super(schedule);
 
         setId(id);
@@ -33,7 +33,7 @@ public class DoctorRegistrationDtoResponse extends DtoResponseWithSchedule {
 
     public DoctorRegistrationDtoResponse(String firstName, String lastName, String patronymic,
                                          String speciality, String room,
-                                         List<ScheduleCellResponse> schedule) {
+                                         List<ScheduleCellDtoResponse> schedule) {
         this(0, firstName, lastName, patronymic, speciality, room, schedule);
     }
 

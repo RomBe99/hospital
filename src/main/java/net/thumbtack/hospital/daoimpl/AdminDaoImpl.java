@@ -19,7 +19,7 @@ import java.util.List;
 @Component("AdminDaoImpl")
 public class AdminDaoImpl extends UserDaoImpl implements AdminDao {
     private static final Logger LOGGER = LoggerFactory.getLogger(AdminDaoImpl.class);
-    private static final String className = AdminDaoImpl.class.getSimpleName();
+    private static final String CLASS_NAME = AdminDaoImpl.class.getSimpleName();
 
     private AdminMapper getAdminMapper(SqlSession session) {
         return session.getMapper(AdminMapper.class);
@@ -27,7 +27,7 @@ public class AdminDaoImpl extends UserDaoImpl implements AdminDao {
 
     @Override
     public void insertAdministrator(Administrator administrator) {
-        LOGGER.debug(className + ": Insert administrator = {}", administrator);
+        LOGGER.debug(CLASS_NAME + ": Insert administrator = {}", administrator);
 
         try (SqlSession session = getSession()) {
             try {
@@ -38,10 +38,10 @@ public class AdminDaoImpl extends UserDaoImpl implements AdminDao {
                 mapper.insertAdministrator(administrator);
 
                 session.commit();
-                LOGGER.debug(className + ": Administrator = {} successfully inserted", administrator);
+                LOGGER.debug(CLASS_NAME + ": Administrator = {} successfully inserted", administrator);
             } catch (RuntimeException ex) {
                 session.rollback();
-                LOGGER.error(className + ": Can't insert administrator = {}", administrator, ex);
+                LOGGER.error(CLASS_NAME + ": Can't insert administrator = {}", administrator, ex);
 
                 throw ex;
             }
@@ -50,7 +50,7 @@ public class AdminDaoImpl extends UserDaoImpl implements AdminDao {
 
     @Override
     public void updateAdministrator(Administrator administrator) {
-        LOGGER.debug(className + ": Update administrator = {}", administrator);
+        LOGGER.debug(CLASS_NAME + ": Update administrator = {}", administrator);
 
         try (SqlSession session = getSession()) {
             try {
@@ -59,10 +59,10 @@ public class AdminDaoImpl extends UserDaoImpl implements AdminDao {
                 mapper.updateAdministrator(administrator);
 
                 session.commit();
-                LOGGER.debug(className + ": Administrator = {} successfully updated", administrator);
+                LOGGER.debug(CLASS_NAME + ": Administrator = {} successfully updated", administrator);
             } catch (RuntimeException ex) {
                 session.rollback();
-                LOGGER.error(className + ": Can't update administrator = {}", administrator, ex);
+                LOGGER.error(CLASS_NAME + ": Can't update administrator = {}", administrator, ex);
 
                 throw ex;
             }
@@ -71,12 +71,12 @@ public class AdminDaoImpl extends UserDaoImpl implements AdminDao {
 
     @Override
     public Administrator getAdministratorById(int id) {
-        LOGGER.debug(className + ": Get administrator with id = {}", id);
+        LOGGER.debug(CLASS_NAME + ": Get administrator with id = {}", id);
 
         try (SqlSession session = getSession()) {
             return session.selectOne("net.thumbtack.hospital.mapper.AdminMapper.getAdminById", id);
         } catch (RuntimeException ex) {
-            LOGGER.error(className + ": Can't get administrator with id = {}", id, ex);
+            LOGGER.error(CLASS_NAME + ": Can't get administrator with id = {}", id, ex);
 
             throw ex;
         }
@@ -84,17 +84,17 @@ public class AdminDaoImpl extends UserDaoImpl implements AdminDao {
 
     @Override
     public void removeAdministratorById(int id) {
-        LOGGER.debug(className + ": Remove administrator with id = {}", id);
+        LOGGER.debug(CLASS_NAME + ": Remove administrator with id = {}", id);
 
         try (SqlSession session = getSession()) {
             try {
                 getAdminMapper(session).removeAdministratorById(id);
 
                 session.commit();
-                LOGGER.debug(className + ": Administrator with id = {} successfully removed", id);
+                LOGGER.debug(CLASS_NAME + ": Administrator with id = {} successfully removed", id);
             } catch (RuntimeException ex) {
                 session.rollback();
-                LOGGER.error(className + ": Can't remove administrator with id = {}", id, ex);
+                LOGGER.error(CLASS_NAME + ": Can't remove administrator with id = {}", id, ex);
 
                 throw ex;
             }
@@ -103,7 +103,7 @@ public class AdminDaoImpl extends UserDaoImpl implements AdminDao {
 
     @Override
     public void editDoctorSchedule(LocalDate dateStart, LocalDate dateEnd, int doctorId, List<ScheduleCell> schedule) {
-        LOGGER.debug(className + ": Inserting schedule = {} for doctor with id = {} (date start = {} date end = {})",
+        LOGGER.debug(CLASS_NAME + ": Inserting schedule = {} for doctor with id = {} (date start = {} date end = {})",
                 schedule, doctorId, dateStart, dateEnd);
 
         try (SqlSession session = getSession()) {
@@ -119,11 +119,11 @@ public class AdminDaoImpl extends UserDaoImpl implements AdminDao {
                 }
 
                 session.commit();
-                LOGGER.debug(className + ": Schedule = {} for doctor with id = {} successfully inserted (date start = {} date end = {})",
+                LOGGER.debug(CLASS_NAME + ": Schedule = {} for doctor with id = {} successfully inserted (date start = {} date end = {})",
                         schedule, doctorId, dateStart, dateEnd);
             } catch (RuntimeException ex) {
                 session.rollback();
-                LOGGER.error(className + ": Can't insert schedule = {} for doctor with id = {} (date start = {} date end = {})",
+                LOGGER.error(CLASS_NAME + ": Can't insert schedule = {} for doctor with id = {} (date start = {} date end = {})",
                         schedule, doctorId, dateStart, dateEnd, ex);
 
                 throw ex;
@@ -133,12 +133,12 @@ public class AdminDaoImpl extends UserDaoImpl implements AdminDao {
 
     @Override
     public int hasPermissions(String sessionId) throws PermissionDeniedException {
-        LOGGER.debug(className + ": Checking administrator permissions for session id = {}", sessionId);
+        LOGGER.debug(CLASS_NAME + ": Checking administrator permissions for session id = {}", sessionId);
 
         try (SqlSession session = getSession()) {
             return getAdminMapper(session).hasPermissions(sessionId);
         } catch (RuntimeException ex) {
-            LOGGER.error(className + ": Can't check administrator permissions for session id = {}", sessionId, ex);
+            LOGGER.error(CLASS_NAME + ": Can't check administrator permissions for session id = {}", sessionId, ex);
 
             throw new PermissionDeniedException(PermissionDeniedErrorCodes.PERMISSION_DENIED);
         }

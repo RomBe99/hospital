@@ -18,7 +18,7 @@ import java.util.List;
 @Component("DoctorDaoImpl")
 public class DoctorDaoImpl extends UserDaoImpl implements DoctorDao {
     private static final Logger LOGGER = LoggerFactory.getLogger(DoctorDaoImpl.class);
-    private static final String className = DoctorDaoImpl.class.getSimpleName();
+    private static final String CLASS_NAME = DoctorDaoImpl.class.getSimpleName();
 
     private DoctorMapper getDoctorMapper(SqlSession session) {
         return session.getMapper(DoctorMapper.class);
@@ -26,7 +26,7 @@ public class DoctorDaoImpl extends UserDaoImpl implements DoctorDao {
 
     @Override
     public Doctor insertDoctor(Doctor doctor) {
-        LOGGER.debug(className + ": Insert doctor = {}", doctor);
+        LOGGER.debug(CLASS_NAME + ": Insert doctor = {}", doctor);
 
         try (SqlSession session = getSession()) {
             try {
@@ -40,12 +40,12 @@ public class DoctorDaoImpl extends UserDaoImpl implements DoctorDao {
                 doctorMapper.insertDoctor(doctor.getId(), specialityId, cabinetId);
 
                 session.commit();
-                LOGGER.debug(className + ": Doctor = {} successfully inserted", doctor);
+                LOGGER.debug(CLASS_NAME + ": Doctor = {} successfully inserted", doctor);
 
                 return doctor;
             } catch (RuntimeException ex) {
                 session.rollback();
-                LOGGER.error(className + ": Can't insert doctor = {}", doctor, ex);
+                LOGGER.error(CLASS_NAME + ": Can't insert doctor = {}", doctor, ex);
 
                 throw ex;
             }
@@ -54,17 +54,17 @@ public class DoctorDaoImpl extends UserDaoImpl implements DoctorDao {
 
     @Override
     public void removeDoctor(int id) {
-        LOGGER.debug(className + ": Delete doctor with id = {}", id);
+        LOGGER.debug(CLASS_NAME + ": Delete doctor with id = {}", id);
 
         try (SqlSession session = getSession()) {
             try {
                 getDoctorMapper(session).removeDoctor(id);
 
                 session.commit();
-                LOGGER.debug(className + ": Doctor with id = {} successfully removed", id);
+                LOGGER.debug(CLASS_NAME + ": Doctor with id = {} successfully removed", id);
             } catch (RuntimeException ex) {
                 session.rollback();
-                LOGGER.error(className + ": Can't remove doctor with id = {}", id, ex);
+                LOGGER.error(CLASS_NAME + ": Can't remove doctor with id = {}", id, ex);
 
                 throw ex;
             }
@@ -73,12 +73,12 @@ public class DoctorDaoImpl extends UserDaoImpl implements DoctorDao {
 
     @Override
     public List<Doctor> getAllDoctors() {
-        LOGGER.debug(className + ": Get all doctors");
+        LOGGER.debug(CLASS_NAME + ": Get all doctors");
 
         try (SqlSession session = getSession()) {
             return session.selectList("net.thumbtack.hospital.mapper.DoctorMapper.getAllDoctors");
         } catch (RuntimeException ex) {
-            LOGGER.error(className + ": Can't get all doctors", ex);
+            LOGGER.error(CLASS_NAME + ": Can't get all doctors", ex);
 
             throw ex;
         }
@@ -86,12 +86,12 @@ public class DoctorDaoImpl extends UserDaoImpl implements DoctorDao {
 
     @Override
     public Doctor getDoctorById(int id) {
-        LOGGER.debug(className + ": Get doctor by id");
+        LOGGER.debug(CLASS_NAME + ": Get doctor by id");
 
         try (SqlSession session = getSession()) {
             return session.selectOne("net.thumbtack.hospital.mapper.DoctorMapper.getDoctorById", id);
         } catch (RuntimeException ex) {
-            LOGGER.error(className + ": Can't get doctor by id", ex);
+            LOGGER.error(CLASS_NAME + ": Can't get doctor by id", ex);
 
             throw ex;
         }
@@ -99,7 +99,7 @@ public class DoctorDaoImpl extends UserDaoImpl implements DoctorDao {
 
     @Override
     public void createMedicalCommission(TicketToMedicalCommission ticketToMedicalCommission) {
-        LOGGER.debug(className + ": Creating medical commission = {}", ticketToMedicalCommission);
+        LOGGER.debug(CLASS_NAME + ": Creating medical commission = {}", ticketToMedicalCommission);
 
         try (SqlSession session = getSession()) {
             try {
@@ -110,10 +110,10 @@ public class DoctorDaoImpl extends UserDaoImpl implements DoctorDao {
                     mapper.insertDoctorInMedicalCommission(ticketToMedicalCommission.getTicket(), id);
                 }
 
-                LOGGER.debug(className + ": Medical commission = {} successfully created", ticketToMedicalCommission);
+                LOGGER.debug(CLASS_NAME + ": Medical commission = {} successfully created", ticketToMedicalCommission);
             } catch (RuntimeException ex) {
                 session.rollback();
-                LOGGER.error(className + ": Can't create medical commission = {}", ticketToMedicalCommission, ex);
+                LOGGER.error(CLASS_NAME + ": Can't create medical commission = {}", ticketToMedicalCommission, ex);
 
                 throw ex;
             }
@@ -122,12 +122,12 @@ public class DoctorDaoImpl extends UserDaoImpl implements DoctorDao {
 
     @Override
     public int hasPermissions(String sessionId) throws PermissionDeniedException {
-        LOGGER.debug(className + ": Checking doctor permissions for session id = {}", sessionId);
+        LOGGER.debug(CLASS_NAME + ": Checking doctor permissions for session id = {}", sessionId);
 
         try (SqlSession session = getSession()) {
             return getDoctorMapper(session).hasPermissions(sessionId);
         } catch (RuntimeException ex) {
-            LOGGER.error(className + ": Can't check doctor permissions for session id = {}", sessionId, ex);
+            LOGGER.error(CLASS_NAME + ": Can't check doctor permissions for session id = {}", sessionId, ex);
 
             throw new PermissionDeniedException(PermissionDeniedErrorCodes.PERMISSION_DENIED);
         }

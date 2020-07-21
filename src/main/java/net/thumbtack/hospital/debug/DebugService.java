@@ -1,8 +1,7 @@
 package net.thumbtack.hospital.debug;
 
 import net.thumbtack.hospital.debug.dtoresponse.schedule.GetScheduleByDoctorIdDtoResponse;
-import net.thumbtack.hospital.dtoresponse.schedule.DtoResponseWithSchedule;
-import net.thumbtack.hospital.dtoresponse.schedule.ScheduleCellResponse;
+import net.thumbtack.hospital.dtoresponse.schedule.ScheduleCellDtoResponse;
 import net.thumbtack.hospital.util.DtoAdapters;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -32,7 +31,7 @@ public class DebugService {
     }
 
     public GetScheduleByDoctorIdDtoResponse getScheduleByDoctorId(int doctorId) {
-        List<ScheduleCellResponse> responseSchedule = debugDao.getScheduleByDoctorId(doctorId).stream()
+        List<ScheduleCellDtoResponse> responseSchedule = debugDao.getScheduleByDoctorId(doctorId).stream()
                 .map(DtoAdapters::transform)
                 .collect(Collectors.toList());
 
