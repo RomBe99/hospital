@@ -65,7 +65,8 @@
                  LEFT JOIN schedule_cell sc ON d.userId = sc.doctorId
                  JOIN time_cell tc ON sc.id = tc.scheduleCellId
                  LEFT JOIN user pu ON pu.id = tc.patientId
-                 LEFT JOIN patient p ON tc.patientId = p.userId;
+                 LEFT JOIN patient p ON tc.patientId = p.userId
+        ORDER BY date, time;;
     </select>
 
     <select id="getDoctorById" parameterType="int" resultMap="resultDoctor">
@@ -97,6 +98,7 @@
                  JOIN time_cell tc ON sc.id = tc.scheduleCellId
                  LEFT JOIN user pu ON pu.id = tc.patientId
                  LEFT JOIN patient p ON tc.patientId = p.userId
-        WHERE doctorId = #{id};
+        WHERE doctorId = #{id}
+        ORDER BY date, time;;
     </select>
 </mapper>

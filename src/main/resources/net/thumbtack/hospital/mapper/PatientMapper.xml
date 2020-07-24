@@ -50,6 +50,7 @@
         FROM medical_commission mc
                  JOIN commission_doctor cd ON mc.ticket = cd.commissionTicket
                  JOIN cabinet c ON mc.cabinetId = c.id
-        WHERE patientId = #{patientId};
+        WHERE patientId = #{patientId}
+        ORDER BY date, time;;
     </select>
 </mapper>
