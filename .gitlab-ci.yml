@@ -15,7 +15,7 @@ variables:
 
 compile_test:
   script:
-    #- apt-get update && apt-get -y upgrade
+    - apt-get update && apt-get -y upgrade
     - service mysql start
     - mysql -h localhost -u test -ptest < sql/hospital.sql
     - mvn $MAVEN_CLI_OPTS clean compile test
