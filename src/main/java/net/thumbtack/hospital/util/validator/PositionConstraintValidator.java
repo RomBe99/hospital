@@ -6,8 +6,8 @@ import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
 public class PositionConstraintValidator implements ConstraintValidator<Position, String> {
-   @Override
-   public boolean isValid(String positionField, ConstraintValidatorContext context) {
-      return positionField != null && !positionField.isEmpty() && positionField.length() <= 200;
-   }
+    @Override
+    public boolean isValid(String positionField, ConstraintValidatorContext context) {
+        return positionField != null && !positionField.isEmpty() && positionField.length() <= 200;
+    }
 }

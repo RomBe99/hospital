@@ -8,18 +8,18 @@ import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 
 public class DateConstraintValidator implements ConstraintValidator<Date, String> {
-   @Override
-   public boolean isValid(String dateField, ConstraintValidatorContext context) {
-      if (dateField == null) {
-         return false;
-      }
+    @Override
+    public boolean isValid(String dateField, ConstraintValidatorContext context) {
+        if (dateField == null) {
+            return false;
+        }
 
-      try {
-         LocalDate.parse(dateField);
-      } catch (DateTimeParseException ex) {
-         return false;
-      }
+        try {
+            LocalDate.parse(dateField);
+        } catch (DateTimeParseException ex) {
+            return false;
+        }
 
-      return true;
-   }
+        return true;
+    }
 }

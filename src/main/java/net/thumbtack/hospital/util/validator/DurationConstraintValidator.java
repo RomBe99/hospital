@@ -6,8 +6,8 @@ import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
 public class DurationConstraintValidator implements ConstraintValidator<Duration, Integer> {
-   @Override
-   public boolean isValid(Integer durationField, ConstraintValidatorContext context) {
-      return durationField > 0;
-   }
+    @Override
+    public boolean isValid(Integer durationField, ConstraintValidatorContext context) {
+        return durationField > 0;
+    }
 }

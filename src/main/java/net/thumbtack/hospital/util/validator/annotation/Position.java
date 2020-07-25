@@ -18,9 +18,9 @@ public @interface Position {
 
     Class<? extends Payload>[] payload() default {};
 
+    @Documented
     @Target({ElementType.METHOD, ElementType.FIELD, ElementType.ANNOTATION_TYPE, ElementType.CONSTRUCTOR, ElementType.PARAMETER, ElementType.TYPE_USE})
     @Retention(RetentionPolicy.RUNTIME)
-    @Documented
     @interface List {
         Position[] value();
     }

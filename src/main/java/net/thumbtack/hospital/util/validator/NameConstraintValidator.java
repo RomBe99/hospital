@@ -8,31 +8,31 @@ import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
 public class NameConstraintValidator implements ConstraintValidator<Name, String> {
-   private boolean isPatronymic;
-   private final Constraints constraints;
+    private boolean isPatronymic;
+    private final Constraints constraints;
 
-   @Autowired
-   public NameConstraintValidator(Constraints constraints) {
-      this.constraints = constraints;
-   }
+    @Autowired
+    public NameConstraintValidator(Constraints constraints) {
+        this.constraints = constraints;
+    }
 
-   @Override
-   public void initialize(Name constraintAnnotation) {
-      isPatronymic = constraintAnnotation.isPatronymic();
-   }
+    @Override
+    public void initialize(Name constraintAnnotation) {
+        isPatronymic = constraintAnnotation.isPatronymic();
+    }
 
-   @Override
-   public boolean isValid(String nameField, ConstraintValidatorContext context) {
-      if (isPatronymic && (nameField == null || nameField.isEmpty())) {
-         return true;
-      }
+    @Override
+    public boolean isValid(String nameField, ConstraintValidatorContext context) {
+        if (isPatronymic && (nameField == null || nameField.isEmpty())) {
+            return true;
+        }
 
-      if (nameField == null) {
-         return false;
-      }
+        if (nameField == null) {
+            return false;
+        }
 
-      String regex = "^[а-яА-ЯёЁa-zA-Z0-9]+$";
+        String regex = "^[а-яА-ЯёЁa-zA-Z0-9]+$";
 
-      return nameField.length() <= constraints.getMaxNameLength() && nameField.matches(regex);
-   }
+        return nameField.length() <= constraints.getMaxNameLength() && nameField.matches(regex);
+    }
 }

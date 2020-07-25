@@ -8,27 +8,27 @@ import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
 public class PasswordConstraintValidator implements ConstraintValidator<Password, String> {
-   private final Constraints constraints;
+    private final Constraints constraints;
 
-   @Autowired
-   public PasswordConstraintValidator(Constraints constraints) {
-      this.constraints = constraints;
-   }
+    @Autowired
+    public PasswordConstraintValidator(Constraints constraints) {
+        this.constraints = constraints;
+    }
 
-   @Override
-   public boolean isValid(String passwordField, ConstraintValidatorContext context) {
-      if (passwordField == null) {
-         return false;
-      }
+    @Override
+    public boolean isValid(String passwordField, ConstraintValidatorContext context) {
+        if (passwordField == null) {
+            return false;
+        }
 
-      if (passwordField.length() < constraints.getMinPasswordLength()
-              || passwordField.length() > constraints.getMaxNameLength()) {
-         return false;
-      }
+        if (passwordField.length() < constraints.getMinPasswordLength()
+                || passwordField.length() > constraints.getMaxNameLength()) {
+            return false;
+        }
 
-      // Latin lowercase and capital letters, numbers
-      String regex = "^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?!.*\\s).*$";
+        // Latin lowercase and capital letters, numbers
+        String regex = "^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?!.*\\s).*$";
 
-      return passwordField.matches(regex);
-   }
+        return passwordField.matches(regex);
+    }
 }

@@ -41,7 +41,6 @@ public class AdministratorService {
     }
 
     private DtoResponseWithSchedule insertSchedule(DtoRequestWithSchedule request, int doctorId) {
-        // TODO Что делать, если в запросе присутсвуют несколько видов расписаний?
         List<ScheduleCell> schedule = DtoAdapters.transform(request, doctorId);
 
         if (doctorId == 0 || schedule.isEmpty()) {

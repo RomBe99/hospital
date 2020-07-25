@@ -1,6 +1,9 @@
 package net.thumbtack.hospital.controller;
 
-import net.thumbtack.hospital.dtorequest.admin.*;
+import net.thumbtack.hospital.dtorequest.admin.AdminRegistrationDtoRequest;
+import net.thumbtack.hospital.dtorequest.admin.DoctorRegistrationDtoRequest;
+import net.thumbtack.hospital.dtorequest.admin.EditAdminProfileDtoRequest;
+import net.thumbtack.hospital.dtorequest.admin.RemoveDoctorDtoRequest;
 import net.thumbtack.hospital.dtorequest.schedule.DtoRequestWithSchedule;
 import net.thumbtack.hospital.dtoresponse.admin.*;
 import net.thumbtack.hospital.dtoresponse.doctor.DoctorLoginDtoResponse;
