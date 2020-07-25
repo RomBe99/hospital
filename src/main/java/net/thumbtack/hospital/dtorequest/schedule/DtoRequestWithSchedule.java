@@ -1,12 +1,14 @@
 package net.thumbtack.hospital.dtorequest.schedule;
 
 import net.thumbtack.hospital.util.validator.annotation.Date;
+import net.thumbtack.hospital.util.validator.annotation.DtoWithSchedule;
 import net.thumbtack.hospital.util.validator.annotation.Duration;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+@DtoWithSchedule
 public abstract class DtoRequestWithSchedule {
     @Date
     private String dateStart;
@@ -14,7 +16,9 @@ public abstract class DtoRequestWithSchedule {
     private String dateEnd;
     @Duration
     private int duration;
+    @DtoWithSchedule.Schedule
     private WeekScheduleDtoRequest weekSchedule;
+    @DtoWithSchedule.Schedule(isCollection = true)
     private List<DayScheduleDtoRequest> weekDaysSchedule = new ArrayList<>();
 
     public DtoRequestWithSchedule() {
