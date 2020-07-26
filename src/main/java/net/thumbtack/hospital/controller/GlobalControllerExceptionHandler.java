@@ -54,7 +54,7 @@ public class GlobalControllerExceptionHandler {
     public ErrorsDtoResponse handlePermissionExceptions(PermissionDeniedException ex) {
         String errorCode = ex.getErrorCode().getErrorCode();
         String field = "sessionId";
-        String errorMessage = "You do not have the required permissions.";
+        String errorMessage = ex.getErrorCode().getErrorMessage();
 
         return new ErrorsDtoResponse(Collections.singletonList(new ErrorDtoResponse(errorCode, field, errorMessage)));
     }
