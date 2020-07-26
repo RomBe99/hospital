@@ -16,8 +16,10 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import java.util.function.Predicate;
+import java.util.Map;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 public class DtoAdapters {
@@ -40,23 +42,26 @@ public class DtoAdapters {
                 patient.getEmail(), patient.getAddress(), patient.getPhone());
     }
 
-    public static List<ScheduleCell> transform(DtoRequestWithSchedule request, int doctorId) {
-        int duration = request.getDuration();
-        LocalDate dateStart = LocalDate.parse(request.getDateStart());
-        LocalDate dateEnd = LocalDate.parse(request.getDateEnd());
-
-        final Predicate<LocalDate> weekendChecker = d -> {
-            DayOfWeek dayOfWeek = d.getDayOfWeek();
+    private final static class ScheduleTransformer {
+        public static boolean weekendChecker(LocalDate date) {
+            DayOfWeek dayOfWeek = date.getDayOfWeek();
 
             return dayOfWeek == DayOfWeek.SATURDAY || dayOfWeek == DayOfWeek.SUNDAY;
-        };
+        }
 
-        List<ScheduleCell> result = new ArrayList<>();
+        public static boolean isEmptyScheduleRequest(DtoRequestWithSchedule request) {
+            return request.getWeekSchedule() == null && request.getWeekDaysSchedule().isEmpty();
+        }
 
-        if (request.getWeekSchedule() != null) {
+        public static List<ScheduleCell> transformWeekSchedule(DtoRequestWithSchedule request, int doctorId) {
+            int duration = request.getDuration();
+            LocalDate dateStart = LocalDate.parse(request.getDateStart());
+            LocalDate dateEnd = LocalDate.parse(request.getDateEnd());
+
             LocalTime durationStartTime = LocalTime.parse(request.getWeekSchedule().getTimeStart());
             LocalTime durationEndTime = LocalTime.parse(request.getWeekSchedule().getTimeEnd());
 
+            List<ScheduleCell> result = new ArrayList<>();
             List<LocalTime> durations = new ArrayList<>();
 
             for (LocalTime t = durationStartTime; t.isBefore(durationEndTime); t = t.plusMinutes(duration)) {
@@ -66,7 +71,7 @@ public class DtoAdapters {
             List<TimeCell> temp;
 
             for (LocalDate d = dateStart; d.isBefore(dateEnd); d = d.plusDays(1)) {
-                if (weekendChecker.test(d)) {
+                if (weekendChecker(d)) {
                     continue;
                 }
 
@@ -78,12 +83,19 @@ public class DtoAdapters {
 
                 result.add(new ScheduleCell(null, d, temp));
             }
+
+            return result;
         }
 
-        if (!request.getWeekDaysSchedule().isEmpty()) {
+        public static List<ScheduleCell> transformWeekDaysSchedule(DtoRequestWithSchedule request, int doctorId) {
+            int duration = request.getDuration();
+            LocalDate dateStart = LocalDate.parse(request.getDateStart());
+            LocalDate dateEnd = LocalDate.parse(request.getDateEnd());
+
             List<DayScheduleDtoRequest> daySchedule = request.getWeekDaysSchedule();
             MultiValueMap<DayOfWeek, LocalTime> weekDurationTimes = new LinkedMultiValueMap<>();
 
+            List<ScheduleCell> result = new ArrayList<>();
             LocalTime durationStartTime;
             LocalTime durationEndTime;
 
@@ -102,7 +114,7 @@ public class DtoAdapters {
             for (LocalDate d = dateStart; d.isBefore(dateEnd); d = d.plusDays(1)) {
                 durations = weekDurationTimes.get(d.getDayOfWeek());
 
-                if (weekendChecker.test(d) || durations == null) {
+                if (weekendChecker(d) || durations == null) {
                     continue;
                 }
 
@@ -114,8 +126,28 @@ public class DtoAdapters {
 
                 result.add(new ScheduleCell(null, d, temp));
             }
+
+            return result;
+        }
+    }
+
+    public static List<ScheduleCell> transform(DtoRequestWithSchedule request, int doctorId) {
+        if (ScheduleTransformer.isEmptyScheduleRequest(request)) {
+            return new ArrayList<>();
         }
 
-        return result;
+        Map<Supplier<Boolean>, Supplier<List<ScheduleCell>>> transformers = new HashMap<>();
+        transformers.put(() -> request.getWeekSchedule() != null,
+                () -> ScheduleTransformer.transformWeekSchedule(request, doctorId));
+        transformers.put(() -> !request.getWeekDaysSchedule().isEmpty(),
+                () -> ScheduleTransformer.transformWeekDaysSchedule(request, doctorId));
+
+        for (Supplier<Boolean> p : transformers.keySet()) {
+            if (p.get()) {
+                return transformers.get(p).get();
+            }
+        }
+
+        return new ArrayList<>();
     }
 }
