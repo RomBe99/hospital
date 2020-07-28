@@ -6,7 +6,7 @@ import net.thumbtack.hospital.mapper.DoctorMapper;
 import net.thumbtack.hospital.mapper.UserTypes;
 import net.thumbtack.hospital.model.user.Doctor;
 import net.thumbtack.hospital.model.ticket.TicketToMedicalCommission;
-import net.thumbtack.hospital.util.error.PermissionDeniedErrorCodes;
+import net.thumbtack.hospital.util.error.PermissionDeniedErrorCode;
 import net.thumbtack.hospital.util.error.PermissionDeniedException;
 import org.apache.ibatis.session.SqlSession;
 import org.slf4j.Logger;
@@ -129,7 +129,7 @@ public class DoctorDaoImpl extends UserDaoImpl implements DoctorDao {
         } catch (RuntimeException ex) {
             LOGGER.error(CLASS_NAME + ": Can't check doctor permissions for session id = {}", sessionId, ex);
 
-            throw new PermissionDeniedException(PermissionDeniedErrorCodes.PERMISSION_DENIED);
+            throw new PermissionDeniedException(PermissionDeniedErrorCode.PERMISSION_DENIED);
         }
     }
 }

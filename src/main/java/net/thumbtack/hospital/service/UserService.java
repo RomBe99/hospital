@@ -18,7 +18,7 @@ import net.thumbtack.hospital.model.user.Administrator;
 import net.thumbtack.hospital.model.user.Doctor;
 import net.thumbtack.hospital.model.user.Patient;
 import net.thumbtack.hospital.util.DtoAdapters;
-import net.thumbtack.hospital.util.error.PermissionDeniedErrorCodes;
+import net.thumbtack.hospital.util.error.PermissionDeniedErrorCode;
 import net.thumbtack.hospital.util.error.PermissionDeniedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -120,7 +120,7 @@ public class UserService {
         try {
             patientDao.hasPermissions(sessionId);
 
-            throw new PermissionDeniedException(PermissionDeniedErrorCodes.PERMISSION_DENIED);
+            throw new PermissionDeniedException(PermissionDeniedErrorCode.PERMISSION_DENIED);
         } catch (RuntimeException ex) {
             Patient patient = patientDao.getPatientById(patientId);
 
