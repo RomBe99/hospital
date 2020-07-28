@@ -2,7 +2,7 @@ package net.thumbtack.hospital.daoimpl;
 
 import net.thumbtack.hospital.dao.AdminDao;
 import net.thumbtack.hospital.mapper.AdminMapper;
-import net.thumbtack.hospital.mapper.UserTypes;
+import net.thumbtack.hospital.mapper.UserType;
 import net.thumbtack.hospital.model.user.Administrator;
 import net.thumbtack.hospital.model.schedule.ScheduleCell;
 import net.thumbtack.hospital.model.schedule.TimeCell;
@@ -31,7 +31,7 @@ public class AdminDaoImpl extends UserDaoImpl implements AdminDao {
 
         try (SqlSession session = getSession()) {
             try {
-                int userTypeId = getCommonMapper(session).getUserTypeId(UserTypes.ADMINISTRATOR.getType());
+                int userTypeId = getCommonMapper(session).getUserTypeId(UserType.ADMINISTRATOR.getType());
 
                 AdminMapper mapper = getAdminMapper(session);
                 mapper.insertUser(administrator, userTypeId);

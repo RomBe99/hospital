@@ -2,7 +2,7 @@ package net.thumbtack.hospital.daoimpl;
 
 import net.thumbtack.hospital.dao.PatientDao;
 import net.thumbtack.hospital.mapper.PatientMapper;
-import net.thumbtack.hospital.mapper.UserTypes;
+import net.thumbtack.hospital.mapper.UserType;
 import net.thumbtack.hospital.model.user.Patient;
 import net.thumbtack.hospital.model.ticket.TicketToMedicalCommission;
 import net.thumbtack.hospital.model.ticket.TicketToDoctor;
@@ -32,7 +32,7 @@ public class PatientDaoImpl extends UserDaoImpl implements PatientDao {
 
         try (SqlSession session = getSession()) {
             try {
-                int userTypeId = getCommonMapper(session).getUserTypeId(UserTypes.PATIENT.getType());
+                int userTypeId = getCommonMapper(session).getUserTypeId(UserType.PATIENT.getType());
 
                 PatientMapper mapper = getPatientMapper(session);
                 mapper.insertUser(patient, userTypeId);

@@ -13,7 +13,7 @@ import net.thumbtack.hospital.dtoresponse.patient.FullPatientInformationDtoRespo
 import net.thumbtack.hospital.dtoresponse.patient.PatientInformationDtoResponse;
 import net.thumbtack.hospital.dtoresponse.patient.PatientLoginDtoResponse;
 import net.thumbtack.hospital.dtoresponse.user.GetAllDoctorsDtoResponse;
-import net.thumbtack.hospital.mapper.UserTypes;
+import net.thumbtack.hospital.mapper.UserType;
 import net.thumbtack.hospital.model.user.Administrator;
 import net.thumbtack.hospital.model.user.Doctor;
 import net.thumbtack.hospital.model.user.Patient;
@@ -50,20 +50,20 @@ public class UserService {
 
     public LoginUserDtoResponse login(LoginDtoRequest request, String sessionId) {
         int userId = userDao.login(sessionId, request.getLogin(), request.getPassword());
-        UserTypes userType = UserTypes.valueOf(commonDao.getUserTypeByUserId(userId));
+        UserType userType = UserType.valueOf(commonDao.getUserTypeByUserId(userId));
 
-        Map<UserTypes, Supplier<? extends LoginUserDtoResponse>> responseMap = new HashMap<>();
-        responseMap.put(UserTypes.PATIENT, () -> {
+        Map<UserType, Supplier<? extends LoginUserDtoResponse>> responseMap = new HashMap<>();
+        responseMap.put(UserType.PATIENT, () -> {
             Patient p = patientDao.getPatientById(userId);
 
             return new PatientLoginDtoResponse(p.getId(), p.getFirstName(), p.getLastName(), p.getPatronymic(), p.getEmail(), p.getAddress(), p.getPhone());
         });
-        responseMap.put(UserTypes.ADMINISTRATOR, () -> {
+        responseMap.put(UserType.ADMINISTRATOR, () -> {
             Administrator a = adminDao.getAdministratorById(userId);
 
             return new AdminLoginDtoResponse(a.getId(), a.getFirstName(), a.getLastName(), a.getPatronymic(), a.getPosition());
         });
-        responseMap.put(UserTypes.DOCTOR, () -> {
+        responseMap.put(UserType.DOCTOR, () -> {
             Doctor d = doctorDao.getDoctorById(userId);
 
             return new DoctorLoginDtoResponse(d.getId(), d.getFirstName(), d.getLastName(), d.getPatronymic(), d.getSpecialty(), d.getCabinet(),
@@ -83,10 +83,10 @@ public class UserService {
 
     public UserInformationDtoResponse getUserInformation(String sessionId) throws PermissionDeniedException {
         int userId = userDao.hasPermissions(sessionId);
-        UserTypes userType = UserTypes.valueOf(commonDao.getUserTypeByUserId(userId));
+        UserType userType = UserType.valueOf(commonDao.getUserTypeByUserId(userId));
 
-        Map<UserTypes, Supplier<? extends UserInformationDtoResponse>> responseMap = new HashMap<>();
-        responseMap.put(UserTypes.PATIENT, () -> {
+        Map<UserType, Supplier<? extends UserInformationDtoResponse>> responseMap = new HashMap<>();
+        responseMap.put(UserType.PATIENT, () -> {
             Patient patient = patientDao.getPatientById(userId);
 
             return new FullPatientInformationDtoResponse(patient.getId(),
@@ -94,14 +94,14 @@ public class UserService {
                     patient.getFirstName(), patient.getLastName(), patient.getPatronymic(),
                     patient.getEmail(), patient.getAddress(), patient.getPhone());
         });
-        responseMap.put(UserTypes.ADMINISTRATOR, () -> {
+        responseMap.put(UserType.ADMINISTRATOR, () -> {
             Administrator admin = adminDao.getAdministratorById(userId);
 
             return new AdminInformationDtoResponse(admin.getId(),
                     admin.getLogin(), admin.getPassword(),
                     admin.getFirstName(), admin.getLastName(), admin.getPatronymic(), admin.getPosition());
         });
-        responseMap.put(UserTypes.DOCTOR, () -> {
+        responseMap.put(UserType.DOCTOR, () -> {
             Doctor doctor = doctorDao.getDoctorById(userId);
 
             return new DoctorInformationDtoResponse(doctor.getId(),

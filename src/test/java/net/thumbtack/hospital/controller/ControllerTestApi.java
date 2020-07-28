@@ -23,7 +23,7 @@ import net.thumbtack.hospital.dtoresponse.patient.*;
 import net.thumbtack.hospital.dtoresponse.patient.ticket.AllTicketsDtoResponse;
 import net.thumbtack.hospital.dtoresponse.schedule.DtoResponseWithSchedule;
 import net.thumbtack.hospital.dtoresponse.user.GetAllDoctorsDtoResponse;
-import net.thumbtack.hospital.mapper.UserTypes;
+import net.thumbtack.hospital.mapper.UserType;
 import net.thumbtack.hospital.server.HospitalApplication;
 import net.thumbtack.hospital.util.DtoAdapters;
 import net.thumbtack.hospital.util.cookie.CookieFactory;
@@ -249,7 +249,7 @@ public abstract class ControllerTestApi {
         Assert.assertEquals(expectedJsonResponse, actualJsonResponse);
     }
 
-    public void getUserInformation(String sessionId, UserTypes userType,
+    public void getUserInformation(String sessionId, UserType userType,
                                    UserInformationDtoResponse expectedResponse) throws Exception {
         String url = UserController.PREFIX_URL + "/" + UserController.GET_USER_INFORMATION_URL;
 
@@ -267,16 +267,16 @@ public abstract class ControllerTestApi {
 
         Assert.assertFalse(jsonResponse.isEmpty());
 
-        Map<UserTypes, Class<? extends UserInformationDtoResponse>> dtoClasses = new HashMap<>();
-        dtoClasses.put(UserTypes.ADMINISTRATOR, AdminInformationDtoResponse.class);
-        dtoClasses.put(UserTypes.DOCTOR, DoctorInformationDtoResponse.class);
-        dtoClasses.put(UserTypes.PATIENT, FullPatientInformationDtoResponse.class);
+        Map<UserType, Class<? extends UserInformationDtoResponse>> dtoClasses = new HashMap<>();
+        dtoClasses.put(UserType.ADMINISTRATOR, AdminInformationDtoResponse.class);
+        dtoClasses.put(UserType.DOCTOR, DoctorInformationDtoResponse.class);
+        dtoClasses.put(UserType.PATIENT, FullPatientInformationDtoResponse.class);
 
         UserInformationDtoResponse actualResponse = mapFromJson(jsonResponse, dtoClasses.get(userType));
         Assert.assertNotEquals(0, actualResponse.getId());
         expectedResponse.setId(actualResponse.getId());
 
-        if (UserTypes.PATIENT.equals(userType)) {
+        if (UserType.PATIENT.equals(userType)) {
             ((FullPatientInformationDtoResponse) expectedResponse)
                     .setPhone(((FullPatientInformationDtoResponse) actualResponse).getPhone());
         }
