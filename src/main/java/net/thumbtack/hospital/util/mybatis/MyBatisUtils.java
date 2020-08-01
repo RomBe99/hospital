@@ -12,8 +12,9 @@ import java.io.Reader;
 public class MyBatisUtils {
     private static SqlSessionFactory sqlSessionFactory;
     private static final Logger LOGGER = LoggerFactory.getLogger(MyBatisUtils.class);
+    private static boolean setUpIsDone = false;
 
-    public static boolean initSqlSessionFactory() {
+    private static boolean initSqlSessionFactory() {
         LOGGER.debug("Initializing SQL sessions factory");
 
         try (Reader reader = Resources.getResourceAsReader("mybatis-config.xml")) {
@@ -31,11 +32,19 @@ public class MyBatisUtils {
         }
     }
 
-    public static SqlSessionFactory getSqlSessionFactory() {
-        return sqlSessionFactory;
+    public static SqlSession getSession() {
+        return sqlSessionFactory.openSession();
     }
 
-    public static SqlSession getSession() {
-        return MyBatisUtils.getSqlSessionFactory().openSession();
+    public static void initConnection() {
+        if (!setUpIsDone) {
+            boolean initSqlSessionFactory = MyBatisUtils.initSqlSessionFactory();
+
+            if (!initSqlSessionFactory) {
+                throw new RuntimeException("Can't create connection, stop");
+            }
+
+            setUpIsDone = true;
+        }
     }
 }

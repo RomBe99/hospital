@@ -15,14 +15,18 @@ import org.springframework.context.annotation.PropertySource;
 @EnableConfigurationProperties(ErrorMessageFactory.class)
 public class HospitalApplication {
     private static final Logger LOGGER = LoggerFactory.getLogger(AdminDaoImpl.class);
+    private static final String CLASS_NAME = HospitalApplication.class.getSimpleName();
 
     public static void main(String[] args) {
-        if (!MyBatisUtils.initSqlSessionFactory()) {
+        try {
+            MyBatisUtils.initConnection();
+        } catch (RuntimeException ex) {
+            LOGGER.error(CLASS_NAME + ": ", ex);
             return;
         }
 
-        LOGGER.info(HospitalApplication.class.getSimpleName() + ": is running");
+        LOGGER.info(CLASS_NAME + ": is running");
         SpringApplication.run(HospitalApplication.class);
-        LOGGER.info(HospitalApplication.class.getSimpleName() + ": application terminated");
+        LOGGER.info(CLASS_NAME + ": application terminated");
     }
 }

@@ -37,19 +37,9 @@ public class BaseTest {
     protected final UserDao userDao = new UserDaoImpl();
     private final DebugDao debugDao = new DebugDaoImpl();
 
-    private static boolean setUpIsDone = false;
-
     @BeforeClass
     public static void setUp() {
-        if (!setUpIsDone) {
-            boolean initSqlSessionFactory = MyBatisUtils.initSqlSessionFactory();
-
-            if (!initSqlSessionFactory) {
-                throw new RuntimeException("Can't create connection, stop");
-            }
-
-            setUpIsDone = true;
-        }
+        MyBatisUtils.initConnection();
     }
 
     @Before

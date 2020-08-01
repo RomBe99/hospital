@@ -56,19 +56,9 @@ public abstract class ControllerTestApi {
     @Autowired
     private ObjectMapper objectMapper;
 
-    private static boolean setUpDatabaseIsDone = false;
-
     @BeforeClass
     public static void setUpDatabase() {
-        if (!setUpDatabaseIsDone) {
-            boolean initSqlSessionFactory = MyBatisUtils.initSqlSessionFactory();
-
-            if (!initSqlSessionFactory) {
-                throw new RuntimeException("Can't create connection, stop");
-            }
-
-            setUpDatabaseIsDone = true;
-        }
+        MyBatisUtils.initConnection();
     }
 
     @Before
