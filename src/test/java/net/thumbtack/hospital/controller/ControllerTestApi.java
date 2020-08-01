@@ -88,6 +88,13 @@ public abstract class ControllerTestApi {
 
     public DtoRequestWithSchedule generateWeekSchedule(int duration, int durationPerDay, int daysCount, List<Integer> weekDays) {
         LocalDate dateStart = LocalDate.now();
+
+        if (DtoAdapters.ScheduleTransformer.weekendChecker(dateStart)) {
+            do {
+                dateStart = dateStart.plusDays(1);
+            } while (DtoAdapters.ScheduleTransformer.weekendChecker(dateStart));
+        }
+
         LocalDate dateEnd = dateStart.plusDays(daysCount);
 
         LocalTime timeStart = LocalTime.now().withNano(0).withSecond(0);

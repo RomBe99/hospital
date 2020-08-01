@@ -42,7 +42,7 @@ public class DtoAdapters {
                 patient.getEmail(), patient.getAddress(), patient.getPhone());
     }
 
-    private final static class ScheduleTransformer {
+    public final static class ScheduleTransformer {
         public static boolean weekendChecker(LocalDate date) {
             DayOfWeek dayOfWeek = date.getDayOfWeek();
 
