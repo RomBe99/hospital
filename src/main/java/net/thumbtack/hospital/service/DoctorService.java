@@ -3,8 +3,10 @@ package net.thumbtack.hospital.service;
 import net.thumbtack.hospital.dao.DoctorDao;
 import net.thumbtack.hospital.dtorequest.doctor.CreateMedicalCommissionDtoRequest;
 import net.thumbtack.hospital.dtoresponse.doctor.CreateMedicalCommissionDtoResponse;
+import net.thumbtack.hospital.mapper.UserType;
 import net.thumbtack.hospital.model.ticket.TicketToMedicalCommission;
 import net.thumbtack.hospital.util.error.PermissionDeniedException;
+import net.thumbtack.hospital.util.security.manager.SecurityManagerImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,7 +21,9 @@ public class DoctorService {
 
     public CreateMedicalCommissionDtoResponse createMedicalCommission(String sessionId,
                                                                       CreateMedicalCommissionDtoRequest request) throws PermissionDeniedException {
-        doctorDao.hasPermissions(sessionId);
+        SecurityManagerImpl
+                .getSecurityManager(UserType.DOCTOR)
+                .hasPermission(sessionId);
 
         TicketToMedicalCommission commission = new TicketToMedicalCommission();
 

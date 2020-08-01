@@ -4,10 +4,13 @@ import net.thumbtack.hospital.dtorequest.admin.AdminRegistrationDtoRequest;
 import net.thumbtack.hospital.dtorequest.admin.DoctorRegistrationDtoRequest;
 import net.thumbtack.hospital.dtorequest.admin.EditAdminProfileDtoRequest;
 import net.thumbtack.hospital.dtorequest.admin.RemoveDoctorDtoRequest;
+import net.thumbtack.hospital.dtorequest.patient.PatientRegistrationDtoRequest;
 import net.thumbtack.hospital.dtorequest.schedule.DtoRequestWithSchedule;
 import net.thumbtack.hospital.dtoresponse.admin.*;
 import net.thumbtack.hospital.dtoresponse.doctor.DoctorLoginDtoResponse;
-import net.thumbtack.hospital.mapper.UserTypes;
+import net.thumbtack.hospital.dtoresponse.patient.PatientInformationDtoResponse;
+import net.thumbtack.hospital.dtoresponse.patient.PatientRegistrationDtoResponse;
+import net.thumbtack.hospital.mapper.UserType;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -33,7 +36,7 @@ public class AdministratorControllerTest extends ControllerTestApi {
         String testAdminSessionId = login(registrationRequest.getLogin(), registrationRequest.getPassword(),
                 new AdminLoginDtoResponse(registrationRequest.getFirstName(), registrationRequest.getLastName(), registrationRequest.getPatronymic(), registrationRequest.getPosition()));
 
-        getUserInformation(testAdminSessionId, UserTypes.ADMINISTRATOR,
+        getUserInformation(testAdminSessionId, UserType.ADMINISTRATOR,
                 new AdminInformationDtoResponse(registrationRequest.getLogin(), registrationRequest.getPassword(),
                         registrationRequest.getFirstName(), registrationRequest.getLastName(), registrationRequest.getPatronymic(),
                         registrationRequest.getPosition()));
@@ -67,7 +70,7 @@ public class AdministratorControllerTest extends ControllerTestApi {
         editAdministratorProfile(testAdminSessionId, editAdminProfileRequest,
                 new EditAdminProfileDtoResponse(adminLoginResponse.getId(), editAdminProfileRequest.getFirstName(), editAdminProfileRequest.getLastName(), editAdminProfileRequest.getPatronymic(), editAdminProfileRequest.getPosition()));
 
-        getUserInformation(testAdminSessionId, UserTypes.ADMINISTRATOR,
+        getUserInformation(testAdminSessionId, UserType.ADMINISTRATOR,
                 new AdminInformationDtoResponse(registrationRequest.getLogin(), editAdminProfileRequest.getNewPassword(),
                         editAdminProfileRequest.getFirstName(), editAdminProfileRequest.getLastName(), editAdminProfileRequest.getPatronymic(),
                         editAdminProfileRequest.getPosition()));
@@ -100,6 +103,44 @@ public class AdministratorControllerTest extends ControllerTestApi {
     }
 
     @Test
+    public void getPatientInformationByAdminAndDoctorTest() throws Exception {
+        String rootAdminSessionId = loginRootAdmin();
+
+        PatientRegistrationDtoRequest patientRegistrationRequest =
+                new PatientRegistrationDtoRequest("Аббо", "Титов", "vixej10213@inmail92.com",
+                        "399822, г. Дербент, ул. Онежская, дом 77, квартира 773", "+7 (922) 069-47-76",
+                        "AbboTitov756", "zRAMIyf7uUVc");
+        PatientRegistrationDtoResponse patientRegistrationResponse =
+                new PatientRegistrationDtoResponse(patientRegistrationRequest.getFirstName(), patientRegistrationRequest.getLastName(), patientRegistrationRequest.getPatronymic(),
+                        patientRegistrationRequest.getEmail(), patientRegistrationRequest.getAddress(), patientRegistrationRequest.getPhone());
+        String patientSessionId = patientRegistration(patientRegistrationRequest, patientRegistrationResponse);
+
+        PatientInformationDtoResponse patientInformationResponse =
+                new PatientInformationDtoResponse(patientRegistrationResponse.getId(),
+                        patientRegistrationResponse.getFirstName(), patientRegistrationResponse.getLastName(), patientRegistrationResponse.getPatronymic(),
+                        patientRegistrationResponse.getEmail(), patientRegistrationResponse.getAddress(), patientRegistrationResponse.getPhone());
+        getPatientInformation(rootAdminSessionId, patientRegistrationResponse.getId(), patientInformationResponse);
+
+        DoctorRegistrationDtoRequest doctorRegistrationRequest =
+                new DoctorRegistrationDtoRequest(LocalDate.now().toString(), LocalDate.now().toString(), 15, new ArrayList<>(),
+                        "Саркис", "Семёнов", "Вениаминович",
+                        "Surgeon", "205", "SarkisSemenov585", "xjNE6QK6d3b9");
+        DoctorRegistrationDtoResponse doctorRegistrationResponse =
+                new DoctorRegistrationDtoResponse(doctorRegistrationRequest.getFirstName(), doctorRegistrationRequest.getLastName(), doctorRegistrationRequest.getPatronymic(),
+                        doctorRegistrationRequest.getSpeciality(), doctorRegistrationRequest.getRoom(), new ArrayList<>());
+        doctorRegistration(rootAdminSessionId, doctorRegistrationRequest, doctorRegistrationResponse);
+
+        String doctorSessionId = login(doctorRegistrationRequest.getLogin(), doctorRegistrationRequest.getPassword(),
+                new DoctorLoginDtoResponse(doctorRegistrationResponse.getFirstName(), doctorRegistrationResponse.getLastName(), doctorRegistrationResponse.getPatronymic(),
+                        doctorRegistrationResponse.getSpeciality(), doctorRegistrationResponse.getRoom(), doctorRegistrationResponse.getSchedule()));
+        getPatientInformation(doctorSessionId, patientRegistrationResponse.getId(), patientInformationResponse);
+
+        logout(doctorSessionId);
+        logout(patientSessionId);
+        logout(rootAdminSessionId);
+    }
+
+    @Test
     public void insertDoctorWithWeekScheduleTest() throws Exception {
         String rootAdminSessionId = loginRootAdmin();
 
@@ -115,14 +156,14 @@ public class AdministratorControllerTest extends ControllerTestApi {
                         generatedSchedule.getWeekSchedule(),
                         "Саркис", "Семёнов", "Вениаминович",
                         "Surgeon", "205", "SarkisSemenov585", "xjNE6QK6d3b9");
-        DoctorRegistrationDtoResponse expectedDoctorRegistrationResponse = new DoctorRegistrationDtoResponse(
+        DoctorRegistrationDtoResponse doctorRegistrationResponse = new DoctorRegistrationDtoResponse(
                 doctorRegistrationRequest.getFirstName(), doctorRegistrationRequest.getLastName(), doctorRegistrationRequest.getPatronymic(),
                 doctorRegistrationRequest.getSpeciality(), doctorRegistrationRequest.getRoom(), null);
-        doctorRegistration(rootAdminSessionId, doctorRegistrationRequest, expectedDoctorRegistrationResponse);
+        doctorRegistration(rootAdminSessionId, doctorRegistrationRequest, doctorRegistrationResponse);
 
         String doctorSessionId = login(doctorRegistrationRequest.getLogin(), doctorRegistrationRequest.getPassword(),
-                new DoctorLoginDtoResponse(expectedDoctorRegistrationResponse.getFirstName(), expectedDoctorRegistrationResponse.getLastName(), expectedDoctorRegistrationResponse.getPatronymic(),
-                        expectedDoctorRegistrationResponse.getSpeciality(), expectedDoctorRegistrationResponse.getRoom(), expectedDoctorRegistrationResponse.getSchedule()));
+                new DoctorLoginDtoResponse(doctorRegistrationResponse.getFirstName(), doctorRegistrationResponse.getLastName(), doctorRegistrationResponse.getPatronymic(),
+                        doctorRegistrationResponse.getSpeciality(), doctorRegistrationResponse.getRoom(), doctorRegistrationResponse.getSchedule()));
 
         logout(doctorSessionId);
         logout(rootAdminSessionId);

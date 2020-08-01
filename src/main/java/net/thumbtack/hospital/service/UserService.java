@@ -18,8 +18,8 @@ import net.thumbtack.hospital.model.user.Administrator;
 import net.thumbtack.hospital.model.user.Doctor;
 import net.thumbtack.hospital.model.user.Patient;
 import net.thumbtack.hospital.util.DtoAdapters;
-import net.thumbtack.hospital.util.error.PermissionDeniedErrorCode;
 import net.thumbtack.hospital.util.error.PermissionDeniedException;
+import net.thumbtack.hospital.util.security.manager.SecurityManagerImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -82,7 +82,9 @@ public class UserService {
     }
 
     public UserInformationDtoResponse getUserInformation(String sessionId) throws PermissionDeniedException {
-        int userId = userDao.hasPermissions(sessionId);
+        int userId = SecurityManagerImpl
+                .getSecurityManager()
+                .hasPermission(sessionId);
         UserType userType = UserType.valueOf(commonDao.getUserTypeByUserId(userId));
 
         Map<UserType, Supplier<? extends UserInformationDtoResponse>> responseMap = new HashMap<>();
@@ -117,21 +119,21 @@ public class UserService {
     }
 
     public PatientInformationDtoResponse getPatientInformation(String sessionId, int patientId) throws PermissionDeniedException {
-        try {
-            patientDao.hasPermissions(sessionId);
+        SecurityManagerImpl
+                .getSecurityManager(UserType.PATIENT, UserType.DOCTOR, UserType.ADMINISTRATOR)
+                .hasPermission(sessionId);
 
-            throw new PermissionDeniedException(PermissionDeniedErrorCode.PERMISSION_DENIED);
-        } catch (RuntimeException ex) {
-            Patient patient = patientDao.getPatientById(patientId);
+        Patient patient = patientDao.getPatientById(patientId);
 
-            return new PatientInformationDtoResponse(patientId,
-                    patient.getFirstName(), patient.getLastName(), patient.getPatronymic(),
-                    patient.getEmail(), patient.getAddress(), patient.getPhone());
-        }
+        return new PatientInformationDtoResponse(patientId,
+                patient.getFirstName(), patient.getLastName(), patient.getPatronymic(),
+                patient.getEmail(), patient.getAddress(), patient.getPhone());
     }
 
     public DoctorInformationDtoResponse getDoctorInformation(String sessionId, int doctorId, LocalDate startDate, LocalDate endDate) throws PermissionDeniedException {
-        int patientId = patientDao.hasPermissions(sessionId);
+        int patientId = SecurityManagerImpl
+                .getSecurityManager(UserType.PATIENT)
+                .hasPermission(sessionId);
         Doctor doctor = userDao.getDoctorInformation(patientId, doctorId, startDate, endDate);
 
         return new DoctorInformationDtoResponse(doctor.getId(),
@@ -144,7 +146,9 @@ public class UserService {
     }
 
     public GetAllDoctorsDtoResponse getDoctorsInformation(String sessionId, String speciality, LocalDate startDate, LocalDate endDate) throws PermissionDeniedException {
-        int patientId = patientDao.hasPermissions(sessionId);
+        int patientId = SecurityManagerImpl
+                .getSecurityManager(UserType.PATIENT)
+                .hasPermission(sessionId);
         List<Doctor> doctors = userDao.getDoctorsInformation(patientId, speciality, startDate, endDate);
 
         return new GetAllDoctorsDtoResponse(doctors.stream()

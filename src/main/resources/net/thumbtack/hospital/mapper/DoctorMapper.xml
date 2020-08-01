@@ -63,10 +63,10 @@
                  JOIN doctor_specialty ds ON d.specialtyId = ds.id
                  LEFT JOIN cabinet c ON d.cabinetId = c.id
                  LEFT JOIN schedule_cell sc ON d.userId = sc.doctorId
-                 JOIN time_cell tc ON sc.id = tc.scheduleCellId
+                 LEFT JOIN time_cell tc ON sc.id = tc.scheduleCellId
                  LEFT JOIN user pu ON pu.id = tc.patientId
                  LEFT JOIN patient p ON tc.patientId = p.userId
-        ORDER BY date, time;;
+        ORDER BY date, time;
     </select>
 
     <select id="getDoctorById" parameterType="int" resultMap="resultDoctor">
@@ -95,10 +95,10 @@
                  JOIN doctor_specialty ds ON d.specialtyId = ds.id
                  LEFT JOIN cabinet c ON d.cabinetId = c.id
                  LEFT JOIN schedule_cell sc ON d.userId = sc.doctorId
-                 JOIN time_cell tc ON sc.id = tc.scheduleCellId
+                 LEFT JOIN time_cell tc ON sc.id = tc.scheduleCellId
                  LEFT JOIN user pu ON pu.id = tc.patientId
                  LEFT JOIN patient p ON tc.patientId = p.userId
-        WHERE doctorId = #{id}
-        ORDER BY date, time;;
+        WHERE u.id = #{id}
+        ORDER BY date, time;
     </select>
 </mapper>

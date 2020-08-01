@@ -14,12 +14,14 @@ import net.thumbtack.hospital.dtoresponse.admin.EditDoctorScheduleDtoResponse;
 import net.thumbtack.hospital.dtoresponse.other.EmptyDtoResponse;
 import net.thumbtack.hospital.dtoresponse.schedule.DtoResponseWithSchedule;
 import net.thumbtack.hospital.dtoresponse.schedule.ScheduleCellDtoResponse;
+import net.thumbtack.hospital.mapper.UserType;
 import net.thumbtack.hospital.model.schedule.ScheduleCell;
 import net.thumbtack.hospital.model.schedule.TimeCell;
 import net.thumbtack.hospital.model.user.Administrator;
 import net.thumbtack.hospital.model.user.Doctor;
 import net.thumbtack.hospital.util.DtoAdapters;
 import net.thumbtack.hospital.util.error.PermissionDeniedException;
+import net.thumbtack.hospital.util.security.manager.SecurityManagerImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -108,7 +110,9 @@ public class AdministratorService {
     }
 
     public AdminRegistrationDtoResponse administratorRegistration(String sessionId, AdminRegistrationDtoRequest request) throws PermissionDeniedException {
-        adminDao.hasPermissions(sessionId);
+        SecurityManagerImpl
+                .getSecurityManager(UserType.ADMINISTRATOR)
+                .hasPermission(sessionId);
 
         Administrator admin =
                 new Administrator(request.getLogin(), request.getPassword(),
@@ -121,7 +125,9 @@ public class AdministratorService {
     }
 
     public DoctorRegistrationDtoResponse doctorRegistration(String sessionId, DoctorRegistrationDtoRequest request) throws PermissionDeniedException {
-        adminDao.hasPermissions(sessionId);
+        SecurityManagerImpl
+                .getSecurityManager(UserType.ADMINISTRATOR)
+                .hasPermission(sessionId);
 
         Doctor doctor =
                 new Doctor(request.getLogin(), request.getPassword(),
@@ -138,7 +144,9 @@ public class AdministratorService {
     }
 
     public EditAdminProfileDtoResponse editAdministratorProfile(String sessionId, EditAdminProfileDtoRequest request) throws PermissionDeniedException {
-        int adminId = adminDao.hasPermissions(sessionId);
+        int adminId = SecurityManagerImpl
+                .getSecurityManager(UserType.ADMINISTRATOR)
+                .hasPermission(sessionId);
 
         Administrator admin =
                 new Administrator(adminId, null, request.getNewPassword(),
@@ -151,7 +159,9 @@ public class AdministratorService {
     }
 
     public EditDoctorScheduleDtoResponse editDoctorSchedule(String sessionId, int doctorId, DtoRequestWithSchedule request) throws PermissionDeniedException {
-        adminDao.hasPermissions(sessionId);
+        SecurityManagerImpl
+                .getSecurityManager(UserType.ADMINISTRATOR)
+                .hasPermission(sessionId);
 
         Doctor doctor = doctorDao.getDoctorById(doctorId);
 
@@ -163,7 +173,10 @@ public class AdministratorService {
     }
 
     public EmptyDtoResponse removeDoctor(String sessionId, int doctorId, RemoveDoctorDtoRequest request) throws PermissionDeniedException {
-        adminDao.hasPermissions(sessionId);
+        SecurityManagerImpl
+                .getSecurityManager(UserType.ADMINISTRATOR)
+                .hasPermission(sessionId);
+
         doctorDao.removeDoctor(doctorId);
 
         return new EmptyDtoResponse();
