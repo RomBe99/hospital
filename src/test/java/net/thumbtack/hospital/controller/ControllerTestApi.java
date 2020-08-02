@@ -43,6 +43,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import javax.servlet.http.Cookie;
 import java.nio.charset.StandardCharsets;
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.*;
@@ -88,11 +89,12 @@ public abstract class ControllerTestApi {
 
     public DtoRequestWithSchedule generateWeekSchedule(int duration, int durationPerDay, int daysCount, List<Integer> weekDays) {
         LocalDate dateStart = LocalDate.now();
+        List<DayOfWeek> workDaysOfWeek = weekDays.stream().map(DayOfWeek::of).collect(Collectors.toList());
 
-        if (DtoAdapters.ScheduleTransformer.weekendChecker(dateStart)) {
+        if (DtoAdapters.ScheduleTransformer.weekendChecker(dateStart, workDaysOfWeek)) {
             do {
                 dateStart = dateStart.plusDays(1);
-            } while (DtoAdapters.ScheduleTransformer.weekendChecker(dateStart));
+            } while (DtoAdapters.ScheduleTransformer.weekendChecker(dateStart, workDaysOfWeek));
         }
 
         LocalDate dateEnd = dateStart.plusDays(daysCount);

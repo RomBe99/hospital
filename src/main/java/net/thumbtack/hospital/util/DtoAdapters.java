@@ -15,10 +15,8 @@ import org.springframework.util.MultiValueMap;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
@@ -43,10 +41,21 @@ public class DtoAdapters {
     }
 
     public final static class ScheduleTransformer {
-        public static boolean weekendChecker(LocalDate date) {
-            DayOfWeek dayOfWeek = date.getDayOfWeek();
+        public static boolean weekendChecker(LocalDate date, List<DayOfWeek> workDaysOfWeek) {
+            DayOfWeek dayOfWeek = DayOfWeek.from(date);
 
-            return dayOfWeek == DayOfWeek.SATURDAY || dayOfWeek == DayOfWeek.SUNDAY;
+            List<Predicate<DayOfWeek>> weekendDayCheckers = new ArrayList<>();
+            weekendDayCheckers.add(d -> d == DayOfWeek.SATURDAY);
+            weekendDayCheckers.add(d -> d == DayOfWeek.SUNDAY);
+            weekendDayCheckers.add(d -> !workDaysOfWeek.contains(d));
+
+            for (Predicate<DayOfWeek> c : weekendDayCheckers) {
+                if (c.test(dayOfWeek)) {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         public static boolean isEmptyScheduleRequest(DtoRequestWithSchedule request) {
@@ -57,12 +66,15 @@ public class DtoAdapters {
             int duration = request.getDuration();
             LocalDate dateStart = LocalDate.parse(request.getDateStart());
             LocalDate dateEnd = LocalDate.parse(request.getDateEnd());
+            List<DayOfWeek> workDaysOfWeek = request.getWeekSchedule().getWeekDays().stream()
+                    .map(DayOfWeek::of)
+                    .collect(Collectors.toList());
 
             LocalTime durationStartTime = LocalTime.parse(request.getWeekSchedule().getTimeStart());
             LocalTime durationEndTime = LocalTime.parse(request.getWeekSchedule().getTimeEnd());
 
-            List<ScheduleCell> result = new ArrayList<>();
-            List<LocalTime> durations = new ArrayList<>();
+            List<ScheduleCell> result = new LinkedList<>();
+            List<LocalTime> durations = new LinkedList<>();
 
             for (LocalTime t = durationStartTime; t.isBefore(durationEndTime); t = t.plusMinutes(duration)) {
                 durations.add(t);
@@ -71,7 +83,7 @@ public class DtoAdapters {
             List<TimeCell> temp;
 
             for (LocalDate d = dateStart; d.isBefore(dateEnd); d = d.plusDays(1)) {
-                if (weekendChecker(d)) {
+                if (weekendChecker(d, workDaysOfWeek)) {
                     continue;
                 }
 
@@ -95,7 +107,7 @@ public class DtoAdapters {
             List<DayScheduleDtoRequest> daySchedule = request.getWeekDaysSchedule();
             MultiValueMap<DayOfWeek, LocalTime> weekDurationTimes = new LinkedMultiValueMap<>();
 
-            List<ScheduleCell> result = new ArrayList<>();
+            List<ScheduleCell> result = new LinkedList<>();
             LocalTime durationStartTime;
             LocalTime durationEndTime;
 
@@ -110,11 +122,12 @@ public class DtoAdapters {
 
             List<LocalTime> durations;
             List<TimeCell> temp;
+            List<DayOfWeek> workDaysOfWeek = new ArrayList<>(weekDurationTimes.keySet());
 
             for (LocalDate d = dateStart; d.isBefore(dateEnd); d = d.plusDays(1)) {
                 durations = weekDurationTimes.get(d.getDayOfWeek());
 
-                if (weekendChecker(d) || durations == null) {
+                if (weekendChecker(d, workDaysOfWeek) || durations == null) {
                     continue;
                 }
 
