@@ -3,9 +3,8 @@ package net.thumbtack.hospital.daoimpl;
 import net.thumbtack.hospital.dao.AdminDao;
 import net.thumbtack.hospital.mapper.AdminMapper;
 import net.thumbtack.hospital.mapper.UserType;
-import net.thumbtack.hospital.model.user.Administrator;
 import net.thumbtack.hospital.model.schedule.ScheduleCell;
-import net.thumbtack.hospital.model.schedule.TimeCell;
+import net.thumbtack.hospital.model.user.Administrator;
 import net.thumbtack.hospital.util.error.PermissionDeniedErrorCode;
 import net.thumbtack.hospital.util.error.PermissionDeniedException;
 import org.apache.ibatis.session.SqlSession;
@@ -110,12 +109,10 @@ public class AdminDaoImpl extends UserDaoImpl implements AdminDao {
             try {
                 AdminMapper mapper = getAdminMapper(session);
 
-                for (ScheduleCell s : schedule) {
-                    mapper.insertScheduleCell(doctorId, s);
+                mapper.insertScheduleCells(doctorId, schedule);
 
-                    for (TimeCell c : s.getCells()) {
-                        mapper.insertTimeCell(s.getId(), c);
-                    }
+                for (ScheduleCell s : schedule) {
+                    mapper.insertTimeCells(s.getId(), s.getCells());
                 }
 
                 session.commit();
