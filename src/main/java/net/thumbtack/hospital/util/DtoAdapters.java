@@ -34,6 +34,12 @@ public class DtoAdapters {
                         .collect(Collectors.toList()));
     }
 
+    public static List<ScheduleCellDtoResponse> transform(List<ScheduleCell> schedule) {
+        return schedule.stream()
+                .map(DtoAdapters::transform)
+                .collect(Collectors.toList());
+    }
+
     public static PatientInformationDtoResponse transform(Patient patient) {
         return new PatientInformationDtoResponse(patient.getId(),
                 patient.getFirstName(), patient.getLastName(), patient.getPatronymic(),
@@ -142,6 +148,13 @@ public class DtoAdapters {
 
             return result;
         }
+
+        public static List<ScheduleCell> sortSchedule(List<ScheduleCell> schedule) {
+            schedule.sort(Comparator.comparing(ScheduleCell::getDate));
+            schedule.forEach(sc -> sc.getCells().sort(Comparator.comparing(TimeCell::getTime)));
+
+            return schedule;
+        }
     }
 
     public static List<ScheduleCell> transform(DtoRequestWithSchedule request, int doctorId) {
@@ -157,7 +170,7 @@ public class DtoAdapters {
 
         for (Supplier<Boolean> p : transformers.keySet()) {
             if (p.get()) {
-                return transformers.get(p).get();
+                return ScheduleTransformer.sortSchedule(transformers.get(p).get());
             }
         }
 
