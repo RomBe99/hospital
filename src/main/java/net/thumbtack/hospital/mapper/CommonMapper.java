@@ -3,7 +3,7 @@ package net.thumbtack.hospital.mapper;
 import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Select;
 
-public interface CommonMapper {
+public interface CommonMapper extends Mapper {
     @Select("SELECT id FROM user_type WHERE name = #{userType};")
     @Options(useGeneratedKeys = true, keyProperty = "id")
     int getUserTypeId(String userType);

@@ -1,6 +1,6 @@
 package net.thumbtack.hospital.service;
 
-import net.thumbtack.hospital.dao.DoctorDao;
+import net.thumbtack.hospital.dao.MedicalCommissionDao;
 import net.thumbtack.hospital.dtorequest.doctor.CreateMedicalCommissionDtoRequest;
 import net.thumbtack.hospital.dtoresponse.doctor.CreateMedicalCommissionDtoResponse;
 import net.thumbtack.hospital.mapper.UserType;
@@ -12,11 +12,11 @@ import org.springframework.stereotype.Service;
 
 @Service("DoctorService")
 public class DoctorService {
-    private final DoctorDao doctorDao;
+    private final MedicalCommissionDao medicalCommissionDao;
 
     @Autowired
-    public DoctorService(DoctorDao doctorDao) {
-        this.doctorDao = doctorDao;
+    public DoctorService(MedicalCommissionDao medicalCommissionDao) {
+        this.medicalCommissionDao = medicalCommissionDao;
     }
 
     public CreateMedicalCommissionDtoResponse createMedicalCommission(String sessionId,
@@ -27,7 +27,7 @@ public class DoctorService {
 
         TicketToMedicalCommission commission = new TicketToMedicalCommission();
 
-        doctorDao.createMedicalCommission(commission);
+        medicalCommissionDao.createMedicalCommission(commission);
 
         return new CreateMedicalCommissionDtoResponse(
                 commission.getTicket(), commission.getPatientId(), commission.getDoctorIds(),

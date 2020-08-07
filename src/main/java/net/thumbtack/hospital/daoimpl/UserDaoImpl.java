@@ -1,6 +1,7 @@
 package net.thumbtack.hospital.daoimpl;
 
 import net.thumbtack.hospital.dao.UserDao;
+import net.thumbtack.hospital.mapper.MapperFactory;
 import net.thumbtack.hospital.mapper.UserMapper;
 import net.thumbtack.hospital.model.user.Doctor;
 import net.thumbtack.hospital.util.error.PermissionDeniedErrorCode;
@@ -15,14 +16,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static net.thumbtack.hospital.util.mybatis.MyBatisUtils.getSession;
+
 @Component("UserDaoImpl")
-public class UserDaoImpl extends BaseDaoImpl implements UserDao {
+public class UserDaoImpl implements UserDao {
     private static final Logger LOGGER = LoggerFactory.getLogger(AdminDaoImpl.class);
     private static final String CLASS_NAME = UserDaoImpl.class.getSimpleName();
 
-    private UserMapper getUserMapper(SqlSession session) {
-        return session.getMapper(UserMapper.class);
-    }
+    private final MapperFactory mapperFactory = new MapperFactory();
 
     @Override
     public final int login(String sessionId, String login, String password) {
@@ -30,7 +31,7 @@ public class UserDaoImpl extends BaseDaoImpl implements UserDao {
 
         try (SqlSession session = getSession()) {
             try {
-                UserMapper mapper = getUserMapper(session);
+                UserMapper mapper = mapperFactory.getMapper(session, UserMapper.class);
                 int userId = mapper.getUserIdByLoginAndPassword(login, password);
                 mapper.loginUser(sessionId, userId);
 
@@ -54,7 +55,7 @@ public class UserDaoImpl extends BaseDaoImpl implements UserDao {
 
         try (SqlSession session = getSession()) {
             try {
-                getUserMapper(session).logoutUser(sessionId);
+                mapperFactory.getMapper(session, UserMapper.class).logoutUser(sessionId);
 
                 session.commit();
                 LOGGER.debug(CLASS_NAME + ": User with session id = {} successfully logout", sessionId);
@@ -72,7 +73,7 @@ public class UserDaoImpl extends BaseDaoImpl implements UserDao {
         LOGGER.debug(CLASS_NAME + ": Checking user permissions for session id = {}", sessionId);
 
         try (SqlSession session = getSession()) {
-            return getUserMapper(session).hasPermissions(sessionId);
+            return mapperFactory.getMapper(session, UserMapper.class).hasPermissions(sessionId);
         } catch (RuntimeException ex) {
             LOGGER.error(CLASS_NAME + ": Can't check user permissions for session id = {}", sessionId, ex);
 

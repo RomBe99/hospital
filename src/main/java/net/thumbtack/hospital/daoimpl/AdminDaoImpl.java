@@ -1,10 +1,13 @@
 package net.thumbtack.hospital.daoimpl;
 
 import net.thumbtack.hospital.dao.AdminDao;
+import net.thumbtack.hospital.dao.UserDao;
 import net.thumbtack.hospital.mapper.AdminMapper;
+import net.thumbtack.hospital.mapper.CommonMapper;
+import net.thumbtack.hospital.mapper.MapperFactory;
 import net.thumbtack.hospital.mapper.UserType;
-import net.thumbtack.hospital.model.schedule.ScheduleCell;
 import net.thumbtack.hospital.model.user.Administrator;
+import net.thumbtack.hospital.model.user.Doctor;
 import net.thumbtack.hospital.util.error.PermissionDeniedErrorCode;
 import net.thumbtack.hospital.util.error.PermissionDeniedException;
 import org.apache.ibatis.session.SqlSession;
@@ -15,14 +18,15 @@ import org.springframework.stereotype.Component;
 import java.time.LocalDate;
 import java.util.List;
 
+import static net.thumbtack.hospital.util.mybatis.MyBatisUtils.getSession;
+
 @Component("AdminDaoImpl")
-public class AdminDaoImpl extends UserDaoImpl implements AdminDao {
+public class AdminDaoImpl implements AdminDao {
     private static final Logger LOGGER = LoggerFactory.getLogger(AdminDaoImpl.class);
     private static final String CLASS_NAME = AdminDaoImpl.class.getSimpleName();
 
-    private AdminMapper getAdminMapper(SqlSession session) {
-        return session.getMapper(AdminMapper.class);
-    }
+    private final MapperFactory mapperFactory = new MapperFactory();
+    private final UserDao userDao = new UserDaoImpl();
 
     @Override
     public void insertAdministrator(Administrator administrator) {
@@ -30,9 +34,9 @@ public class AdminDaoImpl extends UserDaoImpl implements AdminDao {
 
         try (SqlSession session = getSession()) {
             try {
-                int userTypeId = getCommonMapper(session).getUserTypeId(UserType.ADMINISTRATOR.getType());
+                int userTypeId = mapperFactory.getMapper(session, CommonMapper.class).getUserTypeId(UserType.ADMINISTRATOR.getType());
 
-                AdminMapper mapper = getAdminMapper(session);
+                AdminMapper mapper = mapperFactory.getMapper(session, AdminMapper.class);
                 mapper.insertUser(administrator, userTypeId);
                 mapper.insertAdministrator(administrator);
 
@@ -53,7 +57,7 @@ public class AdminDaoImpl extends UserDaoImpl implements AdminDao {
 
         try (SqlSession session = getSession()) {
             try {
-                AdminMapper mapper = getAdminMapper(session);
+                AdminMapper mapper = mapperFactory.getMapper(session, AdminMapper.class);
                 mapper.updateUser(administrator);
                 mapper.updateAdministrator(administrator);
 
@@ -87,7 +91,7 @@ public class AdminDaoImpl extends UserDaoImpl implements AdminDao {
 
         try (SqlSession session = getSession()) {
             try {
-                getAdminMapper(session).removeAdministratorById(id);
+                mapperFactory.getMapper(session, AdminMapper.class).removeAdministratorById(id);
 
                 session.commit();
                 LOGGER.debug(CLASS_NAME + ": Administrator with id = {} successfully removed", id);
@@ -101,31 +105,13 @@ public class AdminDaoImpl extends UserDaoImpl implements AdminDao {
     }
 
     @Override
-    public void editDoctorSchedule(LocalDate dateStart, LocalDate dateEnd, int doctorId, List<ScheduleCell> schedule) {
-        LOGGER.debug(CLASS_NAME + ": Inserting schedule = {} for doctor with id = {} (date start = {} date end = {})",
-                schedule, doctorId, dateStart, dateEnd);
+    public int login(String sessionId, String login, String password) {
+        return userDao.login(sessionId, login, password);
+    }
 
-        try (SqlSession session = getSession()) {
-            try {
-                AdminMapper mapper = getAdminMapper(session);
-
-                mapper.insertScheduleCells(doctorId, schedule);
-
-                for (ScheduleCell s : schedule) {
-                    mapper.insertTimeCells(s.getId(), s.getCells());
-                }
-
-                session.commit();
-                LOGGER.debug(CLASS_NAME + ": Schedule = {} for doctor with id = {} successfully inserted (date start = {} date end = {})",
-                        schedule, doctorId, dateStart, dateEnd);
-            } catch (RuntimeException ex) {
-                session.rollback();
-                LOGGER.error(CLASS_NAME + ": Can't insert schedule = {} for doctor with id = {} (date start = {} date end = {})",
-                        schedule, doctorId, dateStart, dateEnd, ex);
-
-                throw ex;
-            }
-        }
+    @Override
+    public void logout(String sessionId) {
+        userDao.logout(sessionId);
     }
 
     @Override
@@ -133,11 +119,21 @@ public class AdminDaoImpl extends UserDaoImpl implements AdminDao {
         LOGGER.debug(CLASS_NAME + ": Checking administrator permissions for session id = {}", sessionId);
 
         try (SqlSession session = getSession()) {
-            return getAdminMapper(session).hasPermissions(sessionId);
+            return mapperFactory.getMapper(session, AdminMapper.class).hasPermissions(sessionId);
         } catch (RuntimeException ex) {
             LOGGER.error(CLASS_NAME + ": Can't check administrator permissions for session id = {}", sessionId, ex);
 
             throw new PermissionDeniedException(PermissionDeniedErrorCode.PERMISSION_DENIED);
         }
+    }
+
+    @Override
+    public Doctor getDoctorInformation(int patientId, int doctorId, LocalDate startDate, LocalDate endDate) {
+        return userDao.getDoctorInformation(patientId, doctorId, startDate, endDate);
+    }
+
+    @Override
+    public List<Doctor> getDoctorsInformation(int patientId, String speciality, LocalDate startDate, LocalDate endDate) {
+        return userDao.getDoctorsInformation(patientId, speciality, startDate, endDate);
     }
 }

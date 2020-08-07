@@ -1,8 +1,9 @@
 package net.thumbtack.hospital.debug;
 
+import net.thumbtack.hospital.mapper.Mapper;
 import org.apache.ibatis.annotations.Delete;
 
-public interface DebugMapper {
+public interface DebugMapper extends Mapper {
     @Delete("DELETE FROM user WHERE login <> 'admin';")
     void clearUsers();
 

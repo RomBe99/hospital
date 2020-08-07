@@ -3,7 +3,7 @@ package net.thumbtack.hospital.mapper;
 import net.thumbtack.hospital.model.user.User;
 import org.apache.ibatis.annotations.*;
 
-public interface UserMapper {
+public interface UserMapper extends Mapper {
     @Insert("INSERT INTO user VALUES (#{user.id}, #{user.login}, #{user.password}, #{user.firstName}, #{user.lastName}, #{user.patronymic}, #{userTypeId});")
     @Options(useGeneratedKeys = true, keyProperty = "user.id")
     int insertUser(@Param("user") User user, @Param("userTypeId") int userTypeId);
