@@ -47,6 +47,29 @@ public class ScheduleDaoImpl implements ScheduleDao {
 
     @Override
     public void editSchedule(int doctorId, LocalDate dateStart, LocalDate dateEnd, List<ScheduleCell> schedule) {
-        // TODO
+        LOGGER.debug(CLASS_NAME + ": Edit schedule from date start = {} and date end = {} where schedule = {}",
+                dateStart, dateEnd, schedule);
+
+        try (SqlSession session = getSession()) {
+            try {
+                ScheduleMapper mapper = mapperFactory.getMapper(session, ScheduleMapper.class);
+                mapper.removeSchedule(doctorId, dateStart, dateEnd);
+                mapper.insertScheduleCells(doctorId, schedule);
+
+                for (ScheduleCell c : schedule) {
+                    mapper.insertTimeCells(c.getId(), c.getCells());
+                }
+
+                session.commit();
+                LOGGER.debug(CLASS_NAME + ": Schedule from date start = {} and date end = {} where schedule = {} successfully edited",
+                        dateStart, dateEnd, schedule);
+            } catch (RuntimeException ex) {
+                session.rollback();
+                LOGGER.error(CLASS_NAME + ": Can't edit schedule from date start = {} and date end = {} where schedule = {}",
+                        dateStart, dateEnd, schedule, ex);
+
+                throw ex;
+            }
+        }
     }
 }

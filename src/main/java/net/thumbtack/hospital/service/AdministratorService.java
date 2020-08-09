@@ -1,6 +1,7 @@
 package net.thumbtack.hospital.service;
 
 import net.thumbtack.hospital.dao.AdminDao;
+import net.thumbtack.hospital.dao.CommonDao;
 import net.thumbtack.hospital.dao.DoctorDao;
 import net.thumbtack.hospital.dao.ScheduleDao;
 import net.thumbtack.hospital.dtorequest.admin.AdminRegistrationDtoRequest;
@@ -19,6 +20,8 @@ import net.thumbtack.hospital.model.user.Administrator;
 import net.thumbtack.hospital.model.user.Doctor;
 import net.thumbtack.hospital.util.DtoAdapters;
 import net.thumbtack.hospital.util.error.PermissionDeniedException;
+import net.thumbtack.hospital.util.error.ScheduleErrorCode;
+import net.thumbtack.hospital.util.error.ScheduleException;
 import net.thumbtack.hospital.util.security.manager.SecurityManagerImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,12 +35,14 @@ public class AdministratorService {
     private final AdminDao adminDao;
     private final DoctorDao doctorDao;
     private final ScheduleDao scheduleDao;
+    private final CommonDao commonDao;
 
     @Autowired
-    public AdministratorService(AdminDao adminDao, DoctorDao doctorDao, ScheduleDao scheduleDao) {
+    public AdministratorService(AdminDao adminDao, DoctorDao doctorDao, ScheduleDao scheduleDao, CommonDao commonDao) {
         this.adminDao = adminDao;
         this.doctorDao = doctorDao;
         this.scheduleDao = scheduleDao;
+        this.commonDao = commonDao;
     }
 
     public AdminRegistrationDtoResponse administratorRegistration(String sessionId, AdminRegistrationDtoRequest request) throws PermissionDeniedException {
@@ -95,16 +100,25 @@ public class AdministratorService {
                 request.getFirstName(), request.getLastName(), request.getPatronymic(), request.getPosition());
     }
 
-    public EditDoctorScheduleDtoResponse editDoctorSchedule(String sessionId, int doctorId, DtoRequestWithSchedule request) throws PermissionDeniedException {
+    public EditDoctorScheduleDtoResponse editDoctorSchedule(String sessionId, int doctorId, DtoRequestWithSchedule request) throws PermissionDeniedException, ScheduleException {
         SecurityManagerImpl
                 .getSecurityManager(UserType.ADMINISTRATOR)
                 .hasPermission(sessionId);
 
         Doctor doctor = doctorDao.getDoctorById(doctorId);
+        LocalDate dateStart = LocalDate.parse(request.getDateStart());
+        LocalDate dateEnd = LocalDate.parse(request.getDateEnd());
+
+        boolean containsAppointment = commonDao.containsAppointment(doctorId, dateStart, dateEnd);
+
+        if (containsAppointment) {
+            throw new ScheduleException(ScheduleErrorCode.PERIOD_HAVE_APPOINTMENT);
+        }
+
         List<ScheduleCell> schedule = DtoAdapters.transform(request, doctorId);
 
         if (!schedule.isEmpty()) {
-            scheduleDao.editSchedule(doctorId, LocalDate.parse(request.getDateStart()), LocalDate.parse(request.getDateEnd()), schedule);
+            scheduleDao.editSchedule(doctorId, dateStart, dateEnd, schedule);
         }
 
         return new EditDoctorScheduleDtoResponse(doctor.getId(),

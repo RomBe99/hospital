@@ -9,6 +9,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
+import java.util.HashMap;
+import java.util.Map;
+
 import static net.thumbtack.hospital.util.mybatis.MyBatisUtils.getSession;
 
 @Component("CommonDaoImpl")
@@ -57,6 +61,25 @@ public class CommonDaoImpl implements CommonDao {
             return mapperFactory.getMapper(session, CommonMapper.class).getUserTypeByUserId(userId);
         } catch (RuntimeException ex) {
             LOGGER.error(CLASS_NAME + ": Can't get user type by user id  = {}", userId, ex);
+
+            throw ex;
+        }
+    }
+
+    @Override
+    public boolean containsAppointment(int doctorId, LocalDate dateStart, LocalDate dateEnd) {
+        LOGGER.debug(CLASS_NAME + ": Check is an appointment to doctor = {} from {} to {}", doctorId, dateStart, dateEnd);
+
+        try (SqlSession session = getSession()) {
+            Map<String, Object> params = new HashMap<>();
+            params.put("doctorId", doctorId);
+            params.put("dateStart", dateStart);
+            params.put("dateEnd", dateEnd);
+
+            return session.selectOne("net.thumbtack.hospital.mapper.CommonMapper.containsAppointment", params);
+        } catch (RuntimeException ex) {
+            LOGGER.error(CLASS_NAME + ": Can't check is an appointment to doctor = {} from {} to {}",
+                    doctorId, dateStart, dateEnd, ex);
 
             throw ex;
         }

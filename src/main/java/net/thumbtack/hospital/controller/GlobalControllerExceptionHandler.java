@@ -4,6 +4,7 @@ import net.thumbtack.hospital.dtoresponse.other.ErrorDtoResponse;
 import net.thumbtack.hospital.dtoresponse.other.ErrorsDtoResponse;
 import net.thumbtack.hospital.util.error.ErrorMessageFactory;
 import net.thumbtack.hospital.util.error.PermissionDeniedException;
+import net.thumbtack.hospital.util.error.ScheduleException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.FieldError;
@@ -47,6 +48,17 @@ public class GlobalControllerExceptionHandler {
         }
 
         return new ErrorsDtoResponse(result);
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(ScheduleException.class)
+    @ResponseBody
+    public ErrorsDtoResponse handleScheduleExceptions(ScheduleException ex) {
+        String errorCode = ex.getErrorCode().getErrorCode();
+        String field = "schedule";
+        String errorMessage = ex.getErrorCode().getErrorMessage();
+
+        return new ErrorsDtoResponse(Collections.singletonList(new ErrorDtoResponse(errorCode, field, errorMessage)));
     }
 
     @ResponseStatus(HttpStatus.FORBIDDEN)
