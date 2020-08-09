@@ -1,7 +1,6 @@
 package net.thumbtack.hospital.daoimpl;
 
 import net.thumbtack.hospital.dao.DoctorDao;
-import net.thumbtack.hospital.dao.ScheduleDao;
 import net.thumbtack.hospital.dao.UserDao;
 import net.thumbtack.hospital.mapper.CommonMapper;
 import net.thumbtack.hospital.mapper.DoctorMapper;
@@ -27,7 +26,6 @@ public class DoctorDaoImpl implements DoctorDao {
 
     private final MapperFactory mapperFactory = new MapperFactory();
     private final UserDao userDao = new UserDaoImpl();
-    private final ScheduleDao scheduleDao = new ScheduleDaoImpl();
 
     @Override
     public Doctor insertDoctor(Doctor doctor) {

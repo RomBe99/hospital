@@ -13,9 +13,6 @@ public interface PatientMapper extends UserMapper {
     @Update("UPDATE patient SET email = #{email}, address = #{address}, phone = #{phone} WHERE userId = #{id};")
     void updatePatient(Patient patient);
 
-    @Delete("DELETE FROM patient WHERE userId = #{id};")
-    void removePatient(int id);
-
     @Select("SELECT userId FROM patient WHERE userId = (SELECT userId FROM logged_in_users WHERE sessionId = #{sessionId});")
     @Options(useGeneratedKeys = true, keyProperty = "userId")
     int hasPermissions(String sessionId);

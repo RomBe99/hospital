@@ -11,10 +11,6 @@ public interface UserMapper extends Mapper {
     @Update("UPDATE user SET password = #{password}, firstName = #{firstName}, lastName = #{lastName}, patronymic = #{patronymic} WHERE id = #{id};")
     void updateUser(User user);
 
-    @Delete("DELETE FROM user WHERE id = #{id};")
-    @Deprecated
-    void removeUser(int id);
-
     @Insert("INSERT INTO logged_in_users VALUES(#{sessionId}, #{userId});")
     void loginUser(@Param("sessionId") String sessionId, @Param("userId") int userId);
 

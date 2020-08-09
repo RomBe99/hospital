@@ -1,7 +1,9 @@
 package net.thumbtack.hospital.service;
 
 import net.thumbtack.hospital.dao.DoctorDao;
+import net.thumbtack.hospital.dao.MedicalCommissionDao;
 import net.thumbtack.hospital.dao.PatientDao;
+import net.thumbtack.hospital.dao.ScheduleDao;
 import net.thumbtack.hospital.dtorequest.patient.AppointmentToDoctorDtoRequest;
 import net.thumbtack.hospital.dtorequest.patient.EditPatientProfileDtoRequest;
 import net.thumbtack.hospital.dtorequest.patient.PatientRegistrationDtoRequest;
@@ -33,6 +35,8 @@ import java.util.stream.Collectors;
 public class PatientService {
     private final PatientDao patientDao;
     private final DoctorDao doctorDao;
+    private final ScheduleDao scheduleDao;
+    private final MedicalCommissionDao medicalCommissionDao;
 
     public static String phoneTransformer(String phone) {
         String emptyStr = "";
@@ -46,9 +50,11 @@ public class PatientService {
     }
 
     @Autowired
-    public PatientService(PatientDao patientDao, DoctorDao doctorDao) {
+    public PatientService(PatientDao patientDao, DoctorDao doctorDao, ScheduleDao scheduleDao, MedicalCommissionDao medicalCommissionDao) {
         this.patientDao = patientDao;
         this.doctorDao = doctorDao;
+        this.scheduleDao = scheduleDao;
+        this.medicalCommissionDao = medicalCommissionDao;
     }
 
     public PatientRegistrationDtoResponse patientRegistration(PatientRegistrationDtoRequest request) {
@@ -94,7 +100,7 @@ public class PatientService {
         LocalDate ticketDate = LocalDate.parse(request.getDate());
         LocalTime ticketTime = LocalTime.parse(request.getTime());
 
-        patientDao.appointmentToDoctor(patientId, request.getDoctorId(), ticketDate, ticketTime);
+        scheduleDao.appointmentToDoctor(patientId, request.getDoctorId(), ticketDate, ticketTime);
 
         return new AppointmentToDoctorDtoResponse(TicketFactory.buildTicketToDoctor(request.getDoctorId(), ticketDate, ticketTime),
                 request.getDoctorId(),
@@ -107,13 +113,13 @@ public class PatientService {
                 .getSecurityManager(UserType.PATIENT)
                 .hasPermission(sessionId);
 
-        patientDao.denyMedicalCommission(ticket);
+        medicalCommissionDao.denyMedicalCommission(ticket);
     }
 
     public void denyTicket(String sessionId, String ticket) throws PermissionDeniedException {
         patientDao.hasPermissions(sessionId);
 
-        patientDao.denyTicket(ticket);
+        scheduleDao.denyTicket(ticket);
     }
 
     public AllTicketsDtoResponse getTickets(String sessionId) throws PermissionDeniedException {
@@ -121,8 +127,8 @@ public class PatientService {
                 .getSecurityManager(UserType.PATIENT)
                 .hasPermission(sessionId);
 
-        List<TicketToDoctor> ticketsToDoctors = patientDao.getTicketsToDoctor(patientId);
-        List<TicketToMedicalCommission> ticketsToMedicalCommission = patientDao.getTicketsToMedicalCommission(patientId);
+        List<TicketToDoctor> ticketsToDoctors = scheduleDao.getTicketsToDoctor(patientId);
+        List<TicketToMedicalCommission> ticketsToMedicalCommission = medicalCommissionDao.getTicketsToMedicalCommission(patientId);
 
         List<TicketDtoResponse> tickets = new ArrayList<>(ticketsToDoctors.size() + ticketsToMedicalCommission.size());
 

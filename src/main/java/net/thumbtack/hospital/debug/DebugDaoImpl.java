@@ -5,7 +5,6 @@ import net.thumbtack.hospital.model.schedule.ScheduleCell;
 import org.apache.ibatis.session.SqlSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -17,12 +16,7 @@ public class DebugDaoImpl implements DebugDao {
     private static final Logger LOGGER = LoggerFactory.getLogger(DebugDaoImpl.class);
     private static final String className = DebugDaoImpl.class.getSimpleName();
 
-    private final MapperFactory mapperFactory;
-
-    @Autowired
-    public DebugDaoImpl(MapperFactory mapperFactory) {
-        this.mapperFactory = mapperFactory;
-    }
+    private final MapperFactory mapperFactory = new MapperFactory();
 
     @Override
     public void clearUsers() {

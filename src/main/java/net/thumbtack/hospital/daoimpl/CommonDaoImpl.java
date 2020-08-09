@@ -28,32 +28,6 @@ public class CommonDaoImpl implements CommonDao {
     }
 
     @Override
-    public int getDoctorSpecialityIdByName(String name) {
-        LOGGER.debug(CLASS_NAME + ": Get doctor speciality id with name  = {}", name);
-
-        try (SqlSession session = getSession()) {
-            return mapperFactory.getMapper(session, CommonMapper.class).getDoctorSpecialityIdByName(name);
-        } catch (RuntimeException ex) {
-            LOGGER.error(CLASS_NAME + ": Can't get doctor speciality id with name  = {}", name, ex);
-
-            throw ex;
-        }
-    }
-
-    @Override
-    public int getCabinetIdByName(String name) {
-        LOGGER.debug(CLASS_NAME + ": Get cabinet id with name  = {}", name);
-
-        try (SqlSession session = getSession()) {
-            return mapperFactory.getMapper(session, CommonMapper.class).getCabinetIdByName(name);
-        } catch (RuntimeException ex) {
-            LOGGER.error(CLASS_NAME + ": Can't get cabinet id with name  = {}", name, ex);
-
-            throw ex;
-        }
-    }
-
-    @Override
     public String getUserTypeByUserId(int userId) {
         LOGGER.debug(CLASS_NAME + ": Get user type by user id = {}", userId);
 

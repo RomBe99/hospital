@@ -2,7 +2,6 @@ package net.thumbtack.hospital.debug;
 
 import net.thumbtack.hospital.debug.dtoresponse.schedule.GetScheduleByDoctorIdDtoResponse;
 import net.thumbtack.hospital.dtoresponse.other.EmptyDtoResponse;
-import net.thumbtack.hospital.dtoresponse.schedule.DtoResponseWithSchedule;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
