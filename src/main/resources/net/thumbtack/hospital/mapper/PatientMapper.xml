@@ -20,7 +20,7 @@
     </select>
 
     <select id="getTicketsToDoctor" parameterType="int" resultType="net.thumbtack.hospital.model.ticket.TicketToDoctor">
-        SELECT ticket,
+        SELECT title,
                c.name     room,
                date,
                time,
@@ -40,7 +40,7 @@
 
     <select id="getTicketsToMedicalCommission" parameterType="int"
             resultType="net.thumbtack.hospital.model.ticket.TicketToMedicalCommission">
-        SELECT ticket,
+        SELECT title,
                name room,
                date,
                time,
@@ -48,7 +48,7 @@
                duration,
                doctorId
         FROM medical_commission mc
-                 JOIN commission_doctor cd ON mc.ticket = cd.commissionTicket
+                 JOIN commission_doctor cd ON mc.title = cd.commissionTicket
                  JOIN cabinet c ON mc.cabinetId = c.id
         WHERE patientId = #{patientId}
         ORDER BY date, time;;

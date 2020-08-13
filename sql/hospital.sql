@@ -10,7 +10,7 @@ CREATE TABLE user_type
     PRIMARY KEY (id),
     UNIQUE KEY (name)
 ) ENGINE = INNODB
-  DEFAULT CHARSET = utf8;
+  DEFAULT CHARSET = UTF8MB4;
 
 INSERT INTO user_type
 VALUES (0, 'ADMINISTRATOR');
@@ -39,7 +39,7 @@ CREATE TABLE user
     KEY patronymic (patronymic),
     KEY password (password)
 ) ENGINE = INNODB
-  DEFAULT CHARSET = utf8;
+  DEFAULT CHARSET = UTF8MB4;
 
 CREATE TABLE logged_in_users
 (
@@ -49,7 +49,7 @@ CREATE TABLE logged_in_users
     PRIMARY KEY (sessionId),
     FOREIGN KEY (userId) REFERENCES user (id) ON DELETE CASCADE
 ) ENGINE = INNODB
-  DEFAULT CHARSET = utf8;
+  DEFAULT CHARSET = UTF8MB4;
 
 CREATE TABLE administrator
 (
@@ -59,7 +59,7 @@ CREATE TABLE administrator
     PRIMARY KEY (userId),
     FOREIGN KEY (userId) REFERENCES user (id) ON DELETE CASCADE
 ) ENGINE = INNODB
-  DEFAULT CHARSET = utf8;
+  DEFAULT CHARSET = UTF8MB4;
 
 CREATE TABLE cabinet
 (
@@ -69,7 +69,7 @@ CREATE TABLE cabinet
     PRIMARY KEY (id),
     UNIQUE KEY (name)
 ) ENGINE = INNODB
-  DEFAULT CHARSET = utf8;
+  DEFAULT CHARSET = UTF8MB4;
 
 CREATE TABLE doctor_specialty
 (
@@ -79,7 +79,7 @@ CREATE TABLE doctor_specialty
     PRIMARY KEY (id),
     UNIQUE KEY (name)
 ) ENGINE = INNODB
-  DEFAULT CHARSET = utf8;
+  DEFAULT CHARSET = UTF8MB4;
 
 CREATE TABLE doctor
 (
@@ -93,7 +93,7 @@ CREATE TABLE doctor
     FOREIGN KEY (specialtyId) REFERENCES doctor_specialty (id) ON DELETE CASCADE,
     FOREIGN KEY (cabinetId) REFERENCES cabinet (id) ON DELETE SET NULL
 ) ENGINE = INNODB
-  DEFAULT CHARSET = utf8;
+  DEFAULT CHARSET = UTF8MB4;
 
 CREATE TABLE patient
 (
@@ -105,7 +105,7 @@ CREATE TABLE patient
     PRIMARY KEY (userId),
     FOREIGN KEY (userId) REFERENCES user (id) ON DELETE CASCADE
 ) ENGINE = INNODB
-  DEFAULT CHARSET = utf8;
+  DEFAULT CHARSET = UTF8MB4;
 
 CREATE TABLE schedule_cell
 (
@@ -117,38 +117,38 @@ CREATE TABLE schedule_cell
     UNIQUE KEY (doctorId, date),
     FOREIGN KEY (doctorId) REFERENCES doctor (userId) ON DELETE CASCADE
 ) ENGINE = INNODB
-  DEFAULT CHARSET = utf8;
+  DEFAULT CHARSET = UTF8MB4;
 
 CREATE TABLE time_cell
 (
     time           TIME         NOT NULL,
-    ticket         VARCHAR(100) NOT NULL,
+    title         VARCHAR(100) NOT NULL,
     scheduleCellId INT          NOT NULL,
     patientId      INT DEFAULT NULL,
     duration       INT          NOT NULL,
 
-    PRIMARY KEY (ticket),
+    PRIMARY KEY (title),
     UNIQUE KEY (scheduleCellId, patientId),
     FOREIGN KEY (scheduleCellId) REFERENCES schedule_cell (id) ON DELETE CASCADE,
     FOREIGN KEY (patientId) REFERENCES patient (userId) ON DELETE SET NULL
 ) ENGINE = INNODB
-  DEFAULT CHARSET = utf8;
+  DEFAULT CHARSET = UTF8MB4;
 
 CREATE TABLE medical_commission
 (
-    ticket    VARCHAR(200) NOT NULL,
+    title    VARCHAR(200) NOT NULL,
     date      DATE         NOT NULL,
     time      TIME         NOT NULL,
     patientId INT          NOT NULL,
     duration  INT          NOT NULL,
     cabinetId INT          NOT NULL,
 
-    PRIMARY KEY (ticket),
+    PRIMARY KEY (title),
     UNIQUE KEY (date, time, patientId),
     FOREIGN KEY (patientId) REFERENCES patient (userId) ON DELETE CASCADE,
     FOREIGN KEY (cabinetId) REFERENCES cabinet (id) ON DELETE CASCADE
 ) ENGINE = INNODB
-  DEFAULT CHARSET = utf8;
+  DEFAULT CHARSET = UTF8MB4;
 
 CREATE TABLE commission_doctor
 (
@@ -156,10 +156,10 @@ CREATE TABLE commission_doctor
     doctorId         INT          NOT NULL,
 
     PRIMARY KEY (commissionTicket, doctorId),
-    FOREIGN KEY (commissionTicket) REFERENCES medical_commission (ticket) ON DELETE CASCADE,
+    FOREIGN KEY (commissionTicket) REFERENCES medical_commission (title) ON DELETE CASCADE,
     FOREIGN KEY (doctorId) REFERENCES doctor (userId) ON DELETE CASCADE
 ) ENGINE = INNODB
-  DEFAULT CHARSET = utf8;
+  DEFAULT CHARSET = UTF8MB4;
 
 # Insert doctors specialities
 

@@ -5,11 +5,9 @@ import net.thumbtack.hospital.model.user.Doctor;
 import java.util.List;
 
 public interface DoctorDao extends UserDao {
-    Doctor insertDoctor(Doctor doctor);
+    void insertDoctor(Doctor doctor);
 
     void removeDoctor(int id);
-
-    List<Doctor> getAllDoctors();
 
     Doctor getDoctorById(int id);
 }

@@ -2,6 +2,7 @@ package net.thumbtack.hospital.debug;
 
 import net.thumbtack.hospital.mapper.MapperFactory;
 import net.thumbtack.hospital.model.schedule.ScheduleCell;
+import net.thumbtack.hospital.model.ticket.TicketToMedicalCommission;
 import org.apache.ibatis.session.SqlSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -173,12 +174,25 @@ public class DebugDaoImpl implements DebugDao {
 
     @Override
     public List<ScheduleCell> getScheduleByDoctorId(int doctorId) {
-        try (SqlSession session = getSession()) {
-            LOGGER.debug(className + ": Try get full schedule for doctor with id = {}", doctorId);
+        LOGGER.debug(className + ": Try get full schedule for doctor with id = {}", doctorId);
 
-            return session.selectList("net.thumbtack.hospital.mapper.DebugMapper.getScheduleByDoctorId", doctorId);
+        try (SqlSession session = getSession()) {
+            return session.selectList("net.thumbtack.hospital.debug.DebugMapper.getScheduleByDoctorId", doctorId);
         } catch (RuntimeException ex) {
-            LOGGER.error(className + ": Can't clear commissions doctors from database", ex);
+            LOGGER.error(className + ": Can't get full schedule for doctor id = {}", doctorId, ex);
+
+            throw ex;
+        }
+    }
+
+    @Override
+    public TicketToMedicalCommission getTicketToMedicalCommissionByTitle(String title) {
+        LOGGER.debug(className + ": Get ticket to medical commission with title = {}", title);
+
+        try (SqlSession session = getSession()) {
+            return session.selectOne("net.thumbtack.hospital.debug.DebugMapper.getMedicalCommissionTicketByTitle", title);
+        } catch (RuntimeException ex) {
+            LOGGER.error(className + ": Can't get ticket to medical commission with title = {}", title, ex);
 
             throw ex;
         }

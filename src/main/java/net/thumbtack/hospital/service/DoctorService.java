@@ -30,7 +30,7 @@ public class DoctorService {
         medicalCommissionDao.createMedicalCommission(commission);
 
         return new CreateMedicalCommissionDtoResponse(
-                commission.getTicket(), commission.getPatientId(), commission.getDoctorIds(),
+                commission.getTitle(), commission.getPatientId(), commission.getDoctorIds(),
                 commission.getRoom(), commission.getDate().toString(), commission.getTime().toString(), request.getDuration());
     }
 }

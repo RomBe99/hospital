@@ -2,12 +2,13 @@ package net.thumbtack.hospital.model.ticket;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 public class TicketToMedicalCommission extends Ticket {
     private int patientId;
-    private List<Integer> doctorIds;
+    private List<Integer> doctorIds = new ArrayList<>();
     private int duration;
 
     public TicketToMedicalCommission() {

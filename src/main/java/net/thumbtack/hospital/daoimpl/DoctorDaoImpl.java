@@ -28,7 +28,7 @@ public class DoctorDaoImpl implements DoctorDao {
     private final UserDao userDao = new UserDaoImpl();
 
     @Override
-    public Doctor insertDoctor(Doctor doctor) {
+    public void insertDoctor(Doctor doctor) {
         LOGGER.debug(CLASS_NAME + ": Insert doctor = {}", doctor);
 
         try (SqlSession session = getSession()) {
@@ -44,8 +44,6 @@ public class DoctorDaoImpl implements DoctorDao {
 
                 session.commit();
                 LOGGER.debug(CLASS_NAME + ": Doctor = {} successfully inserted", doctor);
-
-                return doctor;
             } catch (RuntimeException ex) {
                 session.rollback();
                 LOGGER.error(CLASS_NAME + ": Can't insert doctor = {}", doctor, ex);
@@ -71,19 +69,6 @@ public class DoctorDaoImpl implements DoctorDao {
 
                 throw ex;
             }
-        }
-    }
-
-    @Override
-    public List<Doctor> getAllDoctors() {
-        LOGGER.debug(CLASS_NAME + ": Get all doctors");
-
-        try (SqlSession session = getSession()) {
-            return session.selectList("net.thumbtack.hospital.mapper.DoctorMapper.getAllDoctors");
-        } catch (RuntimeException ex) {
-            LOGGER.error(CLASS_NAME + ": Can't get all doctors", ex);
-
-            throw ex;
         }
     }
 

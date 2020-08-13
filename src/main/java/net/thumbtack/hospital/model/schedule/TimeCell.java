@@ -9,20 +9,20 @@ public class TimeCell {
     private LocalTime time;
     private Patient patient;
     private int duration;
-    private String ticket;
+    private String title;
 
     public TimeCell() {
     }
 
-    public TimeCell(LocalTime time, Patient patient, int duration, String ticket) {
+    public TimeCell(LocalTime time, Patient patient, int duration, String title) {
         setTime(time);
         setPatient(patient);
         setDuration(duration);
-        setTicket(ticket);
+        setTitle(title);
     }
 
-    public TimeCell(LocalTime time, int duration, String ticket) {
-        this(time, null, duration, ticket);
+    public TimeCell(LocalTime time, int duration, String title) {
+        this(time, null, duration, title);
     }
 
     public void setTime(LocalTime time) {
@@ -37,8 +37,8 @@ public class TimeCell {
         this.duration = duration;
     }
 
-    public void setTicket(String ticket) {
-        this.ticket = ticket;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public LocalTime getTime() {
@@ -53,8 +53,8 @@ public class TimeCell {
         return duration;
     }
 
-    public String getTicket() {
-        return ticket;
+    public String getTitle() {
+        return title;
     }
 
     @Override
@@ -65,12 +65,12 @@ public class TimeCell {
         return getDuration() == timeCell.getDuration() &&
                 Objects.equals(getTime(), timeCell.getTime()) &&
                 Objects.equals(getPatient(), timeCell.getPatient()) &&
-                Objects.equals(getTicket(), timeCell.getTicket());
+                Objects.equals(getTitle(), timeCell.getTitle());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getTime(), getPatient(), getDuration(), getTicket());
+        return Objects.hash(getTime(), getPatient(), getDuration(), getTitle());
     }
 
     @Override
@@ -79,7 +79,7 @@ public class TimeCell {
                 "time=" + time +
                 ", patient=" + patient +
                 ", duration=" + duration +
-                ", ticketName='" + ticket + '\'' +
+                ", ticketName='" + title + '\'' +
                 '}';
     }
 }

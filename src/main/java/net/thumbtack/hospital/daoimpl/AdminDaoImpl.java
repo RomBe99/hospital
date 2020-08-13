@@ -86,7 +86,7 @@ public class AdminDaoImpl implements AdminDao {
     }
 
     @Override
-    public void removeAdministratorById(int id) {
+    public void removeAdministrator(int id) {
         LOGGER.debug(CLASS_NAME + ": Remove administrator with id = {}", id);
 
         try (SqlSession session = getSession()) {

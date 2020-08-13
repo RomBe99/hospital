@@ -23,7 +23,7 @@ public interface ScheduleMapper extends Mapper {
     @Insert({"<script>",
             "INSERT INTO time_cell VALUES",
             "<foreach item='cell' collection='cells' separator=','>",
-            "(#{cell.time}, #{cell.ticket}, #{scheduleCellId}, NULL, #{cell.duration})",
+            "(#{cell.time}, #{cell.title}, #{scheduleCellId}, NULL, #{cell.duration})",
             "</foreach>;",
             "</script>"})
     @Options(useGeneratedKeys = true)

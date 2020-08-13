@@ -29,7 +29,7 @@ public class MedicalCommissionDaoImpl implements MedicalCommissionDao {
             try {
                 MedicalCommissionMapper mapper = mapperFactory.getMapper(session, MedicalCommissionMapper.class);
                 mapper.createMedicalCommission(ticket);
-                mapper.insertDoctorsInMedicalCommission(ticket.getTicket(), ticket.getDoctorIds());
+                mapper.insertDoctorsInMedicalCommission(ticket.getTitle(), ticket.getDoctorIds());
 
                 LOGGER.debug(CLASS_NAME + ": Medical commission = {} successfully created", ticket);
             } catch (RuntimeException ex) {
@@ -42,18 +42,18 @@ public class MedicalCommissionDaoImpl implements MedicalCommissionDao {
     }
 
     @Override
-    public void denyMedicalCommission(String ticket) {
-        LOGGER.debug(CLASS_NAME + ": Deny ticket = {} to commission", ticket);
+    public void denyMedicalCommission(String title) {
+        LOGGER.debug(CLASS_NAME + ": Deny ticket with title = {} to commission", title);
 
         try (SqlSession session = getSession()) {
             try {
-                mapperFactory.getMapper(session, PatientMapper.class).denyMedicalCommission(ticket);
+                mapperFactory.getMapper(session, PatientMapper.class).denyMedicalCommission(title);
 
                 session.commit();
-                LOGGER.debug(CLASS_NAME + ": Successfully deny ticket = {} to commission", ticket);
+                LOGGER.debug(CLASS_NAME + ": Successfully deny ticket with title = {} to commission", title);
             } catch (RuntimeException ex) {
                 session.rollback();
-                LOGGER.error(CLASS_NAME + ": Can't deny ticket = {} to commission", ticket, ex);
+                LOGGER.error(CLASS_NAME + ": Can't deny ticket with title = {} to commission", title, ex);
 
                 throw ex;
             }

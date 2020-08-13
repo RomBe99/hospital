@@ -78,7 +78,7 @@
         scheduleCellId,
         date,
         time,
-        ticket,
+        title,
         duration,
         patientId,
         u.firstName pFirstName,
@@ -111,7 +111,7 @@
         scheduleCellId,
         date,
         time,
-        ticket,
+        title,
         duration,
         patientId,
         u.firstName pFirstName,
@@ -129,9 +129,9 @@
         LEFT JOIN user u ON u.id = tc.patientId
         LEFT JOIN patient p ON u.id = p.userId
         WHERE (patientId IS NULL OR patientId = #{patientId})
-        <if test="speciality != null"> AND ds.name = #{speciality} </if>
-        <if test="startDate != null"> AND date >= #{startDate} </if>
-        <if test="endDate != null"> AND #{endDate} >= date </if>
+        <if test="speciality != null">AND ds.name = #{speciality}</if>
+        <if test="startDate != null">AND date >= #{startDate}</if>
+        <if test="endDate != null">AND #{endDate} >= date</if>
         ORDER BY date, time;
     </select>
 </mapper>

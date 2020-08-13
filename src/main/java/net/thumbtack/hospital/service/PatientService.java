@@ -134,14 +134,14 @@ public class PatientService {
 
         tickets.addAll(ticketsToDoctors.stream()
                 .map(t -> new TicketToDoctorDtoResponse(
-                        t.getTicket(), t.getRoom(), t.getDate(), t.getTime(), t.getDoctorId(),
+                        t.getTitle(), t.getRoom(), t.getDate(), t.getTime(), t.getDoctorId(),
                         t.getDoctorFirstName(), t.getDoctorLastName(), t.getDoctorPatronymic(),
                         t.getSpeciality()))
                 .collect(Collectors.toList()));
 
         tickets.addAll(ticketsToMedicalCommission.stream()
                 .map(t -> new TicketToMedicalCommissionDtoResponse(
-                        t.getTicket(), t.getRoom(), t.getDate(), t.getTime(),
+                        t.getTitle(), t.getRoom(), t.getDate(), t.getTime(),
                         t.getPatientId(), t.getDoctorIds(), t.getDuration()))
                 .collect(Collectors.toList()));
 

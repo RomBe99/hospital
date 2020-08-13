@@ -37,38 +37,6 @@
         </collection>
     </resultMap>
 
-    <select id="getAllDoctors" resultMap="resultDoctor">
-        SELECT u.id          doctorId,
-               u.login,
-               u.password,
-               u.firstName,
-               u.lastName,
-               u.patronymic,
-               ds.name       specialty,
-               c.name        cabinet,
-               sc.id         scheduleCellId,
-               date,
-               time,
-               ticket,
-               duration,
-               p.userId      patientId,
-               pu.firstName  patientFirstName,
-               pu.lastName   patientLastName,
-               pu.patronymic patientPatronymic,
-               email,
-               address,
-               phone
-        FROM user u
-                 JOIN doctor d ON u.id = d.userId
-                 JOIN doctor_specialty ds ON d.specialtyId = ds.id
-                 LEFT JOIN cabinet c ON d.cabinetId = c.id
-                 LEFT JOIN schedule_cell sc ON d.userId = sc.doctorId
-                 LEFT JOIN time_cell tc ON sc.id = tc.scheduleCellId
-                 LEFT JOIN user pu ON pu.id = tc.patientId
-                 LEFT JOIN patient p ON tc.patientId = p.userId
-        ORDER BY date, time;
-    </select>
-
     <select id="getDoctorById" parameterType="int" resultMap="resultDoctor">
         SELECT u.id          doctorId,
                u.login,
@@ -81,7 +49,7 @@
                sc.id         scheduleCellId,
                date,
                time,
-               ticket,
+               title,
                duration,
                p.userId      patientId,
                pu.firstName  patientFirstName,

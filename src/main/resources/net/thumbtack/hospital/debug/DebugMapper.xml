@@ -3,7 +3,7 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="net.thumbtack.hospital.mapper.DebugMapper">
+<mapper namespace="net.thumbtack.hospital.debug.DebugMapper">
     <resultMap id="doctorSchedule" type="net.thumbtack.hospital.model.schedule.ScheduleCell">
         <id property="id" column="id"/>
         <result property="date" column="date"/>
@@ -19,11 +19,27 @@
         SELECT id,
                date,
                time,
-               ticket,
+               title,
                duration
         FROM schedule_cell
                  JOIN time_cell tc on schedule_cell.id = tc.scheduleCellId
         WHERE doctorId = #{doctorId}
         ORDER BY date, time;
+    </select>
+
+    <select id="getMedicalCommissionTicketByTitle" parameterType="java.lang.String"
+            resultType="net.thumbtack.hospital.model.ticket.TicketToMedicalCommission">
+        SELECT title,
+               name room,
+               date,
+               time,
+               patientId,
+               duration,
+               doctorId
+        FROM medical_commission mc
+                 JOIN cabinet c ON c.id = mc.cabinetId
+                 JOIN commission_doctor cd ON mc.title = cd.commissionTicket
+        WHERE title = #{title}
+        ORDER BY doctorId;
     </select>
 </mapper>

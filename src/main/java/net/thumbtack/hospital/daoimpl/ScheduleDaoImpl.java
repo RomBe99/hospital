@@ -49,27 +49,27 @@ public class ScheduleDaoImpl implements ScheduleDao {
     }
 
     @Override
-    public void editSchedule(int doctorId, LocalDate dateStart, LocalDate dateEnd, List<ScheduleCell> schedule) {
+    public void editSchedule(int doctorId, LocalDate dateStart, LocalDate dateEnd, List<ScheduleCell> newSchedule) {
         LOGGER.debug(CLASS_NAME + ": Edit schedule from date start = {} and date end = {} where schedule = {}",
-                dateStart, dateEnd, schedule);
+                dateStart, dateEnd, newSchedule);
 
         try (SqlSession session = getSession()) {
             try {
                 ScheduleMapper mapper = mapperFactory.getMapper(session, ScheduleMapper.class);
                 mapper.removeSchedule(doctorId, dateStart, dateEnd);
-                mapper.insertScheduleCells(doctorId, schedule);
+                mapper.insertScheduleCells(doctorId, newSchedule);
 
-                for (ScheduleCell c : schedule) {
+                for (ScheduleCell c : newSchedule) {
                     mapper.insertTimeCells(c.getId(), c.getCells());
                 }
 
                 session.commit();
                 LOGGER.debug(CLASS_NAME + ": Schedule from date start = {} and date end = {} where schedule = {} successfully edited",
-                        dateStart, dateEnd, schedule);
+                        dateStart, dateEnd, newSchedule);
             } catch (RuntimeException ex) {
                 session.rollback();
                 LOGGER.error(CLASS_NAME + ": Can't edit schedule from date start = {} and date end = {} where schedule = {}",
-                        dateStart, dateEnd, schedule, ex);
+                        dateStart, dateEnd, newSchedule, ex);
 
                 throw ex;
             }
@@ -99,18 +99,18 @@ public class ScheduleDaoImpl implements ScheduleDao {
     }
 
     @Override
-    public void denyTicket(String ticket) {
-        LOGGER.debug(CLASS_NAME + ": Deny ticket = {} ", ticket);
+    public void denyTicket(String title) {
+        LOGGER.debug(CLASS_NAME + ": Deny ticket = {} ", title);
 
         try (SqlSession session = getSession()) {
             try {
-                mapperFactory.getMapper(session, PatientMapper.class).denyTicket(ticket);
+                mapperFactory.getMapper(session, PatientMapper.class).denyTicket(title);
 
                 session.commit();
-                LOGGER.debug(CLASS_NAME + ": Successfully deny ticket = {}", ticket);
+                LOGGER.debug(CLASS_NAME + ": Successfully deny ticket = {}", title);
             } catch (RuntimeException ex) {
                 session.rollback();
-                LOGGER.error(CLASS_NAME + ": Can't deny ticket = {}", ticket, ex);
+                LOGGER.error(CLASS_NAME + ": Can't deny ticket = {}", title, ex);
 
                 throw ex;
             }

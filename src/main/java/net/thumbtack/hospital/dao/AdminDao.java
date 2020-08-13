@@ -9,5 +9,5 @@ public interface AdminDao extends UserDao {
 
     Administrator getAdministratorById(int id);
 
-    void removeAdministratorById(int id);
+    void removeAdministrator(int id);
 }
