@@ -2,7 +2,6 @@ package net.thumbtack.hospital.daoimpl;
 
 import net.thumbtack.hospital.dao.ScheduleDao;
 import net.thumbtack.hospital.mapper.MapperFactory;
-import net.thumbtack.hospital.mapper.PatientMapper;
 import net.thumbtack.hospital.mapper.ScheduleMapper;
 import net.thumbtack.hospital.model.schedule.ScheduleCell;
 import net.thumbtack.hospital.model.ticket.TicketToDoctor;
@@ -83,7 +82,7 @@ public class ScheduleDaoImpl implements ScheduleDao {
 
         try (SqlSession session = getSession()) {
             try {
-                mapperFactory.getMapper(session, PatientMapper.class).appointmentToDoctor(patientId, doctorId, date, time);
+                mapperFactory.getMapper(session, ScheduleMapper.class).appointmentToDoctor(patientId, doctorId, date, time);
 
                 session.commit();
                 LOGGER.debug(CLASS_NAME + ": Patient = {} successfully appointment to doctor = {} on date = {}, time = {}",
@@ -104,7 +103,7 @@ public class ScheduleDaoImpl implements ScheduleDao {
 
         try (SqlSession session = getSession()) {
             try {
-                mapperFactory.getMapper(session, PatientMapper.class).denyTicket(title);
+                mapperFactory.getMapper(session, ScheduleMapper.class).denyTicket(title);
 
                 session.commit();
                 LOGGER.debug(CLASS_NAME + ": Successfully deny ticket = {}", title);

@@ -2,12 +2,10 @@ package net.thumbtack.hospital.mapper;
 
 import net.thumbtack.hospital.model.schedule.ScheduleCell;
 import net.thumbtack.hospital.model.schedule.TimeCell;
-import org.apache.ibatis.annotations.Delete;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Options;
-import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.*;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 
 public interface ScheduleMapper extends Mapper {
@@ -32,4 +30,11 @@ public interface ScheduleMapper extends Mapper {
     @Delete("DELETE FROM schedule_cell WHERE doctorId = #{doctorId} AND date >= #{startDate} AND date <= #{endDate};")
     void removeSchedule(@Param("doctorId") int doctorId,
                         @Param("startDate") LocalDate startDate, @Param("endStart") LocalDate endStart);
+
+    @Update("UPDATE time_cell SET patientId = #{patientId} WHERE patientId IS NULL AND scheduleCellId = (SELECT id FROM schedule_cell WHERE doctorId = #{doctorId} AND date = #{date}) AND time = #{time};")
+    void appointmentToDoctor(@Param("patientId") int patientId, @Param("doctorId") int doctorId,
+                             @Param("date") LocalDate date, @Param("time") LocalTime time);
+
+    @Update("UPDATE time_cell SET patientId = NULL WHERE ticket = #{ticket};")
+    void denyTicket(String ticket);
 }

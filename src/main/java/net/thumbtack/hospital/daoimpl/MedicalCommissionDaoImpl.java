@@ -3,7 +3,6 @@ package net.thumbtack.hospital.daoimpl;
 import net.thumbtack.hospital.dao.MedicalCommissionDao;
 import net.thumbtack.hospital.mapper.MapperFactory;
 import net.thumbtack.hospital.mapper.MedicalCommissionMapper;
-import net.thumbtack.hospital.mapper.PatientMapper;
 import net.thumbtack.hospital.model.ticket.TicketToMedicalCommission;
 import org.apache.ibatis.session.SqlSession;
 import org.slf4j.Logger;
@@ -47,7 +46,7 @@ public class MedicalCommissionDaoImpl implements MedicalCommissionDao {
 
         try (SqlSession session = getSession()) {
             try {
-                mapperFactory.getMapper(session, PatientMapper.class).denyMedicalCommission(title);
+                mapperFactory.getMapper(session, MedicalCommissionMapper.class).denyMedicalCommission(title);
 
                 session.commit();
                 LOGGER.debug(CLASS_NAME + ": Successfully deny ticket with title = {} to commission", title);

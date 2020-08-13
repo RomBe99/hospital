@@ -1,6 +1,7 @@
 package net.thumbtack.hospital.mapper;
 
 import net.thumbtack.hospital.model.ticket.TicketToMedicalCommission;
+import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Param;
@@ -21,4 +22,7 @@ public interface MedicalCommissionMapper extends Mapper {
     @Options(useGeneratedKeys = true)
     void insertDoctorsInMedicalCommission(@Param("commissionTicket") String commissionTicket,
                                           @Param("doctorIds") List<Integer> doctorIds);
+
+    @Delete("DELETE FROM medical_commission WHERE ticket = #{ticket};")
+    void denyMedicalCommission(String ticket);
 }
