@@ -94,18 +94,18 @@ public class ScheduleDaoImpl implements ScheduleDao {
     }
 
     @Override
-    public void denyTicket(String ticketTitle) {
-        LOGGER.debug(CLASS_NAME + ": Deny ticket = {} ", ticketTitle);
+    public void denyTicket(int patientId, String ticketTitle) {
+        LOGGER.debug(CLASS_NAME + ": Patient = {} deny ticket = {}", patientId, ticketTitle);
 
         try (SqlSession session = getSession()) {
             try {
-                mapperFactory.getMapper(session, ScheduleMapper.class).denyTicket(ticketTitle);
+                mapperFactory.getMapper(session, ScheduleMapper.class).denyTicket(patientId, ticketTitle);
 
                 session.commit();
-                LOGGER.debug(CLASS_NAME + ": Successfully deny ticket = {}", ticketTitle);
+                LOGGER.debug(CLASS_NAME + ": Patient = {} successfully deny ticket = {}", patientId, ticketTitle);
             } catch (RuntimeException ex) {
                 session.rollback();
-                LOGGER.error(CLASS_NAME + ": Can't deny ticket = {}", ticketTitle, ex);
+                LOGGER.error(CLASS_NAME + ": Patient = {} can't deny ticket = {}", patientId, ticketTitle, ex);
 
                 throw ex;
             }

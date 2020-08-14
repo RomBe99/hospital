@@ -13,7 +13,7 @@ public interface ScheduleDao {
 
     void appointmentToDoctor(int patientId, String ticketTitle);
 
-    void denyTicket(String ticketTitle);
+    void denyTicket(int patientId, String ticketTitle);
 
     List<TicketToDoctor> getTicketsToDoctor(int patientId);
 }

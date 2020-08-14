@@ -33,6 +33,6 @@ public interface ScheduleMapper extends Mapper {
     @Update("UPDATE time_cell SET patientId = #{patientId} WHERE patientId IS NULL AND title = #{ticketTitle};")
     void appointmentToDoctor(@Param("patientId") int patientId, @Param("ticketTitle") String ticketTitle);
 
-    @Update("UPDATE time_cell SET patientId = NULL WHERE ticket = #{ticketTitle};")
-    void denyTicket(String ticketTitle);
+    @Update("UPDATE time_cell SET patientId = NULL WHERE ticket = #{ticketTitle} AND patientId = #{patientId};")
+    void denyTicket(@Param("patientId") int patientId, @Param("ticketTitle") String ticketTitle);
 }

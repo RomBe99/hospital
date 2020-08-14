@@ -117,11 +117,11 @@ public class PatientService {
     }
 
     public void denyTicket(String sessionId, String ticketTitle) throws PermissionDeniedException {
-        SecurityManagerImpl
+        int patientId = SecurityManagerImpl
                 .getSecurityManager(UserType.PATIENT)
                 .hasPermission(sessionId);
 
-        scheduleDao.denyTicket(ticketTitle);
+        scheduleDao.denyTicket(patientId, ticketTitle);
     }
 
     public AllTicketsDtoResponse getTickets(String sessionId) throws PermissionDeniedException {
