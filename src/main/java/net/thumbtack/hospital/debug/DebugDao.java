@@ -24,6 +24,8 @@ public interface DebugDao {
 
     void clearCommissionDoctors();
 
+    boolean containsPatientInTimeCell(int patientId, String ticketTitle);
+
     List<ScheduleCell> getScheduleByDoctorId(int doctorId);
 
     TicketToMedicalCommission getTicketToMedicalCommissionByTitle(String title);
