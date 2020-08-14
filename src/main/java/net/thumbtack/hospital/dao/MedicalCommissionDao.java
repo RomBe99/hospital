@@ -7,7 +7,7 @@ import java.util.List;
 public interface MedicalCommissionDao {
     void createMedicalCommission(TicketToMedicalCommission ticket);
 
-    void denyMedicalCommission(String title);
+    void denyMedicalCommission(String ticketTitle);
 
     List<TicketToMedicalCommission> getTicketsToMedicalCommission(int patientId);
 }

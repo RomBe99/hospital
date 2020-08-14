@@ -99,11 +99,11 @@ public class PatientService {
 
         LocalDate ticketDate = LocalDate.parse(request.getDate());
         LocalTime ticketTime = LocalTime.parse(request.getTime());
+        String ticketTitle = TicketFactory.buildTicketToDoctor(request.getDoctorId(), ticketDate, ticketTime);
 
-        scheduleDao.appointmentToDoctor(patientId, request.getDoctorId(), ticketDate, ticketTime);
+        scheduleDao.appointmentToDoctor(patientId, ticketTitle);
 
-        return new AppointmentToDoctorDtoResponse(TicketFactory.buildTicketToDoctor(request.getDoctorId(), ticketDate, ticketTime),
-                request.getDoctorId(),
+        return new AppointmentToDoctorDtoResponse(ticketTitle, request.getDoctorId(),
                 doctor.getFirstName(), doctor.getLastName(), doctor.getPatronymic(), doctor.getSpecialty(), doctor.getCabinet(),
                 ticketDate.toString(), ticketTime.toString());
     }
@@ -116,10 +116,12 @@ public class PatientService {
         medicalCommissionDao.denyMedicalCommission(ticket);
     }
 
-    public void denyTicket(String sessionId, String ticket) throws PermissionDeniedException {
-        patientDao.hasPermissions(sessionId);
+    public void denyTicket(String sessionId, String ticketTitle) throws PermissionDeniedException {
+        SecurityManagerImpl
+                .getSecurityManager(UserType.PATIENT)
+                .hasPermission(sessionId);
 
-        scheduleDao.denyTicket(ticket);
+        scheduleDao.denyTicket(ticketTitle);
     }
 
     public AllTicketsDtoResponse getTickets(String sessionId) throws PermissionDeniedException {

@@ -4,7 +4,6 @@ import net.thumbtack.hospital.model.schedule.ScheduleCell;
 import net.thumbtack.hospital.model.ticket.TicketToDoctor;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.List;
 
 public interface ScheduleDao {
@@ -12,9 +11,9 @@ public interface ScheduleDao {
 
     void editSchedule(int doctorId, LocalDate dateStart, LocalDate dateEnd, List<ScheduleCell> newSchedule);
 
-    void appointmentToDoctor(int patientId, int doctorId, LocalDate date, LocalTime time);
+    void appointmentToDoctor(int patientId, String ticketTitle);
 
-    void denyTicket(String title);
+    void denyTicket(String ticketTitle);
 
     List<TicketToDoctor> getTicketsToDoctor(int patientId);
 }

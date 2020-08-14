@@ -41,18 +41,18 @@ public class MedicalCommissionDaoImpl implements MedicalCommissionDao {
     }
 
     @Override
-    public void denyMedicalCommission(String title) {
-        LOGGER.debug(CLASS_NAME + ": Deny ticket with title = {} to commission", title);
+    public void denyMedicalCommission(String ticketTitle) {
+        LOGGER.debug(CLASS_NAME + ": Deny ticket with title = {} to commission", ticketTitle);
 
         try (SqlSession session = getSession()) {
             try {
-                mapperFactory.getMapper(session, MedicalCommissionMapper.class).denyMedicalCommission(title);
+                mapperFactory.getMapper(session, MedicalCommissionMapper.class).denyMedicalCommission(ticketTitle);
 
                 session.commit();
-                LOGGER.debug(CLASS_NAME + ": Successfully deny ticket with title = {} to commission", title);
+                LOGGER.debug(CLASS_NAME + ": Successfully deny ticket with title = {} to commission", ticketTitle);
             } catch (RuntimeException ex) {
                 session.rollback();
-                LOGGER.error(CLASS_NAME + ": Can't deny ticket with title = {} to commission", title, ex);
+                LOGGER.error(CLASS_NAME + ": Can't deny ticket with title = {} to commission", ticketTitle, ex);
 
                 throw ex;
             }
@@ -66,7 +66,7 @@ public class MedicalCommissionDaoImpl implements MedicalCommissionDao {
         try (SqlSession session = getSession()) {
             return session.selectList("net.thumbtack.hospital.mapper.PatientMapper.getTicketsToMedicalCommission", patientId);
         } catch (RuntimeException ex) {
-            LOGGER.error(CLASS_NAME + ": Can't get all tickets to medical commission for patient = {}", patientId);
+            LOGGER.error(CLASS_NAME + ": Can't get all tickets to medical commission for patient = {}", patientId, ex);
 
             throw ex;
         }

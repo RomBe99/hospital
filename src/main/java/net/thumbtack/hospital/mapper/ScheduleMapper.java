@@ -5,7 +5,6 @@ import net.thumbtack.hospital.model.schedule.TimeCell;
 import org.apache.ibatis.annotations.*;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.List;
 
 public interface ScheduleMapper extends Mapper {
@@ -31,10 +30,9 @@ public interface ScheduleMapper extends Mapper {
     void removeSchedule(@Param("doctorId") int doctorId,
                         @Param("startDate") LocalDate startDate, @Param("endStart") LocalDate endStart);
 
-    @Update("UPDATE time_cell SET patientId = #{patientId} WHERE patientId IS NULL AND scheduleCellId = (SELECT id FROM schedule_cell WHERE doctorId = #{doctorId} AND date = #{date}) AND time = #{time};")
-    void appointmentToDoctor(@Param("patientId") int patientId, @Param("doctorId") int doctorId,
-                             @Param("date") LocalDate date, @Param("time") LocalTime time);
+    @Update("UPDATE time_cell SET patientId = #{patientId} WHERE patientId IS NULL AND title = #{ticketTitle};")
+    void appointmentToDoctor(@Param("patientId") int patientId, @Param("ticketTitle") String ticketTitle);
 
-    @Update("UPDATE time_cell SET patientId = NULL WHERE ticket = #{ticket};")
-    void denyTicket(String ticket);
+    @Update("UPDATE time_cell SET patientId = NULL WHERE ticket = #{ticketTitle};")
+    void denyTicket(String ticketTitle);
 }

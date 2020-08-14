@@ -11,7 +11,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.List;
 
 import static net.thumbtack.hospital.util.mybatis.MyBatisUtils.getSession;
@@ -76,21 +75,18 @@ public class ScheduleDaoImpl implements ScheduleDao {
     }
 
     @Override
-    public void appointmentToDoctor(int patientId, int doctorId, LocalDate date, LocalTime time) {
-        LOGGER.debug(CLASS_NAME + ": Patient = {} appointment to doctor = {} on date = {}, time = {}",
-                patientId, doctorId, date, time);
+    public void appointmentToDoctor(int patientId, String ticktTitle) {
+        LOGGER.debug(CLASS_NAME + ": Patient = {} appointment to ticket = {}", patientId, ticktTitle);
 
         try (SqlSession session = getSession()) {
             try {
-                mapperFactory.getMapper(session, ScheduleMapper.class).appointmentToDoctor(patientId, doctorId, date, time);
+                mapperFactory.getMapper(session, ScheduleMapper.class).appointmentToDoctor(patientId, ticktTitle);
 
                 session.commit();
-                LOGGER.debug(CLASS_NAME + ": Patient = {} successfully appointment to doctor = {} on date = {}, time = {}",
-                        patientId, doctorId, date, time);
+                LOGGER.debug(CLASS_NAME + ": Patient = {} successfully appointment to ticket = {}", patientId, ticktTitle);
             } catch (RuntimeException ex) {
                 session.rollback();
-                LOGGER.error(CLASS_NAME + ": Patient = {} can't appointment to doctor = {} on date = {}, time = {}",
-                        patientId, doctorId, date, time);
+                LOGGER.error(CLASS_NAME + ": Patient = {} can't appointment to ticket = {}", patientId, ticktTitle, ex);
 
                 throw ex;
             }
@@ -98,18 +94,18 @@ public class ScheduleDaoImpl implements ScheduleDao {
     }
 
     @Override
-    public void denyTicket(String title) {
-        LOGGER.debug(CLASS_NAME + ": Deny ticket = {} ", title);
+    public void denyTicket(String ticketTitle) {
+        LOGGER.debug(CLASS_NAME + ": Deny ticket = {} ", ticketTitle);
 
         try (SqlSession session = getSession()) {
             try {
-                mapperFactory.getMapper(session, ScheduleMapper.class).denyTicket(title);
+                mapperFactory.getMapper(session, ScheduleMapper.class).denyTicket(ticketTitle);
 
                 session.commit();
-                LOGGER.debug(CLASS_NAME + ": Successfully deny ticket = {}", title);
+                LOGGER.debug(CLASS_NAME + ": Successfully deny ticket = {}", ticketTitle);
             } catch (RuntimeException ex) {
                 session.rollback();
-                LOGGER.error(CLASS_NAME + ": Can't deny ticket = {}", title, ex);
+                LOGGER.error(CLASS_NAME + ": Can't deny ticket = {}", ticketTitle, ex);
 
                 throw ex;
             }
@@ -123,7 +119,7 @@ public class ScheduleDaoImpl implements ScheduleDao {
         try (SqlSession session = getSession()) {
             return session.selectList("net.thumbtack.hospital.mapper.PatientMapper.getTicketsToDoctor", patientId);
         } catch (RuntimeException ex) {
-            LOGGER.error(CLASS_NAME + ": Can't get all tickets to doctor for patient = {}", patientId);
+            LOGGER.error(CLASS_NAME + ": Can't get all tickets to doctor for patient = {}", patientId, ex);
 
             throw ex;
         }
