@@ -11,11 +11,13 @@ import net.thumbtack.hospital.dtoresponse.doctor.DoctorLoginDtoResponse;
 import net.thumbtack.hospital.dtoresponse.patient.PatientInformationDtoResponse;
 import net.thumbtack.hospital.dtoresponse.patient.PatientRegistrationDtoResponse;
 import net.thumbtack.hospital.mapper.UserType;
+import net.thumbtack.hospital.util.ScheduleGenerators;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -145,15 +147,18 @@ public class AdministratorControllerTest extends ControllerTestApi {
         String rootAdminSessionId = loginRootAdmin();
 
         int duration = 15;
-        int durationPerDay = 4;
-        int daysCount = 7;
+        LocalDate dateStart = LocalDate.of(2020, 3, 1);
+        LocalDate dateEnd = LocalDate.of(2020, 3, 31);
+        LocalTime timeStart = LocalTime.of(8, 0);
+        LocalTime timeEnd = LocalTime.of(17, 0);
         List<Integer> weekDays = Arrays.asList(1, 2, 3);
 
-        DtoRequestWithSchedule generatedSchedule = generateWeekSchedule(duration, durationPerDay, daysCount, weekDays);
+        DtoRequestWithSchedule generatedWeekSchedule = ScheduleGenerators.generateDtoRequestWithWeekSchedule(
+                duration, dateStart, dateEnd, timeStart, timeEnd, weekDays);
 
         DoctorRegistrationDtoRequest doctorRegistrationRequest =
-                new DoctorRegistrationDtoRequest(generatedSchedule.getDateStart(), generatedSchedule.getDateEnd(), duration,
-                        generatedSchedule.getWeekSchedule(),
+                new DoctorRegistrationDtoRequest(generatedWeekSchedule.getDateStart(), generatedWeekSchedule.getDateEnd(), duration,
+                        generatedWeekSchedule.getWeekSchedule(),
                         "Саркис", "Семёнов", "Вениаминович",
                         "Surgeon", "205", "SarkisSemenov585", "xjNE6QK6d3b9");
         DoctorRegistrationDtoResponse doctorRegistrationResponse = new DoctorRegistrationDtoResponse(

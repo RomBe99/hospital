@@ -9,9 +9,6 @@ import net.thumbtack.hospital.dtorequest.doctor.CreateMedicalCommissionDtoReques
 import net.thumbtack.hospital.dtorequest.patient.AppointmentToDoctorDtoRequest;
 import net.thumbtack.hospital.dtorequest.patient.EditPatientProfileDtoRequest;
 import net.thumbtack.hospital.dtorequest.patient.PatientRegistrationDtoRequest;
-import net.thumbtack.hospital.dtorequest.schedule.DayScheduleDtoRequest;
-import net.thumbtack.hospital.dtorequest.schedule.DtoRequestWithSchedule;
-import net.thumbtack.hospital.dtorequest.schedule.WeekScheduleDtoRequest;
 import net.thumbtack.hospital.dtorequest.user.LoginDtoRequest;
 import net.thumbtack.hospital.dtoresponse.admin.*;
 import net.thumbtack.hospital.dtoresponse.doctor.CreateMedicalCommissionDtoResponse;
@@ -43,10 +40,9 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import javax.servlet.http.Cookie;
 import java.nio.charset.StandardCharsets;
-import java.time.DayOfWeek;
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @SpringBootTest(classes = HospitalApplication.class)
@@ -85,91 +81,6 @@ public abstract class ControllerTestApi {
 
     public <T> T mapFromJson(String json, Class<T> clazz) throws JsonProcessingException {
         return objectMapper.readValue(json, clazz);
-    }
-
-    public DtoRequestWithSchedule generateWeekSchedule(int duration, int durationPerDay, int daysCount, List<Integer> weekDays) {
-        LocalDate dateStart = LocalDate.now();
-        List<DayOfWeek> workDaysOfWeek = weekDays.stream().map(DayOfWeek::of).collect(Collectors.toList());
-
-        if (DtoAdapters.ScheduleTransformer.weekendChecker(dateStart, workDaysOfWeek)) {
-            do {
-                dateStart = dateStart.plusDays(1);
-            } while (DtoAdapters.ScheduleTransformer.weekendChecker(dateStart, workDaysOfWeek));
-        }
-
-        LocalDate dateEnd = dateStart.plusDays(daysCount);
-
-        LocalTime timeStart = LocalTime.now().withNano(0).withSecond(0);
-        LocalTime timeEnd = timeStart.plusMinutes(durationPerDay * duration);
-
-        WeekScheduleDtoRequest weekSchedule = new WeekScheduleDtoRequest(timeStart.toString(), timeEnd.toString(), weekDays);
-
-        return new DtoRequestWithSchedule(dateStart.toString(), dateEnd.toString(), duration, weekSchedule) {
-            @Override
-            public void setDateStart(String dateStart) {
-                super.setDateStart(dateStart);
-            }
-
-            @Override
-            public void setDateEnd(String dateEnd) {
-                super.setDateEnd(dateEnd);
-            }
-
-            @Override
-            public void setDuration(int duration) {
-                super.setDuration(duration);
-            }
-
-            @Override
-            public void setWeekSchedule(WeekScheduleDtoRequest weekSchedule) {
-                super.setWeekSchedule(weekSchedule);
-            }
-
-            @Override
-            public void setWeekDaysSchedule(List<DayScheduleDtoRequest> weekDaysSchedule) {
-                super.setWeekDaysSchedule(weekDaysSchedule);
-            }
-
-            @Override
-            public String getDateStart() {
-                return super.getDateStart();
-            }
-
-            @Override
-            public String getDateEnd() {
-                return super.getDateEnd();
-            }
-
-            @Override
-            public int getDuration() {
-                return super.getDuration();
-            }
-
-            @Override
-            public WeekScheduleDtoRequest getWeekSchedule() {
-                return super.getWeekSchedule();
-            }
-
-            @Override
-            public List<DayScheduleDtoRequest> getWeekDaysSchedule() {
-                return super.getWeekDaysSchedule();
-            }
-
-            @Override
-            public boolean equals(Object o) {
-                return super.equals(o);
-            }
-
-            @Override
-            public int hashCode() {
-                return super.hashCode();
-            }
-
-            @Override
-            public String toString() {
-                return super.toString();
-            }
-        };
     }
 
     // Debug controller methods
