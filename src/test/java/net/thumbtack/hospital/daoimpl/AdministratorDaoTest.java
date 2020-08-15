@@ -1,6 +1,7 @@
-package net.thumbtack.hospital.dao;
+package net.thumbtack.hospital.daoimpl;
 
 import net.thumbtack.hospital.model.user.Administrator;
+import org.junit.Assert;
 import org.junit.Test;
 
 public class AdministratorDaoTest extends DaoTestApi {
@@ -73,7 +74,7 @@ public class AdministratorDaoTest extends DaoTestApi {
     @Test
     public void removeAdministratorTest() {
         Administrator administrator = new Administrator("HendonGurov725", "xxqvb1dmuLFI",
-                "Хендон", "Гуров", null, "Антонович");
+                "Хендон", "Гуров", null, "Тестовый администратор");
         insertUser(administrator);
 
         removeUserById(administrator.getId(), administrator.getClass());
@@ -82,29 +83,77 @@ public class AdministratorDaoTest extends DaoTestApi {
     @Test(expected = RuntimeException.class)
     public void insertAdministratorWithIncorrectLoginTest() {
         Administrator administrator = new Administrator(null, "xxqvb1dmuLFI",
-                "Хендон", "Гуров", null, "Антонович");
+                "Хендон", "Гуров", null, "Admin with incorrect data");
         insertUser(administrator);
     }
 
     @Test(expected = RuntimeException.class)
     public void insertAdministratorWithIncorrectPasswordTest() {
         Administrator administrator = new Administrator("HendonGurov725", null,
-                "Хендон", "Гуров", null, "Антонович");
+                "Хендон", "Гуров", null, "Admin with incorrect data");
         insertUser(administrator);
+    }
+
+    @Test(expected = RuntimeException.class)
+    public void updateAdministratorWithIncorrectPasswordTest() {
+        Administrator administrator = new Administrator("HendonGurov725", "xxqvb1dmuLFI",
+                "Хендон", "Гуров", null, "Admin with incorrect data");
+
+        try {
+            insertUser(administrator);
+        } catch (RuntimeException ex) {
+            Assert.fail();
+        }
+
+        administrator.setPassword(null);
+
+        updateUser(administrator);
     }
 
     @Test(expected = RuntimeException.class)
     public void insertAdministratorWithIncorrectFirstnameTest() {
         Administrator administrator = new Administrator("HendonGurov725", "xxqvb1dmuLFI",
-                null, "Гуров", null, "Антонович");
+                null, "Гуров", null, "Admin with incorrect data");
         insertUser(administrator);
+    }
+
+    @Test(expected = RuntimeException.class)
+    public void updateAdministratorWithIncorrectFirstnameTest() {
+        Administrator administrator = new Administrator("HendonGurov725", "xxqvb1dmuLFI",
+                "Хендон", "Гуров", null, "Admin with incorrect data");
+
+        try {
+            insertUser(administrator);
+        } catch (RuntimeException ex) {
+            Assert.fail();
+        }
+
+        administrator.setFirstName(null);
+
+        updateUser(administrator);
     }
 
     @Test(expected = RuntimeException.class)
     public void insertAdministratorWithIncorrectLastnameTest() {
         Administrator administrator = new Administrator("HendonGurov725", "xxqvb1dmuLFI",
-                "Хендон", null, null, "Антонович");
+                "Хендон", null, null, "Admin with incorrect data");
         insertUser(administrator);
+    }
+
+    @Test(expected = RuntimeException.class)
+    public void updateAdministratorWithIncorrectLastnameTest() {
+        Administrator administrator = new Administrator("HendonGurov725", "xxqvb1dmuLFI",
+                "Хендон", "Гуров", null, "Admin with incorrect data");
+
+        try {
+            insertUser(administrator);
+        } catch (RuntimeException ex) {
+            Assert.fail();
+        }
+
+        administrator.setLastName(null);
+
+        updateUser(administrator);
     }
 
     @Test(expected = RuntimeException.class)
@@ -112,5 +161,21 @@ public class AdministratorDaoTest extends DaoTestApi {
         Administrator administrator = new Administrator("HendonGurov725", "xxqvb1dmuLFI",
                 "Хендон", "Гуров", null, null);
         insertUser(administrator);
+    }
+
+    @Test(expected = RuntimeException.class)
+    public void updateAdministratorWithIncorrectPositionTest() {
+        Administrator administrator = new Administrator("HendonGurov725", "xxqvb1dmuLFI",
+                "Хендон", "Гуров", null, "Admin with incorrect data");
+
+        try {
+            insertUser(administrator);
+        } catch (RuntimeException ex) {
+            Assert.fail();
+        }
+
+        administrator.setPosition(null);
+
+        updateUser(administrator);
     }
 }
