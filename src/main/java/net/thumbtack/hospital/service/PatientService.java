@@ -41,12 +41,9 @@ public class PatientService {
     public static String phoneTransformer(String phone) {
         String emptyStr = "";
         String clearPhoneNumberRegexp = "\\D+";
+        String result = phone.replaceAll(clearPhoneNumberRegexp, emptyStr);
 
-        if (phone.startsWith("7")) {
-            return '+' + phone.replaceAll(clearPhoneNumberRegexp, emptyStr);
-        }
-
-        return phone.replaceAll(clearPhoneNumberRegexp, emptyStr);
+        return result.startsWith("7") ? '+' + result : result;
     }
 
     @Autowired
