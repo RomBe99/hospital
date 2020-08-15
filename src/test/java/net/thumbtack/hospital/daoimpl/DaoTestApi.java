@@ -1,7 +1,6 @@
 package net.thumbtack.hospital.daoimpl;
 
 import net.thumbtack.hospital.dao.*;
-import net.thumbtack.hospital.daoimpl.*;
 import net.thumbtack.hospital.debug.DebugDao;
 import net.thumbtack.hospital.debug.DebugDaoImpl;
 import net.thumbtack.hospital.mapper.UserType;
@@ -174,14 +173,14 @@ public abstract class DaoTestApi {
 
     public void getDoctorInformation(int patientId, int doctorId, LocalDate startDate, LocalDate endDate,
                                      Doctor expectedDoctor) {
-        Doctor actualDoctor = doctorDao.getDoctorInformation(patientId, doctorId, startDate, endDate);
+        Doctor actualDoctor = userDao.getDoctorInformation(patientId, doctorId, startDate, endDate);
 
         Assert.assertEquals(expectedDoctor, actualDoctor);
     }
 
     public void getDoctorsInformation(int patientId, String speciality, LocalDate startDate, LocalDate endDate,
                                       List<Doctor> expectedDoctors) {
-        List<Doctor> actualDoctors = doctorDao.getDoctorsInformation(patientId, speciality, startDate, endDate);
+        List<Doctor> actualDoctors = userDao.getDoctorsInformation(patientId, speciality, startDate, endDate);
 
         actualDoctors.sort(Comparator.comparingInt(User::getId));
         expectedDoctors.sort(Comparator.comparingInt(User::getId));

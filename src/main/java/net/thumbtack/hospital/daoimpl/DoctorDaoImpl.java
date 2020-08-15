@@ -1,7 +1,6 @@
 package net.thumbtack.hospital.daoimpl;
 
 import net.thumbtack.hospital.dao.DoctorDao;
-import net.thumbtack.hospital.dao.UserDao;
 import net.thumbtack.hospital.mapper.CommonMapper;
 import net.thumbtack.hospital.mapper.DoctorMapper;
 import net.thumbtack.hospital.mapper.MapperFactory;
@@ -14,9 +13,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDate;
-import java.util.List;
-
 import static net.thumbtack.hospital.util.mybatis.MyBatisUtils.getSession;
 
 @Component("DoctorDaoImpl")
@@ -25,7 +21,6 @@ public class DoctorDaoImpl implements DoctorDao {
     private static final String CLASS_NAME = DoctorDaoImpl.class.getSimpleName();
 
     private final MapperFactory mapperFactory = new MapperFactory();
-    private final UserDao userDao = new UserDaoImpl();
 
     @Override
     public void insertDoctor(Doctor doctor) {
@@ -86,16 +81,6 @@ public class DoctorDaoImpl implements DoctorDao {
     }
 
     @Override
-    public int login(String sessionId, String login, String password) {
-        return userDao.login(sessionId, login, password);
-    }
-
-    @Override
-    public void logout(String sessionId) {
-        userDao.logout(sessionId);
-    }
-
-    @Override
     public int hasPermissions(String sessionId) throws PermissionDeniedException {
         LOGGER.debug(CLASS_NAME + ": Checking doctor permissions for session id = {}", sessionId);
 
@@ -106,15 +91,5 @@ public class DoctorDaoImpl implements DoctorDao {
 
             throw new PermissionDeniedException(PermissionDeniedErrorCode.PERMISSION_DENIED);
         }
-    }
-
-    @Override
-    public Doctor getDoctorInformation(int patientId, int doctorId, LocalDate startDate, LocalDate endDate) {
-        return userDao.getDoctorInformation(patientId, doctorId, startDate, endDate);
-    }
-
-    @Override
-    public List<Doctor> getDoctorsInformation(int patientId, String speciality, LocalDate startDate, LocalDate endDate) {
-        return userDao.getDoctorsInformation(patientId, speciality, startDate, endDate);
     }
 }

@@ -1,17 +1,14 @@
 package net.thumbtack.hospital.dao;
 
 import net.thumbtack.hospital.model.user.Doctor;
-import net.thumbtack.hospital.util.error.PermissionDeniedException;
 
 import java.time.LocalDate;
 import java.util.List;
 
-public interface UserDao {
+public interface UserDao extends PermissionsDao {
     int login(String sessionId, String login, String password);
 
     void logout(String sessionId);
-
-    int hasPermissions(String sessionId) throws PermissionDeniedException;
 
     Doctor getDoctorInformation(int patientId, int doctorId, LocalDate startDate, LocalDate endDate);
 
