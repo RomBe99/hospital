@@ -21,7 +21,7 @@ public class HospitalApplication {
         try {
             MyBatisUtils.initConnection();
         } catch (RuntimeException ex) {
-            LOGGER.error(CLASS_NAME + ": ", ex);
+            LOGGER.error(CLASS_NAME + ": Can't connect to database", ex);
             return;
         }
 
