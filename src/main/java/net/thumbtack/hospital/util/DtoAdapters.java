@@ -47,8 +47,8 @@ public class DtoAdapters {
     }
 
     public final static class ScheduleTransformer {
-        public static boolean weekendChecker(LocalDate date, List<DayOfWeek> workDaysOfWeek) {
-            DayOfWeek dayOfWeek = DayOfWeek.from(date);
+        public static boolean isWeekend(LocalDate testDate, List<DayOfWeek> workDaysOfWeek) {
+            DayOfWeek dayOfWeek = DayOfWeek.from(testDate);
 
             List<Predicate<DayOfWeek>> weekendDayCheckers = new ArrayList<>();
             weekendDayCheckers.add(d -> d == DayOfWeek.SATURDAY);
@@ -82,14 +82,14 @@ public class DtoAdapters {
             List<ScheduleCell> result = new LinkedList<>();
             List<LocalTime> durations = new LinkedList<>();
 
-            for (LocalTime t = durationStartTime; t.isBefore(durationEndTime); t = t.plusMinutes(duration)) {
+            for (LocalTime t = durationStartTime; t.isBefore(durationEndTime) || t.equals(durationEndTime); t = t.plusMinutes(duration)) {
                 durations.add(t);
             }
 
             List<TimeCell> temp;
 
-            for (LocalDate d = dateStart; d.isBefore(dateEnd); d = d.plusDays(1)) {
-                if (weekendChecker(d, workDaysOfWeek)) {
+            for (LocalDate d = dateStart; d.isBefore(dateEnd) || d.equals(dateEnd); d = d.plusDays(1)) {
+                if (isWeekend(d, workDaysOfWeek)) {
                     continue;
                 }
 
@@ -130,10 +130,10 @@ public class DtoAdapters {
             List<TimeCell> temp;
             List<DayOfWeek> workDaysOfWeek = new ArrayList<>(weekDurationTimes.keySet());
 
-            for (LocalDate d = dateStart; d.isBefore(dateEnd); d = d.plusDays(1)) {
+            for (LocalDate d = dateStart; d.isBefore(dateEnd) || d.equals(dateEnd); d = d.plusDays(1)) {
                 durations = weekDurationTimes.get(d.getDayOfWeek());
 
-                if (weekendChecker(d, workDaysOfWeek) || durations == null) {
+                if (isWeekend(d, workDaysOfWeek) || durations == null) {
                     continue;
                 }
 
