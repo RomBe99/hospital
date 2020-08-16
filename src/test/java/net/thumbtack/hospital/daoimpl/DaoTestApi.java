@@ -5,7 +5,6 @@ import net.thumbtack.hospital.debug.DebugDao;
 import net.thumbtack.hospital.debug.DebugDaoImpl;
 import net.thumbtack.hospital.mapper.UserType;
 import net.thumbtack.hospital.model.schedule.ScheduleCell;
-import net.thumbtack.hospital.model.schedule.TimeCell;
 import net.thumbtack.hospital.model.ticket.TicketToDoctor;
 import net.thumbtack.hospital.model.ticket.TicketToMedicalCommission;
 import net.thumbtack.hospital.model.user.Administrator;
@@ -15,25 +14,27 @@ import net.thumbtack.hospital.model.user.User;
 import net.thumbtack.hospital.util.cookie.CookieFactory;
 import net.thumbtack.hospital.util.error.PermissionDeniedException;
 import net.thumbtack.hospital.util.mybatis.MyBatisUtils;
-import net.thumbtack.hospital.util.security.manager.SecurityManagerImpl;
-import net.thumbtack.hospital.util.ticket.TicketFactory;
+import net.thumbtack.hospital.util.security.SecurityManagerImpl;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
-import java.util.*;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
 public abstract class DaoTestApi {
-    private final AdminDao adminDao = new AdminDaoImpl();
+    private final AdministratorDao administratorDao = new AdministratorDaoImpl();
     private final DoctorDao doctorDao = new DoctorDaoImpl();
     private final PatientDao patientDao = new PatientDaoImpl();
     private final UserDao userDao = new UserDaoImpl();
     private final MedicalCommissionDao medicalCommissionDao = new MedicalCommissionDaoImpl();
     private final ScheduleDao scheduleDao = new ScheduleDaoImpl();
+    private final CommonDao commonDao = new CommonDaoImpl();
     private final DebugDao debugDao = new DebugDaoImpl();
 
     @BeforeClass
@@ -54,30 +55,6 @@ public abstract class DaoTestApi {
         debugDao.clearTimeCells();
     }
 
-    public static List<ScheduleCell> generateSchedule(int doctorId, int daysCount,
-                                                      LocalTime startTime, LocalDate startDate, List<Integer> durations) {
-        List<ScheduleCell> schedule = new ArrayList<>(daysCount);
-        List<TimeCell> timeCells;
-        LocalDate tempDate;
-        LocalTime tempTime;
-
-        for (int i = 0; i < daysCount; i++) {
-            timeCells = new ArrayList<>(durations.size());
-            tempDate = startDate.plusDays(i);
-
-            for (int d : durations) {
-                tempTime = startTime.plusMinutes(d);
-
-                timeCells.add(new TimeCell(tempTime, null, d,
-                        TicketFactory.buildTicketToDoctor(doctorId, tempDate, tempTime)));
-            }
-
-            schedule.add(new ScheduleCell(0, null, tempDate, timeCells));
-        }
-
-        return schedule;
-    }
-
     public static String generateSessionId() {
         return new CookieFactory().getCookieByCookieName(CookieFactory.JAVA_SESSION_ID).getValue();
     }
@@ -88,7 +65,7 @@ public abstract class DaoTestApi {
         Map<Class<? extends User>, Consumer<User>> userInsertOperations = new HashMap<>();
         userInsertOperations.put(Doctor.class, u -> doctorDao.insertDoctor((Doctor) u));
         userInsertOperations.put(Patient.class, u -> patientDao.insertPatient((Patient) u));
-        userInsertOperations.put(Administrator.class, u -> adminDao.insertAdministrator((Administrator) u));
+        userInsertOperations.put(Administrator.class, u -> administratorDao.insertAdministrator((Administrator) u));
 
         userInsertOperations.get(user.getClass()).accept(user);
 
@@ -108,7 +85,7 @@ public abstract class DaoTestApi {
         Map<Class<? extends User>, Function<Integer, ? extends User>> userSuppliers = new HashMap<>();
         userSuppliers.put(Doctor.class, doctorDao::getDoctorById);
         userSuppliers.put(Patient.class, patientDao::getPatientById);
-        userSuppliers.put(Administrator.class, adminDao::getAdministratorById);
+        userSuppliers.put(Administrator.class, administratorDao::getAdministratorById);
 
         return userSuppliers
                 .get(userClass)
@@ -118,7 +95,7 @@ public abstract class DaoTestApi {
     public void updateUser(User user) {
         Map<Class<? extends User>, Consumer<User>> userUpdaters = new HashMap<>();
         userUpdaters.put(Patient.class, u -> patientDao.updatePatient((Patient) u));
-        userUpdaters.put(Administrator.class, u -> adminDao.updateAdministrator((Administrator) u));
+        userUpdaters.put(Administrator.class, u -> administratorDao.updateAdministrator((Administrator) u));
 
         userUpdaters.get(user.getClass()).accept(user);
 
@@ -129,7 +106,7 @@ public abstract class DaoTestApi {
     public void removeUserById(int userId, Class<? extends User> userType) {
         Map<Class<? extends User>, Consumer<Integer>> userRemovers = new HashMap<>();
         userRemovers.put(Doctor.class, doctorDao::removeDoctor);
-        userRemovers.put(Administrator.class, adminDao::removeAdministrator);
+        userRemovers.put(Administrator.class, administratorDao::removeAdministrator);
 
         userRemovers.get(userType).accept(userId);
 
@@ -238,5 +215,13 @@ public abstract class DaoTestApi {
 
     public List<TicketToDoctor> getTicketsToDoctor(int patientId) {
         return scheduleDao.getTicketsToDoctor(patientId);
+    }
+
+    // Common dao methods
+
+    public void getUserTypeByUserId(int userId, String expectedUserType) {
+        String actualUserType = commonDao.getUserTypeByUserId(userId);
+
+        Assert.assertEquals(expectedUserType, actualUserType);
     }
 }

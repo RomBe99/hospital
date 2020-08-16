@@ -81,6 +81,20 @@ public class AdministratorDaoTest extends DaoTestApi {
     }
 
     @Test(expected = RuntimeException.class)
+    public void insertAdministratorsWithSameLoginTest() {
+        Administrator administrator = new Administrator("HendonGurov725", "xxqvb1dmuLFI",
+                "Хендон", "Гуров", null, "Admin with incorrect data");
+
+        try {
+            insertUser(administrator);
+        } catch (RuntimeException ex) {
+            Assert.fail();
+        }
+
+        insertUser(administrator);
+    }
+
+    @Test(expected = RuntimeException.class)
     public void insertAdministratorWithIncorrectLoginTest() {
         Administrator administrator = new Administrator(null, "xxqvb1dmuLFI",
                 "Хендон", "Гуров", null, "Admin with incorrect data");
@@ -106,7 +120,6 @@ public class AdministratorDaoTest extends DaoTestApi {
         }
 
         administrator.setPassword(null);
-
         updateUser(administrator);
     }
 
@@ -129,7 +142,6 @@ public class AdministratorDaoTest extends DaoTestApi {
         }
 
         administrator.setFirstName(null);
-
         updateUser(administrator);
     }
 
@@ -152,7 +164,6 @@ public class AdministratorDaoTest extends DaoTestApi {
         }
 
         administrator.setLastName(null);
-
         updateUser(administrator);
     }
 
@@ -175,7 +186,6 @@ public class AdministratorDaoTest extends DaoTestApi {
         }
 
         administrator.setPosition(null);
-
         updateUser(administrator);
     }
 }

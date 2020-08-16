@@ -66,6 +66,21 @@ public class PatientDaoTest extends DaoTestApi {
     }
 
     @Test(expected = RuntimeException.class)
+    public void insertPatientsWithSameLoginTest() {
+        Patient patient = new Patient("EallaMerkulova844", "2PrKexqqZ5FK",
+                "Еалла", "Меркулова", "Григорьевна", "jojece9022@aenmail.net",
+                "403105, г. Красной Чикой, ул. Сыромятнический 1-й пер, дом 182, квартира 729", "+79835018633");
+
+        try {
+            insertUser(patient);
+        } catch (RuntimeException ex) {
+            Assert.fail();
+        }
+
+        insertUser(patient);
+    }
+
+    @Test(expected = RuntimeException.class)
     public void insertPatientWithIncorrectLoginTest() {
         Patient patient = new Patient(null, "2PrKexqqZ5FK",
                 "Еалла", "Меркулова", "Григорьевна", "jojece9022@aenmail.net",
