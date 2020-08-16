@@ -6,7 +6,7 @@ import net.thumbtack.hospital.dtoresponse.doctor.CreateMedicalCommissionDtoRespo
 import net.thumbtack.hospital.mapper.UserType;
 import net.thumbtack.hospital.model.ticket.TicketToMedicalCommission;
 import net.thumbtack.hospital.util.error.PermissionDeniedException;
-import net.thumbtack.hospital.util.security.manager.SecurityManagerImpl;
+import net.thumbtack.hospital.util.security.SecurityManagerImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

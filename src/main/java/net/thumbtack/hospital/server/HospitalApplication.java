@@ -1,6 +1,6 @@
 package net.thumbtack.hospital.server;
 
-import net.thumbtack.hospital.daoimpl.AdminDaoImpl;
+import net.thumbtack.hospital.daoimpl.AdministratorDaoImpl;
 import net.thumbtack.hospital.util.error.ErrorMessageFactory;
 import net.thumbtack.hospital.util.mybatis.MyBatisUtils;
 import org.slf4j.Logger;
@@ -14,7 +14,7 @@ import org.springframework.context.annotation.PropertySource;
 @PropertySource("classpath:application.properties")
 @EnableConfigurationProperties(ErrorMessageFactory.class)
 public class HospitalApplication {
-    private static final Logger LOGGER = LoggerFactory.getLogger(AdminDaoImpl.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(AdministratorDaoImpl.class);
     private static final String CLASS_NAME = HospitalApplication.class.getSimpleName();
 
     public static void main(String[] args) {

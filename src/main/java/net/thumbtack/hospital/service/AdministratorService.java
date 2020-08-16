@@ -1,6 +1,6 @@
 package net.thumbtack.hospital.service;
 
-import net.thumbtack.hospital.dao.AdminDao;
+import net.thumbtack.hospital.dao.AdministratorDao;
 import net.thumbtack.hospital.dao.CommonDao;
 import net.thumbtack.hospital.dao.DoctorDao;
 import net.thumbtack.hospital.dao.ScheduleDao;
@@ -22,7 +22,7 @@ import net.thumbtack.hospital.util.DtoAdapters;
 import net.thumbtack.hospital.util.error.PermissionDeniedException;
 import net.thumbtack.hospital.util.error.ScheduleErrorCode;
 import net.thumbtack.hospital.util.error.ScheduleException;
-import net.thumbtack.hospital.util.security.manager.SecurityManagerImpl;
+import net.thumbtack.hospital.util.security.SecurityManagerImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -32,14 +32,14 @@ import java.util.List;
 
 @Service("AdministratorService")
 public class AdministratorService {
-    private final AdminDao adminDao;
+    private final AdministratorDao administratorDao;
     private final DoctorDao doctorDao;
     private final ScheduleDao scheduleDao;
     private final CommonDao commonDao;
 
     @Autowired
-    public AdministratorService(AdminDao adminDao, DoctorDao doctorDao, ScheduleDao scheduleDao, CommonDao commonDao) {
-        this.adminDao = adminDao;
+    public AdministratorService(AdministratorDao administratorDao, DoctorDao doctorDao, ScheduleDao scheduleDao, CommonDao commonDao) {
+        this.administratorDao = administratorDao;
         this.doctorDao = doctorDao;
         this.scheduleDao = scheduleDao;
         this.commonDao = commonDao;
@@ -54,7 +54,7 @@ public class AdministratorService {
                 new Administrator(request.getLogin(), request.getPassword(),
                         request.getFirstName(), request.getLastName(), request.getPatronymic(), request.getPosition());
 
-        adminDao.insertAdministrator(admin);
+        administratorDao.insertAdministrator(admin);
 
         return new AdminRegistrationDtoResponse(admin.getId(),
                 admin.getFirstName(), admin.getLastName(), admin.getPatronymic(), admin.getPosition());
@@ -94,7 +94,7 @@ public class AdministratorService {
                 new Administrator(adminId, null, request.getNewPassword(),
                         request.getFirstName(), request.getLastName(), request.getPatronymic(), request.getPosition());
 
-        adminDao.updateAdministrator(admin);
+        administratorDao.updateAdministrator(admin);
 
         return new EditAdminProfileDtoResponse(adminId,
                 request.getFirstName(), request.getLastName(), request.getPatronymic(), request.getPosition());

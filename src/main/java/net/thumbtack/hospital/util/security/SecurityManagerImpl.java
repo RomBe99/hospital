@@ -1,7 +1,7 @@
-package net.thumbtack.hospital.util.security.manager;
+package net.thumbtack.hospital.util.security;
 
 import net.thumbtack.hospital.dao.PermissionsDao;
-import net.thumbtack.hospital.daoimpl.AdminDaoImpl;
+import net.thumbtack.hospital.daoimpl.AdministratorDaoImpl;
 import net.thumbtack.hospital.daoimpl.DoctorDaoImpl;
 import net.thumbtack.hospital.daoimpl.PatientDaoImpl;
 import net.thumbtack.hospital.daoimpl.UserDaoImpl;
@@ -19,7 +19,7 @@ public class SecurityManagerImpl implements SecurityManager {
         this.userPermissions.addAll(Arrays.asList(userPermissions));
 
         userDaos.put(UserType.PATIENT, new PatientDaoImpl());
-        userDaos.put(UserType.ADMINISTRATOR, new AdminDaoImpl());
+        userDaos.put(UserType.ADMINISTRATOR, new AdministratorDaoImpl());
         userDaos.put(UserType.DOCTOR, new DoctorDaoImpl());
         userDaos.put(null, new UserDaoImpl());
     }

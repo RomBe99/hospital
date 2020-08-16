@@ -19,7 +19,7 @@ import net.thumbtack.hospital.model.user.Doctor;
 import net.thumbtack.hospital.model.user.Patient;
 import net.thumbtack.hospital.util.DtoAdapters;
 import net.thumbtack.hospital.util.error.PermissionDeniedException;
-import net.thumbtack.hospital.util.security.manager.SecurityManagerImpl;
+import net.thumbtack.hospital.util.security.SecurityManagerImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -35,15 +35,15 @@ import java.util.stream.Collectors;
 public class UserService {
     private final PatientDao patientDao;
     private final UserDao userDao;
-    private final AdminDao adminDao;
+    private final AdministratorDao administratorDao;
     private final DoctorDao doctorDao;
     private final CommonDao commonDao;
 
     @Autowired
-    public UserService(PatientDao patientDao, @Qualifier("UserDaoImpl") UserDao userDao, AdminDao adminDao, DoctorDao doctorDao, CommonDao commonDao) {
+    public UserService(PatientDao patientDao, @Qualifier("UserDaoImpl") UserDao userDao, AdministratorDao administratorDao, DoctorDao doctorDao, CommonDao commonDao) {
         this.patientDao = patientDao;
         this.userDao = userDao;
-        this.adminDao = adminDao;
+        this.administratorDao = administratorDao;
         this.doctorDao = doctorDao;
         this.commonDao = commonDao;
     }
@@ -59,7 +59,7 @@ public class UserService {
             return new PatientLoginDtoResponse(p.getId(), p.getFirstName(), p.getLastName(), p.getPatronymic(), p.getEmail(), p.getAddress(), p.getPhone());
         });
         responseMap.put(UserType.ADMINISTRATOR, () -> {
-            Administrator a = adminDao.getAdministratorById(userId);
+            Administrator a = administratorDao.getAdministratorById(userId);
 
             return new AdminLoginDtoResponse(a.getId(), a.getFirstName(), a.getLastName(), a.getPatronymic(), a.getPosition());
         });
@@ -97,7 +97,7 @@ public class UserService {
                     patient.getEmail(), patient.getAddress(), patient.getPhone());
         });
         responseMap.put(UserType.ADMINISTRATOR, () -> {
-            Administrator admin = adminDao.getAdministratorById(userId);
+            Administrator admin = administratorDao.getAdministratorById(userId);
 
             return new AdminInformationDtoResponse(admin.getId(),
                     admin.getLogin(), admin.getPassword(),

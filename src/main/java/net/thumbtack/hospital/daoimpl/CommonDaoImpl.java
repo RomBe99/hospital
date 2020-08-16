@@ -6,7 +6,6 @@ import net.thumbtack.hospital.mapper.MapperFactory;
 import org.apache.ibatis.session.SqlSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
@@ -20,12 +19,7 @@ public class CommonDaoImpl implements CommonDao {
     private static final Logger LOGGER = LoggerFactory.getLogger(CommonDaoImpl.class);
     private static final String CLASS_NAME = CommonDaoImpl.class.getSimpleName();
 
-    private final MapperFactory mapperFactory;
-
-    @Autowired
-    public CommonDaoImpl(MapperFactory mapperFactory) {
-        this.mapperFactory = mapperFactory;
-    }
+    private final MapperFactory mapperFactory = new MapperFactory();
 
     @Override
     public String getUserTypeByUserId(int userId) {

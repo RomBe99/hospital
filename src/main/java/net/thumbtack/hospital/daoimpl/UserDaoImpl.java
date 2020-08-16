@@ -20,7 +20,7 @@ import static net.thumbtack.hospital.util.mybatis.MyBatisUtils.getSession;
 
 @Component("UserDaoImpl")
 public class UserDaoImpl implements UserDao {
-    private static final Logger LOGGER = LoggerFactory.getLogger(AdminDaoImpl.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(UserDaoImpl.class);
     private static final String CLASS_NAME = UserDaoImpl.class.getSimpleName();
 
     private final MapperFactory mapperFactory = new MapperFactory();

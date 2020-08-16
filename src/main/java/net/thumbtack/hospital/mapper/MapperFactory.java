@@ -14,7 +14,7 @@ public class MapperFactory {
 
     public MapperFactory() {
         mappers.put(UserMapper.class, s -> s.getMapper(UserMapper.class));
-        mappers.put(AdminMapper.class, s -> s.getMapper(AdminMapper.class));
+        mappers.put(AdministratorMapper.class, s -> s.getMapper(AdministratorMapper.class));
         mappers.put(CommonMapper.class, s -> s.getMapper(CommonMapper.class));
         mappers.put(DoctorMapper.class, s -> s.getMapper(DoctorMapper.class));
         mappers.put(MedicalCommissionMapper.class, s -> s.getMapper(MedicalCommissionMapper.class));

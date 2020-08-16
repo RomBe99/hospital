@@ -3,7 +3,7 @@ package net.thumbtack.hospital.mapper;
 import net.thumbtack.hospital.model.user.Administrator;
 import org.apache.ibatis.annotations.*;
 
-public interface AdminMapper extends UserMapper {
+public interface AdministratorMapper extends UserMapper {
     @Insert("INSERT INTO administrator VALUES (#{id}, #{position});")
     void insertAdministrator(Administrator administrator);
 

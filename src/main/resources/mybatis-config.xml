@@ -23,7 +23,7 @@
     </environments>
 
     <mappers>
-        <mapper class="net.thumbtack.hospital.mapper.AdminMapper"/>
+        <mapper class="net.thumbtack.hospital.mapper.AdministratorMapper"/>
         <mapper class="net.thumbtack.hospital.mapper.PatientMapper"/>
         <mapper class="net.thumbtack.hospital.mapper.UserMapper"/>
         <mapper class="net.thumbtack.hospital.mapper.CommonMapper"/>
@@ -32,7 +32,7 @@
         <mapper class="net.thumbtack.hospital.mapper.MedicalCommissionMapper"/>
         <mapper class="net.thumbtack.hospital.debug.DebugMapper"/>
         <mapper resource="net/thumbtack/hospital/mapper/DoctorMapper.xml"/>
-        <mapper resource="net/thumbtack/hospital/mapper/AdminMapper.xml"/>
+        <mapper resource="net/thumbtack/hospital/mapper/AdministratorMapper.xml"/>
         <mapper resource="net/thumbtack/hospital/mapper/PatientMapper.xml"/>
         <mapper resource="net/thumbtack/hospital/mapper/UserMapper.xml"/>
         <mapper resource="net/thumbtack/hospital/mapper/CommonMapper.xml"/>

@@ -1,7 +1,7 @@
 package net.thumbtack.hospital.daoimpl;
 
-import net.thumbtack.hospital.dao.AdminDao;
-import net.thumbtack.hospital.mapper.AdminMapper;
+import net.thumbtack.hospital.dao.AdministratorDao;
+import net.thumbtack.hospital.mapper.AdministratorMapper;
 import net.thumbtack.hospital.mapper.CommonMapper;
 import net.thumbtack.hospital.mapper.MapperFactory;
 import net.thumbtack.hospital.mapper.UserType;
@@ -15,10 +15,10 @@ import org.springframework.stereotype.Component;
 
 import static net.thumbtack.hospital.util.mybatis.MyBatisUtils.getSession;
 
-@Component("AdminDaoImpl")
-public class AdminDaoImpl implements AdminDao {
-    private static final Logger LOGGER = LoggerFactory.getLogger(AdminDaoImpl.class);
-    private static final String CLASS_NAME = AdminDaoImpl.class.getSimpleName();
+@Component("AdministratorDaoImpl")
+public class AdministratorDaoImpl implements AdministratorDao {
+    private static final Logger LOGGER = LoggerFactory.getLogger(AdministratorDaoImpl.class);
+    private static final String CLASS_NAME = AdministratorDaoImpl.class.getSimpleName();
 
     private final MapperFactory mapperFactory = new MapperFactory();
 
@@ -30,7 +30,7 @@ public class AdminDaoImpl implements AdminDao {
             try {
                 int userTypeId = mapperFactory.getMapper(session, CommonMapper.class).getUserTypeId(UserType.ADMINISTRATOR.getType());
 
-                AdminMapper mapper = mapperFactory.getMapper(session, AdminMapper.class);
+                AdministratorMapper mapper = mapperFactory.getMapper(session, AdministratorMapper.class);
                 mapper.insertUser(administrator, userTypeId);
                 mapper.insertAdministrator(administrator);
 
@@ -51,7 +51,7 @@ public class AdminDaoImpl implements AdminDao {
 
         try (SqlSession session = getSession()) {
             try {
-                AdminMapper mapper = mapperFactory.getMapper(session, AdminMapper.class);
+                AdministratorMapper mapper = mapperFactory.getMapper(session, AdministratorMapper.class);
                 mapper.updateUser(administrator);
                 mapper.updateAdministrator(administrator);
 
@@ -71,7 +71,7 @@ public class AdminDaoImpl implements AdminDao {
         LOGGER.debug(CLASS_NAME + ": Get administrator with id = {}", id);
 
         try (SqlSession session = getSession()) {
-            return session.selectOne("net.thumbtack.hospital.mapper.AdminMapper.getAdminById", id);
+            return session.selectOne("net.thumbtack.hospital.mapper.AdministratorMapper.getAdminById", id);
         } catch (RuntimeException ex) {
             LOGGER.error(CLASS_NAME + ": Can't get administrator with id = {}", id, ex);
 
@@ -85,7 +85,7 @@ public class AdminDaoImpl implements AdminDao {
 
         try (SqlSession session = getSession()) {
             try {
-                mapperFactory.getMapper(session, AdminMapper.class).removeAdministratorById(id);
+                mapperFactory.getMapper(session, AdministratorMapper.class).removeAdministratorById(id);
 
                 session.commit();
                 LOGGER.debug(CLASS_NAME + ": Administrator with id = {} successfully removed", id);
@@ -103,7 +103,7 @@ public class AdminDaoImpl implements AdminDao {
         LOGGER.debug(CLASS_NAME + ": Checking administrator permissions for session id = {}", sessionId);
 
         try (SqlSession session = getSession()) {
-            return mapperFactory.getMapper(session, AdminMapper.class).hasPermissions(sessionId);
+            return mapperFactory.getMapper(session, AdministratorMapper.class).hasPermissions(sessionId);
         } catch (RuntimeException ex) {
             LOGGER.error(CLASS_NAME + ": Can't check administrator permissions for session id = {}", sessionId, ex);
 

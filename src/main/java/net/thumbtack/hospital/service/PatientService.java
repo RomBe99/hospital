@@ -20,7 +20,7 @@ import net.thumbtack.hospital.model.user.Patient;
 import net.thumbtack.hospital.model.ticket.TicketToMedicalCommission;
 import net.thumbtack.hospital.model.ticket.TicketToDoctor;
 import net.thumbtack.hospital.util.error.PermissionDeniedException;
-import net.thumbtack.hospital.util.security.manager.SecurityManagerImpl;
+import net.thumbtack.hospital.util.security.SecurityManagerImpl;
 import net.thumbtack.hospital.util.ticket.TicketFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
