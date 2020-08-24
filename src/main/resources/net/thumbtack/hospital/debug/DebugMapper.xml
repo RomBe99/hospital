@@ -9,13 +9,13 @@
         <result property="date" column="date"/>
         <collection property="cells" column="ticket" javaType="java.util.List"
                     ofType="net.thumbtack.hospital.model.schedule.TimeCell">
-            <result property="ticket" column="ticket"/>
+            <result property="title" column="title"/>
             <result property="time" column="time"/>
             <result property="duration" column="duration"/>
         </collection>
     </resultMap>
 
-    <select id="getScheduleByDoctorId" parameterType="int" resultMap="doctorSchedule">
+    <select id="getScheduleByDoctorId" parameterType="java.util.Map" resultMap="doctorSchedule">
         SELECT id,
                date,
                time,
@@ -24,6 +24,10 @@
         FROM schedule_cell
                  JOIN time_cell tc on schedule_cell.id = tc.scheduleCellId
         WHERE doctorId = #{doctorId}
+        <if test="dateStart != null">AND date >= #{dateStart}</if>
+        <if test="dateEnd != null">AND #{dateEnd} >= date</if>
+        <if test="timeStart != null">AND time >= #{timeStart}</if>
+        <if test="timeEnd != null">AND #{timeEnd} >= time</if>
         ORDER BY date, time;
     </select>
 

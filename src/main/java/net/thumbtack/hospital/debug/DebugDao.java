@@ -3,6 +3,8 @@ package net.thumbtack.hospital.debug;
 import net.thumbtack.hospital.model.schedule.ScheduleCell;
 import net.thumbtack.hospital.model.ticket.TicketToMedicalCommission;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 
 public interface DebugDao {
@@ -26,7 +28,7 @@ public interface DebugDao {
 
     boolean containsPatientInTimeCell(int patientId, String ticketTitle);
 
-    List<ScheduleCell> getScheduleByDoctorId(int doctorId);
+    List<ScheduleCell> getScheduleByDoctorId(int doctorId, LocalDate dateStart, LocalDate dateEnd, LocalTime timeStart, LocalTime timeEnd);
 
     TicketToMedicalCommission getTicketToMedicalCommissionByTitle(String title);
 }

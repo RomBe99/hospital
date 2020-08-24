@@ -31,7 +31,7 @@ public class DebugService {
     }
 
     public GetScheduleByDoctorIdDtoResponse getScheduleByDoctorId(int doctorId) {
-        List<ScheduleCellDtoResponse> responseSchedule = debugDao.getScheduleByDoctorId(doctorId).stream()
+        List<ScheduleCellDtoResponse> responseSchedule = debugDao.getScheduleByDoctorId(doctorId, null, null, null, null).stream()
                 .map(DtoAdapters::transform)
                 .collect(Collectors.toList());
 

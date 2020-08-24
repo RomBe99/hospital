@@ -8,7 +8,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static net.thumbtack.hospital.util.mybatis.MyBatisUtils.getSession;
 
@@ -186,13 +190,24 @@ public class DebugDaoImpl implements DebugDao {
     }
 
     @Override
-    public List<ScheduleCell> getScheduleByDoctorId(int doctorId) {
-        LOGGER.debug(CLASS_NAME + ": Try get full schedule for doctor with id = {}", doctorId);
+    public List<ScheduleCell> getScheduleByDoctorId(int doctorId, LocalDate dateStart, LocalDate dateEnd, LocalTime timeStart, LocalTime timeEnd) {
+        LOGGER.debug(CLASS_NAME + ": Try get schedule for doctor with id = {} " +
+                        "where start date = {} and end date = {} with start time = {] and end time = {}",
+                doctorId, dateStart, dateEnd, timeStart, timeEnd);
+
+        Map<String, Object> params = new HashMap<>();
+        params.put("doctorId", doctorId);
+        params.put("dateStart", dateStart);
+        params.put("dateEnd", dateEnd);
+        params.put("timeStart", timeStart);
+        params.put("timeEnd", timeEnd);
 
         try (SqlSession session = getSession()) {
-            return session.selectList("net.thumbtack.hospital.debug.DebugMapper.getScheduleByDoctorId", doctorId);
+            return session.selectList("net.thumbtack.hospital.debug.DebugMapper.getScheduleByDoctorId", params);
         } catch (RuntimeException ex) {
-            LOGGER.error(CLASS_NAME + ": Can't get full schedule for doctor id = {}", doctorId, ex);
+            LOGGER.error(CLASS_NAME + ": Can't get schedule for doctor with id = {} " +
+                            "where start date = {} and end date = {} with start time = {] and end time = {}",
+                    doctorId, dateStart, dateEnd, timeStart, timeEnd, ex);
 
             throw ex;
         }
