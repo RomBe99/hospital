@@ -82,13 +82,13 @@ public class DtoAdapters {
             List<ScheduleCell> result = new LinkedList<>();
             List<LocalTime> durations = new LinkedList<>();
 
-            for (LocalTime t = durationStartTime; t.isBefore(durationEndTime) || t.equals(durationEndTime); t = t.plusMinutes(duration)) {
+            for (LocalTime t = durationStartTime; t.isBefore(durationEndTime); t = t.plusMinutes(duration)) {
                 durations.add(t);
             }
 
             List<TimeCell> temp;
 
-            for (LocalDate d = dateStart; d.isBefore(dateEnd) || d.equals(dateEnd); d = d.plusDays(1)) {
+            for (LocalDate d = dateStart; d.isBefore(dateEnd); d = d.plusDays(1)) {
                 if (isWeekend(d, workDaysOfWeek)) {
                     continue;
                 }
@@ -130,7 +130,7 @@ public class DtoAdapters {
             List<TimeCell> temp;
             List<DayOfWeek> workDaysOfWeek = new ArrayList<>(weekDurationTimes.keySet());
 
-            for (LocalDate d = dateStart; d.isBefore(dateEnd) || d.equals(dateEnd); d = d.plusDays(1)) {
+            for (LocalDate d = dateStart; d.isBefore(dateEnd); d = d.plusDays(1)) {
                 durations = weekDurationTimes.get(d.getDayOfWeek());
 
                 if (isWeekend(d, workDaysOfWeek) || durations == null) {
