@@ -5,12 +5,14 @@ import net.thumbtack.hospital.debug.DebugDao;
 import net.thumbtack.hospital.debug.DebugDaoImpl;
 import net.thumbtack.hospital.mapper.UserType;
 import net.thumbtack.hospital.model.schedule.ScheduleCell;
+import net.thumbtack.hospital.model.ticket.Ticket;
 import net.thumbtack.hospital.model.ticket.TicketToDoctor;
 import net.thumbtack.hospital.model.ticket.TicketToMedicalCommission;
 import net.thumbtack.hospital.model.user.Administrator;
 import net.thumbtack.hospital.model.user.Doctor;
 import net.thumbtack.hospital.model.user.Patient;
 import net.thumbtack.hospital.model.user.User;
+import net.thumbtack.hospital.util.DtoAdapters;
 import net.thumbtack.hospital.util.cookie.CookieFactory;
 import net.thumbtack.hospital.util.error.PermissionDeniedException;
 import net.thumbtack.hospital.util.mybatis.MyBatisUtils;
@@ -20,6 +22,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -187,16 +190,32 @@ public abstract class DaoTestApi {
 
     // Schedule dao methods
 
+    public void scheduleInsertingChecker(int doctorId, LocalDate dateStart, LocalDate dateEnd,
+                                         LocalTime timeStart, LocalTime timeEnd, List<ScheduleCell> expectedSchedule) {
+        List<ScheduleCell> actualSchedule = debugDao.getScheduleByDoctorId(doctorId, dateStart, dateEnd, timeStart, timeEnd);
+        Assert.assertEquals(expectedSchedule.size(), actualSchedule.size());
+        DtoAdapters.ScheduleTransformer.sortSchedule(actualSchedule);
+        Assert.assertEquals(expectedSchedule, actualSchedule);
+    }
+
     public void insertSchedule(int doctorId, List<ScheduleCell> schedule) {
+        DtoAdapters.ScheduleTransformer.sortSchedule(schedule);
         scheduleDao.insertSchedule(doctorId, schedule);
 
         schedule.forEach(s -> Assert.assertNotEquals(0, s.getId()));
+
+        LocalDate dateStart = schedule.iterator().next().getDate();
+        LocalDate dateEnd = schedule.listIterator(schedule.size()).previous().getDate();
+        scheduleInsertingChecker(doctorId, dateStart, dateEnd, null, null, schedule);
     }
 
     public void editSchedule(int doctorId, LocalDate dateStart, LocalDate dateEnd, List<ScheduleCell> newSchedule) {
+        DtoAdapters.ScheduleTransformer.sortSchedule(newSchedule);
         scheduleDao.editSchedule(doctorId, dateStart, dateEnd, newSchedule);
 
         newSchedule.forEach(s -> Assert.assertNotEquals(0, s.getId()));
+
+        scheduleInsertingChecker(doctorId, dateStart, dateEnd, null, null, newSchedule);
     }
 
     public void appointmentToDoctor(int patientId, String ticketTitle) {
@@ -214,7 +233,10 @@ public abstract class DaoTestApi {
     }
 
     public List<TicketToDoctor> getTicketsToDoctor(int patientId) {
-        return scheduleDao.getTicketsToDoctor(patientId);
+        List<TicketToDoctor> result = scheduleDao.getTicketsToDoctor(patientId);
+        result.sort(Comparator.comparing(Ticket::getTitle));
+
+        return result;
     }
 
     // Common dao methods

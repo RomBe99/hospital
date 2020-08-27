@@ -28,11 +28,11 @@ public interface ScheduleMapper extends Mapper {
 
     @Delete("DELETE FROM schedule_cell WHERE doctorId = #{doctorId} AND date >= #{startDate} AND date <= #{endDate};")
     void removeSchedule(@Param("doctorId") int doctorId,
-                        @Param("startDate") LocalDate startDate, @Param("endStart") LocalDate endStart);
+                        @Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate);
 
     @Update("UPDATE time_cell SET patientId = #{patientId} WHERE patientId IS NULL AND title = #{ticketTitle};")
     void appointmentToDoctor(@Param("patientId") int patientId, @Param("ticketTitle") String ticketTitle);
 
-    @Update("UPDATE time_cell SET patientId = NULL WHERE ticket = #{ticketTitle} AND patientId = #{patientId};")
+    @Update("UPDATE time_cell SET patientId = NULL WHERE title = #{ticketTitle} AND patientId = #{patientId};")
     void denyTicket(@Param("patientId") int patientId, @Param("ticketTitle") String ticketTitle);
 }

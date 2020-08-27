@@ -33,6 +33,6 @@ public interface DebugMapper extends Mapper {
     @Delete("DELETE FROM commission_doctor;")
     void clearCommissionDoctors();
 
-    @Select("SELECT EXISTS(SELECT * FROM time_cell WHERE title = #{ticketTitle} AND patientId = {patientId});")
+    @Select("SELECT EXISTS(SELECT * FROM time_cell WHERE title = #{ticketTitle} AND patientId = #{patientId});")
     boolean containsPatientInTimeCell(@Param("patientId") int patientId, @Param("ticketTitle") String ticketTitle);
 }
