@@ -4,6 +4,7 @@ import net.thumbtack.hospital.dtorequest.user.LoginDtoRequest;
 import net.thumbtack.hospital.dtoresponse.doctor.DoctorInformationDtoResponse;
 import net.thumbtack.hospital.dtoresponse.other.EmptyDtoResponse;
 import net.thumbtack.hospital.dtoresponse.other.abstractresponse.LoginUserDtoResponse;
+import net.thumbtack.hospital.dtoresponse.other.abstractresponse.SettingsDtoResponse;
 import net.thumbtack.hospital.dtoresponse.other.abstractresponse.UserInformationDtoResponse;
 import net.thumbtack.hospital.dtoresponse.patient.PatientInformationDtoResponse;
 import net.thumbtack.hospital.dtoresponse.user.GetAllDoctorsDtoResponse;
@@ -31,6 +32,7 @@ public class UserController {
     public static final String GET_DOCTOR_INFORMATION_URL = "doctors/{doctorId}";
     public static final String GET_DOCTORS_INFORMATION_URL = "doctors";
     public static final String GET_PATIENT_INFORMATION_URL = "patients/{patientId}";
+    public static final String GET_SETTINGS_URL = "settings";
 
     private final UserService userService;
     private final CookieFactory cookieFactory;
@@ -106,5 +108,12 @@ public class UserController {
     public PatientInformationDtoResponse getPatientInformation(@CookieValue(CookieFactory.JAVA_SESSION_ID) String sessionId,
                                                                @PathVariable int patientId) throws PermissionDeniedException {
         return userService.getPatientInformation(sessionId, patientId);
+    }
+
+    @GetMapping(value = GET_SETTINGS_URL, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public SettingsDtoResponse getSettings(@CookieValue(CookieFactory.JAVA_SESSION_ID) String sessionId) {
+        return userService.getSettings(sessionId);
     }
 }

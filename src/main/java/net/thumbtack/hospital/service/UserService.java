@@ -1,5 +1,6 @@
 package net.thumbtack.hospital.service;
 
+import net.thumbtack.hospital.configuration.Constraints;
 import net.thumbtack.hospital.dao.*;
 import net.thumbtack.hospital.dtorequest.user.LoginDtoRequest;
 import net.thumbtack.hospital.dtoresponse.admin.AdminInformationDtoResponse;
@@ -7,7 +8,9 @@ import net.thumbtack.hospital.dtoresponse.admin.AdminLoginDtoResponse;
 import net.thumbtack.hospital.dtoresponse.doctor.DoctorInformationDtoResponse;
 import net.thumbtack.hospital.dtoresponse.doctor.DoctorLoginDtoResponse;
 import net.thumbtack.hospital.dtoresponse.other.EmptyDtoResponse;
+import net.thumbtack.hospital.dtoresponse.other.ServerSettingsDtoResponse;
 import net.thumbtack.hospital.dtoresponse.other.abstractresponse.LoginUserDtoResponse;
+import net.thumbtack.hospital.dtoresponse.other.abstractresponse.SettingsDtoResponse;
 import net.thumbtack.hospital.dtoresponse.other.abstractresponse.UserInformationDtoResponse;
 import net.thumbtack.hospital.dtoresponse.patient.FullPatientInformationDtoResponse;
 import net.thumbtack.hospital.dtoresponse.patient.PatientInformationDtoResponse;
@@ -38,14 +41,16 @@ public class UserService {
     private final AdministratorDao administratorDao;
     private final DoctorDao doctorDao;
     private final CommonDao commonDao;
+    private final Constraints constraints;
 
     @Autowired
-    public UserService(PatientDao patientDao, @Qualifier("UserDaoImpl") UserDao userDao, AdministratorDao administratorDao, DoctorDao doctorDao, CommonDao commonDao) {
+    public UserService(PatientDao patientDao, @Qualifier("UserDaoImpl") UserDao userDao, AdministratorDao administratorDao, DoctorDao doctorDao, CommonDao commonDao, Constraints constraints) {
         this.patientDao = patientDao;
         this.userDao = userDao;
         this.administratorDao = administratorDao;
         this.doctorDao = doctorDao;
         this.commonDao = commonDao;
+        this.constraints = constraints;
     }
 
     public LoginUserDtoResponse login(LoginDtoRequest request, String sessionId) {
@@ -85,6 +90,7 @@ public class UserService {
         int userId = SecurityManagerImpl
                 .getSecurityManager()
                 .hasPermission(sessionId);
+
         UserType userType = UserType.valueOf(commonDao.getUserTypeByUserId(userId));
 
         Map<UserType, Supplier<? extends UserInformationDtoResponse>> responseMap = new HashMap<>();
@@ -134,6 +140,7 @@ public class UserService {
         int patientId = SecurityManagerImpl
                 .getSecurityManager(UserType.PATIENT)
                 .hasPermission(sessionId);
+
         Doctor doctor = userDao.getDoctorInformation(patientId, doctorId, startDate, endDate);
 
         return new DoctorInformationDtoResponse(doctor.getId(),
@@ -149,6 +156,7 @@ public class UserService {
         int patientId = SecurityManagerImpl
                 .getSecurityManager(UserType.PATIENT)
                 .hasPermission(sessionId);
+
         List<Doctor> doctors = userDao.getDoctorsInformation(patientId, speciality, startDate, endDate);
 
         return new GetAllDoctorsDtoResponse(doctors.stream()
@@ -160,5 +168,27 @@ public class UserService {
                                 .map(DtoAdapters::transform)
                                 .collect(Collectors.toList())))
                 .collect(Collectors.toList()));
+    }
+
+    public SettingsDtoResponse getSettings(String sessionId) {
+        UserType[] userTypes = UserType.values();
+        Map<UserType, Supplier<? extends SettingsDtoResponse>> settingsSuppliers = new HashMap<>();
+        settingsSuppliers.put(UserType.ADMINISTRATOR, () -> new ServerSettingsDtoResponse(constraints.getMaxNameLength(), constraints.getMinPasswordLength()));
+        settingsSuppliers.put(UserType.PATIENT, () -> new ServerSettingsDtoResponse(constraints.getMaxNameLength(), constraints.getMinPasswordLength()));
+        settingsSuppliers.put(UserType.DOCTOR, () -> new ServerSettingsDtoResponse(constraints.getMaxNameLength(), constraints.getMinPasswordLength()));
+        settingsSuppliers.put(null, () -> new ServerSettingsDtoResponse(constraints.getMaxNameLength(), constraints.getMinPasswordLength()));
+
+        for (UserType t : userTypes) {
+            try {
+                SecurityManagerImpl
+                        .getSecurityManager(t)
+                        .hasPermission(sessionId);
+
+                return settingsSuppliers.get(t).get();
+            } catch (PermissionDeniedException ignored) {
+            }
+        }
+
+        return settingsSuppliers.get(null).get();
     }
 }
