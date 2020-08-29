@@ -14,9 +14,9 @@ public class TicketToMedicalCommission extends Ticket {
     public TicketToMedicalCommission() {
     }
 
-    public TicketToMedicalCommission(String ticket, String room, LocalDate date, LocalTime time,
+    public TicketToMedicalCommission(String title, String room, LocalDate date, LocalTime time,
                                      int patientId, List<Integer> doctorIds, int duration) {
-        super(ticket, room, date, time);
+        super(title, room, date, time);
 
         setPatientId(patientId);
         setDoctorIds(doctorIds);

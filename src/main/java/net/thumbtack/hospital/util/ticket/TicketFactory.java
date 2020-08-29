@@ -5,7 +5,7 @@ import java.time.LocalTime;
 import java.util.List;
 
 public class TicketFactory {
-    private static final String TICKET_DOCTOR_PREFIX = "D";
+    private static final String DOCTOR_TICKET_PREFIX = "D";
     private static final String COMMISSION_TICKET_PREFIX = "C";
 
     private static String convertDateToString(LocalDate date) {
@@ -17,14 +17,14 @@ public class TicketFactory {
     }
 
     private static String buildDoctorChapter(int doctorId) {
-        return TICKET_DOCTOR_PREFIX + doctorId;
+        return DOCTOR_TICKET_PREFIX + doctorId;
     }
 
     public static String buildTicketToDoctor(int doctorId, LocalDate date, LocalTime time) {
         return buildDoctorChapter(doctorId) + convertDateToString(date) + convertTimeToString(time);
     }
 
-    public static String buildTicketToCommission(List<Integer> doctorIds, LocalDate date, LocalTime time) {
+    public static String buildTicketToCommission(LocalDate date, LocalTime time, List<Integer> doctorIds) {
         StringBuilder sb = new StringBuilder();
 
         for (Integer i : doctorIds) {
