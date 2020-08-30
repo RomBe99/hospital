@@ -12,7 +12,7 @@ import net.thumbtack.hospital.model.user.Administrator;
 import net.thumbtack.hospital.model.user.Doctor;
 import net.thumbtack.hospital.model.user.Patient;
 import net.thumbtack.hospital.model.user.User;
-import net.thumbtack.hospital.util.ScheduleTransformers;
+import net.thumbtack.hospital.util.adapter.ScheduleTransformers;
 import net.thumbtack.hospital.util.cookie.CookieFactory;
 import net.thumbtack.hospital.util.error.PermissionDeniedException;
 import net.thumbtack.hospital.util.mybatis.MyBatisUtils;

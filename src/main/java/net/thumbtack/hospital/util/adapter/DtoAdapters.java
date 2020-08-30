@@ -1,4 +1,4 @@
-package net.thumbtack.hospital.util;
+package net.thumbtack.hospital.util.adapter;
 
 import net.thumbtack.hospital.dtorequest.schedule.DtoRequestWithSchedule;
 import net.thumbtack.hospital.dtoresponse.patient.PatientInformationDtoResponse;

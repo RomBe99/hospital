@@ -4,6 +4,7 @@ import net.thumbtack.hospital.dtorequest.schedule.DayScheduleDtoRequest;
 import net.thumbtack.hospital.dtorequest.schedule.DtoRequestWithSchedule;
 import net.thumbtack.hospital.dtorequest.schedule.WeekScheduleDtoRequest;
 import net.thumbtack.hospital.model.schedule.ScheduleCell;
+import net.thumbtack.hospital.util.adapter.DtoAdapters;
 
 import java.time.LocalDate;
 import java.time.LocalTime;

@@ -22,7 +22,7 @@ import net.thumbtack.hospital.dtoresponse.schedule.DtoResponseWithSchedule;
 import net.thumbtack.hospital.dtoresponse.user.GetAllDoctorsDtoResponse;
 import net.thumbtack.hospital.mapper.UserType;
 import net.thumbtack.hospital.server.HospitalApplication;
-import net.thumbtack.hospital.util.DtoAdapters;
+import net.thumbtack.hospital.util.adapter.DtoAdapters;
 import net.thumbtack.hospital.util.cookie.CookieFactory;
 import net.thumbtack.hospital.util.mybatis.MyBatisUtils;
 import org.junit.Assert;

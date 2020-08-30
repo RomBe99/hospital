@@ -1,9 +1,10 @@
-package net.thumbtack.hospital.util;
+package net.thumbtack.hospital.util.adapter;
 
 import net.thumbtack.hospital.dtorequest.schedule.DayScheduleDtoRequest;
 import net.thumbtack.hospital.dtorequest.schedule.DtoRequestWithSchedule;
 import net.thumbtack.hospital.model.schedule.ScheduleCell;
 import net.thumbtack.hospital.model.schedule.TimeCell;
+import net.thumbtack.hospital.util.WeekDay;
 import net.thumbtack.hospital.util.ticket.TicketFactory;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;

@@ -18,7 +18,7 @@ import net.thumbtack.hospital.mapper.UserType;
 import net.thumbtack.hospital.model.schedule.ScheduleCell;
 import net.thumbtack.hospital.model.user.Administrator;
 import net.thumbtack.hospital.model.user.Doctor;
-import net.thumbtack.hospital.util.DtoAdapters;
+import net.thumbtack.hospital.util.adapter.DtoAdapters;
 import net.thumbtack.hospital.util.error.PermissionDeniedException;
 import net.thumbtack.hospital.util.error.ScheduleErrorCode;
 import net.thumbtack.hospital.util.error.ScheduleException;

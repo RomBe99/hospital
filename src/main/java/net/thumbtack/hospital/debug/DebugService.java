@@ -2,7 +2,7 @@ package net.thumbtack.hospital.debug;
 
 import net.thumbtack.hospital.debug.dtoresponse.schedule.GetScheduleByDoctorIdDtoResponse;
 import net.thumbtack.hospital.dtoresponse.schedule.ScheduleCellDtoResponse;
-import net.thumbtack.hospital.util.DtoAdapters;
+import net.thumbtack.hospital.util.adapter.DtoAdapters;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
