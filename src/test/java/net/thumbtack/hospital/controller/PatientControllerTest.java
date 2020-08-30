@@ -5,7 +5,6 @@ import net.thumbtack.hospital.dtorequest.patient.PatientRegistrationDtoRequest;
 import net.thumbtack.hospital.dtoresponse.patient.EditPatientProfileDtoResponse;
 import net.thumbtack.hospital.dtoresponse.patient.FullPatientInformationDtoResponse;
 import net.thumbtack.hospital.dtoresponse.patient.PatientRegistrationDtoResponse;
-import net.thumbtack.hospital.mapper.UserType;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -23,7 +22,7 @@ public class PatientControllerTest extends ControllerTestApi {
                 new PatientRegistrationDtoResponse(patientRegistrationRequest.getFirstName(), patientRegistrationRequest.getLastName(), patientRegistrationRequest.getPatronymic(),
                         patientRegistrationRequest.getEmail(), patientRegistrationRequest.getAddress(), patientRegistrationRequest.getPhone()));
 
-        getUserInformation(patientSessionId, UserType.PATIENT,
+        getUserInformation(patientSessionId,
                 new FullPatientInformationDtoResponse(patientRegistrationRequest.getLogin(), patientRegistrationRequest.getPassword(),
                         patientRegistrationRequest.getFirstName(), patientRegistrationRequest.getLastName(), patientRegistrationRequest.getPatronymic(),
                         patientRegistrationRequest.getEmail(), patientRegistrationRequest.getAddress(), patientRegistrationRequest.getPhone()));
@@ -42,7 +41,7 @@ public class PatientControllerTest extends ControllerTestApi {
                 new PatientRegistrationDtoResponse(patientRegistrationRequest.getFirstName(), patientRegistrationRequest.getLastName(), patientRegistrationRequest.getPatronymic(),
                         patientRegistrationRequest.getEmail(), patientRegistrationRequest.getAddress(), patientRegistrationRequest.getPhone()));
 
-        getUserInformation(patientSessionId, UserType.PATIENT,
+        getUserInformation(patientSessionId,
                 new FullPatientInformationDtoResponse(patientRegistrationRequest.getLogin(), patientRegistrationRequest.getPassword(),
                         patientRegistrationRequest.getFirstName(), patientRegistrationRequest.getLastName(), patientRegistrationRequest.getPatronymic(),
                         patientRegistrationRequest.getEmail(), patientRegistrationRequest.getAddress(), patientRegistrationRequest.getPhone()));
@@ -57,7 +56,7 @@ public class PatientControllerTest extends ControllerTestApi {
                         editPatientProfileRequest.getEmail(), editPatientProfileRequest.getAddress(), editPatientProfileRequest.getPhone(),
                         editPatientProfileRequest.getNewPassword()));
 
-        getUserInformation(patientSessionId, UserType.PATIENT,
+        getUserInformation(patientSessionId,
                 new FullPatientInformationDtoResponse(patientRegistrationRequest.getLogin(), editPatientProfileRequest.getNewPassword(),
                         editPatientProfileRequest.getFirstName(), editPatientProfileRequest.getLastName(), editPatientProfileRequest.getPatronymic(),
                         editPatientProfileRequest.getEmail(), editPatientProfileRequest.getAddress(), editPatientProfileRequest.getPhone()));

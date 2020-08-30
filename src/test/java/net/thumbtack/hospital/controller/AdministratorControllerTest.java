@@ -10,17 +10,15 @@ import net.thumbtack.hospital.dtoresponse.admin.*;
 import net.thumbtack.hospital.dtoresponse.doctor.DoctorLoginDtoResponse;
 import net.thumbtack.hospital.dtoresponse.patient.PatientInformationDtoResponse;
 import net.thumbtack.hospital.dtoresponse.patient.PatientRegistrationDtoResponse;
-import net.thumbtack.hospital.mapper.UserType;
 import net.thumbtack.hospital.util.ScheduleGenerators;
+import net.thumbtack.hospital.util.WeekDay;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 @RunWith(SpringRunner.class)
 public class AdministratorControllerTest extends ControllerTestApi {
@@ -38,7 +36,7 @@ public class AdministratorControllerTest extends ControllerTestApi {
         String testAdminSessionId = login(registrationRequest.getLogin(), registrationRequest.getPassword(),
                 new AdminLoginDtoResponse(registrationRequest.getFirstName(), registrationRequest.getLastName(), registrationRequest.getPatronymic(), registrationRequest.getPosition()));
 
-        getUserInformation(testAdminSessionId, UserType.ADMINISTRATOR,
+        getUserInformation(testAdminSessionId,
                 new AdminInformationDtoResponse(registrationRequest.getLogin(), registrationRequest.getPassword(),
                         registrationRequest.getFirstName(), registrationRequest.getLastName(), registrationRequest.getPatronymic(),
                         registrationRequest.getPosition()));
@@ -72,7 +70,7 @@ public class AdministratorControllerTest extends ControllerTestApi {
         editAdministratorProfile(testAdminSessionId, editAdminProfileRequest,
                 new EditAdminProfileDtoResponse(adminLoginResponse.getId(), editAdminProfileRequest.getFirstName(), editAdminProfileRequest.getLastName(), editAdminProfileRequest.getPatronymic(), editAdminProfileRequest.getPosition()));
 
-        getUserInformation(testAdminSessionId, UserType.ADMINISTRATOR,
+        getUserInformation(testAdminSessionId,
                 new AdminInformationDtoResponse(registrationRequest.getLogin(), editAdminProfileRequest.getNewPassword(),
                         editAdminProfileRequest.getFirstName(), editAdminProfileRequest.getLastName(), editAdminProfileRequest.getPatronymic(),
                         editAdminProfileRequest.getPosition()));
@@ -157,7 +155,7 @@ public class AdministratorControllerTest extends ControllerTestApi {
                 duration, dateStart, dateEnd, timeStart, timeEnd, weekDays);
 
         DoctorRegistrationDtoRequest doctorRegistrationRequest =
-                new DoctorRegistrationDtoRequest(generatedWeekSchedule.getDateStart(), generatedWeekSchedule.getDateEnd(), duration,
+                new DoctorRegistrationDtoRequest(generatedWeekSchedule.getDateStart(), generatedWeekSchedule.getDateEnd(), generatedWeekSchedule.getDuration(),
                         generatedWeekSchedule.getWeekSchedule(),
                         "Саркис", "Семёнов", "Вениаминович",
                         "Surgeon", "205", "SarkisSemenov585", "xjNE6QK6d3b9");
@@ -172,5 +170,37 @@ public class AdministratorControllerTest extends ControllerTestApi {
 
         logout(doctorSessionId);
         logout(rootAdminSessionId);
+    }
+
+    @Test
+    public void insertDoctorWithWeekDayScheduleTest() throws Exception {
+        String rootAdminSessionId = loginRootAdmin();
+
+        int duration = 30;
+        LocalDate dateStart = LocalDate.of(2020, 7, 1);
+        LocalDate dateEnd = LocalDate.of(2020, 8, 15);
+        Map<WeekDay, AbstractMap.SimpleEntry<LocalTime, LocalTime>> weekSchedule = new HashMap<>();
+        weekSchedule.put(WeekDay.MONDAY, new AbstractMap.SimpleEntry<>(LocalTime.of(8, 0), LocalTime.of(14, 0)));
+        weekSchedule.put(WeekDay.TUESDAY, new AbstractMap.SimpleEntry<>(LocalTime.of(12, 0), LocalTime.of(18, 0)));
+        weekSchedule.put(WeekDay.THURSDAY, new AbstractMap.SimpleEntry<>(LocalTime.of(10, 0), LocalTime.of(16, 0)));
+
+        DtoRequestWithSchedule generatedWeekSchedule = ScheduleGenerators.generateDtoRequestWithDaySchedule(duration, dateStart, dateEnd, weekSchedule);
+
+        DoctorRegistrationDtoRequest doctorRegistrationRequest =
+                new DoctorRegistrationDtoRequest(generatedWeekSchedule.getDateStart(), generatedWeekSchedule.getDateEnd(), generatedWeekSchedule.getDuration(),
+                        generatedWeekSchedule.getWeekDaysSchedule(),
+                        "Юнонна", "Ушакова", "Константиновна",
+                        "Dentist", "471", "YunonnaUshakova642", "qypzb2XheqYG");
+        DoctorRegistrationDtoResponse doctorRegistrationResponse = new DoctorRegistrationDtoResponse(
+                doctorRegistrationRequest.getFirstName(), doctorRegistrationRequest.getLastName(), doctorRegistrationRequest.getPatronymic(),
+                doctorRegistrationRequest.getSpeciality(), doctorRegistrationRequest.getRoom(), null);
+        doctorRegistration(rootAdminSessionId, doctorRegistrationRequest, doctorRegistrationResponse);
+
+        String doctorSessionId = login(doctorRegistrationRequest.getLogin(), doctorRegistrationRequest.getPassword(),
+                new DoctorLoginDtoResponse(doctorRegistrationResponse.getFirstName(), doctorRegistrationResponse.getLastName(), doctorRegistrationResponse.getPatronymic(),
+                        doctorRegistrationResponse.getSpeciality(), doctorRegistrationResponse.getRoom(), doctorRegistrationResponse.getSchedule()));
+
+        logout(rootAdminSessionId);
+        logout(doctorSessionId);
     }
 }

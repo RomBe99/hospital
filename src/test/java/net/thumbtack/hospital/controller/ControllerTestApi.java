@@ -20,7 +20,6 @@ import net.thumbtack.hospital.dtoresponse.patient.*;
 import net.thumbtack.hospital.dtoresponse.patient.ticket.AllTicketsDtoResponse;
 import net.thumbtack.hospital.dtoresponse.schedule.DtoResponseWithSchedule;
 import net.thumbtack.hospital.dtoresponse.user.GetAllDoctorsDtoResponse;
-import net.thumbtack.hospital.mapper.UserType;
 import net.thumbtack.hospital.server.HospitalApplication;
 import net.thumbtack.hospital.util.adapter.DtoAdapters;
 import net.thumbtack.hospital.util.cookie.CookieFactory;
@@ -40,8 +39,6 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import javax.servlet.http.Cookie;
 import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -159,8 +156,7 @@ public abstract class ControllerTestApi {
         Assert.assertEquals(expectedJsonResponse, actualJsonResponse);
     }
 
-    public void getUserInformation(String sessionId, UserType userType,
-                                   UserInformationDtoResponse expectedResponse) throws Exception {
+    public void getUserInformation(String sessionId, UserInformationDtoResponse expectedResponse) throws Exception {
         String url = UserController.PREFIX_URL + "/" + UserController.GET_USER_INFORMATION_URL;
 
         MockHttpServletResponse response = mvc.perform(
@@ -174,19 +170,13 @@ public abstract class ControllerTestApi {
         response.setCharacterEncoding(StandardCharsets.UTF_8.name());
 
         String jsonResponse = response.getContentAsString();
-
         Assert.assertFalse(jsonResponse.isEmpty());
 
-        Map<UserType, Class<? extends UserInformationDtoResponse>> dtoClasses = new HashMap<>();
-        dtoClasses.put(UserType.ADMINISTRATOR, AdminInformationDtoResponse.class);
-        dtoClasses.put(UserType.DOCTOR, DoctorInformationDtoResponse.class);
-        dtoClasses.put(UserType.PATIENT, FullPatientInformationDtoResponse.class);
-
-        UserInformationDtoResponse actualResponse = mapFromJson(jsonResponse, dtoClasses.get(userType));
+        UserInformationDtoResponse actualResponse = mapFromJson(jsonResponse, expectedResponse.getClass());
         Assert.assertNotEquals(0, actualResponse.getId());
         expectedResponse.setId(actualResponse.getId());
 
-        if (UserType.PATIENT.equals(userType)) {
+        if (FullPatientInformationDtoResponse.class.equals(expectedResponse.getClass())) {
             ((FullPatientInformationDtoResponse) expectedResponse)
                     .setPhone(((FullPatientInformationDtoResponse) actualResponse).getPhone());
         }
