@@ -12,7 +12,7 @@ import net.thumbtack.hospital.model.user.Administrator;
 import net.thumbtack.hospital.model.user.Doctor;
 import net.thumbtack.hospital.model.user.Patient;
 import net.thumbtack.hospital.model.user.User;
-import net.thumbtack.hospital.util.DtoAdapters;
+import net.thumbtack.hospital.util.ScheduleTransformers;
 import net.thumbtack.hospital.util.cookie.CookieFactory;
 import net.thumbtack.hospital.util.error.PermissionDeniedException;
 import net.thumbtack.hospital.util.mybatis.MyBatisUtils;
@@ -194,12 +194,12 @@ public abstract class DaoTestApi {
                                          LocalTime timeStart, LocalTime timeEnd, List<ScheduleCell> expectedSchedule) {
         List<ScheduleCell> actualSchedule = debugDao.getScheduleByDoctorId(doctorId, dateStart, dateEnd, timeStart, timeEnd);
         Assert.assertEquals(expectedSchedule.size(), actualSchedule.size());
-        DtoAdapters.ScheduleTransformer.sortSchedule(actualSchedule);
+        ScheduleTransformers.sortSchedule(actualSchedule);
         Assert.assertEquals(expectedSchedule, actualSchedule);
     }
 
     public void insertSchedule(int doctorId, List<ScheduleCell> schedule) {
-        DtoAdapters.ScheduleTransformer.sortSchedule(schedule);
+        ScheduleTransformers.sortSchedule(schedule);
         scheduleDao.insertSchedule(doctorId, schedule);
 
         schedule.forEach(s -> Assert.assertNotEquals(0, s.getId()));
@@ -210,7 +210,7 @@ public abstract class DaoTestApi {
     }
 
     public void editSchedule(int doctorId, LocalDate dateStart, LocalDate dateEnd, List<ScheduleCell> newSchedule) {
-        DtoAdapters.ScheduleTransformer.sortSchedule(newSchedule);
+        ScheduleTransformers.sortSchedule(newSchedule);
         scheduleDao.editSchedule(doctorId, dateStart, dateEnd, newSchedule);
 
         newSchedule.forEach(s -> Assert.assertNotEquals(0, s.getId()));
