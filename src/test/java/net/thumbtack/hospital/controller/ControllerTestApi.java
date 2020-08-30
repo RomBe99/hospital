@@ -15,6 +15,7 @@ import net.thumbtack.hospital.dtoresponse.doctor.CreateMedicalCommissionDtoRespo
 import net.thumbtack.hospital.dtoresponse.doctor.DoctorInformationDtoResponse;
 import net.thumbtack.hospital.dtoresponse.other.EmptyDtoResponse;
 import net.thumbtack.hospital.dtoresponse.other.abstractresponse.LoginUserDtoResponse;
+import net.thumbtack.hospital.dtoresponse.other.abstractresponse.SettingsDtoResponse;
 import net.thumbtack.hospital.dtoresponse.other.abstractresponse.UserInformationDtoResponse;
 import net.thumbtack.hospital.dtoresponse.patient.*;
 import net.thumbtack.hospital.dtoresponse.patient.ticket.AllTicketsDtoResponse;
@@ -262,6 +263,26 @@ public abstract class ControllerTestApi {
         Assert.assertFalse(jsonResponse.isEmpty());
 
         PatientInformationDtoResponse actualResponse = mapFromJson(jsonResponse, PatientInformationDtoResponse.class);
+        Assert.assertEquals(expectedResponse, actualResponse);
+    }
+
+    public void getSettings(String sessionId, SettingsDtoResponse expectedResponse) throws Exception {
+        String url = UserController.PREFIX_URL + "/" + UserController.GET_SETTINGS_URL;
+
+        MockHttpServletResponse response = mvc.perform(
+                MockMvcRequestBuilders
+                        .get(url)
+                        .cookie(new Cookie(CookieFactory.JAVA_SESSION_ID, sessionId))
+                        .characterEncoding(StandardCharsets.UTF_8.name()))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andReturn().getResponse();
+        response.setCharacterEncoding(StandardCharsets.UTF_8.name());
+
+        String jsonResponse = response.getContentAsString();
+        Assert.assertFalse(jsonResponse.isEmpty());
+
+        SettingsDtoResponse actualResponse = mapFromJson(jsonResponse, expectedResponse.getClass());
         Assert.assertEquals(expectedResponse, actualResponse);
     }
 
