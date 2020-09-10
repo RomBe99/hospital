@@ -4,6 +4,7 @@ import net.thumbtack.hospital.dtoresponse.other.ErrorDtoResponse;
 import net.thumbtack.hospital.dtoresponse.other.ErrorsDtoResponse;
 import net.thumbtack.hospital.util.error.ErrorMessageFactory;
 import net.thumbtack.hospital.util.error.PermissionDeniedException;
+import net.thumbtack.hospital.util.error.ScheduleErrorCode;
 import net.thumbtack.hospital.util.error.ScheduleException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,9 +16,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 @ControllerAdvice
 public class GlobalControllerExceptionHandler {
@@ -54,8 +53,12 @@ public class GlobalControllerExceptionHandler {
     @ExceptionHandler(ScheduleException.class)
     @ResponseBody
     public ErrorsDtoResponse handleScheduleExceptions(ScheduleException ex) {
+        Map<ScheduleErrorCode, String> errorCodeToField = new HashMap<>();
+        errorCodeToField.put(ScheduleErrorCode.SCHEDULE_HAVE_APPOINTMENT, "schedule");
+        errorCodeToField.put(ScheduleErrorCode.ALREADY_CONTAINS_APPOINTMENT, "date and time");
+
         String errorCode = ex.getErrorCode().getErrorCode();
-        String field = "schedule";
+        String field = errorCodeToField.get(ex.getErrorCode());
         String errorMessage = ex.getErrorCode().getErrorMessage();
 
         return new ErrorsDtoResponse(Collections.singletonList(new ErrorDtoResponse(errorCode, field, errorMessage)));

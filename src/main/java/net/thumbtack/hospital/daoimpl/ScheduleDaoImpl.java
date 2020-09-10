@@ -75,18 +75,18 @@ public class ScheduleDaoImpl implements ScheduleDao {
     }
 
     @Override
-    public void appointmentToDoctor(int patientId, String ticktTitle) {
-        LOGGER.debug(CLASS_NAME + ": Patient = {} appointment to ticket = {}", patientId, ticktTitle);
+    public void appointmentToDoctor(int patientId, String ticketTitle) {
+        LOGGER.debug(CLASS_NAME + ": Patient = {} appointment to ticket = {}", patientId, ticketTitle);
 
         try (SqlSession session = getSession()) {
             try {
-                mapperFactory.getMapper(session, ScheduleMapper.class).appointmentToDoctor(patientId, ticktTitle);
+                mapperFactory.getMapper(session, ScheduleMapper.class).appointmentToDoctor(patientId, ticketTitle);
 
                 session.commit();
-                LOGGER.debug(CLASS_NAME + ": Patient = {} successfully appointment to ticket = {}", patientId, ticktTitle);
+                LOGGER.debug(CLASS_NAME + ": Patient = {} successfully appointment to ticket = {}", patientId, ticketTitle);
             } catch (RuntimeException ex) {
                 session.rollback();
-                LOGGER.error(CLASS_NAME + ": Patient = {} can't appointment to ticket = {}", patientId, ticktTitle, ex);
+                LOGGER.error(CLASS_NAME + ": Patient = {} can't appointment to ticket = {}", patientId, ticketTitle, ex);
 
                 throw ex;
             }

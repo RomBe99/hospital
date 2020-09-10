@@ -19,4 +19,7 @@ public interface CommonMapper extends Mapper {
     @Select("SELECT name FROM user_type WHERE id = (SELECT userTypeId FROM user WHERE id = #{userId});")
     @Options(useGeneratedKeys = true, keyProperty = "name")
     String getUserTypeByUserId(int userId);
+
+    @Select("SELECT EXISTS(SELECT * FROM time_cell WHERE title = #{ticketTitle} AND patientId IS NOT NULL);")
+    boolean containsAppointment(String ticketTitle);
 }

@@ -5,5 +5,7 @@ import java.time.LocalDate;
 public interface CommonDao {
     String getUserTypeByUserId(int userId);
 
-    boolean containsAppointment(int doctorId, LocalDate dateStart, LocalDate dateEnd);
+    boolean containsAppointments(int doctorId, LocalDate dateStart, LocalDate dateEnd);
+
+    boolean containsAppointment(String ticketTitle);
 }

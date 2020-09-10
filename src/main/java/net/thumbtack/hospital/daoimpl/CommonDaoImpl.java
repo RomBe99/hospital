@@ -35,7 +35,7 @@ public class CommonDaoImpl implements CommonDao {
     }
 
     @Override
-    public boolean containsAppointment(int doctorId, LocalDate dateStart, LocalDate dateEnd) {
+    public boolean containsAppointments(int doctorId, LocalDate dateStart, LocalDate dateEnd) {
         LOGGER.debug(CLASS_NAME + ": Check is an appointment to doctor = {} from {} to {}", doctorId, dateStart, dateEnd);
 
         try (SqlSession session = getSession()) {
@@ -44,10 +44,23 @@ public class CommonDaoImpl implements CommonDao {
             params.put("dateStart", dateStart);
             params.put("dateEnd", dateEnd);
 
-            return session.selectOne("net.thumbtack.hospital.mapper.CommonMapper.containsAppointment", params);
+            return session.selectOne("net.thumbtack.hospital.mapper.CommonMapper.containsAppointments", params);
         } catch (RuntimeException ex) {
             LOGGER.error(CLASS_NAME + ": Can't check is an appointment to doctor = {} from {} to {}",
                     doctorId, dateStart, dateEnd, ex);
+
+            throw ex;
+        }
+    }
+
+    @Override
+    public boolean containsAppointment(String ticketTitle) {
+        LOGGER.debug(CLASS_NAME + ": Check is an appointment to ticket = {}", ticketTitle);
+
+        try (SqlSession session = getSession()) {
+            return mapperFactory.getMapper(session, CommonMapper.class).containsAppointment(ticketTitle);
+        } catch (RuntimeException ex) {
+            LOGGER.error(CLASS_NAME + ": Can't check appointment to ticket = {}", ticketTitle, ex);
 
             throw ex;
         }

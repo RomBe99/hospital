@@ -109,10 +109,10 @@ public class AdministratorService {
         LocalDate dateStart = LocalDate.parse(request.getDateStart());
         LocalDate dateEnd = LocalDate.parse(request.getDateEnd());
 
-        boolean containsAppointment = commonDao.containsAppointment(doctorId, dateStart, dateEnd);
+        boolean containsAppointments = commonDao.containsAppointments(doctorId, dateStart, dateEnd);
 
-        if (containsAppointment) {
-            throw new ScheduleException(ScheduleErrorCode.PERIOD_HAVE_APPOINTMENT);
+        if (containsAppointments) {
+            throw new ScheduleException(ScheduleErrorCode.SCHEDULE_HAVE_APPOINTMENT);
         }
 
         List<ScheduleCell> schedule = DtoAdapters.transform(request, doctorId);

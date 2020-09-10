@@ -1,9 +1,6 @@
 package net.thumbtack.hospital.service;
 
-import net.thumbtack.hospital.dao.DoctorDao;
-import net.thumbtack.hospital.dao.MedicalCommissionDao;
-import net.thumbtack.hospital.dao.PatientDao;
-import net.thumbtack.hospital.dao.ScheduleDao;
+import net.thumbtack.hospital.dao.*;
 import net.thumbtack.hospital.dtorequest.patient.AppointmentToDoctorDtoRequest;
 import net.thumbtack.hospital.dtorequest.patient.EditPatientProfileDtoRequest;
 import net.thumbtack.hospital.dtorequest.patient.PatientRegistrationDtoRequest;
@@ -20,6 +17,8 @@ import net.thumbtack.hospital.model.user.Patient;
 import net.thumbtack.hospital.model.ticket.TicketToMedicalCommission;
 import net.thumbtack.hospital.model.ticket.TicketToDoctor;
 import net.thumbtack.hospital.util.error.PermissionDeniedException;
+import net.thumbtack.hospital.util.error.ScheduleErrorCode;
+import net.thumbtack.hospital.util.error.ScheduleException;
 import net.thumbtack.hospital.util.security.SecurityManagerImpl;
 import net.thumbtack.hospital.util.ticket.TicketFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,8 +32,9 @@ import java.util.stream.Collectors;
 
 @Service("PatientService")
 public class PatientService {
-    private final PatientDao patientDao;
     private final DoctorDao doctorDao;
+    private final CommonDao commonDao;
+    private final PatientDao patientDao;
     private final ScheduleDao scheduleDao;
     private final MedicalCommissionDao medicalCommissionDao;
 
@@ -47,9 +47,10 @@ public class PatientService {
     }
 
     @Autowired
-    public PatientService(PatientDao patientDao, DoctorDao doctorDao, ScheduleDao scheduleDao, MedicalCommissionDao medicalCommissionDao) {
+    public PatientService(PatientDao patientDao, DoctorDao doctorDao, CommonDao commonDao, ScheduleDao scheduleDao, MedicalCommissionDao medicalCommissionDao) {
         this.patientDao = patientDao;
         this.doctorDao = doctorDao;
+        this.commonDao = commonDao;
         this.scheduleDao = scheduleDao;
         this.medicalCommissionDao = medicalCommissionDao;
     }
@@ -87,7 +88,7 @@ public class PatientService {
                 request.getEmail(), request.getAddress(), request.getPhone(), request.getNewPassword());
     }
 
-    public AppointmentToDoctorDtoResponse appointmentToDoctor(String sessionId, AppointmentToDoctorDtoRequest request) throws PermissionDeniedException {
+    public AppointmentToDoctorDtoResponse appointmentToDoctor(String sessionId, AppointmentToDoctorDtoRequest request) throws PermissionDeniedException, ScheduleException {
         int patientId = SecurityManagerImpl
                 .getSecurityManager(UserType.PATIENT)
                 .hasPermission(sessionId);
@@ -96,21 +97,27 @@ public class PatientService {
 
         LocalDate ticketDate = LocalDate.parse(request.getDate());
         LocalTime ticketTime = LocalTime.parse(request.getTime());
-        String ticketTitle = TicketFactory.buildTicketToDoctor(request.getDoctorId(), ticketDate, ticketTime);
+        String ticketTitle = TicketFactory.buildTicketToDoctor(doctor.getId(), ticketDate, ticketTime);
+
+        boolean containsAppointment = commonDao.containsAppointment(ticketTitle);
+
+        if (containsAppointment) {
+            throw new ScheduleException(ScheduleErrorCode.ALREADY_CONTAINS_APPOINTMENT);
+        }
 
         scheduleDao.appointmentToDoctor(patientId, ticketTitle);
 
-        return new AppointmentToDoctorDtoResponse(ticketTitle, request.getDoctorId(),
+        return new AppointmentToDoctorDtoResponse(ticketTitle, doctor.getId(),
                 doctor.getFirstName(), doctor.getLastName(), doctor.getPatronymic(), doctor.getSpecialty(), doctor.getCabinet(),
                 ticketDate.toString(), ticketTime.toString());
     }
 
-    public void denyMedicalCommission(String sessionId, String ticket) throws PermissionDeniedException {
+    public void denyMedicalCommission(String sessionId, String ticketTitle) throws PermissionDeniedException {
         SecurityManagerImpl
                 .getSecurityManager(UserType.PATIENT)
                 .hasPermission(sessionId);
 
-        medicalCommissionDao.denyMedicalCommission(ticket);
+        medicalCommissionDao.denyMedicalCommission(ticketTitle);
     }
 
     public void denyTicket(String sessionId, String ticketTitle) throws PermissionDeniedException {

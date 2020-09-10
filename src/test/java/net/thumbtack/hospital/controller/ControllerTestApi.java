@@ -455,6 +455,23 @@ public abstract class ControllerTestApi {
         Assert.assertEquals(expectedResponse, actualResponse);
     }
 
+    public void denyTicketToDoctor(String sessionId, String ticketTitle) throws Exception {
+        String url = PatientController.PREFIX_URL + "/" + PatientController.DENY_TICKET_TO_DOCTOR_URL.replace("{ticketTitle}", ticketTitle);
+
+        String actualJsonResponse = mvc.perform(
+                MockMvcRequestBuilders
+                        .delete(url)
+                        .cookie(new Cookie(CookieFactory.JAVA_SESSION_ID, sessionId))
+                        .characterEncoding(StandardCharsets.UTF_8.name()))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
+        Assert.assertFalse(actualJsonResponse.isEmpty());
+
+        String expectedJsonResponse = mapToJson(new EmptyDtoResponse());
+        Assert.assertEquals(expectedJsonResponse, actualJsonResponse);
+    }
+
     public void getTickets(String sessionId, AllTicketsDtoResponse expectedResponse) throws Exception {
         String url = PatientController.PREFIX_URL + "/" + PatientController.GET_TICKETS_URL;
 
