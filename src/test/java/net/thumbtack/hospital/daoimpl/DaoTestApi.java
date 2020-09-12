@@ -171,20 +171,28 @@ public abstract class DaoTestApi {
     // Medical commission dao methods
 
     public void createMedicalCommission(TicketToMedicalCommission ticket) {
+        ticket.getDoctorIds().sort(Integer::compareTo);
         medicalCommissionDao.createMedicalCommission(ticket);
+        Assert.assertNotEquals(0, ticket.getId());
 
         TicketToMedicalCommission insertedTicket = debugDao.getTicketToMedicalCommissionByTitle(ticket.getTitle());
         Assert.assertEquals(ticket, insertedTicket);
     }
 
-    public List<TicketToMedicalCommission> getTicketsToMedicalCommission(int patientId) {
-        return medicalCommissionDao.getTicketsToMedicalCommission(patientId);
+    public void getTicketsToMedicalCommission(int patientId, List<TicketToMedicalCommission> expectedTickets) {
+        List<TicketToMedicalCommission> actualTickets = medicalCommissionDao.getTicketsToMedicalCommission(patientId);
+        actualTickets.forEach(t -> t.getDoctorIds().sort(Integer::compareTo));
+
+        expectedTickets.sort(Comparator.comparing(Ticket::getTime));
+        expectedTickets.sort(Comparator.comparing(Ticket::getDate));
+
+        Assert.assertEquals(expectedTickets, actualTickets);
     }
 
-    public void denyMedicalCommission(String title) {
-        medicalCommissionDao.denyMedicalCommission(title);
+    public void denyMedicalCommission(String ticketTitle) {
+        medicalCommissionDao.denyMedicalCommission(ticketTitle);
 
-        TicketToMedicalCommission insertedTicket = debugDao.getTicketToMedicalCommissionByTitle(title);
+        TicketToMedicalCommission insertedTicket = debugDao.getTicketToMedicalCommissionByTitle(ticketTitle);
         Assert.assertNull(insertedTicket);
     }
 

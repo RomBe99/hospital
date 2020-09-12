@@ -15,6 +15,19 @@
         </collection>
     </resultMap>
 
+    <resultMap id="ticketToMedicalCommission" type="net.thumbtack.hospital.model.ticket.TicketToMedicalCommission">
+        <id property="id" column="id"/>
+        <result property="title" column="title"/>
+        <result property="room" column="room"/>
+        <result property="date" column="date"/>
+        <result property="time" column="time"/>
+        <result property="patientId" column="patientId"/>
+        <result property="duration" column="duration"/>
+        <collection property="doctorIds" column="doctorId" javaType="java.util.List" ofType="int">
+            <id property="doctorId" column="doctorId"/>
+        </collection>
+    </resultMap>
+
     <select id="getScheduleByDoctorId" parameterType="java.util.Map" resultMap="doctorSchedule">
         SELECT id,
                date,
@@ -31,9 +44,9 @@
         ORDER BY date, time;
     </select>
 
-    <select id="getMedicalCommissionTicketByTitle" parameterType="java.lang.String"
-            resultType="net.thumbtack.hospital.model.ticket.TicketToMedicalCommission">
-        SELECT title,
+    <select id="getMedicalCommissionTicketByTitle" parameterType="java.lang.String" resultMap="ticketToMedicalCommission">
+        SELECT mc.id id,
+               title,
                name room,
                date,
                time,
@@ -42,8 +55,8 @@
                doctorId
         FROM medical_commission mc
                  JOIN cabinet c ON c.id = mc.cabinetId
-                 JOIN commission_doctor cd ON mc.title = cd.commissionTicket
+                 JOIN commission_doctor cd ON cd.commissionId = mc.id
         WHERE title = #{title}
-        ORDER BY doctorId;
+        ORDER BY date, time;
     </select>
 </mapper>

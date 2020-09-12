@@ -122,7 +122,7 @@ CREATE TABLE schedule_cell
 CREATE TABLE time_cell
 (
     time           TIME         NOT NULL,
-    title         VARCHAR(100) NOT NULL,
+    title          VARCHAR(100) NOT NULL,
     scheduleCellId INT          NOT NULL,
     patientId      INT DEFAULT NULL,
     duration       INT          NOT NULL,
@@ -136,15 +136,18 @@ CREATE TABLE time_cell
 
 CREATE TABLE medical_commission
 (
-    title    VARCHAR(200) NOT NULL,
+    id        INT          NOT NULL AUTO_INCREMENT,
+    title     VARCHAR(200) NOT NULL,
     date      DATE         NOT NULL,
     time      TIME         NOT NULL,
     patientId INT          NOT NULL,
     duration  INT          NOT NULL,
     cabinetId INT          NOT NULL,
 
-    PRIMARY KEY (title),
+    PRIMARY KEY (id),
+    UNIQUE KEY (title),
     UNIQUE KEY (date, time, patientId),
+    UNIQUE KEY (date, time, cabinetId),
     FOREIGN KEY (patientId) REFERENCES patient (userId) ON DELETE CASCADE,
     FOREIGN KEY (cabinetId) REFERENCES cabinet (id) ON DELETE CASCADE
 ) ENGINE = INNODB
@@ -152,11 +155,11 @@ CREATE TABLE medical_commission
 
 CREATE TABLE commission_doctor
 (
-    commissionTicket VARCHAR(200) NOT NULL,
-    doctorId         INT          NOT NULL,
+    commissionId INT NOT NULL,
+    doctorId     INT NOT NULL,
 
-    PRIMARY KEY (commissionTicket, doctorId),
-    FOREIGN KEY (commissionTicket) REFERENCES medical_commission (title) ON DELETE CASCADE,
+    PRIMARY KEY (commissionId, doctorId),
+    FOREIGN KEY (commissionId) REFERENCES medical_commission (id) ON DELETE CASCADE,
     FOREIGN KEY (doctorId) REFERENCES doctor (userId) ON DELETE CASCADE
 ) ENGINE = INNODB
   DEFAULT CHARSET = UTF8MB4;

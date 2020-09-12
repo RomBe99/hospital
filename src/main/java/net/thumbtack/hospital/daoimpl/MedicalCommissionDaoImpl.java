@@ -28,8 +28,9 @@ public class MedicalCommissionDaoImpl implements MedicalCommissionDao {
             try {
                 MedicalCommissionMapper mapper = mapperFactory.getMapper(session, MedicalCommissionMapper.class);
                 mapper.createMedicalCommission(ticket);
-                mapper.insertDoctorsInMedicalCommission(ticket.getTitle(), ticket.getDoctorIds());
+                mapper.insertDoctorsInMedicalCommission(ticket.getId(), ticket.getDoctorIds());
 
+                session.commit();
                 LOGGER.debug(CLASS_NAME + ": Medical commission = {} successfully created", ticket);
             } catch (RuntimeException ex) {
                 session.rollback();
