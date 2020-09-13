@@ -151,23 +151,15 @@ public abstract class DaoTestApi {
         }
     }
 
-    public void getDoctorInformation(int patientId, int doctorId, LocalDate dateStart, LocalDate dateEnd,
-                                     Doctor expectedDoctor) {
-        Doctor actualDoctor = userDao.getDoctorInformation(patientId, doctorId, dateStart, dateEnd);
-        actualDoctor.setLogin(expectedDoctor.getLogin());
-        actualDoctor.setPassword(expectedDoctor.getPassword());
-
-        Assert.assertEquals(expectedDoctor, actualDoctor);
+    public Doctor getDoctorInformation(int patientId, int doctorId, LocalDate dateStart, LocalDate dateEnd) {
+        return userDao.getDoctorInformation(patientId, doctorId, dateStart, dateEnd);
     }
 
-    public void getDoctorsInformation(int patientId, String speciality, LocalDate dateStart, LocalDate dateEnd,
-                                      List<Doctor> expectedDoctors) {
-        List<Doctor> actualDoctors = userDao.getDoctorsInformation(patientId, speciality, dateStart, dateEnd);
+    public List<Doctor> getDoctorsInformation(int patientId, String speciality, LocalDate dateStart, LocalDate dateEnd) {
+        List<Doctor> result = userDao.getDoctorsInformation(patientId, speciality, dateStart, dateEnd);
+        result.sort(Comparator.comparingInt(User::getId));
 
-        actualDoctors.sort(Comparator.comparingInt(User::getId));
-        expectedDoctors.sort(Comparator.comparingInt(User::getId));
-
-        Assert.assertEquals(expectedDoctors, actualDoctors);
+        return result;
     }
 
     // Medical commission dao methods

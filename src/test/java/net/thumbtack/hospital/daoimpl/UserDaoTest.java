@@ -7,7 +7,7 @@ import net.thumbtack.hospital.model.user.Doctor;
 import net.thumbtack.hospital.model.user.Patient;
 import net.thumbtack.hospital.util.ScheduleGenerators;
 import net.thumbtack.hospital.util.ticket.TicketFactory;
-import org.junit.Ignore;
+import org.junit.Assert;
 import org.junit.Test;
 
 import java.time.LocalDate;
@@ -39,10 +39,14 @@ public class UserDaoTest extends DaoTestApi {
         doctor.setSchedule(schedule);
 
         int patientId = 0;
-        getDoctorInformation(patientId, doctorId, null, null, doctor);
+        Doctor actualDoctor = getDoctorInformation(patientId, doctorId, null, null);
+        actualDoctor.setLogin(doctor.getLogin());
+        actualDoctor.setPassword(doctor.getPassword());
+
+        Assert.assertEquals(doctor, actualDoctor);
     }
 
-    @Ignore
+    @Test
     public void getDoctorInformationWithFullScheduleAndAppointmentsTest() {
         Doctor doctor = new Doctor("IvstaliyaMaksimova821", "VMWr9LVh5dVI",
                 "Ивсталия", "Валерьевна", "Максимова", "205", "Surgeon", new ArrayList<>());
@@ -87,34 +91,23 @@ public class UserDaoTest extends DaoTestApi {
                 TicketFactory.buildTicketToDoctor(doctorId, LocalDate.of(2020, 3, 31), LocalTime.of(14, 0)));
         patient2Tickets.forEach(ticketTitle -> appointmentToDoctor(patient2.getId(), ticketTitle));
 
-        // TODO фокусы преобразования расписания в мапу, грамотная фильтрация по средствам лямбд и сборка обратно в лист ScheduleCell
-        Map<ScheduleCell, Map<String, TimeCell>> mapForGeneratingScheduleAfterPatientAppointments = schedule.stream()
-                .collect(Collectors.toMap(sc -> sc,
-                        sc -> sc.getCells().stream().collect(Collectors.toMap(TimeCell::getTitle, tc -> tc))));
-
-        for (String ticketTitle : patient2Tickets) {
-            for (ScheduleCell sc : mapForGeneratingScheduleAfterPatientAppointments.keySet()) {
-                if (mapForGeneratingScheduleAfterPatientAppointments.get(sc).remove(ticketTitle) != null) {
-                    break;
-                }
-            }
-        }
-
-        for (String ticketTitle : patient1Tickets) {
-            for (ScheduleCell sc : mapForGeneratingScheduleAfterPatientAppointments.keySet()) {
-                TimeCell temp = mapForGeneratingScheduleAfterPatientAppointments.get(sc).get(ticketTitle);
-
-                if (temp != null) {
-                    temp.setPatient(patient1);
-                    break;
-                }
-            }
-        }
-
-        doctor.setSchedule(schedule);
-
         int patientId = patient1.getId();
-        getDoctorInformation(patientId, doctorId, null, null, doctor);
+        Doctor actualDoctor = getDoctorInformation(patientId, doctorId, null, null);
+        actualDoctor.setLogin(doctor.getLogin());
+        actualDoctor.setPassword(doctor.getPassword());
+
+        List<TimeCell> temp = new LinkedList<>();
+        actualDoctor.getSchedule().forEach(sc -> temp.addAll(sc.getCells()));
+
+        Map<String, TimeCell> allTimeCells = temp.stream().collect(Collectors.toMap(TimeCell::getTitle, tc -> tc));
+        patient2Tickets.forEach(ticketTitle -> Assert.assertFalse(allTimeCells.containsKey(ticketTitle)));
+
+        patient1.setLogin(null);
+        patient1.setPassword(null);
+        patient1Tickets.forEach(ticketTitle -> Assert.assertEquals(allTimeCells.get(ticketTitle).getPatient(), patient1));
+
+        doctor.setSchedule(actualDoctor.getSchedule());
+        Assert.assertEquals(doctor, actualDoctor);
     }
 
     @Test
@@ -146,6 +139,10 @@ public class UserDaoTest extends DaoTestApi {
         doctor.setSchedule(schedule);
 
         int patientId = 0;
-        getDoctorInformation(patientId, doctorId, bottomBound, upperBound, doctor);
+        Doctor actualDoctor = getDoctorInformation(patientId, doctorId, bottomBound, upperBound);
+        actualDoctor.setLogin(doctor.getLogin());
+        actualDoctor.setPassword(doctor.getPassword());
+
+        Assert.assertEquals(doctor, actualDoctor);
     }
 }
