@@ -87,8 +87,8 @@ public class UserDaoImpl implements UserDao {
                 doctorId, patientId, startDate, endDate);
 
         Map<String, Object> params = new HashMap<>();
-        params.put("patientId", patientId);
-        params.put("doctorId", doctorId);
+        params.put("patientId", patientId == 0 ? null : patientId);
+        params.put("doctorId", doctorId == 0 ? null : doctorId);
         params.put("startDate", startDate);
         params.put("endDate", endDate);
 
@@ -108,7 +108,7 @@ public class UserDaoImpl implements UserDao {
                 speciality, patientId, startDate, endDate);
 
         Map<String, Object> params = new HashMap<>();
-        params.put("patientId", patientId);
+        params.put("patientId", patientId == 0 ? null : patientId);
         params.put("speciality", speciality);
         params.put("startDate", startDate);
         params.put("endDate", endDate);

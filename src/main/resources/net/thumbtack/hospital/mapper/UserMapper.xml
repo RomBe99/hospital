@@ -21,7 +21,7 @@
                         ofType="net.thumbtack.hospital.model.schedule.TimeCell">
                 <result property="time" column="time"/>
                 <result property="duration" column="duration"/>
-                <result property="ticket" column="ticket"/>
+                <result property="title" column="title"/>
 
                 <association property="patient" javaType="net.thumbtack.hospital.model.user.Patient">
                     <id property="id" column="patientId"/>
@@ -53,7 +53,7 @@
                         ofType="net.thumbtack.hospital.model.schedule.TimeCell">
                 <result property="time" column="time"/>
                 <result property="duration" column="duration"/>
-                <result property="ticket" column="ticket"/>
+                <result property="title" column="title"/>
 
                 <association property="patient" javaType="net.thumbtack.hospital.model.user.Patient">
                     <id property="id" column="patientId"/>

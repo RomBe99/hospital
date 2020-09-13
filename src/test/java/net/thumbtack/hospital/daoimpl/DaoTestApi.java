@@ -151,16 +151,18 @@ public abstract class DaoTestApi {
         }
     }
 
-    public void getDoctorInformation(int patientId, int doctorId, LocalDate startDate, LocalDate endDate,
+    public void getDoctorInformation(int patientId, int doctorId, LocalDate dateStart, LocalDate dateEnd,
                                      Doctor expectedDoctor) {
-        Doctor actualDoctor = userDao.getDoctorInformation(patientId, doctorId, startDate, endDate);
+        Doctor actualDoctor = userDao.getDoctorInformation(patientId, doctorId, dateStart, dateEnd);
+        actualDoctor.setLogin(expectedDoctor.getLogin());
+        actualDoctor.setPassword(expectedDoctor.getPassword());
 
         Assert.assertEquals(expectedDoctor, actualDoctor);
     }
 
-    public void getDoctorsInformation(int patientId, String speciality, LocalDate startDate, LocalDate endDate,
+    public void getDoctorsInformation(int patientId, String speciality, LocalDate dateStart, LocalDate dateEnd,
                                       List<Doctor> expectedDoctors) {
-        List<Doctor> actualDoctors = userDao.getDoctorsInformation(patientId, speciality, startDate, endDate);
+        List<Doctor> actualDoctors = userDao.getDoctorsInformation(patientId, speciality, dateStart, dateEnd);
 
         actualDoctors.sort(Comparator.comparingInt(User::getId));
         expectedDoctors.sort(Comparator.comparingInt(User::getId));
