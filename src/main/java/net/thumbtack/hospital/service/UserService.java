@@ -140,10 +140,15 @@ public class UserService {
         int patientId = SecurityManagerImpl
                 .getSecurityManager(UserType.PATIENT)
                 .hasPermission(sessionId);
+        Doctor doctor;
 
-        Doctor doctor = userDao.getDoctorInformation(patientId, doctorId, startDate, endDate);
+        if (startDate == null || endDate == null) {
+            doctor = userDao.getDoctorInformationWithoutSchedule(doctorId);
+        } else {
+            doctor = userDao.getDoctorInformationWithSchedule(patientId, doctorId, startDate, endDate);
+        }
 
-        return new DoctorInformationDtoResponse(doctor.getId(),
+        return doctor == null ? null : new DoctorInformationDtoResponse(doctor.getId(),
                 doctor.getLogin(), doctor.getPassword(),
                 doctor.getFirstName(), doctor.getLastName(), doctor.getPatronymic(),
                 doctor.getSpecialty(), doctor.getCabinet(),
@@ -156,8 +161,13 @@ public class UserService {
         int patientId = SecurityManagerImpl
                 .getSecurityManager(UserType.PATIENT)
                 .hasPermission(sessionId);
+        List<Doctor> doctors;
 
-        List<Doctor> doctors = userDao.getDoctorsInformation(patientId, speciality, startDate, endDate);
+        if (startDate == null || endDate == null) {
+            doctors = userDao.getDoctorsBySpecialityWithoutSchedule(speciality);
+        } else {
+            doctors = userDao.getDoctorsInformationWithSchedule(patientId, speciality, startDate, endDate);
+        }
 
         return new GetAllDoctorsDtoResponse(doctors.stream()
                 .map(d -> new DoctorInformationDtoResponse(d.getId(),

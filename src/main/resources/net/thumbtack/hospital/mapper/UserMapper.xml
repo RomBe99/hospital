@@ -36,40 +36,8 @@
         </collection>
     </resultMap>
 
-    <resultMap id="resultDoctorsInformation" type="net.thumbtack.hospital.model.user.Doctor">
-        <id property="id" column="doctorId"/>
-        <result property="firstName" column="docFirstName"/>
-        <result property="lastName" column="docLastName"/>
-        <result property="patronymic" column="docPatronymic"/>
-        <result property="cabinet" column="cabinet"/>
-        <result property="specialty" column="specialty"/>
-
-        <collection property="schedule" column="scheduleCellId" javaType="java.util.List"
-                    ofType="net.thumbtack.hospital.model.schedule.ScheduleCell">
-            <result property="id" column="scheduleCellId"/>
-            <result property="date" column="date"/>
-
-            <collection property="cells" column="scheduleCellId" javaType="java.util.List"
-                        ofType="net.thumbtack.hospital.model.schedule.TimeCell">
-                <result property="time" column="time"/>
-                <result property="duration" column="duration"/>
-                <result property="title" column="title"/>
-
-                <association property="patient" javaType="net.thumbtack.hospital.model.user.Patient">
-                    <id property="id" column="patientId"/>
-                    <result property="firstName" column="pFirstName"/>
-                    <result property="lastName" column="pLastName"/>
-                    <result property="patronymic" column="pPatronymic"/>
-                    <result property="email" column="email"/>
-                    <result property="address" column="address"/>
-                    <result property="phone" column="phone"/>
-                </association>
-            </collection>
-        </collection>
-    </resultMap>
-
-    <select id="getDoctorInformation" parameterType="java.util.Map" resultMap="resultDoctorInformation">
-        SELECT doctorId,
+    <select id="getDoctorsInformationWithSchedule" parameterType="java.util.Map" resultMap="resultDoctorInformation">
+        SELECT d.userId doctorId,
         user.firstName docFirstName,
         user.lastName docLastName,
         user.patronymic docPatronymic,
@@ -96,42 +64,39 @@
         LEFT JOIN user u ON u.id = tc.patientId
         LEFT JOIN patient p ON u.id = p.userId
         WHERE doctorId = #{doctorId} AND (patientId = #{patientId} OR patientId IS NULL)
+        <if test="speciality != null">AND ds.name = #{speciality}</if>
         <if test="startDate != null">AND date >= #{startDate}</if>
         <if test="endDate != null">AND #{endDate} >= date</if>
         ORDER BY date, time;
     </select>
 
-    <select id="getDoctorsInformation" parameterType="java.util.Map" resultMap="resultDoctorsInformation">
-        SELECT doctorId,
-        user.firstName docFirstName,
-        user.lastName docLastName,
-        user.patronymic docPatronymic,
-        c.name cabinet,
+    <select id="getDoctorsInformationWithoutScheduleById" parameterType="int"
+            resultType="net.thumbtack.hospital.model.user.Doctor">
+        SELECT u.id id,
+        firstName,
+        lastName,
+        patronymic,
         ds.name specialty,
-        scheduleCellId,
-        date,
-        time,
-        title,
-        duration,
-        patientId,
-        u.firstName pFirstName,
-        u.lastName pLastName,
-        u.patronymic pPatronymic,
-        email,
-        address,
-        phone
-        FROM user
-        JOIN doctor d ON user.id = d.userId
-        JOIN cabinet c ON d.cabinetId = c.id
-        JOIN doctor_specialty ds ON d.specialtyId = ds.id
-        LEFT JOIN schedule_cell sc ON d.userId = sc.doctorId
-        LEFT JOIN time_cell tc ON sc.id = tc.scheduleCellId
-        LEFT JOIN user u ON u.id = tc.patientId
-        LEFT JOIN patient p ON u.id = p.userId
-        WHERE (patientId IS NULL OR patientId = #{patientId})
-        <if test="speciality != null">AND ds.name = #{speciality}</if>
-        <if test="startDate != null">AND date >= #{startDate}</if>
-        <if test="endDate != null">AND #{endDate} >= date</if>
-        ORDER BY date, time;
+        c.name cabinet
+        FROM user u
+        JOIN doctor d ON u.id = d.userId
+        JOIN cabinet c ON c.id = d.cabinetId
+        JOIN doctor_specialty ds ON ds.id = d.specialtyId
+        WHERE u.id = #{doctorId};
+    </select>
+
+    <select id="getDoctorsInformationWithoutScheduleBySpecialty" parameterType="java.lang.String"
+            resultType="net.thumbtack.hospital.model.user.Doctor">
+        SELECT u.id id,
+        firstName,
+        lastName,
+        patronymic,
+        ds.name specialty,
+        c.name cabinet
+        FROM user u
+        JOIN doctor d ON u.id = d.userId
+        JOIN cabinet c ON c.id = d.cabinetId
+        JOIN doctor_specialty ds ON ds.id = d.specialtyId
+        <if test="speciality != null">WHERE ds.name = #{speciality}</if>;
     </select>
 </mapper>

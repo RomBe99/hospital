@@ -39,7 +39,7 @@ public class UserDaoTest extends DaoTestApi {
         doctor.setSchedule(schedule);
 
         int patientId = 0;
-        Doctor actualDoctor = getDoctorInformation(patientId, doctorId, null, null);
+        Doctor actualDoctor = getDoctorInformationWithSchedule(patientId, doctorId, null, null);
         actualDoctor.setLogin(doctor.getLogin());
         actualDoctor.setPassword(doctor.getPassword());
 
@@ -92,7 +92,7 @@ public class UserDaoTest extends DaoTestApi {
         patient2Tickets.forEach(ticketTitle -> appointmentToDoctor(patient2.getId(), ticketTitle));
 
         int patientId = patient1.getId();
-        Doctor actualDoctor = getDoctorInformation(patientId, doctorId, null, null);
+        Doctor actualDoctor = getDoctorInformationWithSchedule(patientId, doctorId, null, null);
         actualDoctor.setLogin(doctor.getLogin());
         actualDoctor.setPassword(doctor.getPassword());
 
@@ -139,7 +139,7 @@ public class UserDaoTest extends DaoTestApi {
         doctor.setSchedule(schedule);
 
         int patientId = 0;
-        Doctor actualDoctor = getDoctorInformation(patientId, doctorId, bottomBound, upperBound);
+        Doctor actualDoctor = getDoctorInformationWithSchedule(patientId, doctorId, bottomBound, upperBound);
         actualDoctor.setLogin(doctor.getLogin());
         actualDoctor.setPassword(doctor.getPassword());
 

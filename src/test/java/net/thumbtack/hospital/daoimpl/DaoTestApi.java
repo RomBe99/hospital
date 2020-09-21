@@ -151,12 +151,12 @@ public abstract class DaoTestApi {
         }
     }
 
-    public Doctor getDoctorInformation(int patientId, int doctorId, LocalDate dateStart, LocalDate dateEnd) {
-        return userDao.getDoctorInformation(patientId, doctorId, dateStart, dateEnd);
+    public Doctor getDoctorInformationWithSchedule(int patientId, int doctorId, LocalDate dateStart, LocalDate dateEnd) {
+        return userDao.getDoctorInformationWithSchedule(patientId, doctorId, dateStart, dateEnd);
     }
 
     public List<Doctor> getDoctorsInformation(int patientId, String speciality, LocalDate dateStart, LocalDate dateEnd) {
-        List<Doctor> result = userDao.getDoctorsInformation(patientId, speciality, dateStart, dateEnd);
+        List<Doctor> result = userDao.getDoctorsInformationWithSchedule(patientId, speciality, dateStart, dateEnd);
         result.sort(Comparator.comparingInt(User::getId));
 
         return result;

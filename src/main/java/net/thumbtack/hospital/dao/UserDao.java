@@ -10,7 +10,11 @@ public interface UserDao extends PermissionsDao {
 
     void logout(String sessionId);
 
-    Doctor getDoctorInformation(int patientId, int doctorId, LocalDate startDate, LocalDate endDate);
+    Doctor getDoctorInformationWithoutSchedule(int doctorId);
 
-    List<Doctor> getDoctorsInformation(int patientId, String speciality, LocalDate startDate, LocalDate endDate);
+    List<Doctor> getDoctorsBySpecialityWithoutSchedule(String specialty);
+
+    Doctor getDoctorInformationWithSchedule(int patientId, int doctorId, LocalDate startDate, LocalDate endDate);
+
+    List<Doctor> getDoctorsInformationWithSchedule(int patientId, String specialty, LocalDate startDate, LocalDate endDate);
 }

@@ -69,6 +69,32 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
+    public Doctor getDoctorInformationWithoutSchedule(int doctorId) {
+        LOGGER.debug(CLASS_NAME + ": Get information by doctor id = {}", doctorId);
+
+        try (SqlSession session = getSession()) {
+            return session.selectOne("net.thumbtack.hospital.mapper.UserMapper.getDoctorsInformationWithoutScheduleById", doctorId);
+        } catch (RuntimeException ex) {
+            LOGGER.error(CLASS_NAME + ": Can't get information by doctor id = {}", doctorId, ex);
+
+            throw ex;
+        }
+    }
+
+    @Override
+    public List<Doctor> getDoctorsBySpecialityWithoutSchedule(String specialty) {
+        LOGGER.debug(CLASS_NAME + ": Get information about doctors who specialty is {}", specialty);
+
+        try (SqlSession session = getSession()) {
+            return session.selectList("net.thumbtack.hospital.mapper.UserMapper.getDoctorsInformationWithoutScheduleBySpecialty", specialty);
+        } catch (RuntimeException ex) {
+            LOGGER.error(CLASS_NAME + ": Can't get information about doctors who specialty is {}", specialty, ex);
+
+            throw ex;
+        }
+    }
+
+    @Override
     public int hasPermissions(String sessionId) throws PermissionDeniedException {
         LOGGER.debug(CLASS_NAME + ": Checking user permissions for session id = {}", sessionId);
 
@@ -82,18 +108,19 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public Doctor getDoctorInformation(int patientId, int doctorId, LocalDate startDate, LocalDate endDate) {
+    public Doctor getDoctorInformationWithSchedule(int patientId, int doctorId, LocalDate startDate, LocalDate endDate) {
         LOGGER.debug(CLASS_NAME + ": Get information about doctor = {} for patient id = {} with schedule where start date = {} to end date = {}",
                 doctorId, patientId, startDate, endDate);
 
         Map<String, Object> params = new HashMap<>();
         params.put("patientId", patientId == 0 ? null : patientId);
         params.put("doctorId", doctorId == 0 ? null : doctorId);
+        params.put("speciality", null);
         params.put("startDate", startDate);
         params.put("endDate", endDate);
 
         try (SqlSession session = getSession()) {
-            return session.selectOne("net.thumbtack.hospital.mapper.UserMapper.getDoctorInformation", params);
+            return session.selectOne("net.thumbtack.hospital.mapper.UserMapper.getDoctorsInformationWithSchedule", params);
         } catch (RuntimeException ex) {
             LOGGER.error(CLASS_NAME + ": Can't get information about doctor = {} for patient id = {} with schedule where start date = {} to end date = {}",
                     doctorId, patientId, startDate, endDate);
@@ -103,21 +130,22 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public List<Doctor> getDoctorsInformation(int patientId, String speciality, LocalDate startDate, LocalDate endDate) {
+    public List<Doctor> getDoctorsInformationWithSchedule(int patientId, String specialty, LocalDate startDate, LocalDate endDate) {
         LOGGER.debug(CLASS_NAME + ": Get information about all doctors with speciality = {} for patient id = {} with schedule where start date = {} to end date = {}",
-                speciality, patientId, startDate, endDate);
+                specialty, patientId, startDate, endDate);
 
         Map<String, Object> params = new HashMap<>();
         params.put("patientId", patientId == 0 ? null : patientId);
-        params.put("speciality", speciality);
+        params.put("doctorId", null);
+        params.put("speciality", specialty);
         params.put("startDate", startDate);
         params.put("endDate", endDate);
 
         try (SqlSession session = getSession()) {
-            return session.selectList("net.thumbtack.hospital.mapper.UserMapper.getDoctorsInformation", params);
+            return session.selectList("net.thumbtack.hospital.mapper.UserMapper.getDoctorsInformationWithSchedule", params);
         } catch (RuntimeException ex) {
             LOGGER.error(CLASS_NAME + ": Can't get information about all doctors with speciality = {} for patient id = {} with schedule where start date = {} to end date = {}",
-                    speciality, patientId, startDate, endDate);
+                    specialty, patientId, startDate, endDate);
 
             throw ex;
         }
