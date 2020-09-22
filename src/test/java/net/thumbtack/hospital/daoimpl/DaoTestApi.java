@@ -147,8 +147,8 @@ public abstract class DaoTestApi {
 
         try {
             hasPermissions(sessionId, 0);
+        } catch (PermissionDeniedException e) {
             Assert.fail();
-        } catch (PermissionDeniedException ignored) {
         }
     }
 

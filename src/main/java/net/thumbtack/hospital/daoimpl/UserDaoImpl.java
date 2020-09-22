@@ -4,8 +4,6 @@ import net.thumbtack.hospital.dao.UserDao;
 import net.thumbtack.hospital.mapper.MapperFactory;
 import net.thumbtack.hospital.mapper.UserMapper;
 import net.thumbtack.hospital.model.user.Doctor;
-import net.thumbtack.hospital.util.error.PermissionDeniedErrorCode;
-import net.thumbtack.hospital.util.error.PermissionDeniedException;
 import org.apache.ibatis.session.SqlSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -95,15 +93,17 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public int hasPermissions(String sessionId) throws PermissionDeniedException {
+    public int hasPermissions(String sessionId) {
         LOGGER.debug(CLASS_NAME + ": Checking user permissions for session id = {}", sessionId);
 
         try (SqlSession session = getSession()) {
-            return mapperFactory.getMapper(session, UserMapper.class).hasPermissions(sessionId);
+            Integer userId = mapperFactory.getMapper(session, UserMapper.class).hasPermissions(sessionId);
+
+            return userId == null ? 0 : userId;
         } catch (RuntimeException ex) {
             LOGGER.error(CLASS_NAME + ": Can't check user permissions for session id = {}", sessionId, ex);
 
-            throw new PermissionDeniedException(PermissionDeniedErrorCode.PERMISSION_DENIED);
+            throw ex;
         }
     }
 
