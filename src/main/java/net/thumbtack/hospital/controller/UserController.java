@@ -134,7 +134,7 @@ public class UserController {
     @GetMapping(value = GET_SETTINGS_URL, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public SettingsDtoResponse getSettings(@CookieValue(CookieFactory.JAVA_SESSION_ID) String sessionId) {
+    public SettingsDtoResponse getSettings(@CookieValue(required = false, value = CookieFactory.JAVA_SESSION_ID) String sessionId) {
         return userService.getSettings(sessionId);
     }
 }
