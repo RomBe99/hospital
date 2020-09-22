@@ -8,6 +8,7 @@ import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
 public class PasswordConstraintValidator implements ConstraintValidator<Password, String> {
+    private boolean isNewPassword;
     private final Constraints constraints;
 
     @Autowired
@@ -16,7 +17,16 @@ public class PasswordConstraintValidator implements ConstraintValidator<Password
     }
 
     @Override
+    public void initialize(Password constraintAnnotation) {
+        isNewPassword = constraintAnnotation.isNewPassword();
+    }
+
+    @Override
     public boolean isValid(String passwordField, ConstraintValidatorContext context) {
+        if (isNewPassword && (passwordField == null || passwordField.isEmpty())) {
+            return true;
+        }
+
         if (passwordField == null) {
             return false;
         }

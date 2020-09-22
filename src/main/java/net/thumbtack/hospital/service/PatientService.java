@@ -77,12 +77,16 @@ public class PatientService {
 
         request.setPhone(phoneTransformer(request.getPhone()));
 
+        if (request.getNewPassword() == null || request.getNewPassword().isEmpty()) {
+            request.setNewPassword(request.getOldPassword());
+        }
+
         Patient patient =
-                new Patient(patientId, null, request.getNewPassword(),
+                new Patient(patientId, null, request.getOldPassword(),
                         request.getFirstName(), request.getLastName(), request.getPatronymic(),
                         request.getEmail(), request.getAddress(), request.getPhone());
 
-        patientDao.updatePatient(patient);
+        patientDao.updatePatient(patient, request.getNewPassword());
 
         return new EditPatientProfileDtoResponse(request.getFirstName(), request.getLastName(), request.getPatronymic(),
                 request.getEmail(), request.getAddress(), request.getPhone(), request.getNewPassword());

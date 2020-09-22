@@ -18,6 +18,8 @@ public @interface Password {
 
     Class<? extends Payload>[] payload() default {};
 
+    boolean isNewPassword() default false;
+
     @Documented
     @Target({ElementType.METHOD, ElementType.FIELD, ElementType.ANNOTATION_TYPE, ElementType.CONSTRUCTOR, ElementType.PARAMETER, ElementType.TYPE_USE})
     @Retention(RetentionPolicy.RUNTIME)

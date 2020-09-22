@@ -95,12 +95,13 @@ public abstract class DaoTestApi {
                 .apply(userId);
     }
 
-    public void updateUser(User user) {
+    public void updateUser(User user, String newPassword) {
         Map<Class<? extends User>, Consumer<User>> userUpdaters = new HashMap<>();
-        userUpdaters.put(Patient.class, u -> patientDao.updatePatient((Patient) u));
-        userUpdaters.put(Administrator.class, u -> administratorDao.updateAdministrator((Administrator) u));
+        userUpdaters.put(Patient.class, u -> patientDao.updatePatient((Patient) u, newPassword));
+        userUpdaters.put(Administrator.class, u -> administratorDao.updateAdministrator((Administrator) u, newPassword));
 
         userUpdaters.get(user.getClass()).accept(user);
+        user.setPassword(newPassword);
 
         User userAfterUpdate = getUserById(user.getId(), user.getClass());
         Assert.assertEquals(user, userAfterUpdate);

@@ -39,7 +39,7 @@ public class PatientDaoTest extends DaoTestApi {
         patient.setAddress("403105, г. Красной Чикой, ул. Сыромятнический 1-й пер, дом 182, квартира 729");
         patient.setLastName("Варфоломеева");
         patient.setPatronymic(null);
-        updateUser(patient);
+        updateUser(patient, patient.getPassword());
 
         logout(sessionId);
     }
@@ -52,15 +52,15 @@ public class PatientDaoTest extends DaoTestApi {
         insertUser(patient);
 
         String sessionId = login(patient.getLogin(), patient.getPassword());
+        String newPassword = "DXR5SZEufeD0";
 
         patient.setFirstName("Роуэн");
         patient.setLastName("Сафаров");
         patient.setPatronymic("Игоревич");
-        patient.setPassword("DXR5SZEufeD0");
         patient.setEmail("xbowuveyxqgfviwudp@awdrt.net");
         patient.setAddress("662862, г. Мокроус, ул. Люберецкий 2-й проезд, дом 87, квартира 260");
         patient.setPhone("+79488638119");
-        updateUser(patient);
+        updateUser(patient, newPassword);
 
         logout(sessionId);
     }
@@ -148,8 +148,7 @@ public class PatientDaoTest extends DaoTestApi {
             Assert.fail();
         }
 
-        patient.setPassword(null);
-        updateUser(patient);
+        updateUser(patient, null);
     }
 
     @Test(expected = RuntimeException.class)
@@ -165,7 +164,7 @@ public class PatientDaoTest extends DaoTestApi {
         }
 
         patient.setFirstName(null);
-        updateUser(patient);
+        updateUser(patient, patient.getPassword());
     }
 
     @Test(expected = RuntimeException.class)
@@ -181,7 +180,7 @@ public class PatientDaoTest extends DaoTestApi {
         }
 
         patient.setLastName(null);
-        updateUser(patient);
+        updateUser(patient, patient.getPassword());
     }
 
     @Test(expected = RuntimeException.class)
@@ -197,7 +196,7 @@ public class PatientDaoTest extends DaoTestApi {
         }
 
         patient.setEmail(null);
-        updateUser(patient);
+        updateUser(patient, patient.getPassword());
     }
 
     @Test(expected = RuntimeException.class)
@@ -213,7 +212,7 @@ public class PatientDaoTest extends DaoTestApi {
         }
 
         patient.setAddress(null);
-        updateUser(patient);
+        updateUser(patient, patient.getPassword());
     }
 
     @Test(expected = RuntimeException.class)
@@ -229,6 +228,6 @@ public class PatientDaoTest extends DaoTestApi {
         }
 
         patient.setPhone(null);
-        updateUser(patient);
+        updateUser(patient, patient.getPassword());
     }
 }

@@ -72,15 +72,15 @@ public class PatientControllerTest extends ControllerTestApi {
         EditPatientProfileDtoRequest editPatientProfileRequest =
                 new EditPatientProfileDtoRequest("Арифе", "Репин", "Вадимович",
                         "camikaf920@mijumail.com", "433832, г. Карагай, ул. Сходненский проезд, дом 18, квартира 592", "8922) 790-31-77",
-                        patientRegistrationRequest.getPassword(), patientRegistrationRequest.getPassword());
+                        patientRegistrationRequest.getPassword(), null);
 
         editPatientProfile(patientSessionId, editPatientProfileRequest,
                 new EditPatientProfileDtoResponse(editPatientProfileRequest.getFirstName(), editPatientProfileRequest.getLastName(), editPatientProfileRequest.getPatronymic(),
                         editPatientProfileRequest.getEmail(), editPatientProfileRequest.getAddress(), editPatientProfileRequest.getPhone(),
-                        editPatientProfileRequest.getNewPassword()));
+                        editPatientProfileRequest.getOldPassword()));
 
         getUserInformation(patientSessionId,
-                new FullPatientInformationDtoResponse(patientRegistrationRequest.getLogin(), editPatientProfileRequest.getNewPassword(),
+                new FullPatientInformationDtoResponse(patientRegistrationRequest.getLogin(), editPatientProfileRequest.getOldPassword(),
                         editPatientProfileRequest.getFirstName(), editPatientProfileRequest.getLastName(), editPatientProfileRequest.getPatronymic(),
                         editPatientProfileRequest.getEmail(), editPatientProfileRequest.getAddress(), editPatientProfileRequest.getPhone()));
 

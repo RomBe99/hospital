@@ -46,13 +46,13 @@ public class AdministratorDaoImpl implements AdministratorDao {
     }
 
     @Override
-    public void updateAdministrator(Administrator administrator) {
+    public void updateAdministrator(Administrator administrator, String newPassword) {
         LOGGER.debug(CLASS_NAME + ": Update administrator = {}", administrator);
 
         try (SqlSession session = getSession()) {
             try {
                 AdministratorMapper mapper = mapperFactory.getMapper(session, AdministratorMapper.class);
-                mapper.updateUser(administrator);
+                mapper.updateUser(administrator, newPassword);
                 mapper.updateAdministrator(administrator);
 
                 session.commit();

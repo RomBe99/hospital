@@ -30,7 +30,7 @@ public class AdministratorDaoTest extends DaoTestApi {
         String sessionId = login(administrator.getLogin(), administrator.getPassword());
 
         administrator.setPosition("Very Important Person");
-        updateUser(administrator);
+        updateUser(administrator, administrator.getPassword());
 
         logout(sessionId);
     }
@@ -42,13 +42,13 @@ public class AdministratorDaoTest extends DaoTestApi {
         insertUser(administrator);
 
         String sessionId = login(administrator.getLogin(), administrator.getPassword());
+        String newPassword = "NFLPcdfQy5JM";
 
-        administrator.setPassword("NFLPcdfQy5JM");
         administrator.setFirstName("Кулун");
         administrator.setLastName("Ковалевский");
         administrator.setPatronymic("Артемович");
         administrator.setPosition("Another admin");
-        updateUser(administrator);
+        updateUser(administrator, newPassword);
 
         logout(sessionId);
     }
@@ -60,13 +60,13 @@ public class AdministratorDaoTest extends DaoTestApi {
         insertUser(administrator);
 
         String sessionId = login(administrator.getLogin(), administrator.getPassword());
+        String newPassword = "NFLPcdfQy5JM";
 
-        administrator.setPassword("NFLPcdfQy5JM");
         administrator.setPatronymic("");
-        updateUser(administrator);
+        updateUser(administrator, newPassword);
 
         administrator.setPatronymic(null);
-        updateUser(administrator);
+        updateUser(administrator, newPassword);
 
         logout(sessionId);
     }
@@ -119,8 +119,7 @@ public class AdministratorDaoTest extends DaoTestApi {
             Assert.fail();
         }
 
-        administrator.setPassword(null);
-        updateUser(administrator);
+        updateUser(administrator, null);
     }
 
     @Test(expected = RuntimeException.class)
@@ -142,7 +141,7 @@ public class AdministratorDaoTest extends DaoTestApi {
         }
 
         administrator.setFirstName(null);
-        updateUser(administrator);
+        updateUser(administrator, administrator.getPassword());
     }
 
     @Test(expected = RuntimeException.class)
@@ -164,7 +163,7 @@ public class AdministratorDaoTest extends DaoTestApi {
         }
 
         administrator.setLastName(null);
-        updateUser(administrator);
+        updateUser(administrator, administrator.getPassword());
     }
 
     @Test(expected = RuntimeException.class)
@@ -186,6 +185,6 @@ public class AdministratorDaoTest extends DaoTestApi {
         }
 
         administrator.setPosition(null);
-        updateUser(administrator);
+        updateUser(administrator, administrator.getPassword());
     }
 }

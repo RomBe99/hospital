@@ -23,7 +23,7 @@ public class EditPatientProfileDtoRequest {
     private String phone;
     @Password
     private String oldPassword;
-    @Password
+    @Password(isNewPassword = true)
     private String newPassword;
 
     public EditPatientProfileDtoRequest() {

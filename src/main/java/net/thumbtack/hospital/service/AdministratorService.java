@@ -91,10 +91,10 @@ public class AdministratorService {
                 .hasPermission(sessionId);
 
         Administrator admin =
-                new Administrator(adminId, null, request.getNewPassword(),
+                new Administrator(adminId, null, request.getOldPassword(),
                         request.getFirstName(), request.getLastName(), request.getPatronymic(), request.getPosition());
 
-        administratorDao.updateAdministrator(admin);
+        administratorDao.updateAdministrator(admin, request.getNewPassword());
 
         return new EditAdminProfileDtoResponse(adminId,
                 request.getFirstName(), request.getLastName(), request.getPatronymic(), request.getPosition());

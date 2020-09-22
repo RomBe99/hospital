@@ -8,8 +8,9 @@ public interface UserMapper extends Mapper {
     @Options(useGeneratedKeys = true, keyProperty = "user.id")
     int insertUser(@Param("user") User user, @Param("userTypeId") int userTypeId);
 
-    @Update("UPDATE user SET password = #{password}, firstName = #{firstName}, lastName = #{lastName}, patronymic = #{patronymic} WHERE id = #{id};")
-    void updateUser(User user);
+    @Update("UPDATE user SET password = #{newPassword}, firstName = #{u.firstName}, lastName = #{u.lastName}, patronymic = #{u.patronymic} " +
+            "WHERE id = #{u.id} AND password = #{u.password};")
+    void updateUser(@Param("u") User user, @Param("newPassword") String newPassword);
 
     @Insert("INSERT INTO logged_in_users VALUES(#{sessionId}, #{userId});")
     void loginUser(@Param("sessionId") String sessionId, @Param("userId") int userId);

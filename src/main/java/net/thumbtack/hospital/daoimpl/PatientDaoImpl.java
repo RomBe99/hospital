@@ -46,13 +46,13 @@ public class PatientDaoImpl implements PatientDao {
     }
 
     @Override
-    public void updatePatient(Patient patient) {
+    public void updatePatient(Patient patient, String newPassword) {
         LOGGER.debug(CLASS_NAME + ": Update patient = {}", patient);
 
         try (SqlSession session = getSession()) {
             try {
                 PatientMapper mapper = mapperFactory.getMapper(session, PatientMapper.class);
-                mapper.updateUser(patient);
+                mapper.updateUser(patient, newPassword);
                 mapper.updatePatient(patient);
 
                 session.commit();
