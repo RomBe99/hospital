@@ -41,6 +41,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import javax.servlet.http.Cookie;
 import java.nio.charset.StandardCharsets;
 import java.util.Objects;
+import java.util.StringJoiner;
 import java.util.stream.Collectors;
 
 @SpringBootTest(classes = HospitalApplication.class)
@@ -73,6 +74,28 @@ public abstract class ControllerTestApi {
         Assert.assertEquals(expectedJsonResponse, actualJsonResponse);
     }
 
+    public static String buildUrl(String ... urlParts) {
+        final String separator = "/";
+
+        if (urlParts.length == 0) {
+            return separator;
+        }
+
+        StringJoiner sj = new StringJoiner(separator);
+
+        for (String part : urlParts) {
+            sj.add(part);
+        }
+
+        String result = sj.toString();
+
+        return result.startsWith(separator) ? result : separator + result;
+    }
+
+    public static String buildUrlWithPathVariable(String pathVarName, String pathVarValue, String ... urlParts) {
+        return buildUrl(urlParts).replace(pathVarName, pathVarValue);
+    }
+
     public String mapToJson(Object obj) throws JsonProcessingException {
         return objectMapper.writeValueAsString(obj);
     }
@@ -84,7 +107,7 @@ public abstract class ControllerTestApi {
     // Debug controller methods
 
     private void getScheduleByDoctorId(int doctorId, DtoResponseWithSchedule expectedResponse) throws Exception {
-        String url = DebugController.PREFIX_URL + "/" + DebugController.GET_SCHEDULE_BY_DOCTOR_ID_URL.replace("{doctorId}", String.valueOf(doctorId));
+        String url = buildUrlWithPathVariable("{doctorId}", String.valueOf(doctorId), DebugController.PREFIX_URL, DebugController.GET_SCHEDULE_BY_DOCTOR_ID_URL);
 
         String actualJsonResponse = mvc.perform(
                 MockMvcRequestBuilders
@@ -101,7 +124,7 @@ public abstract class ControllerTestApi {
     // User controller methods
 
     public String login(String login, String password, LoginUserDtoResponse expectedResponse) throws Exception {
-        String url = UserController.PREFIX_URL + "/" + UserController.LOGIN_URL;
+        String url = buildUrl(UserController.PREFIX_URL, UserController.LOGIN_URL);
         LoginDtoRequest request = new LoginDtoRequest(login, password);
         String json = mapToJson(request);
 
@@ -139,7 +162,7 @@ public abstract class ControllerTestApi {
     }
 
     public void logout(String sessionId) throws Exception {
-        String url = UserController.PREFIX_URL + "/" + UserController.LOGOUT_URL;
+        String url = buildUrl(UserController.PREFIX_URL, UserController.LOGOUT_URL);
 
         String actualJsonResponse = mvc.perform(
                 MockMvcRequestBuilders
@@ -156,7 +179,7 @@ public abstract class ControllerTestApi {
     }
 
     public void getUserInformation(String sessionId, UserInformationDtoResponse expectedResponse) throws Exception {
-        String url = UserController.PREFIX_URL + "/" + UserController.GET_USER_INFORMATION_URL;
+        String url = buildUrl(UserController.PREFIX_URL, UserController.GET_USER_INFORMATION_URL);
 
         String actualJsonResponse = mvc.perform(
                 MockMvcRequestBuilders
@@ -182,7 +205,7 @@ public abstract class ControllerTestApi {
 
     public void getDoctorInformation(String sessionId, int doctorId, String schedule, String startDate, String endDate,
                                      DoctorInformationDtoResponse expectedResponse) throws Exception {
-        String url = UserController.PREFIX_URL + "/" + UserController.GET_DOCTOR_INFORMATION_URL.replace("{doctorId}", String.valueOf(doctorId));
+        String url = buildUrlWithPathVariable("{doctorId}", String.valueOf(doctorId), UserController.PREFIX_URL, UserController.GET_DOCTOR_INFORMATION_URL);
 
         MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders
                 .get(url)
@@ -207,7 +230,7 @@ public abstract class ControllerTestApi {
 
     public void getDoctorsInformation(String sessionId, String schedule, String speciality, String startDate, String endDate,
                                       GetAllDoctorsDtoResponse expectedResponse) throws Exception {
-        String url = UserController.PREFIX_URL + "/" + UserController.GET_DOCTORS_INFORMATION_URL;
+        String url = buildUrl(UserController.PREFIX_URL, UserController.GET_DOCTORS_INFORMATION_URL);
 
         MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders
                 .get(url)
@@ -236,7 +259,7 @@ public abstract class ControllerTestApi {
 
     public void getPatientInformation(String sessionId, int patientId,
                                       PatientInformationDtoResponse expectedResponse) throws Exception {
-        String url = UserController.PREFIX_URL + "/" + UserController.GET_PATIENT_INFORMATION_URL.replace("{patientId}", String.valueOf(patientId));
+        String url = buildUrlWithPathVariable("{patientId}", String.valueOf(patientId), UserController.PREFIX_URL, UserController.GET_PATIENT_INFORMATION_URL);
 
         String actualJsonResponse = mvc.perform(
                 MockMvcRequestBuilders
@@ -254,7 +277,7 @@ public abstract class ControllerTestApi {
     }
 
     public void getSettings(String sessionId, SettingsDtoResponse expectedResponse) throws Exception {
-        String url = UserController.PREFIX_URL + "/" + UserController.GET_SETTINGS_URL;
+        String url = buildUrl(UserController.PREFIX_URL, UserController.GET_SETTINGS_URL);
 
         String actualJsonResponse = mvc.perform(
                 MockMvcRequestBuilders
@@ -274,7 +297,7 @@ public abstract class ControllerTestApi {
 
     public void administratorRegistration(String sessionId, AdminRegistrationDtoRequest request,
                                           AdminRegistrationDtoResponse expectedResponse) throws Exception {
-        String url = AdministratorController.PREFIX_URL + "/" + AdministratorController.ADMINISTRATOR_REGISTRATION_URL;
+        String url = buildUrl(AdministratorController.PREFIX_URL, AdministratorController.ADMINISTRATOR_REGISTRATION_URL);
         String json = mapToJson(request);
 
         String actualJsonResponse = mvc.perform(
@@ -296,7 +319,7 @@ public abstract class ControllerTestApi {
 
     public void doctorRegistration(String sessionId, DoctorRegistrationDtoRequest request,
                                    DoctorRegistrationDtoResponse expectedResponse) throws Exception {
-        String url = AdministratorController.PREFIX_URL + "/" + AdministratorController.DOCTOR_REGISTRATION_URL;
+        String url = buildUrl(AdministratorController.PREFIX_URL, AdministratorController.DOCTOR_REGISTRATION_URL);
         String json = mapToJson(request);
 
         String actualJsonResponse = mvc.perform(
@@ -323,7 +346,7 @@ public abstract class ControllerTestApi {
 
     public void editAdministratorProfile(String sessionId, EditAdminProfileDtoRequest request,
                                          EditAdminProfileDtoResponse expectedResponse) throws Exception {
-        String url = AdministratorController.PREFIX_URL + "/" + AdministratorController.EDIT_ADMINISTRATOR_PROFILE_URL;
+        String url = buildUrl(AdministratorController.PREFIX_URL, AdministratorController.EDIT_ADMINISTRATOR_PROFILE_URL);
         String json = mapToJson(request);
 
         String actualJsonResponse = mvc.perform(
@@ -343,7 +366,7 @@ public abstract class ControllerTestApi {
 
     public void editDoctorSchedule(String sessionId, int doctorId, EditDoctorScheduleDtoRequest request,
                                    EditDoctorScheduleDtoResponse expectedResponse) throws Exception {
-        String url = AdministratorController.PREFIX_URL + "/" + AdministratorController.EDIT_DOCTOR_SCHEDULE_URL.replace("{doctorId}", String.valueOf(doctorId));
+        String url = buildUrlWithPathVariable("{doctorId}", String.valueOf(doctorId), AdministratorController.PREFIX_URL, AdministratorController.EDIT_DOCTOR_SCHEDULE_URL);
         String json = mapToJson(request);
 
         String actualJsonResponse = mvc.perform(
@@ -362,7 +385,7 @@ public abstract class ControllerTestApi {
     }
 
     public void removeDoctor(String sessionId, int doctorId, RemoveDoctorDtoRequest request) throws Exception {
-        String url = AdministratorController.PREFIX_URL + "/" + AdministratorController.REMOVE_DOCTOR_URL.replace("{doctorId}", String.valueOf(doctorId));
+        String url = buildUrlWithPathVariable("{doctorId}", String.valueOf(doctorId), AdministratorController.PREFIX_URL, AdministratorController.REMOVE_DOCTOR_URL);
         String json = mapToJson(request);
 
         String actualJsonResponse = mvc.perform(
@@ -384,7 +407,7 @@ public abstract class ControllerTestApi {
 
     public String patientRegistration(PatientRegistrationDtoRequest request,
                                       PatientRegistrationDtoResponse expectedResponse) throws Exception {
-        String url = PatientController.PREFIX_URL + "/" + PatientController.PATIENT_REGISTRATION_URL;
+        String url = buildUrl(PatientController.PREFIX_URL, PatientController.PATIENT_REGISTRATION_URL);
         String json = mapToJson(request);
 
         MockHttpServletResponse response = mvc.perform(
@@ -415,7 +438,7 @@ public abstract class ControllerTestApi {
 
     public void editPatientProfile(String sessionId, EditPatientProfileDtoRequest request,
                                    EditPatientProfileDtoResponse expectedResponse) throws Exception {
-        String url = PatientController.PREFIX_URL + "/" + PatientController.EDIT_PATIENT_PROFILE_URL;
+        String url = buildUrl(PatientController.PREFIX_URL, PatientController.EDIT_PATIENT_PROFILE_URL);
         String json = mapToJson(request);
 
         String actualJsonResponse = mvc.perform(
@@ -437,7 +460,7 @@ public abstract class ControllerTestApi {
 
     public void appointmentToDoctor(String sessionId, AppointmentToDoctorDtoRequest request,
                                     AppointmentToDoctorDtoResponse expectedResponse) throws Exception {
-        String url = PatientController.PREFIX_URL + "/" + PatientController.APPOINTMENT_TO_DOCTOR_URL;
+        String url = buildUrl(PatientController.PREFIX_URL, PatientController.APPOINTMENT_TO_DOCTOR_URL);
         String json = mapToJson(request);
 
         String actualJsonResponse = mvc.perform(
@@ -456,7 +479,7 @@ public abstract class ControllerTestApi {
     }
 
     public void denyTicketToDoctor(String sessionId, String ticketTitle) throws Exception {
-        String url = PatientController.PREFIX_URL + "/" + PatientController.DENY_TICKET_TO_DOCTOR_URL.replace("{ticketTitle}", ticketTitle);
+        String url = buildUrlWithPathVariable("{ticketTitle}", ticketTitle, PatientController.PREFIX_URL, PatientController.DENY_TICKET_TO_DOCTOR_URL);
 
         String actualJsonResponse = mvc.perform(
                 MockMvcRequestBuilders
@@ -473,7 +496,7 @@ public abstract class ControllerTestApi {
     }
 
     public void getTickets(String sessionId, AllTicketsDtoResponse expectedResponse) throws Exception {
-        String url = PatientController.PREFIX_URL + "/" + PatientController.GET_TICKETS_URL;
+        String url = buildUrl(PatientController.PREFIX_URL, PatientController.GET_TICKETS_URL);
 
         String actualJsonResponse = mvc.perform(
                 MockMvcRequestBuilders
@@ -493,7 +516,7 @@ public abstract class ControllerTestApi {
 
     public void createMedicalCommission(String sessionId, CreateMedicalCommissionDtoRequest request,
                                         CreateMedicalCommissionDtoResponse expectedResponse) throws Exception {
-        String url = DoctorController.PREFIX_URL + "/" + DoctorController.CREATE_MEDICAL_COMMISSION_URL;
+        String url = buildUrl(DoctorController.PREFIX_URL, DoctorController.CREATE_MEDICAL_COMMISSION_URL);
         String json = mapToJson(request);
 
         String actualJsonResponse = mvc.perform(

@@ -2,6 +2,7 @@ package net.thumbtack.hospital.controller;
 
 import net.thumbtack.hospital.dtoresponse.other.ErrorDtoResponse;
 import net.thumbtack.hospital.dtoresponse.other.ErrorsDtoResponse;
+import net.thumbtack.hospital.util.cookie.CookieFactory;
 import net.thumbtack.hospital.util.error.ErrorMessageFactory;
 import net.thumbtack.hospital.util.error.PermissionDeniedException;
 import net.thumbtack.hospital.util.error.ScheduleErrorCode;
@@ -69,7 +70,7 @@ public class GlobalControllerExceptionHandler {
     @ResponseBody
     public ErrorsDtoResponse handlePermissionExceptions(PermissionDeniedException ex) {
         String errorCode = ex.getErrorCode().getErrorCode();
-        String field = "sessionId";
+        String field = CookieFactory.JAVA_SESSION_ID;
         String errorMessage = ex.getErrorCode().getErrorMessage();
 
         return new ErrorsDtoResponse(Collections.singletonList(new ErrorDtoResponse(errorCode, field, errorMessage)));

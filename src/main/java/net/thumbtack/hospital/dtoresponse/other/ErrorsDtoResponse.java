@@ -1,6 +1,7 @@
 package net.thumbtack.hospital.dtoresponse.other;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -8,6 +9,10 @@ public class ErrorsDtoResponse {
     List<ErrorDtoResponse> errors = new ArrayList<>();
 
     public ErrorsDtoResponse() {
+    }
+
+    public ErrorsDtoResponse(ErrorDtoResponse ... errors) {
+        this(Arrays.asList(errors));
     }
 
     public ErrorsDtoResponse(List<ErrorDtoResponse> errors) {

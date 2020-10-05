@@ -47,19 +47,13 @@ public class UserController {
     }
 
     private static LocalDate generateStartDate(String startDate) {
-        if (startDate == null || startDate.isEmpty()) {
-            return LocalDate.now();
-        }
-
-        return LocalDate.parse(startDate);
+        return startDate == null || startDate.isEmpty() ?
+                LocalDate.now() : LocalDate.parse(startDate);
     }
 
     private static LocalDate generateEndDate(String endDate) {
-        if (endDate == null || endDate.isEmpty()) {
-            return LocalDate.now().plusMonths(2);
-        }
-
-        return LocalDate.parse(endDate);
+        return endDate == null || endDate.isEmpty() ?
+                LocalDate.now().plusMonths(2) : LocalDate.parse(endDate);
     }
 
     @PostMapping(value = LOGIN_URL,
