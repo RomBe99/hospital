@@ -18,15 +18,19 @@ public class HospitalApplication {
     private static final String CLASS_NAME = HospitalApplication.class.getSimpleName();
 
     public static void main(String[] args) {
+        LOGGER.info(CLASS_NAME + ": application is running");
+
         try {
             MyBatisUtils.initConnection();
         } catch (RuntimeException ex) {
             LOGGER.error(CLASS_NAME + ": Can't connect to database", ex);
+            LOGGER.info(CLASS_NAME + ": application terminated");
+
             return;
         }
 
-        LOGGER.info(CLASS_NAME + ": is running");
         SpringApplication.run(HospitalApplication.class);
+
         LOGGER.info(CLASS_NAME + ": application terminated");
     }
 }
