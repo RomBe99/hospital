@@ -91,6 +91,11 @@
       "name": "hospital.errors.invalid-schedule-request",
       "type": "java.lang.String",
       "description": "Error code for invalid schedule request."
+    },
+    {
+      "name": "hospital.errors.invalid-appointment-doctor-request",
+      "type": "java.lang.String",
+      "description": "Error code for invalid appointment to doctor request."
     }
   ]
 }

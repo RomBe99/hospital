@@ -3,10 +3,7 @@ package net.thumbtack.hospital.controller;
 import net.thumbtack.hospital.dtoresponse.other.ErrorDtoResponse;
 import net.thumbtack.hospital.dtoresponse.other.ErrorsDtoResponse;
 import net.thumbtack.hospital.util.cookie.CookieFactory;
-import net.thumbtack.hospital.util.error.ErrorMessageFactory;
-import net.thumbtack.hospital.util.error.PermissionDeniedException;
-import net.thumbtack.hospital.util.error.ScheduleErrorCode;
-import net.thumbtack.hospital.util.error.ScheduleException;
+import net.thumbtack.hospital.util.error.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.FieldError;
@@ -61,6 +58,17 @@ public class GlobalControllerExceptionHandler {
         String errorCode = ex.getErrorCode().getErrorCode();
         String field = errorCodeToField.get(ex.getErrorCode());
         String errorMessage = ex.getErrorCode().getErrorMessage();
+
+        return new ErrorsDtoResponse(Collections.singletonList(new ErrorDtoResponse(errorCode, field, errorMessage)));
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(DoctorNotFoundException.class)
+    @ResponseBody
+    public ErrorsDtoResponse handleDoctorNotFoundException(DoctorNotFoundException ex) {
+        final String errorCode = ex.getErrorCode().getErrorCode();
+        final String field = "id or speciality";
+        final String errorMessage = ex.getErrorCode().getErrorMessage();
 
         return new ErrorsDtoResponse(Collections.singletonList(new ErrorDtoResponse(errorCode, field, errorMessage)));
     }

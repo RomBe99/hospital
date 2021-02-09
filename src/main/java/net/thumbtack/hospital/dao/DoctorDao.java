@@ -8,4 +8,6 @@ public interface DoctorDao extends PermissionsDao {
     void removeDoctor(int id);
 
     Doctor getDoctorById(int id);
+
+    Doctor getRandomDoctorBySpeciality(String speciality);
 }

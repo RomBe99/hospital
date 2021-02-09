@@ -74,7 +74,7 @@ public abstract class ControllerTestApi {
         Assert.assertEquals(expectedJsonResponse, actualJsonResponse);
     }
 
-    public static String buildUrl(String ... urlParts) {
+    public static String buildUrl(String... urlParts) {
         final String separator = "/";
 
         if (urlParts.length == 0) {
@@ -92,7 +92,7 @@ public abstract class ControllerTestApi {
         return result.startsWith(separator) ? result : separator + result;
     }
 
-    public static String buildUrlWithPathVariable(String pathVarName, String pathVarValue, String ... urlParts) {
+    public static String buildUrlWithPathVariable(String pathVarName, String pathVarValue, String... urlParts) {
         return buildUrl(urlParts).replace(pathVarName, pathVarValue);
     }
 
@@ -458,8 +458,7 @@ public abstract class ControllerTestApi {
         Assert.assertEquals(expectedResponse, actualResponse);
     }
 
-    public void appointmentToDoctor(String sessionId, AppointmentToDoctorDtoRequest request,
-                                    AppointmentToDoctorDtoResponse expectedResponse) throws Exception {
+    public AppointmentToDoctorDtoResponse appointmentToDoctor(String sessionId, AppointmentToDoctorDtoRequest request) throws Exception {
         String url = buildUrl(PatientController.PREFIX_URL, PatientController.APPOINTMENT_TO_DOCTOR_URL);
         String json = mapToJson(request);
 
@@ -474,8 +473,7 @@ public abstract class ControllerTestApi {
                 .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
         Assert.assertFalse(actualJsonResponse.isEmpty());
 
-        AppointmentToDoctorDtoResponse actualResponse = mapFromJson(actualJsonResponse, AppointmentToDoctorDtoResponse.class);
-        Assert.assertEquals(expectedResponse, actualResponse);
+        return mapFromJson(actualJsonResponse, AppointmentToDoctorDtoResponse.class);
     }
 
     public void denyTicketToDoctor(String sessionId, String ticketTitle) throws Exception {

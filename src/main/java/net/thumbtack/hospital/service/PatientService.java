@@ -16,9 +16,7 @@ import net.thumbtack.hospital.model.user.Doctor;
 import net.thumbtack.hospital.model.user.Patient;
 import net.thumbtack.hospital.model.ticket.TicketToMedicalCommission;
 import net.thumbtack.hospital.model.ticket.TicketToDoctor;
-import net.thumbtack.hospital.util.error.PermissionDeniedException;
-import net.thumbtack.hospital.util.error.ScheduleErrorCode;
-import net.thumbtack.hospital.util.error.ScheduleException;
+import net.thumbtack.hospital.util.error.*;
 import net.thumbtack.hospital.util.security.SecurityManagerImpl;
 import net.thumbtack.hospital.util.ticket.TicketFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -92,12 +90,23 @@ public class PatientService {
                 request.getEmail(), request.getAddress(), request.getPhone(), request.getNewPassword());
     }
 
-    public AppointmentToDoctorDtoResponse appointmentToDoctor(String sessionId, AppointmentToDoctorDtoRequest request) throws PermissionDeniedException, ScheduleException {
+    public AppointmentToDoctorDtoResponse appointmentToDoctor(String sessionId, AppointmentToDoctorDtoRequest request)
+            throws PermissionDeniedException, ScheduleException, DoctorNotFoundException {
         int patientId = SecurityManagerImpl
                 .getSecurityManager(UserType.PATIENT)
                 .hasPermission(sessionId);
 
-        Doctor doctor = doctorDao.getDoctorById(request.getDoctorId());
+        Doctor doctor;
+
+        if (request.getDoctorId() != 0) {
+            doctor = doctorDao.getDoctorById(request.getDoctorId());
+        } else {
+            doctor = doctorDao.getRandomDoctorBySpeciality(request.getSpeciality());
+        }
+
+        if (doctor == null) {
+            throw new DoctorNotFoundException(DoctorNotFoundErrorCode.DOCTOR_NOT_FOUND);
+        }
 
         LocalDate ticketDate = LocalDate.parse(request.getDate());
         LocalTime ticketTime = LocalTime.parse(request.getTime());

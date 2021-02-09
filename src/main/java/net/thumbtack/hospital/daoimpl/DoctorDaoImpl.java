@@ -11,6 +11,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 import static net.thumbtack.hospital.util.mybatis.MyBatisUtils.getSession;
 
 @Component("DoctorDaoImpl")
@@ -67,12 +69,35 @@ public class DoctorDaoImpl implements DoctorDao {
 
     @Override
     public Doctor getDoctorById(int id) {
-        LOGGER.debug(CLASS_NAME + ": Get doctor by id");
+        LOGGER.debug(CLASS_NAME + ": Get doctor by id = {}", id);
 
         try (SqlSession session = getSession()) {
             return session.selectOne("net.thumbtack.hospital.mapper.DoctorMapper.getDoctorById", id);
         } catch (RuntimeException ex) {
-            LOGGER.error(CLASS_NAME + ": Can't get doctor by id", ex);
+            LOGGER.error(CLASS_NAME + ": Can't get doctor by id = {}", id, ex);
+
+            throw ex;
+        }
+    }
+
+    @Override
+    public Doctor getRandomDoctorBySpeciality(String speciality) {
+        LOGGER.debug(CLASS_NAME + ": Get random doctor by speciality = {}", speciality);
+
+        try (SqlSession session = getSession()) {
+            int specialityId = mapperFactory.getMapper(session, CommonMapper.class).getDoctorSpecialityIdByName(speciality);
+
+            List<Doctor> doctors = session.selectList("net.thumbtack.hospital.mapper.DoctorMapper.getDoctorsBySpecialityId", specialityId);
+
+            if (doctors.isEmpty()) {
+                return null;
+            }
+
+            int index = (int) (Math.random() * doctors.size());
+
+            return doctors.get(index);
+        } catch (RuntimeException ex) {
+            LOGGER.error(CLASS_NAME + ": Can't get random doctor by speciality = {}", speciality, ex);
 
             throw ex;
         }

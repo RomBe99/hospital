@@ -12,6 +12,7 @@ import net.thumbtack.hospital.dtoresponse.patient.ticket.AllTicketsDtoResponse;
 import net.thumbtack.hospital.service.PatientService;
 import net.thumbtack.hospital.service.UserService;
 import net.thumbtack.hospital.util.cookie.CookieFactory;
+import net.thumbtack.hospital.util.error.DoctorNotFoundException;
 import net.thumbtack.hospital.util.error.PermissionDeniedException;
 import net.thumbtack.hospital.util.error.ScheduleException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -75,7 +76,8 @@ public class PatientController {
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public AppointmentToDoctorDtoResponse appointmentToDoctor(@CookieValue(value = CookieFactory.JAVA_SESSION_ID) String sessionId,
-                                                              @Valid @RequestBody AppointmentToDoctorDtoRequest request) throws PermissionDeniedException, ScheduleException {
+                                                              @Valid @RequestBody AppointmentToDoctorDtoRequest request)
+            throws PermissionDeniedException, ScheduleException, DoctorNotFoundException {
         return patientService.appointmentToDoctor(sessionId, request);
     }
 
