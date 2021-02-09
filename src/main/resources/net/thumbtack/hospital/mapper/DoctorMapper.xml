@@ -4,7 +4,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="net.thumbtack.hospital.mapper.DoctorMapper">
-    <resultMap id="resultDoctor" type="net.thumbtack.hospital.model.Doctor">
+    <resultMap id="resultDoctor" type="net.thumbtack.hospital.model.user.Doctor">
         <id property="id" column="doctorId"/>
         <result property="login" column="login"/>
         <result property="password" column="password"/>
@@ -15,86 +15,91 @@
         <result property="specialty" column="specialty"/>
 
         <collection property="schedule" column="scheduleCellId" javaType="java.util.List"
-                    ofType="net.thumbtack.hospital.model.ScheduleCell">
+                    ofType="net.thumbtack.hospital.model.schedule.ScheduleCell">
             <result property="id" column="scheduleCellId"/>
             <result property="date" column="date"/>
-            <association property="doctor" javaType="net.thumbtack.hospital.model.Doctor"/>
 
-            <collection property="cells" column="timeCellId" javaType="java.util.List"
-                        ofType="net.thumbtack.hospital.model.TimeCell">
+            <collection property="cells" column="ticket" javaType="java.util.List"
+                        ofType="net.thumbtack.hospital.model.schedule.TimeCell">
+                <result property="ticket" column="ticket"/>
                 <result property="time" column="time"/>
                 <result property="duration" column="duration"/>
-                <result property="ticket" column="ticket"/>
-
-                <association property="patient" javaType="net.thumbtack.hospital.model.Patient">
+                <association property="patient" javaType="net.thumbtack.hospital.model.user.Patient">
                     <id property="id" column="patientId"/>
                     <result property="firstName" column="patientFirstName"/>
                     <result property="lastName" column="patientLastName"/>
                     <result property="patronymic" column="patientPatronymic"/>
-                    <result property="email" column="patientEmail"/>
-                    <result property="address" column="patientAddress"/>
-                    <result property="phone" column="patientPhone"/>
+                    <result property="email" column="email"/>
+                    <result property="address" column="address"/>
+                    <result property="phone" column="phone"/>
                 </association>
             </collection>
         </collection>
     </resultMap>
 
-    <select id="getAllDoctors" resultMap="resultDoctor">
-        SELECT user.id    AS doctorId,
-               login,
-               password,
-               firstName,
-               lastName,
-               patronymic,
-               ds.name    AS specialty,
-               c.name     AS cabinet,
-               sc.id      AS scheduleCellId,
+    <select id="getDoctorById" parameterType="int" resultMap="resultDoctor">
+        SELECT u.id          doctorId,
+               u.login,
+               u.password,
+               u.firstName,
+               u.lastName,
+               u.patronymic,
+               ds.name       specialty,
+               c.name        cabinet,
+               sc.id         scheduleCellId,
                date,
                time,
-               ticket,
+               title,
                duration,
-               firstName  AS patientFirstName,
-               lastName   AS patientLastName,
-               patronymic AS patientPatronymic,
-               email      AS patientEmail,
-               address    AS patientAddress,
-               phone      AS patientPhone
-        FROM user
-                 JOIN doctor d ON user.id = d.userId
+               p.userId      patientId,
+               pu.firstName  patientFirstName,
+               pu.lastName   patientLastName,
+               pu.patronymic patientPatronymic,
+               email,
+               address,
+               phone
+        FROM user u
+                 JOIN doctor d ON u.id = d.userId
                  JOIN doctor_specialty ds ON d.specialtyId = ds.id
                  LEFT JOIN cabinet c ON d.cabinetId = c.id
                  LEFT JOIN schedule_cell sc ON d.userId = sc.doctorId
-                 JOIN time_cell tc ON sc.id = tc.scheduleCellId
-                 LEFT JOIN patient p ON tc.patientId = p.userId;
+                 LEFT JOIN time_cell tc ON sc.id = tc.scheduleCellId
+                 LEFT JOIN user pu ON pu.id = tc.patientId
+                 LEFT JOIN patient p ON tc.patientId = p.userId
+        WHERE u.id = #{id}
+        ORDER BY date, time;
     </select>
 
-    <select id="getDoctorById" parameterType="int" resultMap="resultDoctor">
-        SELECT user.id    AS doctorId,
-               login,
-               password,
-               firstName,
-               lastName,
-               patronymic,
-               ds.name    AS specialty,
-               c.name     AS cabinet,
-               sc.id      AS scheduleCellId,
-               date,
-               time,
-               ticket,
-               duration,
-               firstName  AS patientFirstName,
-               lastName   AS patientLastName,
-               patronymic AS patientPatronymic,
-               email      AS patientEmail,
-               address    AS patientAddress,
-               phone      AS patientPhone
-        FROM user
-                 JOIN doctor d ON user.id = d.userId
-                 JOIN doctor_specialty ds ON d.specialtyId = ds.id
-                 LEFT JOIN cabinet c ON d.cabinetId = c.id
-                 LEFT JOIN schedule_cell sc ON d.userId = sc.doctorId
-                 JOIN time_cell tc ON sc.id = tc.scheduleCellId
-                 LEFT JOIN patient p ON tc.patientId = p.userId
-        WHERE doctorId = #{id};
+    <select id="getDoctorsBySpecialityId" parameterType="int" resultMap="resultDoctor">
+        SELECT u.id          doctorId,
+               u.login,
+               u.password,
+               u.firstName,
+               u.lastName,
+               u.patronymic,
+               ds.name       specialty,
+               c.name        cabinet,
+               sc.id         scheduleCellId,
+            date,
+            time,
+            title,
+            duration,
+            p.userId      patientId,
+            pu.firstName  patientFirstName,
+            pu.lastName   patientLastName,
+            pu.patronymic patientPatronymic,
+            email,
+            address,
+            phone
+        FROM user u
+            JOIN doctor d ON u.id = d.userId
+            JOIN doctor_specialty ds ON d.specialtyId = ds.id
+            LEFT JOIN cabinet c ON d.cabinetId = c.id
+            LEFT JOIN schedule_cell sc ON d.userId = sc.doctorId
+            LEFT JOIN time_cell tc ON sc.id = tc.scheduleCellId
+            LEFT JOIN user pu ON pu.id = tc.patientId
+            LEFT JOIN patient p ON tc.patientId = p.userId
+        WHERE ds.id = #{specialityId}
+        ORDER BY date, time;
     </select>
 </mapper>

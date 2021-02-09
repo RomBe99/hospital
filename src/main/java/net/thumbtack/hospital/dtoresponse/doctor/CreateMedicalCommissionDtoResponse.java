@@ -1,12 +1,13 @@
 package net.thumbtack.hospital.dtoresponse.doctor;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 public class CreateMedicalCommissionDtoResponse {
     private String ticket;
     private int patientId;
-    private List<Integer> doctorIds;
+    private List<Integer> doctorIds = new ArrayList<>();
     private String room;
     private String date;
     private String time;

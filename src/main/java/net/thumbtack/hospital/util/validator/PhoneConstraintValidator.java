@@ -4,6 +4,8 @@ import net.thumbtack.hospital.util.validator.annotation.Phone;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
+import java.util.HashMap;
+import java.util.Map;
 
 public class PhoneConstraintValidator implements ConstraintValidator<Phone, String> {
     @Override
@@ -12,15 +14,15 @@ public class PhoneConstraintValidator implements ConstraintValidator<Phone, Stri
             return false;
         }
 
-        int phoneLength = 11;
-        String regex = "^((8|\\+7)[\\- ]?)?(\\(?\\d{3}\\)?[\\- ]?)?[\\d\\- ]{7,10}$";
+        final String regex = "^((8|\\+7)[\\- ]?)?(\\(?\\d{3}\\)?[\\- ]?)?[\\d\\- ]{7,10}$";
+        Map<String, Integer> numberPrefixToLength = new HashMap<>();
+        numberPrefixToLength.put("8", 11);
+        numberPrefixToLength.put("+7", 12);
 
-        if (phoneField.startsWith("8") && phoneField.length() >= phoneLength) {
-            return phoneField.matches(regex);
-        }
-
-        if (phoneField.startsWith("+7") && phoneField.length() >= phoneLength + 1) {
-            return phoneField.matches(regex);
+        for (String prefix : numberPrefixToLength.keySet()) {
+            if (phoneField.startsWith(prefix) && phoneField.length() >= numberPrefixToLength.get(prefix)) {
+                return phoneField.matches(regex);
+            }
         }
 
         return false;

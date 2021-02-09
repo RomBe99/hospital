@@ -5,9 +5,9 @@ import java.util.Objects;
 public class AppointmentToDoctorDtoResponse {
     private String ticket;
     private int doctorId;
-    private String firstName;
-    private String lastName;
-    private String patronymic;
+    private String doctorFirstName;
+    private String doctorLastName;
+    private String doctorPatronymic;
     private String speciality;
     private String room;
     private String date;
@@ -17,23 +17,17 @@ public class AppointmentToDoctorDtoResponse {
     }
 
     public AppointmentToDoctorDtoResponse(String ticket, int doctorId,
-                                          String firstName, String lastName, String patronymic,
+                                          String doctorFirstName, String doctorLastName, String doctorPatronymic,
                                           String speciality, String room, String date, String time) {
         setTicket(ticket);
         setDoctorId(doctorId);
-        setFirstName(firstName);
-        setLastName(lastName);
-        setPatronymic(patronymic);
+        setDoctorFirstName(doctorFirstName);
+        setDoctorLastName(doctorLastName);
+        setDoctorPatronymic(doctorPatronymic);
         setSpeciality(speciality);
         setRoom(room);
         setDate(date);
         setTime(time);
-    }
-
-    public AppointmentToDoctorDtoResponse(String ticket, int doctorId,
-                                          String firstName, String lastName,
-                                          String speciality, String room, String date, String time) {
-        this(ticket, doctorId, firstName, lastName, null, speciality, room, date, time);
     }
 
     public void setTicket(String ticket) {
@@ -44,16 +38,16 @@ public class AppointmentToDoctorDtoResponse {
         this.doctorId = doctorId;
     }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
+    public void setDoctorFirstName(String doctorFirstName) {
+        this.doctorFirstName = doctorFirstName;
     }
 
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
+    public void setDoctorLastName(String doctorLastName) {
+        this.doctorLastName = doctorLastName;
     }
 
-    public void setPatronymic(String patronymic) {
-        this.patronymic = patronymic;
+    public void setDoctorPatronymic(String doctorPatronymic) {
+        this.doctorPatronymic = doctorPatronymic;
     }
 
     public void setSpeciality(String speciality) {
@@ -80,16 +74,16 @@ public class AppointmentToDoctorDtoResponse {
         return doctorId;
     }
 
-    public String getFirstName() {
-        return firstName;
+    public String getDoctorFirstName() {
+        return doctorFirstName;
     }
 
-    public String getLastName() {
-        return lastName;
+    public String getDoctorLastName() {
+        return doctorLastName;
     }
 
-    public String getPatronymic() {
-        return patronymic;
+    public String getDoctorPatronymic() {
+        return doctorPatronymic;
     }
 
     public String getSpeciality() {
@@ -115,9 +109,9 @@ public class AppointmentToDoctorDtoResponse {
         AppointmentToDoctorDtoResponse that = (AppointmentToDoctorDtoResponse) o;
         return doctorId == that.doctorId &&
                 Objects.equals(ticket, that.ticket) &&
-                Objects.equals(firstName, that.firstName) &&
-                Objects.equals(lastName, that.lastName) &&
-                Objects.equals(patronymic, that.patronymic) &&
+                Objects.equals(doctorFirstName, that.doctorFirstName) &&
+                Objects.equals(doctorLastName, that.doctorLastName) &&
+                Objects.equals(doctorPatronymic, that.doctorPatronymic) &&
                 Objects.equals(speciality, that.speciality) &&
                 Objects.equals(room, that.room) &&
                 Objects.equals(date, that.date) &&
@@ -126,7 +120,7 @@ public class AppointmentToDoctorDtoResponse {
 
     @Override
     public int hashCode() {
-        return Objects.hash(ticket, doctorId, firstName, lastName, patronymic, speciality, room, date, time);
+        return Objects.hash(ticket, doctorId, doctorFirstName, doctorLastName, doctorPatronymic, speciality, room, date, time);
     }
 
     @Override
@@ -134,9 +128,9 @@ public class AppointmentToDoctorDtoResponse {
         return "AppointmentToDoctorDtoResponse{" +
                 "ticket='" + ticket + '\'' +
                 ", doctorId=" + doctorId +
-                ", firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
-                ", patronymic='" + patronymic + '\'' +
+                ", doctorFirstName='" + doctorFirstName + '\'' +
+                ", doctorLastName='" + doctorLastName + '\'' +
+                ", doctorPatronymic='" + doctorPatronymic + '\'' +
                 ", speciality='" + speciality + '\'' +
                 ", room='" + room + '\'' +
                 ", date='" + date + '\'' +

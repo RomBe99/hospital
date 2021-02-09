@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="net.thumbtack.hospital.debug.DebugMapper">
+    <resultMap id="doctorSchedule" type="net.thumbtack.hospital.model.schedule.ScheduleCell">
+        <id property="id" column="id"/>
+        <result property="date" column="date"/>
+        <collection property="cells" column="ticket" javaType="java.util.List"
+                    ofType="net.thumbtack.hospital.model.schedule.TimeCell">
+            <result property="title" column="title"/>
+            <result property="time" column="time"/>
+            <result property="duration" column="duration"/>
+        </collection>
+    </resultMap>
+
+    <resultMap id="ticketToMedicalCommission" type="net.thumbtack.hospital.model.ticket.TicketToMedicalCommission">
+        <id property="id" column="id"/>
+        <result property="title" column="title"/>
+        <result property="room" column="room"/>
+        <result property="date" column="date"/>
+        <result property="time" column="time"/>
+        <result property="patientId" column="patientId"/>
+        <result property="duration" column="duration"/>
+        <collection property="doctorIds" column="doctorId" javaType="java.util.List" ofType="int">
+            <id property="doctorId" column="doctorId"/>
+        </collection>
+    </resultMap>
+
+    <select id="getScheduleByDoctorId" parameterType="java.util.Map" resultMap="doctorSchedule">
+        SELECT id,
+               date,
+               time,
+               title,
+               duration
+        FROM schedule_cell
+                 JOIN time_cell tc on schedule_cell.id = tc.scheduleCellId
+        WHERE doctorId = #{doctorId}
+        <if test="dateStart != null">AND date >= #{dateStart}</if>
+        <if test="dateEnd != null">AND #{dateEnd} >= date</if>
+        <if test="timeStart != null">AND time >= #{timeStart}</if>
+        <if test="timeEnd != null">AND #{timeEnd} >= time</if>
+        ORDER BY date, time;
+    </select>
+
+    <select id="getMedicalCommissionTicketByTitle" parameterType="java.lang.String" resultMap="ticketToMedicalCommission">
+        SELECT mc.id id,
+               title,
+               name room,
+               date,
+               time,
+               patientId,
+               duration,
+               doctorId
+        FROM medical_commission mc
+                 JOIN cabinet c ON c.id = mc.cabinetId
+                 JOIN commission_doctor cd ON cd.commissionId = mc.id
+        WHERE title = #{title}
+        ORDER BY date, time;
+    </select>
+</mapper>

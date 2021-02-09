@@ -81,6 +81,21 @@
       "name": "hospital.errors.invalid-week-day-code",
       "type": "java.lang.String",
       "description": "Error code for invalid week day."
+    },
+    {
+      "name": "hospital.errors.invalid-day-of_week-code",
+      "type": "java.lang.String",
+      "description": "Error code for invalid day of week."
+    },
+    {
+      "name": "hospital.errors.invalid-schedule-request",
+      "type": "java.lang.String",
+      "description": "Error code for invalid schedule request."
+    },
+    {
+      "name": "hospital.errors.invalid-appointment-doctor-request",
+      "type": "java.lang.String",
+      "description": "Error code for invalid appointment to doctor request."
     }
   ]
 }

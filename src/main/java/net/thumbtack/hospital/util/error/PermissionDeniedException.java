@@ -1,13 +1,13 @@
 package net.thumbtack.hospital.util.error;
 
 public class PermissionDeniedException extends Exception {
-    private final PermissionDeniedErrorCodes errorCode;
+    private final PermissionDeniedErrorCode errorCode;
 
-    public PermissionDeniedException(PermissionDeniedErrorCodes errorCode) {
+    public PermissionDeniedException(PermissionDeniedErrorCode errorCode) {
         this.errorCode = errorCode;
     }
 
-    public PermissionDeniedErrorCodes getErrorCode() {
+    public PermissionDeniedErrorCode getErrorCode() {
         return errorCode;
     }
 }

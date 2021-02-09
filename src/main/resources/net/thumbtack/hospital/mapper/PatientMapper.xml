@@ -4,43 +4,20 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="net.thumbtack.hospital.mapper.PatientMapper">
-    <resultMap id="resultPatient" type="net.thumbtack.hospital.model.Patient">
+    <resultMap id="ticketToMedicalCommission" type="net.thumbtack.hospital.model.ticket.TicketToMedicalCommission">
         <id property="id" column="id"/>
-        <result property="login" column="login"/>
-        <result property="password" column="password"/>
-        <result property="firstName" column="firstName"/>
-        <result property="lastName" column="lastName"/>
-        <result property="patronymic" column="patronymic"/>
-        <result property="email" column="email"/>
-        <result property="address" column="address"/>
-        <result property="phone" column="phone"/>
-    </resultMap>
-
-    <resultMap id="resultTicketToDoctor" type="net.thumbtack.hospital.model.ticket.TicketToDoctor">
-        <id property="ticket" column="ticket"/>
-        <result property="room" column="room"/>
-        <result property="date" column="date"/>
-        <result property="time" column="time"/>
-        <result property="doctorId" column="doctorId"/>
-        <result property="doctorFirstName" column="doctorFirstName"/>
-        <result property="doctorLastName" column="doctorLastName"/>
-        <result property="doctorPatronymic" column="doctorPatronymic"/>
-        <result property="speciality" column="speciality"/>
-    </resultMap>
-
-    <resultMap id="resultTicketToMedicalCommission"
-               type="net.thumbtack.hospital.model.ticket.TicketToMedicalCommission">
-        <id property="ticket" column="ticket"/>
+        <result property="title" column="title"/>
         <result property="room" column="room"/>
         <result property="date" column="date"/>
         <result property="time" column="time"/>
         <result property="patientId" column="patientId"/>
         <result property="duration" column="duration"/>
-
-        <collection property="doctorIds" column="doctorId" javaType="java.util.List" ofType="java.lang.Integer"/>
+        <collection property="doctorIds" column="doctorId" javaType="java.util.List" ofType="int">
+            <id property="doctorId" column="doctorId"/>
+        </collection>
     </resultMap>
 
-    <select id="getPatientById" parameterType="int" resultMap="resultPatient">
+    <select id="getPatientById" parameterType="int" resultType="net.thumbtack.hospital.model.user.Patient">
         SELECT user.id id,
                login,
                password,
@@ -55,8 +32,8 @@
         WHERE userId = #{id};
     </select>
 
-    <select id="getTicketsToDoctor" parameterType="int" resultMap="resultTicketToDoctor">
-        SELECT ticket,
+    <select id="getTicketsToDoctor" parameterType="int" resultType="net.thumbtack.hospital.model.ticket.TicketToDoctor">
+        SELECT title,
                c.name     room,
                date,
                time,
@@ -74,8 +51,9 @@
         WHERE patientId = #{patientId};
     </select>
 
-    <select id="getTicketsToMedicalCommission" parameterType="int" resultMap="resultTicketToMedicalCommission">
-        SELECT ticket,
+    <select id="getTicketsToMedicalCommission" parameterType="int" resultMap="ticketToMedicalCommission">
+        SELECT mc.id id,
+               title,
                name room,
                date,
                time,
@@ -83,8 +61,9 @@
                duration,
                doctorId
         FROM medical_commission mc
-                 JOIN commission_doctor cd ON mc.ticket = cd.commissionTicket
+                 JOIN commission_doctor cd ON mc.id = cd.commissionId
                  JOIN cabinet c ON mc.cabinetId = c.id
-        WHERE patientId = #{patientId};
+        WHERE patientId = #{patientId}
+        ORDER BY date, time;;
     </select>
 </mapper>

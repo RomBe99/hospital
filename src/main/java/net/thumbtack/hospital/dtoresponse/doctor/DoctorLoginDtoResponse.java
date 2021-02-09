@@ -1,22 +1,23 @@
 package net.thumbtack.hospital.dtoresponse.doctor;
 
 import net.thumbtack.hospital.dtoresponse.other.abstractresponse.LoginUserDtoResponse;
-import net.thumbtack.hospital.dtoresponse.other.schedulecell.ScheduleCellResponse;
+import net.thumbtack.hospital.dtoresponse.schedule.ScheduleCellDtoResponse;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 public class DoctorLoginDtoResponse extends LoginUserDtoResponse {
     private String speciality;
     private String room;
-    private List<ScheduleCellResponse> schedule;
+    private List<ScheduleCellDtoResponse> schedule = new ArrayList<>();
 
     public DoctorLoginDtoResponse() {
     }
 
     public DoctorLoginDtoResponse(int id,
                                   String firstName, String lastName, String patronymic,
-                                  String speciality, String room, List<ScheduleCellResponse> schedule) {
+                                  String speciality, String room, List<ScheduleCellDtoResponse> schedule) {
         super(id, firstName, lastName, patronymic);
 
         setSpeciality(speciality);
@@ -24,20 +25,9 @@ public class DoctorLoginDtoResponse extends LoginUserDtoResponse {
         setSchedule(schedule);
     }
 
-    public DoctorLoginDtoResponse(int id,
-                                  String firstName, String lastName,
-                                  String speciality, String room, List<ScheduleCellResponse> schedule) {
-        this(id, firstName, lastName, null, speciality, room, schedule);
-    }
-
     public DoctorLoginDtoResponse(String firstName, String lastName, String patronymic,
-                                  String speciality, String room, List<ScheduleCellResponse> schedule) {
+                                  String speciality, String room, List<ScheduleCellDtoResponse> schedule) {
         this(0, firstName, lastName, patronymic, speciality, room, schedule);
-    }
-
-    public DoctorLoginDtoResponse(String firstName, String lastName,
-                                  String speciality, String room, List<ScheduleCellResponse> schedule) {
-        this(firstName, lastName, null, speciality, room, schedule);
     }
 
     public void setSpeciality(String speciality) {
@@ -48,7 +38,7 @@ public class DoctorLoginDtoResponse extends LoginUserDtoResponse {
         this.room = room;
     }
 
-    public void setSchedule(List<ScheduleCellResponse> schedule) {
+    public void setSchedule(List<ScheduleCellDtoResponse> schedule) {
         this.schedule = schedule;
     }
 
@@ -60,7 +50,7 @@ public class DoctorLoginDtoResponse extends LoginUserDtoResponse {
         return room;
     }
 
-    public List<ScheduleCellResponse> getSchedule() {
+    public List<ScheduleCellDtoResponse> getSchedule() {
         return schedule;
     }
 

@@ -17,7 +17,7 @@ public class EditAdminProfileDtoRequest {
     private String position;
     @Password
     private String oldPassword;
-    @Password
+    @Password(isNewPassword = true)
     private String newPassword;
 
     public EditAdminProfileDtoRequest() {

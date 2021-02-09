@@ -8,23 +8,18 @@ import java.time.LocalTime;
 import java.time.format.DateTimeParseException;
 
 public class TimeConstraintValidator implements ConstraintValidator<Time, String> {
-   @Override
-   public boolean isValid(String time, ConstraintValidatorContext context) {
-      if (time == null) {
-         return false;
-      }
+    @Override
+    public boolean isValid(String time, ConstraintValidatorContext context) {
+        if (time == null) {
+            return false;
+        }
 
-      try {
-         LocalTime.parse(time);
-      } catch (DateTimeParseException ignored) {
-      }
+        try {
+            LocalTime.parse(time);
+        } catch (DateTimeParseException ex) {
+            return false;
+        }
 
-      try {
-         java.sql.Time.valueOf(time);
-      } catch (IllegalArgumentException ex) {
-         return false;
-      }
-
-      return true;
-   }
+        return true;
+    }
 }

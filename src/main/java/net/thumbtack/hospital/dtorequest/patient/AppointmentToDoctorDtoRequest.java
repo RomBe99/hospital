@@ -1,16 +1,14 @@
 package net.thumbtack.hospital.dtorequest.patient;
 
+import net.thumbtack.hospital.util.validator.annotation.AppointmentToDoctor;
 import net.thumbtack.hospital.util.validator.annotation.Date;
-import net.thumbtack.hospital.util.validator.annotation.Speciality;
 import net.thumbtack.hospital.util.validator.annotation.Time;
 
-import javax.validation.constraints.Positive;
 import java.util.Objects;
 
+@AppointmentToDoctor
 public class AppointmentToDoctorDtoRequest {
-    @Positive
     private int doctorId;
-    @Speciality
     private String speciality;
     @Date
     private String date;
@@ -20,11 +18,19 @@ public class AppointmentToDoctorDtoRequest {
     public AppointmentToDoctorDtoRequest() {
     }
 
-    public AppointmentToDoctorDtoRequest(int doctorId, String speciality, String date, String time) {
+    private AppointmentToDoctorDtoRequest(int doctorId, String speciality, String date, String time) {
         setDoctorId(doctorId);
         setSpeciality(speciality);
         setDate(date);
         setTime(time);
+    }
+
+    public AppointmentToDoctorDtoRequest(int doctorId, String date, String time) {
+        this(doctorId, null, date, time);
+    }
+
+    public AppointmentToDoctorDtoRequest(String speciality, String date, String time) {
+        this(0, speciality, date, time);
     }
 
     public void setDoctorId(int doctorId) {

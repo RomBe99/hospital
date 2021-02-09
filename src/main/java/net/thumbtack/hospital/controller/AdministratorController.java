@@ -9,6 +9,7 @@ import net.thumbtack.hospital.dtoresponse.other.EmptyDtoResponse;
 import net.thumbtack.hospital.service.AdministratorService;
 import net.thumbtack.hospital.util.cookie.CookieFactory;
 import net.thumbtack.hospital.util.error.PermissionDeniedException;
+import net.thumbtack.hospital.util.error.ScheduleException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -66,7 +67,8 @@ public class AdministratorController {
     @ResponseBody
     public EditDoctorScheduleDtoResponse editDoctorSchedule(@CookieValue(CookieFactory.JAVA_SESSION_ID) String sessionId,
                                                             @PathVariable int doctorId,
-                                                            @Valid @RequestBody EditDoctorScheduleDtoRequest request) throws PermissionDeniedException {
+                                                            @Valid @RequestBody EditDoctorScheduleDtoRequest request)
+            throws PermissionDeniedException, ScheduleException {
         return administratorService.editDoctorSchedule(sessionId, doctorId, request);
     }
 

@@ -1,32 +1,37 @@
 package net.thumbtack.hospital.model.ticket;
 
-import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.sql.Date;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 public class TicketToMedicalCommission extends Ticket {
+    private int id;
     private int patientId;
-    private List<Integer> doctorIds;
+    private List<Integer> doctorIds = new ArrayList<>();
     private int duration;
 
     public TicketToMedicalCommission() {
     }
 
-    public TicketToMedicalCommission(String ticket, String room, LocalDate date, LocalTime time,
+    public TicketToMedicalCommission(int id, String title, String room, LocalDate date, LocalTime time,
                                      int patientId, List<Integer> doctorIds, int duration) {
-        super(ticket, room, date, time);
+        super(title, room, date, time);
 
+        setId(id);
         setPatientId(patientId);
         setDoctorIds(doctorIds);
         setDuration(duration);
     }
 
-    public TicketToMedicalCommission(String ticket, String room, Date date, Time time,
+    public TicketToMedicalCommission(String title, String room, LocalDate date, LocalTime time,
                                      int patientId, List<Integer> doctorIds, int duration) {
-        this(ticket, room, date.toLocalDate(), time.toLocalTime(), patientId, doctorIds, duration);
+        this(0, title, room, date, time, patientId, doctorIds, duration);
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public void setPatientId(int patientId) {
@@ -39,6 +44,10 @@ public class TicketToMedicalCommission extends Ticket {
 
     public void setDuration(int duration) {
         this.duration = duration;
+    }
+
+    public int getId() {
+        return id;
     }
 
     public int getPatientId() {
@@ -59,20 +68,22 @@ public class TicketToMedicalCommission extends Ticket {
         if (!(o instanceof TicketToMedicalCommission)) return false;
         if (!super.equals(o)) return false;
         TicketToMedicalCommission that = (TicketToMedicalCommission) o;
-        return getPatientId() == that.getPatientId() &&
+        return getId() == that.getId() &&
+                getPatientId() == that.getPatientId() &&
                 getDuration() == that.getDuration() &&
                 Objects.equals(getDoctorIds(), that.getDoctorIds());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), getPatientId(), getDoctorIds(), getDuration());
+        return Objects.hash(super.hashCode(), getId(), getPatientId(), getDoctorIds(), getDuration());
     }
 
     @Override
     public String toString() {
-        return super.toString() + " TicketToCommission{" +
-                "patientId=" + patientId +
+        return super.toString() + " TicketToMedicalCommission{" +
+                "id=" + id +
+                ", patientId=" + patientId +
                 ", doctorIds=" + doctorIds +
                 ", duration=" + duration +
                 '}';

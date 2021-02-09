@@ -4,6 +4,7 @@ import net.thumbtack.hospital.dtorequest.user.LoginDtoRequest;
 import net.thumbtack.hospital.dtoresponse.doctor.DoctorInformationDtoResponse;
 import net.thumbtack.hospital.dtoresponse.other.EmptyDtoResponse;
 import net.thumbtack.hospital.dtoresponse.other.abstractresponse.LoginUserDtoResponse;
+import net.thumbtack.hospital.dtoresponse.other.abstractresponse.SettingsDtoResponse;
 import net.thumbtack.hospital.dtoresponse.other.abstractresponse.UserInformationDtoResponse;
 import net.thumbtack.hospital.dtoresponse.patient.PatientInformationDtoResponse;
 import net.thumbtack.hospital.dtoresponse.user.GetAllDoctorsDtoResponse;
@@ -19,6 +20,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.time.LocalDate;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 @RestController("UserController")
@@ -31,6 +33,9 @@ public class UserController {
     public static final String GET_DOCTOR_INFORMATION_URL = "doctors/{doctorId}";
     public static final String GET_DOCTORS_INFORMATION_URL = "doctors";
     public static final String GET_PATIENT_INFORMATION_URL = "patients/{patientId}";
+    public static final String GET_SETTINGS_URL = "settings";
+
+    private static final Predicate<String> needSchedule = s -> s != null && !s.isEmpty() && s.toLowerCase().equals("yes");
 
     private final UserService userService;
     private final CookieFactory cookieFactory;
@@ -39,6 +44,16 @@ public class UserController {
     public UserController(UserService userService, CookieFactory cookieFactory) {
         this.userService = userService;
         this.cookieFactory = cookieFactory;
+    }
+
+    private static LocalDate generateStartDate(String startDate) {
+        return startDate == null || startDate.isEmpty() ?
+                LocalDate.now() : LocalDate.parse(startDate);
+    }
+
+    private static LocalDate generateEndDate(String endDate) {
+        return endDate == null || endDate.isEmpty() ?
+                LocalDate.now().plusMonths(2) : LocalDate.parse(endDate);
     }
 
     @PostMapping(value = LOGIN_URL,
@@ -76,8 +91,9 @@ public class UserController {
                                                              @RequestParam("schedule") String schedule,
                                                              @RequestParam(value = "startDate", required = false) String startDate,
                                                              @RequestParam(value = "endDate", required = false) String endDate) throws PermissionDeniedException {
-        if (schedule != null && !schedule.isEmpty() && schedule.toLowerCase().equals("yes")) {
-            return userService.getDoctorInformation(sessionId, doctorId, LocalDate.parse(startDate), LocalDate.parse(endDate));
+        if (needSchedule.test(schedule)) {
+            return userService.getDoctorInformation(sessionId, doctorId,
+                    generateStartDate(startDate), generateEndDate(endDate));
         }
 
         return userService.getDoctorInformation(sessionId, doctorId, null, null);
@@ -93,8 +109,9 @@ public class UserController {
                                                           @RequestParam(value = "endDate", required = false) String endDate) throws PermissionDeniedException {
         Supplier<String> specialitySupplier = () -> speciality == null || speciality.isEmpty() ? null : speciality;
 
-        if (schedule != null && !schedule.isEmpty() && schedule.toLowerCase().equals("yes")) {
-            return userService.getDoctorsInformation(sessionId, specialitySupplier.get(), LocalDate.parse(startDate), LocalDate.parse(endDate));
+        if (needSchedule.test(schedule)) {
+            return userService.getDoctorsInformation(sessionId, specialitySupplier.get(),
+                    generateStartDate(startDate), generateEndDate(endDate));
         }
 
         return userService.getDoctorsInformation(sessionId, specialitySupplier.get(), null, null);
@@ -106,5 +123,12 @@ public class UserController {
     public PatientInformationDtoResponse getPatientInformation(@CookieValue(CookieFactory.JAVA_SESSION_ID) String sessionId,
                                                                @PathVariable int patientId) throws PermissionDeniedException {
         return userService.getPatientInformation(sessionId, patientId);
+    }
+
+    @GetMapping(value = GET_SETTINGS_URL, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public SettingsDtoResponse getSettings(@CookieValue(required = false, value = CookieFactory.JAVA_SESSION_ID) String sessionId) {
+        return userService.getSettings(sessionId);
     }
 }

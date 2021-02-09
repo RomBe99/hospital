@@ -20,9 +20,9 @@ public @interface Name {
 
     boolean isPatronymic() default false;
 
+    @Documented
     @Target({ElementType.METHOD, ElementType.FIELD, ElementType.ANNOTATION_TYPE, ElementType.CONSTRUCTOR, ElementType.PARAMETER, ElementType.TYPE_USE})
     @Retention(RetentionPolicy.RUNTIME)
-    @Documented
     @interface List {
         Name[] value();
     }

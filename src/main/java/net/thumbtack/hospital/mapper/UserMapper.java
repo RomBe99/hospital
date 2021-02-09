@@ -1,19 +1,16 @@
 package net.thumbtack.hospital.mapper;
 
-import net.thumbtack.hospital.model.User;
+import net.thumbtack.hospital.model.user.User;
 import org.apache.ibatis.annotations.*;
 
-public interface UserMapper {
+public interface UserMapper extends Mapper {
     @Insert("INSERT INTO user VALUES (#{user.id}, #{user.login}, #{user.password}, #{user.firstName}, #{user.lastName}, #{user.patronymic}, #{userTypeId});")
     @Options(useGeneratedKeys = true, keyProperty = "user.id")
-    int insertUser(@Param("user") User user, @Param("userTypeId") int userTypeId);
+    void insertUser(@Param("user") User user, @Param("userTypeId") int userTypeId);
 
-    @Update("UPDATE user SET password = #{password}, firstName = #{firstName}, lastName = #{lastName}, patronymic = #{patronymic} WHERE id = #{id};")
-    void updateUser(User user);
-
-    @Delete("DELETE FROM user WHERE id = #{id};")
-    @Deprecated
-    void removeUser(int id);
+    @Update("UPDATE user SET password = #{newPassword}, firstName = #{u.firstName}, lastName = #{u.lastName}, patronymic = #{u.patronymic} " +
+            "WHERE id = #{u.id} AND password = #{u.password};")
+    void updateUser(@Param("u") User user, @Param("newPassword") String newPassword);
 
     @Insert("INSERT INTO logged_in_users VALUES(#{sessionId}, #{userId});")
     void loginUser(@Param("sessionId") String sessionId, @Param("userId") int userId);
@@ -23,7 +20,7 @@ public interface UserMapper {
 
     @Select("SELECT userId FROM logged_in_users WHERE sessionId = #{sessionId};")
     @Options(useGeneratedKeys = true, keyProperty = "userId")
-    int hasPermissions(String sessionId);
+    Integer hasPermissions(String sessionId);
 
     @Select("SELECT id FROM user WHERE login = #{login} AND password = #{password};")
     @Options(useGeneratedKeys = true, keyProperty = "id")

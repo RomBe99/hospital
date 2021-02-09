@@ -1,10 +1,11 @@
 package net.thumbtack.hospital.dtoresponse.patient.ticket;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 public class AllTicketsDtoResponse {
-    private List<TicketDtoResponse> tickets;
+    private List<TicketDtoResponse> tickets = new ArrayList<>();
 
     public AllTicketsDtoResponse() {
     }

@@ -19,23 +19,10 @@ public class AdminInformationDtoResponse extends UserInformationDtoResponse {
         setPosition(position);
     }
 
-    public AdminInformationDtoResponse(int id,
-                                       String login, String password,
-                                       String firstName, String lastName,
-                                       String position) {
-        this(id, login, password, firstName, lastName, null, position);
-    }
-
     public AdminInformationDtoResponse(String login, String password,
                                        String firstName, String lastName, String patronymic,
                                        String position) {
         this(0, login, password, firstName, lastName, patronymic, position);
-    }
-
-    public AdminInformationDtoResponse(String login, String password,
-                                       String firstName, String lastName,
-                                       String position) {
-        this(0, login, password, firstName, lastName, null, position);
     }
 
     public void setPosition(String position) {

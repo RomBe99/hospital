@@ -3,11 +3,9 @@ package net.thumbtack.hospital.daoimpl;
 import net.thumbtack.hospital.dao.DoctorDao;
 import net.thumbtack.hospital.mapper.CommonMapper;
 import net.thumbtack.hospital.mapper.DoctorMapper;
-import net.thumbtack.hospital.mapper.UserTypes;
-import net.thumbtack.hospital.model.Doctor;
-import net.thumbtack.hospital.model.ticket.TicketToMedicalCommission;
-import net.thumbtack.hospital.util.error.PermissionDeniedErrorCodes;
-import net.thumbtack.hospital.util.error.PermissionDeniedException;
+import net.thumbtack.hospital.mapper.MapperFactory;
+import net.thumbtack.hospital.mapper.UserType;
+import net.thumbtack.hospital.model.user.Doctor;
 import org.apache.ibatis.session.SqlSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,37 +13,35 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-@Component("DoctorDaoImpl")
-public class DoctorDaoImpl extends UserDaoImpl implements DoctorDao {
-    private static final Logger LOGGER = LoggerFactory.getLogger(DoctorDaoImpl.class);
-    private static final String className = DoctorDaoImpl.class.getSimpleName();
+import static net.thumbtack.hospital.util.mybatis.MyBatisUtils.getSession;
 
-    private DoctorMapper getDoctorMapper(SqlSession session) {
-        return session.getMapper(DoctorMapper.class);
-    }
+@Component("DoctorDaoImpl")
+public class DoctorDaoImpl implements DoctorDao {
+    private static final Logger LOGGER = LoggerFactory.getLogger(DoctorDaoImpl.class);
+    private static final String CLASS_NAME = DoctorDaoImpl.class.getSimpleName();
+
+    private final MapperFactory mapperFactory = new MapperFactory();
 
     @Override
-    public Doctor insertDoctor(Doctor doctor) {
-        LOGGER.debug(className + ": Insert doctor = {}", doctor);
+    public void insertDoctor(Doctor doctor) {
+        LOGGER.debug(CLASS_NAME + ": Insert doctor = {}", doctor);
 
         try (SqlSession session = getSession()) {
             try {
-                CommonMapper commonMapper = getCommonMapper(session);
-                int userTypeId = getCommonMapper(session).getUserTypeId(UserTypes.DOCTOR.getType());
+                CommonMapper commonMapper = mapperFactory.getMapper(session, CommonMapper.class);
+                int userTypeId = commonMapper.getUserTypeId(UserType.DOCTOR.getType());
                 int cabinetId = commonMapper.getCabinetIdByName(doctor.getCabinet());
                 int specialityId = commonMapper.getDoctorSpecialityIdByName(doctor.getSpecialty());
 
-                DoctorMapper doctorMapper = getDoctorMapper(session);
+                DoctorMapper doctorMapper = mapperFactory.getMapper(session, DoctorMapper.class);
                 doctorMapper.insertUser(doctor, userTypeId);
                 doctorMapper.insertDoctor(doctor.getId(), specialityId, cabinetId);
 
                 session.commit();
-                LOGGER.debug(className + ": Doctor = {} successfully inserted", doctor);
-
-                return doctor;
+                LOGGER.debug(CLASS_NAME + ": Doctor = {} successfully inserted", doctor);
             } catch (RuntimeException ex) {
                 session.rollback();
-                LOGGER.error(className + ": Can't insert doctor = {}", doctor, ex);
+                LOGGER.error(CLASS_NAME + ": Can't insert doctor = {}", doctor, ex);
 
                 throw ex;
             }
@@ -54,82 +50,71 @@ public class DoctorDaoImpl extends UserDaoImpl implements DoctorDao {
 
     @Override
     public void removeDoctor(int id) {
-        LOGGER.debug(className + ": Delete doctor with id = {}", id);
+        LOGGER.debug(CLASS_NAME + ": Delete doctor with id = {}", id);
 
         try (SqlSession session = getSession()) {
             try {
-                getDoctorMapper(session).removeDoctor(id);
+                mapperFactory.getMapper(session, DoctorMapper.class).removeDoctor(id);
 
                 session.commit();
-                LOGGER.debug(className + ": Doctor with id = {} successfully removed", id);
+                LOGGER.debug(CLASS_NAME + ": Doctor with id = {} successfully removed", id);
             } catch (RuntimeException ex) {
                 session.rollback();
-                LOGGER.error(className + ": Can't remove doctor with id = {}", id, ex);
+                LOGGER.error(CLASS_NAME + ": Can't remove doctor with id = {}", id, ex);
 
                 throw ex;
             }
-        }
-    }
-
-    @Override
-    public List<Doctor> getAllDoctors() {
-        LOGGER.debug(className + ": Get all doctors");
-
-        try (SqlSession session = getSession()) {
-            return session.selectList("net.thumbtack.hospital.mapper.DoctorMapper.getAllDoctors");
-        } catch (RuntimeException ex) {
-            LOGGER.error(className + ": Can't get all doctors", ex);
-
-            throw ex;
         }
     }
 
     @Override
     public Doctor getDoctorById(int id) {
-        LOGGER.debug(className + ": Get doctor by id");
+        LOGGER.debug(CLASS_NAME + ": Get doctor by id = {}", id);
 
         try (SqlSession session = getSession()) {
             return session.selectOne("net.thumbtack.hospital.mapper.DoctorMapper.getDoctorById", id);
         } catch (RuntimeException ex) {
-            LOGGER.error(className + ": Can't get doctor by id", ex);
+            LOGGER.error(CLASS_NAME + ": Can't get doctor by id = {}", id, ex);
 
             throw ex;
         }
     }
 
     @Override
-    public void createMedicalCommission(TicketToMedicalCommission ticketToMedicalCommission) {
-        LOGGER.debug(className + ": Creating medical commission = {}", ticketToMedicalCommission);
+    public Doctor getRandomDoctorBySpeciality(String speciality) {
+        LOGGER.debug(CLASS_NAME + ": Get random doctor by speciality = {}", speciality);
 
         try (SqlSession session = getSession()) {
-            try {
-                DoctorMapper mapper = getDoctorMapper(session);
-                mapper.createMedicalCommission(ticketToMedicalCommission);
+            int specialityId = mapperFactory.getMapper(session, CommonMapper.class).getDoctorSpecialityIdByName(speciality);
 
-                for (int id : ticketToMedicalCommission.getDoctorIds()) {
-                    mapper.insertDoctorInMedicalCommission(ticketToMedicalCommission.getTicket(), id);
-                }
+            List<Doctor> doctors = session.selectList("net.thumbtack.hospital.mapper.DoctorMapper.getDoctorsBySpecialityId", specialityId);
 
-                LOGGER.debug(className + ": Medical commission = {} successfully created", ticketToMedicalCommission);
-            } catch (RuntimeException ex) {
-                session.rollback();
-                LOGGER.error(className + ": Can't create medical commission = {}", ticketToMedicalCommission, ex);
-
-                throw ex;
+            if (doctors.isEmpty()) {
+                return null;
             }
+
+            int index = (int) (Math.random() * doctors.size());
+
+            return doctors.get(index);
+        } catch (RuntimeException ex) {
+            LOGGER.error(CLASS_NAME + ": Can't get random doctor by speciality = {}", speciality, ex);
+
+            throw ex;
         }
     }
 
     @Override
-    public int hasPermissions(String sessionId) throws PermissionDeniedException {
-        LOGGER.debug(className + ": Checking doctor permissions for session id = {}", sessionId);
+    public int hasPermissions(String sessionId) {
+        LOGGER.debug(CLASS_NAME + ": Checking doctor permissions for session id = {}", sessionId);
 
         try (SqlSession session = getSession()) {
-            return getDoctorMapper(session).hasPermissions(sessionId);
-        } catch (RuntimeException ex) {
-            LOGGER.error(className + ": Can't check doctor permissions for session id = {}", sessionId, ex);
+            Integer userId = mapperFactory.getMapper(session, DoctorMapper.class).hasPermissions(sessionId);
 
-            throw new PermissionDeniedException(PermissionDeniedErrorCodes.PERMISSION_DENIED);
+            return userId == null ? 0 : userId;
+        } catch (RuntimeException ex) {
+            LOGGER.error(CLASS_NAME + ": Can't check doctor permissions for session id = {}", sessionId, ex);
+
+            throw ex;
         }
     }
 }

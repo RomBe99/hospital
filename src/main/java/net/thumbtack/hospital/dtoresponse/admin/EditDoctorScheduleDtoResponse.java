@@ -1,18 +1,18 @@
 package net.thumbtack.hospital.dtoresponse.admin;
 
-import net.thumbtack.hospital.dtoresponse.other.schedulecell.ScheduleCellResponse;
+import net.thumbtack.hospital.dtoresponse.schedule.DtoResponseWithSchedule;
+import net.thumbtack.hospital.dtoresponse.schedule.ScheduleCellDtoResponse;
 
 import java.util.List;
 import java.util.Objects;
 
-public class EditDoctorScheduleDtoResponse {
+public class EditDoctorScheduleDtoResponse extends DtoResponseWithSchedule {
     private int id;
     private String firstName;
     private String lastName;
     private String patronymic;
     private String speciality;
     private String room;
-    private List<ScheduleCellResponse> schedule;
 
     public EditDoctorScheduleDtoResponse() {
     }
@@ -20,33 +20,21 @@ public class EditDoctorScheduleDtoResponse {
     public EditDoctorScheduleDtoResponse(int id,
                                          String firstName, String lastName, String patronymic,
                                          String speciality, String room,
-                                         List<ScheduleCellResponse> schedule) {
+                                         List<ScheduleCellDtoResponse> schedule) {
+        super(schedule);
+
         setId(id);
         setFirstName(firstName);
         setLastName(lastName);
         setPatronymic(patronymic);
         setSpeciality(speciality);
         setRoom(room);
-        setSchedule(schedule);
-    }
-
-    public EditDoctorScheduleDtoResponse(int id,
-                                         String firstName, String lastName,
-                                         String speciality, String room,
-                                         List<ScheduleCellResponse> schedule) {
-        this(id, firstName, lastName, null, speciality, room, schedule);
     }
 
     public EditDoctorScheduleDtoResponse(String firstName, String lastName, String patronymic,
                                          String speciality, String room,
-                                         List<ScheduleCellResponse> schedule) {
+                                         List<ScheduleCellDtoResponse> schedule) {
         this(0, firstName, lastName, patronymic, speciality, room, schedule);
-    }
-
-    public EditDoctorScheduleDtoResponse(String firstName, String lastName,
-                                         String speciality, String room,
-                                         List<ScheduleCellResponse> schedule) {
-        this(firstName, lastName, null, speciality, room, schedule);
     }
 
     public void setId(int id) {
@@ -73,10 +61,6 @@ public class EditDoctorScheduleDtoResponse {
         this.room = room;
     }
 
-    public void setSchedule(List<ScheduleCellResponse> schedule) {
-        this.schedule = schedule;
-    }
-
     public int getId() {
         return id;
     }
@@ -101,10 +85,6 @@ public class EditDoctorScheduleDtoResponse {
         return room;
     }
 
-    public List<ScheduleCellResponse> getSchedule() {
-        return schedule;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -115,25 +95,23 @@ public class EditDoctorScheduleDtoResponse {
                 Objects.equals(lastName, response.lastName) &&
                 Objects.equals(patronymic, response.patronymic) &&
                 Objects.equals(speciality, response.speciality) &&
-                Objects.equals(room, response.room) &&
-                Objects.equals(schedule, response.schedule);
+                Objects.equals(room, response.room);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, firstName, lastName, patronymic, speciality, room, schedule);
+        return Objects.hash(id, firstName, lastName, patronymic, speciality, room);
     }
 
     @Override
     public String toString() {
-        return "EditDoctorScheduleDtoResponse{" +
+        return super.toString() + " EditDoctorScheduleDtoResponse{" +
                 "id=" + id +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", patronymic='" + patronymic + '\'' +
                 ", speciality='" + speciality + '\'' +
                 ", room='" + room + '\'' +
-                ", schedule=" + schedule +
                 '}';
     }
 }

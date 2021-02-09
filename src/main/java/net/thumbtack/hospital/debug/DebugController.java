@@ -1,5 +1,6 @@
 package net.thumbtack.hospital.debug;
 
+import net.thumbtack.hospital.debug.dtoresponse.schedule.GetScheduleByDoctorIdDtoResponse;
 import net.thumbtack.hospital.dtoresponse.other.EmptyDtoResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 public class DebugController {
     public static final String PREFIX_URL = "/api/debug";
     public static final String DEBUG_CLEAR_URL = "clear";
+    public static final String GET_SCHEDULE_BY_DOCTOR_ID_URL = "schedule/{doctorId}";
 
     private final DebugService debugService;
 
@@ -26,5 +28,12 @@ public class DebugController {
         debugService.clear();
 
         return new EmptyDtoResponse();
+    }
+
+    @GetMapping(value = GET_SCHEDULE_BY_DOCTOR_ID_URL, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public GetScheduleByDoctorIdDtoResponse getScheduleByDoctorId(@PathVariable int doctorId) {
+        return debugService.getScheduleByDoctorId(doctorId);
     }
 }
