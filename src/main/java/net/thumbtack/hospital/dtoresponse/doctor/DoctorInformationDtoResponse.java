@@ -43,7 +43,7 @@ public class DoctorInformationDtoResponse extends UserInformationDtoResponse {
     }
 
     public void setSchedule(List<ScheduleCellDtoResponse> schedule) {
-        this.schedule = schedule;
+        this.schedule = schedule == null ? new ArrayList<>() : schedule;
     }
 
     public String getSpeciality() {

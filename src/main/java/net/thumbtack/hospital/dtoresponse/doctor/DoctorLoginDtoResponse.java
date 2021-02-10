@@ -39,7 +39,7 @@ public class DoctorLoginDtoResponse extends LoginUserDtoResponse {
     }
 
     public void setSchedule(List<ScheduleCellDtoResponse> schedule) {
-        this.schedule = schedule;
+        this.schedule = schedule == null ? new ArrayList<>() : schedule;
     }
 
     public String getSpeciality() {
