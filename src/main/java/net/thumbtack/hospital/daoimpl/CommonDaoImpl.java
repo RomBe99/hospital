@@ -39,7 +39,7 @@ public class CommonDaoImpl implements CommonDao {
         LOGGER.debug(CLASS_NAME + ": Check is an appointment to doctor = {} from {} to {}", doctorId, dateStart, dateEnd);
 
         try (SqlSession session = getSession()) {
-            Map<String, Object> params = new HashMap<>();
+            final Map<String, Object> params = new HashMap<>();
             params.put("doctorId", doctorId);
             params.put("dateStart", dateStart);
             params.put("dateEnd", dateEnd);

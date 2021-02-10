@@ -26,9 +26,9 @@ public class AdministratorDaoImpl implements AdministratorDao {
 
         try (SqlSession session = getSession()) {
             try {
-                int userTypeId = mapperFactory.getMapper(session, CommonMapper.class).getUserTypeId(UserType.ADMINISTRATOR.getType());
+                final Integer userTypeId = mapperFactory.getMapper(session, CommonMapper.class).getUserTypeId(UserType.ADMINISTRATOR.getType());
 
-                AdministratorMapper mapper = mapperFactory.getMapper(session, AdministratorMapper.class);
+                final AdministratorMapper mapper = mapperFactory.getMapper(session, AdministratorMapper.class);
                 mapper.insertUser(administrator, userTypeId);
                 mapper.insertAdministrator(administrator);
 
@@ -49,7 +49,7 @@ public class AdministratorDaoImpl implements AdministratorDao {
 
         try (SqlSession session = getSession()) {
             try {
-                AdministratorMapper mapper = mapperFactory.getMapper(session, AdministratorMapper.class);
+                final AdministratorMapper mapper = mapperFactory.getMapper(session, AdministratorMapper.class);
                 mapper.updateUser(administrator, newPassword);
                 mapper.updateAdministrator(administrator);
 
@@ -101,7 +101,7 @@ public class AdministratorDaoImpl implements AdministratorDao {
         LOGGER.debug(CLASS_NAME + ": Checking administrator permissions for session id = {}", sessionId);
 
         try (SqlSession session = getSession()) {
-            Integer userId = mapperFactory.getMapper(session, AdministratorMapper.class).hasPermissions(sessionId);
+            final Integer userId = mapperFactory.getMapper(session, AdministratorMapper.class).hasPermissions(sessionId);
 
             return userId == null ? 0 : userId;
         } catch (RuntimeException ex) {
