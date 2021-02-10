@@ -2,6 +2,8 @@ package net.thumbtack.hospital.mapper;
 
 import net.thumbtack.hospital.debug.DebugMapper;
 import org.apache.ibatis.session.SqlSession;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
@@ -9,6 +11,7 @@ import java.util.Map;
 import java.util.function.Function;
 
 @Component("MapperFactory")
+@Scope(value = ConfigurableBeanFactory.SCOPE_SINGLETON)
 public class MapperFactory {
     private final Map<Class<? extends Mapper>, Function<SqlSession, ? extends Mapper>> mappers = new HashMap<>();
 
