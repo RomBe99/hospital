@@ -26,7 +26,7 @@ public class MedicalCommissionDaoImpl implements MedicalCommissionDao {
 
         try (SqlSession session = getSession()) {
             try {
-                MedicalCommissionMapper mapper = mapperFactory.getMapper(session, MedicalCommissionMapper.class);
+                final MedicalCommissionMapper mapper = mapperFactory.getMapper(session, MedicalCommissionMapper.class);
                 mapper.createMedicalCommission(ticket);
                 mapper.insertDoctorsInMedicalCommission(ticket.getId(), ticket.getDoctorIds());
 

@@ -26,24 +26,24 @@ public class DoctorService {
 
     public CreateMedicalCommissionDtoResponse createMedicalCommission(String sessionId,
                                                                       CreateMedicalCommissionDtoRequest request) throws PermissionDeniedException {
-        int commissionCreatorId = SecurityManagerImpl
+        final int commissionCreatorId = SecurityManagerImpl
                 .getSecurityManager(UserType.DOCTOR)
                 .hasPermission(sessionId);
 
-        LocalDate date = LocalDate.parse(request.getDate());
-        LocalTime time = LocalTime.parse(request.getTime());
-        List<Integer> doctorIds = request.getDoctorIds();
+        final LocalDate date = LocalDate.parse(request.getDate());
+        final LocalTime time = LocalTime.parse(request.getTime());
+        final List<Integer> doctorIds = request.getDoctorIds();
 
         if (!doctorIds.contains(commissionCreatorId)) {
             doctorIds.add(commissionCreatorId);
         }
 
-        String title = TicketFactory.buildTicketToCommission(date, time, doctorIds);
-        int patientId = request.getPatientId();
-        int duration = request.getDuration();
-        String room = request.getRoom();
+        final String title = TicketFactory.buildTicketToCommission(date, time, doctorIds);
+        final int patientId = request.getPatientId();
+        final int duration = request.getDuration();
+        final String room = request.getRoom();
 
-        TicketToMedicalCommission commission =
+        final TicketToMedicalCommission commission =
                 new TicketToMedicalCommission(title, room, date, time, patientId, doctorIds, duration);
 
         medicalCommissionDao.createMedicalCommission(commission);

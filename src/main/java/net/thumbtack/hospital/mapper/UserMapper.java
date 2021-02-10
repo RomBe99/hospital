@@ -24,5 +24,5 @@ public interface UserMapper extends Mapper {
 
     @Select("SELECT id FROM user WHERE login = #{login} AND password = #{password};")
     @Options(useGeneratedKeys = true, keyProperty = "id")
-    int getUserIdByLoginAndPassword(@Param("login") String login, @Param("password") String password);
+    Integer getUserIdByLoginAndPassword(@Param("login") String login, @Param("password") String password);
 }

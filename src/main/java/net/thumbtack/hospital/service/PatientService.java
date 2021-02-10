@@ -37,9 +37,7 @@ public class PatientService {
     private final MedicalCommissionDao medicalCommissionDao;
 
     public static String phoneTransformer(String phone) {
-        String emptyStr = "";
-        String clearPhoneNumberRegexp = "\\D+";
-        String result = phone.replaceAll(clearPhoneNumberRegexp, emptyStr);
+        final String result = phone.replaceAll("\\D+", "");
 
         return result.startsWith("7") ? '+' + result : result;
     }
@@ -56,7 +54,7 @@ public class PatientService {
     public PatientRegistrationDtoResponse patientRegistration(PatientRegistrationDtoRequest request) {
         request.setPhone(phoneTransformer(request.getPhone()));
 
-        Patient patient =
+        final Patient patient =
                 new Patient(request.getLogin(), request.getPassword(),
                         request.getFirstName(), request.getLastName(), request.getPatronymic(),
                         request.getEmail(), request.getAddress(), request.getPhone());
@@ -69,7 +67,7 @@ public class PatientService {
     }
 
     public EditPatientProfileDtoResponse editPatientProfile(String sessionId, EditPatientProfileDtoRequest request) throws PermissionDeniedException {
-        int patientId = SecurityManagerImpl
+        final int patientId = SecurityManagerImpl
                 .getSecurityManager(UserType.PATIENT)
                 .hasPermission(sessionId);
 
@@ -79,7 +77,7 @@ public class PatientService {
             request.setNewPassword(request.getOldPassword());
         }
 
-        Patient patient =
+        final Patient patient =
                 new Patient(patientId, null, request.getOldPassword(),
                         request.getFirstName(), request.getLastName(), request.getPatronymic(),
                         request.getEmail(), request.getAddress(), request.getPhone());
@@ -92,11 +90,11 @@ public class PatientService {
 
     public AppointmentToDoctorDtoResponse appointmentToDoctor(String sessionId, AppointmentToDoctorDtoRequest request)
             throws PermissionDeniedException, ScheduleException, DoctorNotFoundException {
-        int patientId = SecurityManagerImpl
+        final int patientId = SecurityManagerImpl
                 .getSecurityManager(UserType.PATIENT)
                 .hasPermission(sessionId);
 
-        Doctor doctor;
+        final Doctor doctor;
 
         if (request.getDoctorId() != 0) {
             doctor = doctorDao.getDoctorById(request.getDoctorId());
@@ -108,9 +106,9 @@ public class PatientService {
             throw new DoctorNotFoundException(DoctorNotFoundErrorCode.DOCTOR_NOT_FOUND);
         }
 
-        LocalDate ticketDate = LocalDate.parse(request.getDate());
-        LocalTime ticketTime = LocalTime.parse(request.getTime());
-        String ticketTitle = TicketFactory.buildTicketToDoctor(doctor.getId(), ticketDate, ticketTime);
+        final LocalDate ticketDate = LocalDate.parse(request.getDate());
+        final LocalTime ticketTime = LocalTime.parse(request.getTime());
+        final String ticketTitle = TicketFactory.buildTicketToDoctor(doctor.getId(), ticketDate, ticketTime);
 
         boolean containsAppointment = commonDao.containsAppointment(ticketTitle);
 
@@ -134,7 +132,7 @@ public class PatientService {
     }
 
     public void denyTicket(String sessionId, String ticketTitle) throws PermissionDeniedException {
-        int patientId = SecurityManagerImpl
+        final int patientId = SecurityManagerImpl
                 .getSecurityManager(UserType.PATIENT)
                 .hasPermission(sessionId);
 
@@ -142,14 +140,14 @@ public class PatientService {
     }
 
     public AllTicketsDtoResponse getTickets(String sessionId) throws PermissionDeniedException {
-        int patientId = SecurityManagerImpl
+        final int patientId = SecurityManagerImpl
                 .getSecurityManager(UserType.PATIENT)
                 .hasPermission(sessionId);
 
-        List<TicketToDoctor> ticketsToDoctors = scheduleDao.getTicketsToDoctor(patientId);
-        List<TicketToMedicalCommission> ticketsToMedicalCommission = medicalCommissionDao.getTicketsToMedicalCommission(patientId);
+        final List<TicketToDoctor> ticketsToDoctors = scheduleDao.getTicketsToDoctor(patientId);
+        final List<TicketToMedicalCommission> ticketsToMedicalCommission = medicalCommissionDao.getTicketsToMedicalCommission(patientId);
 
-        List<TicketDtoResponse> tickets = new ArrayList<>(ticketsToDoctors.size() + ticketsToMedicalCommission.size());
+        final List<TicketDtoResponse> tickets = new ArrayList<>(ticketsToDoctors.size() + ticketsToMedicalCommission.size());
 
         tickets.addAll(ticketsToDoctors.stream()
                 .map(t -> new TicketToDoctorDtoResponse(

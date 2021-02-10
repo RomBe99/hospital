@@ -3,6 +3,7 @@ package net.thumbtack.hospital.model.schedule;
 import net.thumbtack.hospital.model.user.Doctor;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -10,7 +11,7 @@ public class ScheduleCell {
     private int id;
     private Doctor doctor;
     private LocalDate date;
-    private List<TimeCell> cells;
+    private List<TimeCell> cells = new ArrayList<>();
 
     public ScheduleCell() {
     }
@@ -39,7 +40,7 @@ public class ScheduleCell {
     }
 
     public void setCells(List<TimeCell> cells) {
-        this.cells = cells;
+        this.cells = cells == null ? new ArrayList<>() : cells;
     }
 
     public int getId() {

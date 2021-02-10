@@ -28,7 +28,7 @@ public class ScheduleDaoImpl implements ScheduleDao {
 
         try (SqlSession session = getSession()) {
             try {
-                ScheduleMapper mapper = mapperFactory.getMapper(session, ScheduleMapper.class);
+                final ScheduleMapper mapper = mapperFactory.getMapper(session, ScheduleMapper.class);
                 mapper.insertScheduleCells(doctorId, schedule);
 
                 for (ScheduleCell c : schedule) {
@@ -53,7 +53,7 @@ public class ScheduleDaoImpl implements ScheduleDao {
 
         try (SqlSession session = getSession()) {
             try {
-                ScheduleMapper mapper = mapperFactory.getMapper(session, ScheduleMapper.class);
+                final ScheduleMapper mapper = mapperFactory.getMapper(session, ScheduleMapper.class);
                 mapper.removeSchedule(doctorId, dateStart, dateEnd);
                 mapper.insertScheduleCells(doctorId, newSchedule);
 

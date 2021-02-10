@@ -26,7 +26,7 @@ public class PatientDaoImpl implements PatientDao {
 
         try (SqlSession session = getSession()) {
             try {
-                int userTypeId = mapperFactory.getMapper(session, CommonMapper.class).getUserTypeId(UserType.PATIENT.getType());
+                final Integer userTypeId = mapperFactory.getMapper(session, CommonMapper.class).getUserTypeId(UserType.PATIENT.getType());
 
                 PatientMapper mapper = mapperFactory.getMapper(session, PatientMapper.class);
                 mapper.insertUser(patient, userTypeId);
@@ -49,7 +49,7 @@ public class PatientDaoImpl implements PatientDao {
 
         try (SqlSession session = getSession()) {
             try {
-                PatientMapper mapper = mapperFactory.getMapper(session, PatientMapper.class);
+                final PatientMapper mapper = mapperFactory.getMapper(session, PatientMapper.class);
                 mapper.updateUser(patient, newPassword);
                 mapper.updatePatient(patient);
 
@@ -82,7 +82,7 @@ public class PatientDaoImpl implements PatientDao {
         LOGGER.debug(CLASS_NAME + ": Checking patient permissions for session id = {}", sessionId);
 
         try (SqlSession session = getSession()) {
-            Integer userId = mapperFactory.getMapper(session, PatientMapper.class).hasPermissions(sessionId);
+            final Integer userId = mapperFactory.getMapper(session, PatientMapper.class).hasPermissions(sessionId);
 
             return userId == null ? 0 : userId;
         } catch (RuntimeException ex) {

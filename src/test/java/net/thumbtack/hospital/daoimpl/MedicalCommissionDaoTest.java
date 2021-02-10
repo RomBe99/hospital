@@ -17,19 +17,19 @@ public class MedicalCommissionDaoTest extends DaoTestApi {
     @Test
     public void createMedicalCommissionTest() {
         Doctor doctorCreatedCommission = new Doctor("MenaAltyrev568", "ceVCCj14uw4H",
-                "Варсеник", "Чудина", "Ивановна", "342", "Therapist", new ArrayList<>());
+                "Варсеник", "Чудина", "Ивановна", "342", "Therapist", Collections.emptyList());
 
         List<Doctor> doctors = Arrays.asList(doctorCreatedCommission,
                 new Doctor("ArnestinaChehova823", "l1E57ydLV9M1",
-                        "Арнестина", "Чехова", "Ефимовна", "104", "Dentist", new ArrayList<>()),
+                        "Арнестина", "Чехова", "Ефимовна", "104", "Dentist", Collections.emptyList()),
                 new Doctor("KostantinVolochkov999", "d8Nb22tloSMQ",
-                        "Костантин", "Ильич", null, "205", "Surgeon", new ArrayList<>()),
+                        "Костантин", "Ильич", null, "205", "Surgeon", Collections.emptyList()),
                 new Doctor("AzhinaSolntseva451", "2I7S5a7ze911",
-                        "Ажина", "Солнцева", "Олеговна", "306", "Therapist", new ArrayList<>()),
+                        "Ажина", "Солнцева", "Олеговна", "306", "Therapist", Collections.emptyList()),
                 new Doctor("BalmuradOblomov794", "TwQXwwyAJy64",
-                        "Балмурад", "Обломов", "Андреевич", "471", "Traumatologist", new ArrayList<>()),
+                        "Балмурад", "Обломов", "Андреевич", "471", "Traumatologist", Collections.emptyList()),
                 new Doctor("MagamedzakirSaharov326", "9V3JaO1Ollde",
-                        "Магамедзакир", "Сахаров", "Анатольевич", "124", "Dentist", new ArrayList<>()));
+                        "Магамедзакир", "Сахаров", "Анатольевич", "124", "Dentist", Collections.emptyList()));
 
         for (Doctor d : doctors) {
             insertUser(d);
@@ -56,19 +56,19 @@ public class MedicalCommissionDaoTest extends DaoTestApi {
     @Test
     public void denyMedicalCommissionTest() {
         Doctor doctorCreatedCommission = new Doctor("MenaAltyrev568", "ceVCCj14uw4H",
-                "Варсеник", "Чудина", "Ивановна", "342", "Therapist", new ArrayList<>());
+                "Варсеник", "Чудина", "Ивановна", "342", "Therapist", Collections.emptyList());
 
         List<Doctor> doctors = Arrays.asList(doctorCreatedCommission,
                 new Doctor("ArnestinaChehova823", "l1E57ydLV9M1",
-                        "Арнестина", "Чехова", "Ефимовна", "104", "Dentist", new ArrayList<>()),
+                        "Арнестина", "Чехова", "Ефимовна", "104", "Dentist", Collections.emptyList()),
                 new Doctor("KostantinVolochkov999", "d8Nb22tloSMQ",
-                        "Костантин", "Ильич", null, "205", "Surgeon", new ArrayList<>()),
+                        "Костантин", "Ильич", null, "205", "Surgeon", Collections.emptyList()),
                 new Doctor("AzhinaSolntseva451", "2I7S5a7ze911",
-                        "Ажина", "Солнцева", "Олеговна", "306", "Therapist", new ArrayList<>()),
+                        "Ажина", "Солнцева", "Олеговна", "306", "Therapist", Collections.emptyList()),
                 new Doctor("BalmuradOblomov794", "TwQXwwyAJy64",
-                        "Балмурад", "Обломов", "Андреевич", "471", "Traumatologist", new ArrayList<>()),
+                        "Балмурад", "Обломов", "Андреевич", "471", "Traumatologist", Collections.emptyList()),
                 new Doctor("MagamedzakirSaharov326", "9V3JaO1Ollde",
-                        "Магамедзакир", "Сахаров", "Анатольевич", "124", "Dentist", new ArrayList<>()));
+                        "Магамедзакир", "Сахаров", "Анатольевич", "124", "Dentist", Collections.emptyList()));
 
         for (Doctor d : doctors) {
             insertUser(d);
@@ -100,24 +100,24 @@ public class MedicalCommissionDaoTest extends DaoTestApi {
                 "457441, г. Орел, ул. Вешних Вод, дом 26, квартира 398", "+79465104246");
         insertUser(patient);
 
-        getTicketsToMedicalCommission(patient.getId(), new ArrayList<>());
+        getTicketsToMedicalCommission(patient.getId(), Collections.emptyList());
     }
 
     @Test
     public void getTicketsToMedicalCommissionTest() {
         Map<String, Doctor> doctors = Stream.of(
                 new Doctor("MenaAltyrev568", "ceVCCj14uw4H",
-                        "Варсеник", "Чудина", "Ивановна", "342", "Therapist", new ArrayList<>()),
+                        "Варсеник", "Чудина", "Ивановна", "342", "Therapist", Collections.emptyList()),
                 new Doctor("ArnestinaChehova823", "l1E57ydLV9M1",
-                        "Арнестина", "Чехова", "Ефимовна", "104", "Dentist", new ArrayList<>()),
+                        "Арнестина", "Чехова", "Ефимовна", "104", "Dentist", Collections.emptyList()),
                 new Doctor("KostantinVolochkov999", "d8Nb22tloSMQ",
-                        "Костантин", "Ильич", null, "205", "Surgeon", new ArrayList<>()),
+                        "Костантин", "Ильич", null, "205", "Surgeon", Collections.emptyList()),
                 new Doctor("AzhinaSolntseva451", "2I7S5a7ze911",
-                        "Ажина", "Солнцева", "Олеговна", "306", "Therapist", new ArrayList<>()),
+                        "Ажина", "Солнцева", "Олеговна", "306", "Therapist", Collections.emptyList()),
                 new Doctor("BalmuradOblomov794", "TwQXwwyAJy64",
-                        "Балмурад", "Обломов", "Андреевич", "471", "Traumatologist", new ArrayList<>()),
+                        "Балмурад", "Обломов", "Андреевич", "471", "Traumatologist", Collections.emptyList()),
                 new Doctor("MagamedzakirSaharov326", "9V3JaO1Ollde",
-                        "Магамедзакир", "Сахаров", "Анатольевич", "124", "Dentist", new ArrayList<>()))
+                        "Магамедзакир", "Сахаров", "Анатольевич", "124", "Dentist", Collections.emptyList()))
                 .collect(Collectors.toMap(User::getLogin, d -> d));
 
         for (Doctor d : doctors.values()) {
@@ -177,7 +177,7 @@ public class MedicalCommissionDaoTest extends DaoTestApi {
     @Test(expected = RuntimeException.class)
     public void insertTicketToMedicalCommissionWithNullTitleTest() {
         Doctor doctor = new Doctor("AbilfatGolovin602", "FW9E1x2m2u18",
-                "Абилфат", "Головин", "Анатольевич", "261", "Dentist", new ArrayList<>());
+                "Абилфат", "Головин", "Анатольевич", "261", "Dentist", Collections.emptyList());
         insertUser(doctor);
 
         Patient patient = new Patient("BogertZorin407", "saTPqK1Hs8gu",
@@ -195,7 +195,7 @@ public class MedicalCommissionDaoTest extends DaoTestApi {
     @Test(expected = RuntimeException.class)
     public void insertTicketToMedicalCommissionWithIncorrectCabinetTest() {
         Doctor doctor = new Doctor("AbilfatGolovin602", "FW9E1x2m2u18",
-                "Абилфат", "Головин", "Анатольевич", "261", "Dentist", new ArrayList<>());
+                "Абилфат", "Головин", "Анатольевич", "261", "Dentist", Collections.emptyList());
         insertUser(doctor);
 
         Patient patient = new Patient("BogertZorin407", "saTPqK1Hs8gu",
@@ -213,7 +213,7 @@ public class MedicalCommissionDaoTest extends DaoTestApi {
     @Test(expected = RuntimeException.class)
     public void insertTicketToMedicalCommissionWithNullCabinetTest() {
         Doctor doctor = new Doctor("AbilfatGolovin602", "FW9E1x2m2u18",
-                "Абилфат", "Головин", "Анатольевич", "261", "Dentist", new ArrayList<>());
+                "Абилфат", "Головин", "Анатольевич", "261", "Dentist", Collections.emptyList());
         insertUser(doctor);
 
         Patient patient = new Patient("BogertZorin407", "saTPqK1Hs8gu",
@@ -231,7 +231,7 @@ public class MedicalCommissionDaoTest extends DaoTestApi {
     @Test(expected = RuntimeException.class)
     public void insertTicketToMedicalCommissionWithNullDateTest() {
         Doctor doctor = new Doctor("AbilfatGolovin602", "FW9E1x2m2u18",
-                "Абилфат", "Головин", "Анатольевич", "261", "Dentist", new ArrayList<>());
+                "Абилфат", "Головин", "Анатольевич", "261", "Dentist", Collections.emptyList());
         insertUser(doctor);
 
         Patient patient = new Patient("BogertZorin407", "saTPqK1Hs8gu",
@@ -249,7 +249,7 @@ public class MedicalCommissionDaoTest extends DaoTestApi {
     @Test(expected = RuntimeException.class)
     public void insertTicketToMedicalCommissionWithNullTimeTest() {
         Doctor doctor = new Doctor("AbilfatGolovin602", "FW9E1x2m2u18",
-                "Абилфат", "Головин", "Анатольевич", "261", "Dentist", new ArrayList<>());
+                "Абилфат", "Головин", "Анатольевич", "261", "Dentist", Collections.emptyList());
         insertUser(doctor);
 
         Patient patient = new Patient("BogertZorin407", "saTPqK1Hs8gu",
@@ -267,7 +267,7 @@ public class MedicalCommissionDaoTest extends DaoTestApi {
     @Test(expected = RuntimeException.class)
     public void insertTicketToMedicalCommissionWithIncorrectPatientIdTest() {
         Doctor doctor = new Doctor("AbilfatGolovin602", "FW9E1x2m2u18",
-                "Абилфат", "Головин", "Анатольевич", "261", "Dentist", new ArrayList<>());
+                "Абилфат", "Головин", "Анатольевич", "261", "Dentist", Collections.emptyList());
         insertUser(doctor);
 
         TicketToMedicalCommission incorrectTicket =
@@ -280,7 +280,7 @@ public class MedicalCommissionDaoTest extends DaoTestApi {
     @Test(expected = RuntimeException.class)
     public void insertTicketToMedicalCommissionWithEmptyDoctorIdsTest() {
         Doctor doctor = new Doctor("AbilfatGolovin602", "FW9E1x2m2u18",
-                "Абилфат", "Головин", "Анатольевич", "261", "Dentist", new ArrayList<>());
+                "Абилфат", "Головин", "Анатольевич", "261", "Dentist", Collections.emptyList());
         insertUser(doctor);
 
         Patient patient = new Patient("BogertZorin407", "saTPqK1Hs8gu",
@@ -291,14 +291,14 @@ public class MedicalCommissionDaoTest extends DaoTestApi {
         TicketToMedicalCommission incorrectTicket =
                 new TicketToMedicalCommission("Ticket title", doctor.getCabinet(),
                         LocalDate.of(2020, 3, 4), LocalTime.of(8, 0), patient.getId(),
-                        new ArrayList<>(), 120);
+                        Collections.emptyList(), 120);
         createMedicalCommission(incorrectTicket);
     }
 
     @Test(expected = RuntimeException.class)
     public void insertTicketToMedicalCommissionWithIncorrectDoctorIdsTest() {
         Doctor doctor = new Doctor("AbilfatGolovin602", "FW9E1x2m2u18",
-                "Абилфат", "Головин", "Анатольевич", "261", "Dentist", new ArrayList<>());
+                "Абилфат", "Головин", "Анатольевич", "261", "Dentist", Collections.emptyList());
         insertUser(doctor);
 
         Patient patient = new Patient("BogertZorin407", "saTPqK1Hs8gu",

@@ -6,15 +6,15 @@ import org.apache.ibatis.annotations.Select;
 public interface CommonMapper extends Mapper {
     @Select("SELECT id FROM user_type WHERE name = #{userType};")
     @Options(useGeneratedKeys = true, keyProperty = "id")
-    int getUserTypeId(String userType);
+    Integer getUserTypeId(String userType);
 
     @Select("SELECT id FROM doctor_specialty WHERE name = #{name};")
     @Options(useGeneratedKeys = true, keyProperty = "id")
-    int getDoctorSpecialityIdByName(String name);
+    Integer getDoctorSpecialityIdByName(String name);
 
     @Select("SELECT id FROM cabinet WHERE name = #{name};")
     @Options(useGeneratedKeys = true, keyProperty = "id")
-    int getCabinetIdByName(String name);
+    Integer getCabinetIdByName(String name);
 
     @Select("SELECT name FROM user_type WHERE id = (SELECT userTypeId FROM user WHERE id = #{userId});")
     @Options(useGeneratedKeys = true, keyProperty = "name")

@@ -19,7 +19,7 @@ public class ScheduleDaoTest extends DaoTestApi {
     @Test
     public void insertScheduleTest() {
         Doctor doctor = new Doctor("IvstaliyaMaksimova821", "VMWr9LVh5dVI",
-                "Ивсталия", "Валерьевна", "Максимова", "205", "Surgeon", new ArrayList<>());
+                "Ивсталия", "Валерьевна", "Максимова", "205", "Surgeon", Collections.emptyList());
         insertUser(doctor);
 
         int duration = 30;
@@ -59,16 +59,16 @@ public class ScheduleDaoTest extends DaoTestApi {
     @Test(expected = RuntimeException.class)
     public void tryInsertEmptyScheduleTest() {
         Doctor doctor = new Doctor("IvstaliyaMaksimova821", "VMWr9LVh5dVI",
-                "Ивсталия", "Валерьевна", "Максимова", "205", "Surgeon", new ArrayList<>());
+                "Ивсталия", "Валерьевна", "Максимова", "205", "Surgeon", Collections.emptyList());
         insertUser(doctor);
 
-        insertSchedule(doctor.getId(), new ArrayList<>());
+        insertSchedule(doctor.getId(), Collections.emptyList());
     }
 
     @Test
     public void editScheduleTest1() {
         Doctor doctor = new Doctor("IvstaliyaMaksimova821", "VMWr9LVh5dVI",
-                "Ивсталия", "Валерьевна", "Максимова", "205", "Surgeon", new ArrayList<>());
+                "Ивсталия", "Валерьевна", "Максимова", "205", "Surgeon", Collections.emptyList());
         insertUser(doctor);
 
         int doctorId = doctor.getId();
@@ -105,7 +105,7 @@ public class ScheduleDaoTest extends DaoTestApi {
     @Test
     public void editScheduleTest2() {
         Doctor doctor = new Doctor("IvstaliyaMaksimova821", "VMWr9LVh5dVI",
-                "Ивсталия", "Валерьевна", "Максимова", "205", "Surgeon", new ArrayList<>());
+                "Ивсталия", "Валерьевна", "Максимова", "205", "Surgeon", Collections.emptyList());
         insertUser(doctor);
 
         int doctorId = doctor.getId();
@@ -143,7 +143,7 @@ public class ScheduleDaoTest extends DaoTestApi {
     @Test
     public void editScheduleTest3() {
         Doctor doctor = new Doctor("IvstaliyaMaksimova821", "VMWr9LVh5dVI",
-                "Ивсталия", "Валерьевна", "Максимова", "205", "Surgeon", new ArrayList<>());
+                "Ивсталия", "Валерьевна", "Максимова", "205", "Surgeon", Collections.emptyList());
         insertUser(doctor);
 
         int doctorId = doctor.getId();
@@ -179,7 +179,7 @@ public class ScheduleDaoTest extends DaoTestApi {
     @Test
     public void appointmentToDoctorTest() {
         Doctor doctor = new Doctor("IvstaliyaMaksimova821", "VMWr9LVh5dVI",
-                "Ивсталия", "Валерьевна", "Максимова", "205", "Surgeon", new ArrayList<>());
+                "Ивсталия", "Валерьевна", "Максимова", "205", "Surgeon", Collections.emptyList());
         insertUser(doctor);
 
         int doctorId = doctor.getId();
@@ -210,7 +210,7 @@ public class ScheduleDaoTest extends DaoTestApi {
     @Test
     public void denyTicketToDoctorTest() {
         Doctor doctor = new Doctor("IvstaliyaMaksimova821", "VMWr9LVh5dVI",
-                "Ивсталия", "Валерьевна", "Максимова", "205", "Surgeon", new ArrayList<>());
+                "Ивсталия", "Валерьевна", "Максимова", "205", "Surgeon", Collections.emptyList());
         insertUser(doctor);
 
         int doctorId = doctor.getId();
@@ -246,7 +246,7 @@ public class ScheduleDaoTest extends DaoTestApi {
     @Test
     public void getTicketsToDoctorTest() {
         Doctor doctor = new Doctor("IvstaliyaMaksimova821", "VMWr9LVh5dVI",
-                "Ивсталия", "Валерьевна", "Максимова", "205", "Surgeon", new ArrayList<>());
+                "Ивсталия", "Валерьевна", "Максимова", "205", "Surgeon", Collections.emptyList());
         insertUser(doctor);
 
         int doctorId = doctor.getId();

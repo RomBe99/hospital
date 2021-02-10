@@ -12,10 +12,7 @@ import org.springframework.util.MultiValueMap;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -23,10 +20,11 @@ public class ScheduleTransformers {
     public static boolean isWeekend(LocalDate testDate, List<DayOfWeek> workDaysOfWeek) {
         DayOfWeek dayOfWeek = DayOfWeek.from(testDate);
 
-        List<Predicate<DayOfWeek>> weekendDayCheckers = new ArrayList<>();
-        weekendDayCheckers.add(d -> d == DayOfWeek.SATURDAY);
-        weekendDayCheckers.add(d -> d == DayOfWeek.SUNDAY);
-        weekendDayCheckers.add(d -> !workDaysOfWeek.contains(d));
+        final List<Predicate<DayOfWeek>> weekendDayCheckers = Arrays.asList(
+                d -> d == DayOfWeek.SATURDAY,
+                d -> d == DayOfWeek.SUNDAY,
+                d -> !workDaysOfWeek.contains(d)
+        );
 
         for (Predicate<DayOfWeek> c : weekendDayCheckers) {
             if (c.test(dayOfWeek)) {
@@ -42,18 +40,18 @@ public class ScheduleTransformers {
     }
 
     public static List<ScheduleCell> transformWeekSchedule(DtoRequestWithSchedule request, int doctorId) {
-        int duration = request.getDuration();
-        LocalDate dateStart = LocalDate.parse(request.getDateStart());
-        LocalDate dateEnd = LocalDate.parse(request.getDateEnd());
-        List<DayOfWeek> workDaysOfWeek = request.getWeekSchedule().getWeekDays().stream()
+        final int duration = request.getDuration();
+        final LocalDate dateStart = LocalDate.parse(request.getDateStart());
+        final LocalDate dateEnd = LocalDate.parse(request.getDateEnd());
+        final List<DayOfWeek> workDaysOfWeek = request.getWeekSchedule().getWeekDays().stream()
                 .map(DayOfWeek::of)
                 .collect(Collectors.toList());
 
-        LocalTime durationStartTime = LocalTime.parse(request.getWeekSchedule().getTimeStart());
-        LocalTime durationEndTime = LocalTime.parse(request.getWeekSchedule().getTimeEnd());
+        final LocalTime durationStartTime = LocalTime.parse(request.getWeekSchedule().getTimeStart());
+        final LocalTime durationEndTime = LocalTime.parse(request.getWeekSchedule().getTimeEnd());
 
-        List<ScheduleCell> result = new LinkedList<>();
-        List<LocalTime> durations = new LinkedList<>();
+        final List<ScheduleCell> result = new LinkedList<>();
+        final List<LocalTime> durations = new LinkedList<>();
 
         for (LocalTime t = durationStartTime; t.isBefore(durationEndTime); t = t.plusMinutes(duration)) {
             durations.add(t);
@@ -79,14 +77,14 @@ public class ScheduleTransformers {
     }
 
     public static List<ScheduleCell> transformWeekDaysSchedule(DtoRequestWithSchedule request, int doctorId) {
-        int duration = request.getDuration();
-        LocalDate dateStart = LocalDate.parse(request.getDateStart());
-        LocalDate dateEnd = LocalDate.parse(request.getDateEnd());
+        final int duration = request.getDuration();
+        final LocalDate dateStart = LocalDate.parse(request.getDateStart());
+        final LocalDate dateEnd = LocalDate.parse(request.getDateEnd());
 
-        List<DayScheduleDtoRequest> daySchedule = request.getWeekDaysSchedule();
-        MultiValueMap<DayOfWeek, LocalTime> weekDurationTimes = new LinkedMultiValueMap<>();
+        final List<DayScheduleDtoRequest> daySchedule = request.getWeekDaysSchedule();
+        final MultiValueMap<DayOfWeek, LocalTime> weekDurationTimes = new LinkedMultiValueMap<>();
 
-        List<ScheduleCell> result = new LinkedList<>();
+        final List<ScheduleCell> result = new LinkedList<>();
         LocalTime durationStartTime;
         LocalTime durationEndTime;
 
@@ -101,7 +99,7 @@ public class ScheduleTransformers {
 
         List<LocalTime> durations;
         List<TimeCell> temp;
-        List<DayOfWeek> workDaysOfWeek = new ArrayList<>(weekDurationTimes.keySet());
+        final List<DayOfWeek> workDaysOfWeek = new ArrayList<>(weekDurationTimes.keySet());
 
         for (LocalDate d = dateStart; d.isBefore(dateEnd); d = d.plusDays(1)) {
             durations = weekDurationTimes.get(d.getDayOfWeek());

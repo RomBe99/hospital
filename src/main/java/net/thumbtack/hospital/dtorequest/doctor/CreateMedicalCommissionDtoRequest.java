@@ -43,7 +43,7 @@ public class CreateMedicalCommissionDtoRequest {
     }
 
     public void setDoctorIds(List<Integer> doctorIds) {
-        this.doctorIds = doctorIds;
+        this.doctorIds = doctorIds == null ? new ArrayList<>() : doctorIds;
     }
 
     public void setRoom(String room) {

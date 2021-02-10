@@ -28,10 +28,10 @@ public class DoctorDaoImpl implements DoctorDao {
 
         try (SqlSession session = getSession()) {
             try {
-                CommonMapper commonMapper = mapperFactory.getMapper(session, CommonMapper.class);
-                int userTypeId = commonMapper.getUserTypeId(UserType.DOCTOR.getType());
-                int cabinetId = commonMapper.getCabinetIdByName(doctor.getCabinet());
-                int specialityId = commonMapper.getDoctorSpecialityIdByName(doctor.getSpecialty());
+                final CommonMapper commonMapper = mapperFactory.getMapper(session, CommonMapper.class);
+                final Integer userTypeId = commonMapper.getUserTypeId(UserType.DOCTOR.getType());
+                final Integer cabinetId = commonMapper.getCabinetIdByName(doctor.getCabinet());
+                final Integer specialityId = commonMapper.getDoctorSpecialityIdByName(doctor.getSpecialty());
 
                 DoctorMapper doctorMapper = mapperFactory.getMapper(session, DoctorMapper.class);
                 doctorMapper.insertUser(doctor, userTypeId);
@@ -85,9 +85,9 @@ public class DoctorDaoImpl implements DoctorDao {
         LOGGER.debug(CLASS_NAME + ": Get random doctor by speciality = {}", speciality);
 
         try (SqlSession session = getSession()) {
-            int specialityId = mapperFactory.getMapper(session, CommonMapper.class).getDoctorSpecialityIdByName(speciality);
+            final Integer specialityId = mapperFactory.getMapper(session, CommonMapper.class).getDoctorSpecialityIdByName(speciality);
 
-            List<Doctor> doctors = session.selectList("net.thumbtack.hospital.mapper.DoctorMapper.getDoctorsBySpecialityId", specialityId);
+            final List<Doctor> doctors = session.selectList("net.thumbtack.hospital.mapper.DoctorMapper.getDoctorsBySpecialityId", specialityId);
 
             if (doctors.isEmpty()) {
                 return null;
@@ -108,7 +108,7 @@ public class DoctorDaoImpl implements DoctorDao {
         LOGGER.debug(CLASS_NAME + ": Checking doctor permissions for session id = {}", sessionId);
 
         try (SqlSession session = getSession()) {
-            Integer userId = mapperFactory.getMapper(session, DoctorMapper.class).hasPermissions(sessionId);
+            final Integer userId = mapperFactory.getMapper(session, DoctorMapper.class).hasPermissions(sessionId);
 
             return userId == null ? 0 : userId;
         } catch (RuntimeException ex) {

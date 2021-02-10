@@ -8,10 +8,11 @@ import net.thumbtack.hospital.model.schedule.ScheduleCell;
 import net.thumbtack.hospital.model.schedule.TimeCell;
 import net.thumbtack.hospital.model.user.Patient;
 
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.BiFunction;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
@@ -43,21 +44,19 @@ public class DtoAdapters {
 
     public static List<ScheduleCell> transform(DtoRequestWithSchedule request, int doctorId) {
         if (ScheduleTransformers.isEmptyScheduleRequest(request)) {
-            return new ArrayList<>();
+            return Collections.emptyList();
         }
 
-        Map<Supplier<Boolean>, Supplier<List<ScheduleCell>>> transformers = new HashMap<>();
-        transformers.put(() -> request.getWeekSchedule() != null,
-                () -> ScheduleTransformers.transformWeekSchedule(request, doctorId));
-        transformers.put(() -> !request.getWeekDaysSchedule().isEmpty(),
-                () -> ScheduleTransformers.transformWeekDaysSchedule(request, doctorId));
+        Map<Supplier<Boolean>, BiFunction<DtoRequestWithSchedule, Integer, List<ScheduleCell>>> transformers = new HashMap<>();
+        transformers.put(() -> request.getWeekSchedule() != null, ScheduleTransformers::transformWeekSchedule);
+        transformers.put(() -> !request.getWeekDaysSchedule().isEmpty(), ScheduleTransformers::transformWeekDaysSchedule);
 
         for (Supplier<Boolean> p : transformers.keySet()) {
             if (p.get()) {
-                return ScheduleTransformers.sortSchedule(transformers.get(p).get());
+                return ScheduleTransformers.sortSchedule(transformers.get(p).apply(request, doctorId));
             }
         }
 
-        return new ArrayList<>();
+        return Collections.emptyList();
     }
 }

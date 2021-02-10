@@ -29,8 +29,8 @@ public class UserDaoImpl implements UserDao {
 
         try (SqlSession session = getSession()) {
             try {
-                UserMapper mapper = mapperFactory.getMapper(session, UserMapper.class);
-                int userId = mapper.getUserIdByLoginAndPassword(login, password);
+                final UserMapper mapper = mapperFactory.getMapper(session, UserMapper.class);
+                final Integer userId = mapper.getUserIdByLoginAndPassword(login, password);
                 mapper.loginUser(sessionId, userId);
 
                 session.commit();
@@ -97,7 +97,7 @@ public class UserDaoImpl implements UserDao {
         LOGGER.debug(CLASS_NAME + ": Checking user permissions for session id = {}", sessionId);
 
         try (SqlSession session = getSession()) {
-            Integer userId = mapperFactory.getMapper(session, UserMapper.class).hasPermissions(sessionId);
+            final Integer userId = mapperFactory.getMapper(session, UserMapper.class).hasPermissions(sessionId);
 
             return userId == null ? 0 : userId;
         } catch (RuntimeException ex) {
@@ -112,7 +112,7 @@ public class UserDaoImpl implements UserDao {
         LOGGER.debug(CLASS_NAME + ": Get information about doctor = {} for patient id = {} with schedule where start date = {} to end date = {}",
                 doctorId, patientId, startDate, endDate);
 
-        Map<String, Object> params = new HashMap<>();
+        final Map<String, Object> params = new HashMap<>();
         params.put("patientId", patientId == 0 ? null : patientId);
         params.put("doctorId", doctorId == 0 ? null : doctorId);
         params.put("speciality", null);
@@ -134,7 +134,7 @@ public class UserDaoImpl implements UserDao {
         LOGGER.debug(CLASS_NAME + ": Get information about all doctors with speciality = {} for patient id = {} with schedule where start date = {} to end date = {}",
                 specialty, patientId, startDate, endDate);
 
-        Map<String, Object> params = new HashMap<>();
+        final Map<String, Object> params = new HashMap<>();
         params.put("patientId", patientId == 0 ? null : patientId);
         params.put("doctorId", null);
         params.put("speciality", specialty);
