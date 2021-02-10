@@ -1,7 +1,6 @@
 package net.thumbtack.hospital.model.user;
 
 import net.thumbtack.hospital.model.schedule.ScheduleCell;
-import org.apache.ibatis.annotations.AutomapConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,7 +14,6 @@ public class Doctor extends User {
     public Doctor() {
     }
 
-    @AutomapConstructor
     public Doctor(int id,
                   String login, String password,
                   String firstName, String lastName, String patronymic,
@@ -42,7 +40,7 @@ public class Doctor extends User {
     }
 
     public void setSchedule(List<ScheduleCell> schedule) {
-        this.schedule = schedule;
+        this.schedule = schedule == null ? new ArrayList<>() : schedule;
     }
 
     public String getCabinet() {

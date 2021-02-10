@@ -39,7 +39,7 @@ public class TicketToMedicalCommission extends Ticket {
     }
 
     public void setDoctorIds(List<Integer> doctorIds) {
-        this.doctorIds = doctorIds;
+        this.doctorIds = doctorIds == null ? new ArrayList<>() : doctorIds;
     }
 
     public void setDuration(int duration) {
