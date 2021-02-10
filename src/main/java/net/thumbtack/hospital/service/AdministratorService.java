@@ -50,7 +50,7 @@ public class AdministratorService {
                 .getSecurityManager(UserType.ADMINISTRATOR)
                 .hasPermission(sessionId);
 
-        Administrator admin =
+        final Administrator admin =
                 new Administrator(request.getLogin(), request.getPassword(),
                         request.getFirstName(), request.getLastName(), request.getPatronymic(), request.getPosition());
 
@@ -65,15 +65,15 @@ public class AdministratorService {
                 .getSecurityManager(UserType.ADMINISTRATOR)
                 .hasPermission(sessionId);
 
-        Doctor doctor =
+        final Doctor doctor =
                 new Doctor(request.getLogin(), request.getPassword(),
                         request.getFirstName(), request.getLastName(), request.getPatronymic(),
                         request.getRoom(), request.getSpeciality(), new ArrayList<>());
 
         doctorDao.insertDoctor(doctor);
 
-        int doctorId = doctor.getId();
-        List<ScheduleCell> schedule = DtoAdapters.transform(request, doctorId);
+        final int doctorId = doctor.getId();
+        final List<ScheduleCell> schedule = DtoAdapters.transform(request, doctorId);
 
         if (!schedule.isEmpty()) {
             scheduleDao.insertSchedule(doctorId, schedule);
@@ -90,7 +90,7 @@ public class AdministratorService {
                 .getSecurityManager(UserType.ADMINISTRATOR)
                 .hasPermission(sessionId);
 
-        Administrator admin =
+        final Administrator admin =
                 new Administrator(adminId, null, request.getOldPassword(),
                         request.getFirstName(), request.getLastName(), request.getPatronymic(), request.getPosition());
 
@@ -100,22 +100,23 @@ public class AdministratorService {
                 request.getFirstName(), request.getLastName(), request.getPatronymic(), request.getPosition());
     }
 
-    public EditDoctorScheduleDtoResponse editDoctorSchedule(String sessionId, int doctorId, DtoRequestWithSchedule request) throws PermissionDeniedException, ScheduleException {
+    public EditDoctorScheduleDtoResponse editDoctorSchedule(String sessionId, int doctorId, DtoRequestWithSchedule request)
+            throws PermissionDeniedException, ScheduleException {
         SecurityManagerImpl
                 .getSecurityManager(UserType.ADMINISTRATOR)
                 .hasPermission(sessionId);
 
-        Doctor doctor = doctorDao.getDoctorById(doctorId);
+        final Doctor doctor = doctorDao.getDoctorById(doctorId);
         LocalDate dateStart = LocalDate.parse(request.getDateStart());
         LocalDate dateEnd = LocalDate.parse(request.getDateEnd());
 
-        boolean containsAppointments = commonDao.containsAppointments(doctorId, dateStart, dateEnd);
+        final boolean containsAppointments = commonDao.containsAppointments(doctorId, dateStart, dateEnd);
 
         if (containsAppointments) {
             throw new ScheduleException(ScheduleErrorCode.SCHEDULE_HAVE_APPOINTMENT);
         }
 
-        List<ScheduleCell> schedule = DtoAdapters.transform(request, doctorId);
+        final List<ScheduleCell> schedule = DtoAdapters.transform(request, doctorId);
 
         if (!schedule.isEmpty()) {
             scheduleDao.editSchedule(doctorId, dateStart, dateEnd, schedule);

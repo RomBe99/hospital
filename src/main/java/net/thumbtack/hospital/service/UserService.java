@@ -44,7 +44,8 @@ public class UserService {
     private final Constraints constraints;
 
     @Autowired
-    public UserService(PatientDao patientDao, @Qualifier("UserDaoImpl") UserDao userDao, AdministratorDao administratorDao, DoctorDao doctorDao, CommonDao commonDao, Constraints constraints) {
+    public UserService(PatientDao patientDao, @Qualifier("UserDaoImpl") UserDao userDao,
+                       AdministratorDao administratorDao, DoctorDao doctorDao, CommonDao commonDao, Constraints constraints) {
         this.patientDao = patientDao;
         this.userDao = userDao;
         this.administratorDao = administratorDao;
@@ -54,10 +55,10 @@ public class UserService {
     }
 
     public LoginUserDtoResponse login(LoginDtoRequest request, String sessionId) {
-        int userId = userDao.login(sessionId, request.getLogin(), request.getPassword());
-        UserType userType = UserType.valueOf(commonDao.getUserTypeByUserId(userId));
+        final int userId = userDao.login(sessionId, request.getLogin(), request.getPassword());
+        final UserType userType = UserType.valueOf(commonDao.getUserTypeByUserId(userId));
 
-        Map<UserType, Supplier<? extends LoginUserDtoResponse>> responseMap = new HashMap<>();
+        final Map<UserType, Supplier<? extends LoginUserDtoResponse>> responseMap = new HashMap<>();
         responseMap.put(UserType.PATIENT, () -> {
             Patient p = patientDao.getPatientById(userId);
 
@@ -87,13 +88,13 @@ public class UserService {
     }
 
     public UserInformationDtoResponse getUserInformation(String sessionId) throws PermissionDeniedException {
-        int userId = SecurityManagerImpl
+        final int userId = SecurityManagerImpl
                 .getSecurityManager()
                 .hasPermission(sessionId);
 
-        UserType userType = UserType.valueOf(commonDao.getUserTypeByUserId(userId));
+        final UserType userType = UserType.valueOf(commonDao.getUserTypeByUserId(userId));
 
-        Map<UserType, Supplier<? extends UserInformationDtoResponse>> responseMap = new HashMap<>();
+        final Map<UserType, Supplier<? extends UserInformationDtoResponse>> responseMap = new HashMap<>();
         responseMap.put(UserType.PATIENT, () -> {
             Patient patient = patientDao.getPatientById(userId);
 
@@ -129,18 +130,19 @@ public class UserService {
                 .getSecurityManager(UserType.PATIENT, UserType.DOCTOR, UserType.ADMINISTRATOR)
                 .hasPermission(sessionId);
 
-        Patient patient = patientDao.getPatientById(patientId);
+        final Patient patient = patientDao.getPatientById(patientId);
 
         return new PatientInformationDtoResponse(patientId,
                 patient.getFirstName(), patient.getLastName(), patient.getPatronymic(),
                 patient.getEmail(), patient.getAddress(), patient.getPhone());
     }
 
-    public DoctorInformationDtoResponse getDoctorInformation(String sessionId, int doctorId, LocalDate startDate, LocalDate endDate) throws PermissionDeniedException {
-        int patientId = SecurityManagerImpl
+    public DoctorInformationDtoResponse getDoctorInformation(String sessionId, int doctorId,
+                                                             LocalDate startDate, LocalDate endDate) throws PermissionDeniedException {
+        final int patientId = SecurityManagerImpl
                 .getSecurityManager(UserType.PATIENT)
                 .hasPermission(sessionId);
-        Doctor doctor;
+        final Doctor doctor;
 
         if (startDate == null || endDate == null) {
             doctor = userDao.getDoctorInformationWithoutSchedule(doctorId);
@@ -157,11 +159,12 @@ public class UserService {
                         .collect(Collectors.toList()));
     }
 
-    public GetAllDoctorsDtoResponse getDoctorsInformation(String sessionId, String speciality, LocalDate startDate, LocalDate endDate) throws PermissionDeniedException {
-        int patientId = SecurityManagerImpl
+    public GetAllDoctorsDtoResponse getDoctorsInformation(String sessionId, String speciality,
+                                                          LocalDate startDate, LocalDate endDate) throws PermissionDeniedException {
+        final int patientId = SecurityManagerImpl
                 .getSecurityManager(UserType.PATIENT)
                 .hasPermission(sessionId);
-        List<Doctor> doctors;
+        final List<Doctor> doctors;
 
         if (startDate == null || endDate == null) {
             doctors = userDao.getDoctorsBySpecialityWithoutSchedule(speciality);
@@ -181,14 +184,17 @@ public class UserService {
     }
 
     public SettingsDtoResponse getSettings(String sessionId) {
-        UserType[] userTypes = UserType.values();
-        Map<UserType, Supplier<? extends SettingsDtoResponse>> settingsSuppliers = new HashMap<>();
-        settingsSuppliers.put(UserType.ADMINISTRATOR, () -> new ServerSettingsDtoResponse(constraints.getMaxNameLength(), constraints.getMinPasswordLength()));
-        settingsSuppliers.put(UserType.PATIENT, () -> new ServerSettingsDtoResponse(constraints.getMaxNameLength(), constraints.getMinPasswordLength()));
-        settingsSuppliers.put(UserType.DOCTOR, () -> new ServerSettingsDtoResponse(constraints.getMaxNameLength(), constraints.getMinPasswordLength()));
-        settingsSuppliers.put(null, () -> new ServerSettingsDtoResponse(constraints.getMaxNameLength(), constraints.getMinPasswordLength()));
+        final Map<UserType, Supplier<? extends SettingsDtoResponse>> settingsSuppliers = new HashMap<>();
+        settingsSuppliers.put(UserType.ADMINISTRATOR,
+                () -> new ServerSettingsDtoResponse(constraints.getMaxNameLength(), constraints.getMinPasswordLength()));
+        settingsSuppliers.put(UserType.PATIENT,
+                () -> new ServerSettingsDtoResponse(constraints.getMaxNameLength(), constraints.getMinPasswordLength()));
+        settingsSuppliers.put(UserType.DOCTOR,
+                () -> new ServerSettingsDtoResponse(constraints.getMaxNameLength(), constraints.getMinPasswordLength()));
+        settingsSuppliers.put(null,
+                () -> new ServerSettingsDtoResponse(constraints.getMaxNameLength(), constraints.getMinPasswordLength()));
 
-        for (UserType t : userTypes) {
+        for (UserType t : UserType.values()) {
             try {
                 SecurityManagerImpl
                         .getSecurityManager(t)
