@@ -5,32 +5,36 @@ import java.time.LocalTime;
 import java.util.List;
 
 public class TicketFactory {
-    private static final String DOCTOR_TICKET_PREFIX = "D";
-    private static final String COMMISSION_TICKET_PREFIX = "C";
-
-    private static String convertDateToString(LocalDate date) {
-        return String.valueOf(date.getDayOfMonth()) + date.getMonthValue() + date.getYear();
+    private static StringBuilder convertDateToString(LocalDate date) {
+        return new StringBuilder().append(date.getDayOfMonth()).append(date.getMonthValue()).append(date.getYear());
     }
 
-    private static String convertTimeToString(LocalTime time) {
-        return String.valueOf(time.getHour()) + time.getMinute();
+    private static StringBuilder convertTimeToString(LocalTime time) {
+        return new StringBuilder().append(time.getHour()).append(time.getMinute());
     }
 
-    private static String buildDoctorChapter(int doctorId) {
-        return DOCTOR_TICKET_PREFIX + doctorId;
+    private static StringBuilder buildDoctorChapter(int doctorId) {
+        final String doctorTicketPrefix = "D";
+
+        return new StringBuilder(doctorTicketPrefix).append(doctorId);
     }
 
     public static String buildTicketToDoctor(int doctorId, LocalDate date, LocalTime time) {
-        return buildDoctorChapter(doctorId) + convertDateToString(date) + convertTimeToString(time);
+        return buildDoctorChapter(doctorId)
+                .append(convertDateToString(date))
+                .append(convertTimeToString(time))
+                .toString();
     }
 
     public static String buildTicketToCommission(LocalDate date, LocalTime time, List<Integer> doctorIds) {
-        StringBuilder sb = new StringBuilder();
+        final String commissionTicketPrefix = "C";
+        final StringBuilder result = new StringBuilder(commissionTicketPrefix);
 
-        for (Integer i : doctorIds) {
-            sb.append(buildDoctorChapter(i));
-        }
+        doctorIds.forEach(i -> result.append(buildDoctorChapter(i)));
 
-        return COMMISSION_TICKET_PREFIX + sb + convertDateToString(date) + convertTimeToString(time);
+        result.append(convertDateToString(date));
+        result.append(convertTimeToString(time));
+
+        return result.toString();
     }
 }
