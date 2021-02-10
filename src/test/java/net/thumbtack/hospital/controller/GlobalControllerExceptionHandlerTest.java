@@ -19,6 +19,7 @@ import javax.servlet.http.Cookie;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.UUID;
 import java.util.function.BiFunction;
@@ -75,7 +76,7 @@ public class GlobalControllerExceptionHandlerTest extends ControllerTestApi {
         String incorrectSessionId = UUID.randomUUID().toString();
         String url = buildUrl(AdministratorController.PREFIX_URL, AdministratorController.DOCTOR_REGISTRATION_URL);
         DoctorRegistrationDtoRequest request = new DoctorRegistrationDtoRequest(
-                LocalDate.of(2020, 3, 1).toString(), LocalDate.of(2020, 3, 2).toString(), 15, new ArrayList<>(),
+                LocalDate.of(2020, 3, 1).toString(), LocalDate.of(2020, 3, 2).toString(), 15, Collections.emptyList(),
                 "Епихария", "Козлова", null,
                 "Surgeon", "124", "EpihariyaKozlova75", "44XNaexggtgK");
         String json = mapToJson(request);
@@ -104,7 +105,7 @@ public class GlobalControllerExceptionHandlerTest extends ControllerTestApi {
         String rootAdminSessionId = loginRootAdmin();
         String url = buildUrl(AdministratorController.PREFIX_URL, AdministratorController.DOCTOR_REGISTRATION_URL);
         DoctorRegistrationDtoRequest request =
-                new DoctorRegistrationDtoRequest(null, "fsdafas", -1, new ArrayList<>(),
+                new DoctorRegistrationDtoRequest(null, "fsdafas", -1, Collections.emptyList(),
                         null, "", null,
                         "", null, "", null);
         String json = mapToJson(request);
@@ -143,7 +144,7 @@ public class GlobalControllerExceptionHandlerTest extends ControllerTestApi {
         String rootAdminSessionId = loginRootAdmin();
         String url = buildUrl(AdministratorController.PREFIX_URL, AdministratorController.DOCTOR_REGISTRATION_URL);
         DoctorRegistrationDtoRequest request =
-                new DoctorRegistrationDtoRequest(null, "fsdafas", -1, new ArrayList<>(),
+                new DoctorRegistrationDtoRequest(null, "fsdafas", -1, Collections.emptyList(),
                         "adasfas2#", "2#", "sad#2",
                         "", null, "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "asd");
         String json = mapToJson(request);

@@ -87,12 +87,12 @@ public class AdministratorControllerTest extends ControllerTestApi {
         LocalDate dateEnd = dateStart.plusDays(5);
 
         DoctorRegistrationDtoRequest doctorRegistrationRequest =
-                new DoctorRegistrationDtoRequest(dateStart.toString(), dateEnd.toString(), 15, new ArrayList<>(),
+                new DoctorRegistrationDtoRequest(dateStart.toString(), dateEnd.toString(), 15, Collections.emptyList(),
                         "Саркис", "Семёнов", "Вениаминович",
                         "Surgeon", "205", "SarkisSemenov585", "xjNE6QK6d3b9");
         DoctorRegistrationDtoResponse doctorRegistrationResponse =
                 new DoctorRegistrationDtoResponse(doctorRegistrationRequest.getFirstName(), doctorRegistrationRequest.getLastName(), doctorRegistrationRequest.getPatronymic(),
-                        doctorRegistrationRequest.getSpeciality(), doctorRegistrationRequest.getRoom(), new ArrayList<>());
+                        doctorRegistrationRequest.getSpeciality(), doctorRegistrationRequest.getRoom(), Collections.emptyList());
 
         doctorRegistration(rootAdminSessionId, doctorRegistrationRequest, doctorRegistrationResponse);
 
@@ -122,12 +122,12 @@ public class AdministratorControllerTest extends ControllerTestApi {
         getPatientInformation(rootAdminSessionId, patientRegistrationResponse.getId(), patientInformationResponse);
 
         DoctorRegistrationDtoRequest doctorRegistrationRequest =
-                new DoctorRegistrationDtoRequest(LocalDate.now().toString(), LocalDate.now().toString(), 15, new ArrayList<>(),
+                new DoctorRegistrationDtoRequest(LocalDate.now().toString(), LocalDate.now().toString(), 15, Collections.emptyList(),
                         "Саркис", "Семёнов", "Вениаминович",
                         "Surgeon", "205", "SarkisSemenov585", "xjNE6QK6d3b9");
         DoctorRegistrationDtoResponse doctorRegistrationResponse =
                 new DoctorRegistrationDtoResponse(doctorRegistrationRequest.getFirstName(), doctorRegistrationRequest.getLastName(), doctorRegistrationRequest.getPatronymic(),
-                        doctorRegistrationRequest.getSpeciality(), doctorRegistrationRequest.getRoom(), new ArrayList<>());
+                        doctorRegistrationRequest.getSpeciality(), doctorRegistrationRequest.getRoom(), Collections.emptyList());
         doctorRegistration(rootAdminSessionId, doctorRegistrationRequest, doctorRegistrationResponse);
 
         String doctorSessionId = login(doctorRegistrationRequest.getLogin(), doctorRegistrationRequest.getPassword(),

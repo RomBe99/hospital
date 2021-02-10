@@ -14,7 +14,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -25,7 +25,7 @@ import java.util.stream.Stream;
 public class DoctorControllerTest extends ControllerTestApi {
     private final static Function<DoctorRegistrationDtoRequest, DoctorRegistrationDtoResponse> DOCTOR_REQUEST_TO_RESPONSE_TRANSFORMER =
             dtoRequest -> new DoctorRegistrationDtoResponse(dtoRequest.getFirstName(), dtoRequest.getLastName(), dtoRequest.getPatronymic(),
-                    dtoRequest.getSpeciality(), dtoRequest.getRoom(), new ArrayList<>());
+                    dtoRequest.getSpeciality(), dtoRequest.getRoom(), Collections.emptyList());
     private final static Function<CreateMedicalCommissionDtoRequest, CreateMedicalCommissionDtoResponse> MEDICAL_COMMISSION_REQUEST_TO_RESPONSE_TRANSFORMER =
             dtoRequest -> {
                 List<Integer> doctorIds = dtoRequest.getDoctorIds();
@@ -38,29 +38,29 @@ public class DoctorControllerTest extends ControllerTestApi {
             };
     private final static Function<DoctorRegistrationDtoRequest, DoctorLoginDtoResponse> DOCTOR_REQUEST_TO_LOGIN_RESPONSE_TRANSFORMER =
             dtoRequest -> new DoctorLoginDtoResponse(dtoRequest.getFirstName(), dtoRequest.getLastName(), dtoRequest.getPatronymic(),
-                    dtoRequest.getSpeciality(), dtoRequest.getRoom(), new ArrayList<>());
+                    dtoRequest.getSpeciality(), dtoRequest.getRoom(), Collections.emptyList());
 
     @Test
     public void createAndDenyMedicalCommission() throws Exception {
         String rootAdminSessionId = loginRootAdmin();
 
         DoctorRegistrationDtoRequest doctorCreatedCommission =
-                new DoctorRegistrationDtoRequest(LocalDate.of(2020, 3, 1).toString(), LocalDate.of(2020, 3, 2).toString(), 15, new ArrayList<>(),
+                new DoctorRegistrationDtoRequest(LocalDate.of(2020, 3, 1).toString(), LocalDate.of(2020, 3, 2).toString(), 15, Collections.emptyList(),
                         "Есенгалий", "Скачков", null,
                         "Surgeon", "104", "EsengaliySkachkov56", "u15fv6vy5NvA");
 
         Map<DoctorRegistrationDtoRequest, DoctorRegistrationDtoResponse> doctorRegistrations = Stream.of(
                 doctorCreatedCommission,
-                new DoctorRegistrationDtoRequest(LocalDate.of(2020, 3, 1).toString(), LocalDate.of(2020, 3, 2).toString(), 15, new ArrayList<>(),
+                new DoctorRegistrationDtoRequest(LocalDate.of(2020, 3, 1).toString(), LocalDate.of(2020, 3, 2).toString(), 15, Collections.emptyList(),
                         "Епихария", "Козлова", null,
                         "Surgeon", "124", "EpihariyaKozlova75", "44XNaexggtgK"),
-                new DoctorRegistrationDtoRequest(LocalDate.of(2020, 3, 1).toString(), LocalDate.of(2020, 3, 2).toString(), 15, new ArrayList<>(),
+                new DoctorRegistrationDtoRequest(LocalDate.of(2020, 3, 1).toString(), LocalDate.of(2020, 3, 2).toString(), 15, Collections.emptyList(),
                         "Кариадна", "Шарыпова", null,
                         "Surgeon", "205", "KariadnaSharypova754", "1Ur1QSHY0lA0"),
-                new DoctorRegistrationDtoRequest(LocalDate.of(2020, 3, 1).toString(), LocalDate.of(2020, 3, 2).toString(), 15, new ArrayList<>(),
+                new DoctorRegistrationDtoRequest(LocalDate.of(2020, 3, 1).toString(), LocalDate.of(2020, 3, 2).toString(), 15, Collections.emptyList(),
                         "Риолана", "Садовничая", null,
                         "Surgeon", "261", "RiolanaSadovnichaya144", "nqBxvSnejwa3"),
-                new DoctorRegistrationDtoRequest(LocalDate.of(2020, 3, 1).toString(), LocalDate.of(2020, 3, 2).toString(), 15, new ArrayList<>(),
+                new DoctorRegistrationDtoRequest(LocalDate.of(2020, 3, 1).toString(), LocalDate.of(2020, 3, 2).toString(), 15, Collections.emptyList(),
                         "Хамнам", "Андрианов", null,
                         "Surgeon", "306", "HamnamAndrianov239", "6Ok5lrf2vdpI")
         ).collect(Collectors.toMap(r -> r, DOCTOR_REQUEST_TO_RESPONSE_TRANSFORMER));

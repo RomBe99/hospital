@@ -6,7 +6,7 @@ import net.thumbtack.hospital.model.user.Doctor;
 import net.thumbtack.hospital.model.user.Patient;
 import org.junit.Test;
 
-import java.util.ArrayList;
+import java.util.Collections;
 
 public class CommonDaoTest extends DaoTestApi {
     @Test
@@ -31,7 +31,7 @@ public class CommonDaoTest extends DaoTestApi {
     @Test
     public void getDoctorTypeByUserId() {
         Doctor doctor = new Doctor("RoudiKarpov62", "EaGV1fBkLxrX",
-                "Роуди", "Карпов", "Артемович", "306", "Therapist", new ArrayList<>());
+                "Роуди", "Карпов", "Артемович", "306", "Therapist", Collections.emptyList());
         insertUser(doctor);
 
         getUserTypeByUserId(doctor.getId(), UserType.DOCTOR.getType());

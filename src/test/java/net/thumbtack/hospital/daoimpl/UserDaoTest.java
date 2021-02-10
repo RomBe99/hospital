@@ -19,7 +19,7 @@ public class UserDaoTest extends DaoTestApi {
     @Test
     public void getDoctorInformationWithFullScheduleTest() {
         Doctor doctor = new Doctor("IvstaliyaMaksimova821", "VMWr9LVh5dVI",
-                "Ивсталия", "Валерьевна", "Максимова", "205", "Surgeon", new ArrayList<>());
+                "Ивсталия", "Валерьевна", "Максимова", "205", "Surgeon", Collections.emptyList());
         insertUser(doctor);
 
         int duration = 30;
@@ -49,7 +49,7 @@ public class UserDaoTest extends DaoTestApi {
     @Test
     public void getDoctorInformationWithFullScheduleAndAppointmentsTest() {
         Doctor doctor = new Doctor("IvstaliyaMaksimova821", "VMWr9LVh5dVI",
-                "Ивсталия", "Валерьевна", "Максимова", "205", "Surgeon", new ArrayList<>());
+                "Ивсталия", "Валерьевна", "Максимова", "205", "Surgeon", Collections.emptyList());
         insertUser(doctor);
 
         int duration = 30;
@@ -113,7 +113,7 @@ public class UserDaoTest extends DaoTestApi {
     @Test
     public void getDoctorInformationWithNonFullScheduleTest() {
         Doctor doctor = new Doctor("IvstaliyaMaksimova821", "VMWr9LVh5dVI",
-                "Ивсталия", "Валерьевна", "Максимова", "205", "Surgeon", new ArrayList<>());
+                "Ивсталия", "Валерьевна", "Максимова", "205", "Surgeon", Collections.emptyList());
         insertUser(doctor);
 
         int duration = 30;
