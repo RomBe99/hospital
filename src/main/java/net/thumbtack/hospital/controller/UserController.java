@@ -35,7 +35,7 @@ public class UserController {
     public static final String GET_PATIENT_INFORMATION_URL = "patients/{patientId}";
     public static final String GET_SETTINGS_URL = "settings";
 
-    private static final Predicate<String> needSchedule = s -> s != null && !s.isEmpty() && s.toLowerCase().equals("yes");
+    private static final Predicate<String> needSchedule = s -> s != null && !s.isEmpty() && s.equalsIgnoreCase("yes");
 
     private final UserService userService;
     private final CookieFactory cookieFactory;
@@ -61,7 +61,7 @@ public class UserController {
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public LoginUserDtoResponse login(@Valid @RequestBody LoginDtoRequest request, HttpServletResponse response) {
-        Cookie javaSessionId = cookieFactory.getCookieByCookieName(CookieFactory.JAVA_SESSION_ID);
+        Cookie javaSessionId = cookieFactory.produceCookie(CookieFactory.JAVA_SESSION_ID);
 
         LoginUserDtoResponse dtoResponse = userService.login(request, javaSessionId.getValue());
         response.addCookie(javaSessionId);

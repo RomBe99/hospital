@@ -54,7 +54,7 @@ public class PatientController {
                                                               HttpServletResponse response) {
         PatientRegistrationDtoResponse dtoResponse = patientService.patientRegistration(request);
 
-        Cookie javaSessionId = cookieFactory.getCookieByCookieName(CookieFactory.JAVA_SESSION_ID);
+        Cookie javaSessionId = cookieFactory.produceCookie(CookieFactory.JAVA_SESSION_ID);
 
         userService.login(new LoginDtoRequest(request.getLogin(), request.getPassword()), javaSessionId.getValue());
         response.addCookie(javaSessionId);

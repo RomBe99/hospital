@@ -21,7 +21,7 @@ public class CookieFactory {
         cookieGenerators.put(JAVA_SESSION_ID, () -> new Cookie(JAVA_SESSION_ID, UUID.randomUUID().toString()));
     }
 
-    public Cookie getCookieByCookieName(String cookieName) {
+    public Cookie produceCookie(String cookieName) {
         return cookieGenerators.get(cookieName).get();
     }
 }

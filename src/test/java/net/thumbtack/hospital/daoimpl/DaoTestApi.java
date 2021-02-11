@@ -59,7 +59,7 @@ public abstract class DaoTestApi {
     }
 
     public static String generateSessionId() {
-        return new CookieFactory().getCookieByCookieName(CookieFactory.JAVA_SESSION_ID).getValue();
+        return new CookieFactory().produceCookie(CookieFactory.JAVA_SESSION_ID).getValue();
     }
 
     // Template methods
