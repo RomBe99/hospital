@@ -1,6 +1,5 @@
 package net.thumbtack.hospital.server;
 
-import net.thumbtack.hospital.daoimpl.AdministratorDaoImpl;
 import net.thumbtack.hospital.util.error.ErrorMessageFactory;
 import net.thumbtack.hospital.util.mybatis.MyBatisUtils;
 import org.slf4j.Logger;
@@ -14,23 +13,20 @@ import org.springframework.context.annotation.PropertySource;
 @PropertySource("classpath:application.properties")
 @EnableConfigurationProperties(ErrorMessageFactory.class)
 public class HospitalApplication {
-    private static final Logger LOGGER = LoggerFactory.getLogger(AdministratorDaoImpl.class);
-    private static final String CLASS_NAME = HospitalApplication.class.getSimpleName();
+    private static final Logger LOGGER = LoggerFactory.getLogger(HospitalApplication.class);
 
     public static void main(String[] args) {
-        LOGGER.info(CLASS_NAME + ": application is running");
-
         try {
             MyBatisUtils.initConnection();
         } catch (RuntimeException ex) {
-            LOGGER.error(CLASS_NAME + ": Can't connect to database", ex);
-            LOGGER.info(CLASS_NAME + ": application terminated");
+            LOGGER.error("Can't connect to database", ex);
+            LOGGER.info("application terminated");
 
             return;
         }
 
         SpringApplication.run(HospitalApplication.class);
 
-        LOGGER.info(CLASS_NAME + ": application terminated");
+        LOGGER.info("application is ready to use");
     }
 }

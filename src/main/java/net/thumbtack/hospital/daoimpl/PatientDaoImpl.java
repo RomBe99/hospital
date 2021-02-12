@@ -16,13 +16,12 @@ import static net.thumbtack.hospital.util.mybatis.MyBatisUtils.getSession;
 @Component("PatientDaoImpl")
 public class PatientDaoImpl implements PatientDao {
     private static final Logger LOGGER = LoggerFactory.getLogger(PatientDaoImpl.class);
-    private static final String CLASS_NAME = PatientDaoImpl.class.getSimpleName();
 
     private final MapperFactory mapperFactory = new MapperFactory();
 
     @Override
     public void insertPatient(Patient patient) {
-        LOGGER.debug(CLASS_NAME + ": Insert patient = {}", patient);
+        LOGGER.debug("Insert patient = {}", patient);
 
         try (SqlSession session = getSession()) {
             try {
@@ -33,10 +32,10 @@ public class PatientDaoImpl implements PatientDao {
                 mapper.insertPatient(patient);
 
                 session.commit();
-                LOGGER.debug(CLASS_NAME + ": Patient = {} successfully inserted", patient);
+                LOGGER.debug("Patient = {} successfully inserted", patient);
             } catch (RuntimeException ex) {
                 session.rollback();
-                LOGGER.error(CLASS_NAME + ": Can't insert patient = {}", patient, ex);
+                LOGGER.error("Can't insert patient = {}", patient, ex);
 
                 throw ex;
             }
@@ -45,7 +44,7 @@ public class PatientDaoImpl implements PatientDao {
 
     @Override
     public void updatePatient(Patient patient, String newPassword) {
-        LOGGER.debug(CLASS_NAME + ": Update patient = {}", patient);
+        LOGGER.debug("Update patient = {}", patient);
 
         try (SqlSession session = getSession()) {
             try {
@@ -54,10 +53,10 @@ public class PatientDaoImpl implements PatientDao {
                 mapper.updatePatient(patient);
 
                 session.commit();
-                LOGGER.debug(CLASS_NAME + ": Patient = {} successfully updated", patient);
+                LOGGER.debug("Patient = {} successfully updated", patient);
             } catch (RuntimeException ex) {
                 session.rollback();
-                LOGGER.error(CLASS_NAME + ": Can't update patient = {}", patient, ex);
+                LOGGER.error("Can't update patient = {}", patient, ex);
 
                 throw ex;
             }
@@ -66,12 +65,12 @@ public class PatientDaoImpl implements PatientDao {
 
     @Override
     public Patient getPatientById(int id) {
-        LOGGER.debug(CLASS_NAME + ": Get patient with id = {}", id);
+        LOGGER.debug("Get patient with id = {}", id);
 
         try (SqlSession session = getSession()) {
             return session.selectOne("net.thumbtack.hospital.mapper.PatientMapper.getPatientById", id);
         } catch (RuntimeException ex) {
-            LOGGER.error(CLASS_NAME + ": Can't get patient with id = {}", id, ex);
+            LOGGER.error("Can't get patient with id = {}", id, ex);
 
             throw ex;
         }
@@ -79,14 +78,14 @@ public class PatientDaoImpl implements PatientDao {
 
     @Override
     public int hasPermissions(String sessionId) {
-        LOGGER.debug(CLASS_NAME + ": Checking patient permissions for session id = {}", sessionId);
+        LOGGER.debug("Checking patient permissions for session id = {}", sessionId);
 
         try (SqlSession session = getSession()) {
             final Integer userId = mapperFactory.getMapper(session, PatientMapper.class).hasPermissions(sessionId);
 
             return userId == null ? 0 : userId;
         } catch (RuntimeException ex) {
-            LOGGER.error(CLASS_NAME + ": Can't check patient permissions for session id = {}", sessionId, ex);
+            LOGGER.error("Can't check patient permissions for session id = {}", sessionId, ex);
 
             throw ex;
         }

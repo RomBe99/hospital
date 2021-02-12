@@ -18,13 +18,12 @@ import static net.thumbtack.hospital.util.mybatis.MyBatisUtils.getSession;
 @Component("DoctorDaoImpl")
 public class DoctorDaoImpl implements DoctorDao {
     private static final Logger LOGGER = LoggerFactory.getLogger(DoctorDaoImpl.class);
-    private static final String CLASS_NAME = DoctorDaoImpl.class.getSimpleName();
 
     private final MapperFactory mapperFactory = new MapperFactory();
 
     @Override
     public void insertDoctor(Doctor doctor) {
-        LOGGER.debug(CLASS_NAME + ": Insert doctor = {}", doctor);
+        LOGGER.debug("Insert doctor = {}", doctor);
 
         try (SqlSession session = getSession()) {
             try {
@@ -38,10 +37,10 @@ public class DoctorDaoImpl implements DoctorDao {
                 doctorMapper.insertDoctor(doctor.getId(), specialityId, cabinetId);
 
                 session.commit();
-                LOGGER.debug(CLASS_NAME + ": Doctor = {} successfully inserted", doctor);
+                LOGGER.debug("Doctor = {} successfully inserted", doctor);
             } catch (RuntimeException ex) {
                 session.rollback();
-                LOGGER.error(CLASS_NAME + ": Can't insert doctor = {}", doctor, ex);
+                LOGGER.error("Can't insert doctor = {}", doctor, ex);
 
                 throw ex;
             }
@@ -50,17 +49,17 @@ public class DoctorDaoImpl implements DoctorDao {
 
     @Override
     public void removeDoctor(int id) {
-        LOGGER.debug(CLASS_NAME + ": Delete doctor with id = {}", id);
+        LOGGER.debug("Delete doctor with id = {}", id);
 
         try (SqlSession session = getSession()) {
             try {
                 mapperFactory.getMapper(session, DoctorMapper.class).removeDoctor(id);
 
                 session.commit();
-                LOGGER.debug(CLASS_NAME + ": Doctor with id = {} successfully removed", id);
+                LOGGER.debug("Doctor with id = {} successfully removed", id);
             } catch (RuntimeException ex) {
                 session.rollback();
-                LOGGER.error(CLASS_NAME + ": Can't remove doctor with id = {}", id, ex);
+                LOGGER.error("Can't remove doctor with id = {}", id, ex);
 
                 throw ex;
             }
@@ -69,12 +68,12 @@ public class DoctorDaoImpl implements DoctorDao {
 
     @Override
     public Doctor getDoctorById(int id) {
-        LOGGER.debug(CLASS_NAME + ": Get doctor by id = {}", id);
+        LOGGER.debug("Get doctor by id = {}", id);
 
         try (SqlSession session = getSession()) {
             return session.selectOne("net.thumbtack.hospital.mapper.DoctorMapper.getDoctorById", id);
         } catch (RuntimeException ex) {
-            LOGGER.error(CLASS_NAME + ": Can't get doctor by id = {}", id, ex);
+            LOGGER.error("Can't get doctor by id = {}", id, ex);
 
             throw ex;
         }
@@ -82,7 +81,7 @@ public class DoctorDaoImpl implements DoctorDao {
 
     @Override
     public Doctor getRandomDoctorBySpeciality(String speciality) {
-        LOGGER.debug(CLASS_NAME + ": Get random doctor by speciality = {}", speciality);
+        LOGGER.debug("Get random doctor by speciality = {}", speciality);
 
         try (SqlSession session = getSession()) {
             final Integer specialityId = mapperFactory.getMapper(session, CommonMapper.class).getDoctorSpecialityIdByName(speciality);
@@ -97,7 +96,7 @@ public class DoctorDaoImpl implements DoctorDao {
 
             return doctors.get(index);
         } catch (RuntimeException ex) {
-            LOGGER.error(CLASS_NAME + ": Can't get random doctor by speciality = {}", speciality, ex);
+            LOGGER.error("Can't get random doctor by speciality = {}", speciality, ex);
 
             throw ex;
         }
@@ -105,14 +104,14 @@ public class DoctorDaoImpl implements DoctorDao {
 
     @Override
     public int hasPermissions(String sessionId) {
-        LOGGER.debug(CLASS_NAME + ": Checking doctor permissions for session id = {}", sessionId);
+        LOGGER.debug("Checking doctor permissions for session id = {}", sessionId);
 
         try (SqlSession session = getSession()) {
             final Integer userId = mapperFactory.getMapper(session, DoctorMapper.class).hasPermissions(sessionId);
 
             return userId == null ? 0 : userId;
         } catch (RuntimeException ex) {
-            LOGGER.error(CLASS_NAME + ": Can't check doctor permissions for session id = {}", sessionId, ex);
+            LOGGER.error("Can't check doctor permissions for session id = {}", sessionId, ex);
 
             throw ex;
         }

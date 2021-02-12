@@ -19,13 +19,12 @@ import static net.thumbtack.hospital.util.mybatis.MyBatisUtils.getSession;
 @Component("UserDaoImpl")
 public class UserDaoImpl implements UserDao {
     private static final Logger LOGGER = LoggerFactory.getLogger(UserDaoImpl.class);
-    private static final String CLASS_NAME = UserDaoImpl.class.getSimpleName();
 
     private final MapperFactory mapperFactory = new MapperFactory();
 
     @Override
     public final int login(String sessionId, String login, String password) {
-        LOGGER.debug(CLASS_NAME + ": Login user with login = {} and password = {}, session id = {}", login, password, sessionId);
+        LOGGER.debug("Login user with login = {} and password = {}, session id = {}", login, password, sessionId);
 
         try (SqlSession session = getSession()) {
             try {
@@ -34,13 +33,13 @@ public class UserDaoImpl implements UserDao {
                 mapper.loginUser(sessionId, userId);
 
                 session.commit();
-                LOGGER.debug(CLASS_NAME + ": User with login = {} and password = {}, id = {}, session id = {} successfully logged in",
+                LOGGER.debug("User with login = {} and password = {}, id = {}, session id = {} successfully logged in",
                         login, password, userId, session);
 
                 return userId;
             } catch (RuntimeException ex) {
                 session.rollback();
-                LOGGER.error(CLASS_NAME + ": Can't login user with login = {} and password = {}, session id = {}", login, password, sessionId);
+                LOGGER.error("Can't login user with login = {} and password = {}, session id = {}", login, password, sessionId);
 
                 throw ex;
             }
@@ -49,17 +48,17 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public final void logout(String sessionId) {
-        LOGGER.debug(CLASS_NAME + ": Logout user with session id = {}", sessionId);
+        LOGGER.debug("Logout user with session id = {}", sessionId);
 
         try (SqlSession session = getSession()) {
             try {
                 mapperFactory.getMapper(session, UserMapper.class).logoutUser(sessionId);
 
                 session.commit();
-                LOGGER.debug(CLASS_NAME + ": User with session id = {} successfully logout", sessionId);
+                LOGGER.debug("User with session id = {} successfully logout", sessionId);
             } catch (RuntimeException ex) {
                 session.rollback();
-                LOGGER.error(CLASS_NAME + ": User with session id = {} can't logout", sessionId, ex);
+                LOGGER.error("User with session id = {} can't logout", sessionId, ex);
 
                 throw ex;
             }
@@ -68,12 +67,12 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public Doctor getDoctorInformationWithoutSchedule(int doctorId) {
-        LOGGER.debug(CLASS_NAME + ": Get information by doctor id = {}", doctorId);
+        LOGGER.debug("Get information by doctor id = {}", doctorId);
 
         try (SqlSession session = getSession()) {
             return session.selectOne("net.thumbtack.hospital.mapper.UserMapper.getDoctorsInformationWithoutScheduleById", doctorId);
         } catch (RuntimeException ex) {
-            LOGGER.error(CLASS_NAME + ": Can't get information by doctor id = {}", doctorId, ex);
+            LOGGER.error("Can't get information by doctor id = {}", doctorId, ex);
 
             throw ex;
         }
@@ -81,12 +80,12 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public List<Doctor> getDoctorsBySpecialityWithoutSchedule(String specialty) {
-        LOGGER.debug(CLASS_NAME + ": Get information about doctors who specialty is {}", specialty);
+        LOGGER.debug("Get information about doctors who specialty is {}", specialty);
 
         try (SqlSession session = getSession()) {
             return session.selectList("net.thumbtack.hospital.mapper.UserMapper.getDoctorsInformationWithoutScheduleBySpecialty", specialty);
         } catch (RuntimeException ex) {
-            LOGGER.error(CLASS_NAME + ": Can't get information about doctors who specialty is {}", specialty, ex);
+            LOGGER.error("Can't get information about doctors who specialty is {}", specialty, ex);
 
             throw ex;
         }
@@ -94,14 +93,14 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public int hasPermissions(String sessionId) {
-        LOGGER.debug(CLASS_NAME + ": Checking user permissions for session id = {}", sessionId);
+        LOGGER.debug("Checking user permissions for session id = {}", sessionId);
 
         try (SqlSession session = getSession()) {
             final Integer userId = mapperFactory.getMapper(session, UserMapper.class).hasPermissions(sessionId);
 
             return userId == null ? 0 : userId;
         } catch (RuntimeException ex) {
-            LOGGER.error(CLASS_NAME + ": Can't check user permissions for session id = {}", sessionId, ex);
+            LOGGER.error("Can't check user permissions for session id = {}", sessionId, ex);
 
             throw ex;
         }
@@ -109,7 +108,7 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public Doctor getDoctorInformationWithSchedule(int patientId, int doctorId, LocalDate startDate, LocalDate endDate) {
-        LOGGER.debug(CLASS_NAME + ": Get information about doctor = {} for patient id = {} with schedule where start date = {} to end date = {}",
+        LOGGER.debug("Get information about doctor = {} for patient id = {} with schedule where start date = {} to end date = {}",
                 doctorId, patientId, startDate, endDate);
 
         final Map<String, Object> params = new HashMap<>();
@@ -122,7 +121,7 @@ public class UserDaoImpl implements UserDao {
         try (SqlSession session = getSession()) {
             return session.selectOne("net.thumbtack.hospital.mapper.UserMapper.getDoctorsInformationWithSchedule", params);
         } catch (RuntimeException ex) {
-            LOGGER.error(CLASS_NAME + ": Can't get information about doctor = {} for patient id = {} with schedule where start date = {} to end date = {}",
+            LOGGER.error("Can't get information about doctor = {} for patient id = {} with schedule where start date = {} to end date = {}",
                     doctorId, patientId, startDate, endDate);
 
             throw ex;
@@ -131,7 +130,7 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public List<Doctor> getDoctorsInformationWithSchedule(int patientId, String specialty, LocalDate startDate, LocalDate endDate) {
-        LOGGER.debug(CLASS_NAME + ": Get information about all doctors with speciality = {} for patient id = {} with schedule where start date = {} to end date = {}",
+        LOGGER.debug("Get information about all doctors with speciality = {} for patient id = {} with schedule where start date = {} to end date = {}",
                 specialty, patientId, startDate, endDate);
 
         final Map<String, Object> params = new HashMap<>();
@@ -144,7 +143,7 @@ public class UserDaoImpl implements UserDao {
         try (SqlSession session = getSession()) {
             return session.selectList("net.thumbtack.hospital.mapper.UserMapper.getDoctorsInformationWithSchedule", params);
         } catch (RuntimeException ex) {
-            LOGGER.error(CLASS_NAME + ": Can't get information about all doctors with speciality = {} for patient id = {} with schedule where start date = {} to end date = {}",
+            LOGGER.error("Can't get information about all doctors with speciality = {} for patient id = {} with schedule where start date = {} to end date = {}",
                     specialty, patientId, startDate, endDate);
 
             throw ex;

@@ -16,13 +16,12 @@ import static net.thumbtack.hospital.util.mybatis.MyBatisUtils.getSession;
 @Component("AdministratorDaoImpl")
 public class AdministratorDaoImpl implements AdministratorDao {
     private static final Logger LOGGER = LoggerFactory.getLogger(AdministratorDaoImpl.class);
-    private static final String CLASS_NAME = AdministratorDaoImpl.class.getSimpleName();
 
     private final MapperFactory mapperFactory = new MapperFactory();
 
     @Override
     public void insertAdministrator(Administrator administrator) {
-        LOGGER.debug(CLASS_NAME + ": Insert administrator = {}", administrator);
+        LOGGER.debug("Insert administrator = {}", administrator);
 
         try (SqlSession session = getSession()) {
             try {
@@ -33,10 +32,10 @@ public class AdministratorDaoImpl implements AdministratorDao {
                 mapper.insertAdministrator(administrator);
 
                 session.commit();
-                LOGGER.debug(CLASS_NAME + ": Administrator = {} successfully inserted", administrator);
+                LOGGER.debug("Administrator = {} successfully inserted", administrator);
             } catch (RuntimeException ex) {
                 session.rollback();
-                LOGGER.error(CLASS_NAME + ": Can't insert administrator = {}", administrator, ex);
+                LOGGER.error("Can't insert administrator = {}", administrator, ex);
 
                 throw ex;
             }
@@ -45,7 +44,7 @@ public class AdministratorDaoImpl implements AdministratorDao {
 
     @Override
     public void updateAdministrator(Administrator administrator, String newPassword) {
-        LOGGER.debug(CLASS_NAME + ": Update administrator = {}", administrator);
+        LOGGER.debug("Update administrator = {}", administrator);
 
         try (SqlSession session = getSession()) {
             try {
@@ -54,10 +53,10 @@ public class AdministratorDaoImpl implements AdministratorDao {
                 mapper.updateAdministrator(administrator);
 
                 session.commit();
-                LOGGER.debug(CLASS_NAME + ": Administrator = {} successfully updated", administrator);
+                LOGGER.debug("Administrator = {} successfully updated", administrator);
             } catch (RuntimeException ex) {
                 session.rollback();
-                LOGGER.error(CLASS_NAME + ": Can't update administrator = {}", administrator, ex);
+                LOGGER.error("Can't update administrator = {}", administrator, ex);
 
                 throw ex;
             }
@@ -66,12 +65,12 @@ public class AdministratorDaoImpl implements AdministratorDao {
 
     @Override
     public Administrator getAdministratorById(int id) {
-        LOGGER.debug(CLASS_NAME + ": Get administrator with id = {}", id);
+        LOGGER.debug("Get administrator with id = {}", id);
 
         try (SqlSession session = getSession()) {
             return session.selectOne("net.thumbtack.hospital.mapper.AdministratorMapper.getAdminById", id);
         } catch (RuntimeException ex) {
-            LOGGER.error(CLASS_NAME + ": Can't get administrator with id = {}", id, ex);
+            LOGGER.error("Can't get administrator with id = {}", id, ex);
 
             throw ex;
         }
@@ -79,17 +78,17 @@ public class AdministratorDaoImpl implements AdministratorDao {
 
     @Override
     public void removeAdministrator(int id) {
-        LOGGER.debug(CLASS_NAME + ": Remove administrator with id = {}", id);
+        LOGGER.debug("Remove administrator with id = {}", id);
 
         try (SqlSession session = getSession()) {
             try {
                 mapperFactory.getMapper(session, AdministratorMapper.class).removeAdministratorById(id);
 
                 session.commit();
-                LOGGER.debug(CLASS_NAME + ": Administrator with id = {} successfully removed", id);
+                LOGGER.debug("Administrator with id = {} successfully removed", id);
             } catch (RuntimeException ex) {
                 session.rollback();
-                LOGGER.error(CLASS_NAME + ": Can't remove administrator with id = {}", id, ex);
+                LOGGER.error("Can't remove administrator with id = {}", id, ex);
 
                 throw ex;
             }
@@ -98,14 +97,14 @@ public class AdministratorDaoImpl implements AdministratorDao {
 
     @Override
     public int hasPermissions(String sessionId) {
-        LOGGER.debug(CLASS_NAME + ": Checking administrator permissions for session id = {}", sessionId);
+        LOGGER.debug("Checking administrator permissions for session id = {}", sessionId);
 
         try (SqlSession session = getSession()) {
             final Integer userId = mapperFactory.getMapper(session, AdministratorMapper.class).hasPermissions(sessionId);
 
             return userId == null ? 0 : userId;
         } catch (RuntimeException ex) {
-            LOGGER.error(CLASS_NAME + ": Can't check administrator permissions for session id = {}", sessionId, ex);
+            LOGGER.error("Can't check administrator permissions for session id = {}", sessionId, ex);
 
             throw ex;
         }

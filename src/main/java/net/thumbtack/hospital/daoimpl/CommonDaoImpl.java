@@ -17,18 +17,17 @@ import static net.thumbtack.hospital.util.mybatis.MyBatisUtils.getSession;
 @Component("CommonDaoImpl")
 public class CommonDaoImpl implements CommonDao {
     private static final Logger LOGGER = LoggerFactory.getLogger(CommonDaoImpl.class);
-    private static final String CLASS_NAME = CommonDaoImpl.class.getSimpleName();
 
     private final MapperFactory mapperFactory = new MapperFactory();
 
     @Override
     public String getUserTypeByUserId(int userId) {
-        LOGGER.debug(CLASS_NAME + ": Get user type by user id = {}", userId);
+        LOGGER.debug("Get user type by user id = {}", userId);
 
         try (SqlSession session = getSession()) {
             return mapperFactory.getMapper(session, CommonMapper.class).getUserTypeByUserId(userId);
         } catch (RuntimeException ex) {
-            LOGGER.error(CLASS_NAME + ": Can't get user type by user id  = {}", userId, ex);
+            LOGGER.error("Can't get user type by user id  = {}", userId, ex);
 
             throw ex;
         }
@@ -36,7 +35,7 @@ public class CommonDaoImpl implements CommonDao {
 
     @Override
     public boolean containsAppointments(int doctorId, LocalDate dateStart, LocalDate dateEnd) {
-        LOGGER.debug(CLASS_NAME + ": Check is an appointment to doctor = {} from {} to {}", doctorId, dateStart, dateEnd);
+        LOGGER.debug("Check is an appointment to doctor = {} from {} to {}", doctorId, dateStart, dateEnd);
 
         try (SqlSession session = getSession()) {
             final Map<String, Object> params = new HashMap<>();
@@ -46,7 +45,7 @@ public class CommonDaoImpl implements CommonDao {
 
             return session.selectOne("net.thumbtack.hospital.mapper.CommonMapper.containsAppointments", params);
         } catch (RuntimeException ex) {
-            LOGGER.error(CLASS_NAME + ": Can't check is an appointment to doctor = {} from {} to {}",
+            LOGGER.error("Can't check is an appointment to doctor = {} from {} to {}",
                     doctorId, dateStart, dateEnd, ex);
 
             throw ex;
@@ -55,12 +54,12 @@ public class CommonDaoImpl implements CommonDao {
 
     @Override
     public boolean containsAppointment(String ticketTitle) {
-        LOGGER.debug(CLASS_NAME + ": Check is an appointment to ticket = {}", ticketTitle);
+        LOGGER.debug("Check is an appointment to ticket = {}", ticketTitle);
 
         try (SqlSession session = getSession()) {
             return mapperFactory.getMapper(session, CommonMapper.class).containsAppointment(ticketTitle);
         } catch (RuntimeException ex) {
-            LOGGER.error(CLASS_NAME + ": Can't check appointment to ticket = {}", ticketTitle, ex);
+            LOGGER.error("Can't check appointment to ticket = {}", ticketTitle, ex);
 
             throw ex;
         }
