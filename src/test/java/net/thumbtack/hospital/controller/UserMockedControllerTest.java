@@ -21,7 +21,7 @@ import java.util.Arrays;
 import java.util.List;
 
 @RunWith(SpringRunner.class)
-public class UserControllerTest extends ControllerTestApi {
+public class UserMockedControllerTest extends MockedControllerTestApi {
     @Autowired
     private Constraints constraints;
 

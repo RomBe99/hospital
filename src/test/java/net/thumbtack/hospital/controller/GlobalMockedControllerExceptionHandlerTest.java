@@ -18,14 +18,13 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import javax.servlet.http.Cookie;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.UUID;
 import java.util.function.BiFunction;
 
 @RunWith(SpringRunner.class)
-public class GlobalControllerExceptionHandlerTest extends ControllerTestApi {
+public class GlobalMockedControllerExceptionHandlerTest extends MockedControllerTestApi {
     @Autowired
     private ErrorMessageFactory errorMessageFactory;
     private final BiFunction<String, String, ErrorDtoResponse> genErrorResponse = (String errCode, String field) ->

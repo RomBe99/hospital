@@ -32,7 +32,7 @@ import java.time.LocalTime;
 import java.util.*;
 
 @RunWith(SpringRunner.class)
-public class PatientControllerTest extends ControllerTestApi {
+public class PatientMockedControllerTest extends MockedControllerTestApi {
     @Test
     public void patientRegistrationTest() throws Exception {
         PatientRegistrationDtoRequest patientRegistrationRequest =

@@ -21,7 +21,7 @@ import java.time.LocalTime;
 import java.util.*;
 
 @RunWith(SpringRunner.class)
-public class AdministratorControllerTest extends ControllerTestApi {
+public class AdministratorMockedControllerTest extends MockedControllerTestApi {
     @Test
     public void administratorRegistrationTest() throws Exception {
         String rootAdminSessionId = loginRootAdmin();

@@ -46,7 +46,7 @@ import java.util.stream.Collectors;
 
 @SpringBootTest(classes = HospitalApplication.class)
 @AutoConfigureMockMvc
-public abstract class ControllerTestApi {
+public abstract class MockedControllerTestApi {
     @Autowired
     protected MockMvc mvc;
     @Autowired

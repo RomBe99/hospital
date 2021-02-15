@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @RunWith(SpringRunner.class)
-public class DoctorControllerTest extends ControllerTestApi {
+public class DoctorMockedControllerTest extends MockedControllerTestApi {
     private final static Function<DoctorRegistrationDtoRequest, DoctorRegistrationDtoResponse> DOCTOR_REQUEST_TO_RESPONSE_TRANSFORMER =
             dtoRequest -> new DoctorRegistrationDtoResponse(dtoRequest.getFirstName(), dtoRequest.getLastName(), dtoRequest.getPatronymic(),
                     dtoRequest.getSpeciality(), dtoRequest.getRoom(), Collections.emptyList());
