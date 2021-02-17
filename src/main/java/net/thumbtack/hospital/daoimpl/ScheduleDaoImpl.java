@@ -8,14 +8,14 @@ import net.thumbtack.hospital.model.ticket.TicketToDoctor;
 import org.apache.ibatis.session.SqlSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
 import java.util.List;
 
 import static net.thumbtack.hospital.util.mybatis.MyBatisUtils.getSession;
 
-@Component("ScheduleDaoImpl")
+@Repository("ScheduleDaoImpl")
 public class ScheduleDaoImpl implements ScheduleDao {
     private static final Logger LOGGER = LoggerFactory.getLogger(ScheduleDaoImpl.class);
 

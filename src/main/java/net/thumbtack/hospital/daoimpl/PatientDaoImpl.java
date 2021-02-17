@@ -9,11 +9,11 @@ import net.thumbtack.hospital.model.user.Patient;
 import org.apache.ibatis.session.SqlSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 import static net.thumbtack.hospital.util.mybatis.MyBatisUtils.getSession;
 
-@Component("PatientDaoImpl")
+@Repository("PatientDaoImpl")
 public class PatientDaoImpl implements PatientDao {
     private static final Logger LOGGER = LoggerFactory.getLogger(PatientDaoImpl.class);
 

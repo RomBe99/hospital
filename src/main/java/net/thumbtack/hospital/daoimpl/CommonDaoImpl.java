@@ -6,7 +6,7 @@ import net.thumbtack.hospital.mapper.MapperFactory;
 import org.apache.ibatis.session.SqlSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
 import java.util.HashMap;
@@ -14,7 +14,7 @@ import java.util.Map;
 
 import static net.thumbtack.hospital.util.mybatis.MyBatisUtils.getSession;
 
-@Component("CommonDaoImpl")
+@Repository("CommonDaoImpl")
 public class CommonDaoImpl implements CommonDao {
     private static final Logger LOGGER = LoggerFactory.getLogger(CommonDaoImpl.class);
 
