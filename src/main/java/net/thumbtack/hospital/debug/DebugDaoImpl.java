@@ -1,6 +1,5 @@
 package net.thumbtack.hospital.debug;
 
-import net.thumbtack.hospital.mapper.MapperFactory;
 import net.thumbtack.hospital.model.schedule.ScheduleCell;
 import net.thumbtack.hospital.model.ticket.TicketToMedicalCommission;
 import org.apache.ibatis.session.SqlSession;
@@ -20,15 +19,14 @@ import static net.thumbtack.hospital.util.mybatis.MyBatisUtils.getSession;
 public class DebugDaoImpl implements DebugDao {
     private static final Logger LOGGER = LoggerFactory.getLogger(DebugDaoImpl.class);
 
-    private final MapperFactory mapperFactory = new MapperFactory();
-
     @Override
     public void clearUsers() {
         try (SqlSession session = getSession()) {
             LOGGER.debug("Clear all users from database");
 
             try {
-                mapperFactory.getMapper(session, DebugMapper.class).clearUsers();
+                session.getMapper(DebugMapper.class).clearUsers();
+
                 session.commit();
                 LOGGER.debug("All users is cleared");
             } catch (RuntimeException ex) {
@@ -45,7 +43,8 @@ public class DebugDaoImpl implements DebugDao {
             LOGGER.debug("Clear all administrators from database");
 
             try {
-                mapperFactory.getMapper(session, DebugMapper.class).clearAdministrators();
+                session.getMapper(DebugMapper.class).clearAdministrators();
+
                 session.commit();
                 LOGGER.debug("All administrators is cleared");
             } catch (RuntimeException ex) {
@@ -62,7 +61,8 @@ public class DebugDaoImpl implements DebugDao {
             LOGGER.debug("Clear all doctors from database");
 
             try {
-                mapperFactory.getMapper(session, DebugMapper.class).clearDoctors();
+                session.getMapper(DebugMapper.class).clearDoctors();
+
                 session.commit();
                 LOGGER.debug("All doctors is cleared");
             } catch (RuntimeException ex) {
@@ -79,7 +79,8 @@ public class DebugDaoImpl implements DebugDao {
             LOGGER.debug("Clear all patients from database");
 
             try {
-                mapperFactory.getMapper(session, DebugMapper.class).clearPatients();
+                session.getMapper(DebugMapper.class).clearPatients();
+
                 session.commit();
                 LOGGER.debug("All patients is cleared");
             } catch (RuntimeException ex) {
@@ -96,7 +97,8 @@ public class DebugDaoImpl implements DebugDao {
             LOGGER.debug("Clear all logged in users from database");
 
             try {
-                mapperFactory.getMapper(session, DebugMapper.class).clearLoggedInUsers();
+                session.getMapper(DebugMapper.class).clearLoggedInUsers();
+
                 session.commit();
                 LOGGER.debug("All logged in users is cleared");
             } catch (RuntimeException ex) {
@@ -113,7 +115,8 @@ public class DebugDaoImpl implements DebugDao {
             LOGGER.debug("Clear all schedule cells from database");
 
             try {
-                mapperFactory.getMapper(session, DebugMapper.class).clearScheduleCells();
+                session.getMapper(DebugMapper.class).clearScheduleCells();
+
                 session.commit();
                 LOGGER.debug("All schedule cells is cleared");
             } catch (RuntimeException ex) {
@@ -130,7 +133,8 @@ public class DebugDaoImpl implements DebugDao {
             LOGGER.debug("Clear all time cells from database");
 
             try {
-                mapperFactory.getMapper(session, DebugMapper.class).clearTimeCells();
+                session.getMapper(DebugMapper.class).clearTimeCells();
+
                 session.commit();
                 LOGGER.debug("All time cells is cleared");
             } catch (RuntimeException ex) {
@@ -147,7 +151,8 @@ public class DebugDaoImpl implements DebugDao {
             LOGGER.debug("Clear all medical commissions from database");
 
             try {
-                mapperFactory.getMapper(session, DebugMapper.class).clearMedicalCommissions();
+                session.getMapper(DebugMapper.class).clearMedicalCommissions();
+
                 session.commit();
                 LOGGER.debug("All medical commissions is cleared");
             } catch (RuntimeException ex) {
@@ -164,7 +169,8 @@ public class DebugDaoImpl implements DebugDao {
             LOGGER.debug("Clear all commissions doctors from database");
 
             try {
-                mapperFactory.getMapper(session, DebugMapper.class).clearCommissionDoctors();
+                session.getMapper(DebugMapper.class).clearCommissionDoctors();
+
                 session.commit();
                 LOGGER.debug("All commissions doctors is cleared");
             } catch (RuntimeException ex) {
@@ -180,7 +186,7 @@ public class DebugDaoImpl implements DebugDao {
         LOGGER.debug("Checking time cell with ticket title = {} for patient = {} record", ticketTitle, patientId);
 
         try (SqlSession session = getSession()) {
-            return mapperFactory.getMapper(session, DebugMapper.class).containsPatientInTimeCell(patientId, ticketTitle);
+            return session.getMapper(DebugMapper.class).containsPatientInTimeCell(patientId, ticketTitle);
         } catch (RuntimeException ex) {
             LOGGER.error("Can't check time cell with ticket title = {} for patient = {} record", ticketTitle, patientId, ex);
 

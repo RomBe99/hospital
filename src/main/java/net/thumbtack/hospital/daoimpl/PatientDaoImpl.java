@@ -2,7 +2,6 @@ package net.thumbtack.hospital.daoimpl;
 
 import net.thumbtack.hospital.dao.PatientDao;
 import net.thumbtack.hospital.mapper.CommonMapper;
-import net.thumbtack.hospital.mapper.MapperFactory;
 import net.thumbtack.hospital.mapper.PatientMapper;
 import net.thumbtack.hospital.mapper.UserType;
 import net.thumbtack.hospital.model.user.Patient;
@@ -17,17 +16,15 @@ import static net.thumbtack.hospital.util.mybatis.MyBatisUtils.getSession;
 public class PatientDaoImpl implements PatientDao {
     private static final Logger LOGGER = LoggerFactory.getLogger(PatientDaoImpl.class);
 
-    private final MapperFactory mapperFactory = new MapperFactory();
-
     @Override
     public void insertPatient(Patient patient) {
         LOGGER.debug("Insert patient = {}", patient);
 
         try (SqlSession session = getSession()) {
             try {
-                final Integer userTypeId = mapperFactory.getMapper(session, CommonMapper.class).getUserTypeId(UserType.PATIENT.getType());
+                final Integer userTypeId = session.getMapper(CommonMapper.class).getUserTypeId(UserType.PATIENT.getType());
 
-                PatientMapper mapper = mapperFactory.getMapper(session, PatientMapper.class);
+                PatientMapper mapper = session.getMapper(PatientMapper.class);
                 mapper.insertUser(patient, userTypeId);
                 mapper.insertPatient(patient);
 
@@ -48,7 +45,7 @@ public class PatientDaoImpl implements PatientDao {
 
         try (SqlSession session = getSession()) {
             try {
-                final PatientMapper mapper = mapperFactory.getMapper(session, PatientMapper.class);
+                final PatientMapper mapper = session.getMapper(PatientMapper.class);
                 mapper.updateUser(patient, newPassword);
                 mapper.updatePatient(patient);
 
@@ -81,7 +78,7 @@ public class PatientDaoImpl implements PatientDao {
         LOGGER.debug("Checking patient permissions for session id = {}", sessionId);
 
         try (SqlSession session = getSession()) {
-            final Integer userId = mapperFactory.getMapper(session, PatientMapper.class).hasPermissions(sessionId);
+            final Integer userId = session.getMapper(PatientMapper.class).hasPermissions(sessionId);
 
             return userId == null ? 0 : userId;
         } catch (RuntimeException ex) {

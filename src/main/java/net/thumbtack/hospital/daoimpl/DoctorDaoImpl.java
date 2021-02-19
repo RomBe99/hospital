@@ -3,7 +3,6 @@ package net.thumbtack.hospital.daoimpl;
 import net.thumbtack.hospital.dao.DoctorDao;
 import net.thumbtack.hospital.mapper.CommonMapper;
 import net.thumbtack.hospital.mapper.DoctorMapper;
-import net.thumbtack.hospital.mapper.MapperFactory;
 import net.thumbtack.hospital.mapper.UserType;
 import net.thumbtack.hospital.model.user.Doctor;
 import org.apache.ibatis.session.SqlSession;
@@ -19,20 +18,18 @@ import static net.thumbtack.hospital.util.mybatis.MyBatisUtils.getSession;
 public class DoctorDaoImpl implements DoctorDao {
     private static final Logger LOGGER = LoggerFactory.getLogger(DoctorDaoImpl.class);
 
-    private final MapperFactory mapperFactory = new MapperFactory();
-
     @Override
     public void insertDoctor(Doctor doctor) {
         LOGGER.debug("Insert doctor = {}", doctor);
 
         try (SqlSession session = getSession()) {
             try {
-                final CommonMapper commonMapper = mapperFactory.getMapper(session, CommonMapper.class);
+                final CommonMapper commonMapper = session.getMapper(CommonMapper.class);
                 final Integer userTypeId = commonMapper.getUserTypeId(UserType.DOCTOR.getType());
                 final Integer cabinetId = commonMapper.getCabinetIdByName(doctor.getCabinet());
                 final Integer specialityId = commonMapper.getDoctorSpecialityIdByName(doctor.getSpecialty());
 
-                DoctorMapper doctorMapper = mapperFactory.getMapper(session, DoctorMapper.class);
+                DoctorMapper doctorMapper = session.getMapper(DoctorMapper.class);
                 doctorMapper.insertUser(doctor, userTypeId);
                 doctorMapper.insertDoctor(doctor.getId(), specialityId, cabinetId);
 
@@ -53,7 +50,7 @@ public class DoctorDaoImpl implements DoctorDao {
 
         try (SqlSession session = getSession()) {
             try {
-                mapperFactory.getMapper(session, DoctorMapper.class).removeDoctor(id);
+                session.getMapper(DoctorMapper.class).removeDoctor(id);
 
                 session.commit();
                 LOGGER.debug("Doctor with id = {} successfully removed", id);
@@ -84,7 +81,7 @@ public class DoctorDaoImpl implements DoctorDao {
         LOGGER.debug("Get random doctor by speciality = {}", speciality);
 
         try (SqlSession session = getSession()) {
-            final Integer specialityId = mapperFactory.getMapper(session, CommonMapper.class).getDoctorSpecialityIdByName(speciality);
+            final Integer specialityId = session.getMapper(CommonMapper.class).getDoctorSpecialityIdByName(speciality);
 
             final List<Doctor> doctors = session.selectList("net.thumbtack.hospital.mapper.DoctorMapper.getDoctorsBySpecialityId", specialityId);
 
@@ -107,7 +104,7 @@ public class DoctorDaoImpl implements DoctorDao {
         LOGGER.debug("Checking doctor permissions for session id = {}", sessionId);
 
         try (SqlSession session = getSession()) {
-            final Integer userId = mapperFactory.getMapper(session, DoctorMapper.class).hasPermissions(sessionId);
+            final Integer userId = session.getMapper(DoctorMapper.class).hasPermissions(sessionId);
 
             return userId == null ? 0 : userId;
         } catch (RuntimeException ex) {

@@ -1,7 +1,6 @@
 package net.thumbtack.hospital.daoimpl;
 
 import net.thumbtack.hospital.dao.MedicalCommissionDao;
-import net.thumbtack.hospital.mapper.MapperFactory;
 import net.thumbtack.hospital.mapper.MedicalCommissionMapper;
 import net.thumbtack.hospital.model.ticket.TicketToMedicalCommission;
 import org.apache.ibatis.session.SqlSession;
@@ -17,15 +16,13 @@ import static net.thumbtack.hospital.util.mybatis.MyBatisUtils.getSession;
 public class MedicalCommissionDaoImpl implements MedicalCommissionDao {
     private static final Logger LOGGER = LoggerFactory.getLogger(MedicalCommissionDaoImpl.class);
 
-    private final MapperFactory mapperFactory = new MapperFactory();
-
     @Override
     public void createMedicalCommission(TicketToMedicalCommission ticket) {
         LOGGER.debug("Creating medical commission = {}", ticket);
 
         try (SqlSession session = getSession()) {
             try {
-                final MedicalCommissionMapper mapper = mapperFactory.getMapper(session, MedicalCommissionMapper.class);
+                final MedicalCommissionMapper mapper = session.getMapper(MedicalCommissionMapper.class);
                 mapper.createMedicalCommission(ticket);
                 mapper.insertDoctorsInMedicalCommission(ticket.getId(), ticket.getDoctorIds());
 
@@ -46,7 +43,7 @@ public class MedicalCommissionDaoImpl implements MedicalCommissionDao {
 
         try (SqlSession session = getSession()) {
             try {
-                mapperFactory.getMapper(session, MedicalCommissionMapper.class).denyMedicalCommission(ticketTitle);
+                session.getMapper(MedicalCommissionMapper.class).denyMedicalCommission(ticketTitle);
 
                 session.commit();
                 LOGGER.debug("Successfully deny ticket with title = {} to commission", ticketTitle);

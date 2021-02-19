@@ -1,7 +1,6 @@
 package net.thumbtack.hospital.daoimpl;
 
 import net.thumbtack.hospital.dao.UserDao;
-import net.thumbtack.hospital.mapper.MapperFactory;
 import net.thumbtack.hospital.mapper.UserMapper;
 import net.thumbtack.hospital.model.user.Doctor;
 import org.apache.ibatis.session.SqlSession;
@@ -20,15 +19,13 @@ import static net.thumbtack.hospital.util.mybatis.MyBatisUtils.getSession;
 public class UserDaoImpl implements UserDao {
     private static final Logger LOGGER = LoggerFactory.getLogger(UserDaoImpl.class);
 
-    private final MapperFactory mapperFactory = new MapperFactory();
-
     @Override
     public final int login(String sessionId, String login, String password) {
         LOGGER.debug("Login user with login = {} and password = {}, session id = {}", login, password, sessionId);
 
         try (SqlSession session = getSession()) {
             try {
-                final UserMapper mapper = mapperFactory.getMapper(session, UserMapper.class);
+                final UserMapper mapper = session.getMapper(UserMapper.class);
                 final Integer userId = mapper.getUserIdByLoginAndPassword(login, password);
                 mapper.loginUser(sessionId, userId);
 
@@ -52,7 +49,7 @@ public class UserDaoImpl implements UserDao {
 
         try (SqlSession session = getSession()) {
             try {
-                mapperFactory.getMapper(session, UserMapper.class).logoutUser(sessionId);
+                session.getMapper(UserMapper.class).logoutUser(sessionId);
 
                 session.commit();
                 LOGGER.debug("User with session id = {} successfully logout", sessionId);
@@ -96,7 +93,7 @@ public class UserDaoImpl implements UserDao {
         LOGGER.debug("Checking user permissions for session id = {}", sessionId);
 
         try (SqlSession session = getSession()) {
-            final Integer userId = mapperFactory.getMapper(session, UserMapper.class).hasPermissions(sessionId);
+            final Integer userId = session.getMapper(UserMapper.class).hasPermissions(sessionId);
 
             return userId == null ? 0 : userId;
         } catch (RuntimeException ex) {

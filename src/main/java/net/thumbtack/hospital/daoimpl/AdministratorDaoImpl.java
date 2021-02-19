@@ -3,7 +3,6 @@ package net.thumbtack.hospital.daoimpl;
 import net.thumbtack.hospital.dao.AdministratorDao;
 import net.thumbtack.hospital.mapper.AdministratorMapper;
 import net.thumbtack.hospital.mapper.CommonMapper;
-import net.thumbtack.hospital.mapper.MapperFactory;
 import net.thumbtack.hospital.mapper.UserType;
 import net.thumbtack.hospital.model.user.Administrator;
 import org.apache.ibatis.session.SqlSession;
@@ -17,17 +16,15 @@ import static net.thumbtack.hospital.util.mybatis.MyBatisUtils.getSession;
 public class AdministratorDaoImpl implements AdministratorDao {
     private static final Logger LOGGER = LoggerFactory.getLogger(AdministratorDaoImpl.class);
 
-    private final MapperFactory mapperFactory = new MapperFactory();
-
     @Override
     public void insertAdministrator(Administrator administrator) {
         LOGGER.debug("Insert administrator = {}", administrator);
 
         try (SqlSession session = getSession()) {
             try {
-                final Integer userTypeId = mapperFactory.getMapper(session, CommonMapper.class).getUserTypeId(UserType.ADMINISTRATOR.getType());
+                final Integer userTypeId = session.getMapper(CommonMapper.class).getUserTypeId(UserType.ADMINISTRATOR.getType());
 
-                final AdministratorMapper mapper = mapperFactory.getMapper(session, AdministratorMapper.class);
+                final AdministratorMapper mapper = session.getMapper(AdministratorMapper.class);
                 mapper.insertUser(administrator, userTypeId);
                 mapper.insertAdministrator(administrator);
 
@@ -48,7 +45,7 @@ public class AdministratorDaoImpl implements AdministratorDao {
 
         try (SqlSession session = getSession()) {
             try {
-                final AdministratorMapper mapper = mapperFactory.getMapper(session, AdministratorMapper.class);
+                final AdministratorMapper mapper = session.getMapper(AdministratorMapper.class);
                 mapper.updateUser(administrator, newPassword);
                 mapper.updateAdministrator(administrator);
 
@@ -82,7 +79,7 @@ public class AdministratorDaoImpl implements AdministratorDao {
 
         try (SqlSession session = getSession()) {
             try {
-                mapperFactory.getMapper(session, AdministratorMapper.class).removeAdministratorById(id);
+                session.getMapper(AdministratorMapper.class).removeAdministratorById(id);
 
                 session.commit();
                 LOGGER.debug("Administrator with id = {} successfully removed", id);
@@ -100,7 +97,7 @@ public class AdministratorDaoImpl implements AdministratorDao {
         LOGGER.debug("Checking administrator permissions for session id = {}", sessionId);
 
         try (SqlSession session = getSession()) {
-            final Integer userId = mapperFactory.getMapper(session, AdministratorMapper.class).hasPermissions(sessionId);
+            final Integer userId = session.getMapper(AdministratorMapper.class).hasPermissions(sessionId);
 
             return userId == null ? 0 : userId;
         } catch (RuntimeException ex) {

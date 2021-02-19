@@ -2,7 +2,6 @@ package net.thumbtack.hospital.daoimpl;
 
 import net.thumbtack.hospital.dao.CommonDao;
 import net.thumbtack.hospital.mapper.CommonMapper;
-import net.thumbtack.hospital.mapper.MapperFactory;
 import org.apache.ibatis.session.SqlSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,14 +17,12 @@ import static net.thumbtack.hospital.util.mybatis.MyBatisUtils.getSession;
 public class CommonDaoImpl implements CommonDao {
     private static final Logger LOGGER = LoggerFactory.getLogger(CommonDaoImpl.class);
 
-    private final MapperFactory mapperFactory = new MapperFactory();
-
     @Override
     public String getUserTypeByUserId(int userId) {
         LOGGER.debug("Get user type by user id = {}", userId);
 
         try (SqlSession session = getSession()) {
-            return mapperFactory.getMapper(session, CommonMapper.class).getUserTypeByUserId(userId);
+            return session.getMapper(CommonMapper.class).getUserTypeByUserId(userId);
         } catch (RuntimeException ex) {
             LOGGER.error("Can't get user type by user id  = {}", userId, ex);
 
@@ -57,7 +54,7 @@ public class CommonDaoImpl implements CommonDao {
         LOGGER.debug("Check is an appointment to ticket = {}", ticketTitle);
 
         try (SqlSession session = getSession()) {
-            return mapperFactory.getMapper(session, CommonMapper.class).containsAppointment(ticketTitle);
+            return session.getMapper(CommonMapper.class).containsAppointment(ticketTitle);
         } catch (RuntimeException ex) {
             LOGGER.error("Can't check appointment to ticket = {}", ticketTitle, ex);
 

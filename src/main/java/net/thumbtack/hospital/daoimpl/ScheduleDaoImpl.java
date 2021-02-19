@@ -1,7 +1,6 @@
 package net.thumbtack.hospital.daoimpl;
 
 import net.thumbtack.hospital.dao.ScheduleDao;
-import net.thumbtack.hospital.mapper.MapperFactory;
 import net.thumbtack.hospital.mapper.ScheduleMapper;
 import net.thumbtack.hospital.model.schedule.ScheduleCell;
 import net.thumbtack.hospital.model.ticket.TicketToDoctor;
@@ -19,15 +18,13 @@ import static net.thumbtack.hospital.util.mybatis.MyBatisUtils.getSession;
 public class ScheduleDaoImpl implements ScheduleDao {
     private static final Logger LOGGER = LoggerFactory.getLogger(ScheduleDaoImpl.class);
 
-    private final MapperFactory mapperFactory = new MapperFactory();
-
     @Override
     public void insertSchedule(int doctorId, List<ScheduleCell> schedule) {
         LOGGER.debug("Insert schedule = {}", schedule);
 
         try (SqlSession session = getSession()) {
             try {
-                final ScheduleMapper mapper = mapperFactory.getMapper(session, ScheduleMapper.class);
+                final ScheduleMapper mapper = session.getMapper(ScheduleMapper.class);
                 mapper.insertScheduleCells(doctorId, schedule);
 
                 for (ScheduleCell c : schedule) {
@@ -52,7 +49,7 @@ public class ScheduleDaoImpl implements ScheduleDao {
 
         try (SqlSession session = getSession()) {
             try {
-                final ScheduleMapper mapper = mapperFactory.getMapper(session, ScheduleMapper.class);
+                final ScheduleMapper mapper = session.getMapper(ScheduleMapper.class);
                 mapper.removeSchedule(doctorId, dateStart, dateEnd);
                 mapper.insertScheduleCells(doctorId, newSchedule);
 
@@ -79,7 +76,7 @@ public class ScheduleDaoImpl implements ScheduleDao {
 
         try (SqlSession session = getSession()) {
             try {
-                mapperFactory.getMapper(session, ScheduleMapper.class).appointmentToDoctor(patientId, ticketTitle);
+                session.getMapper(ScheduleMapper.class).appointmentToDoctor(patientId, ticketTitle);
 
                 session.commit();
                 LOGGER.debug("Patient = {} successfully appointment to ticket = {}", patientId, ticketTitle);
@@ -98,7 +95,7 @@ public class ScheduleDaoImpl implements ScheduleDao {
 
         try (SqlSession session = getSession()) {
             try {
-                mapperFactory.getMapper(session, ScheduleMapper.class).denyTicket(patientId, ticketTitle);
+                session.getMapper(ScheduleMapper.class).denyTicket(patientId, ticketTitle);
 
                 session.commit();
                 LOGGER.debug("Patient = {} successfully deny ticket = {}", patientId, ticketTitle);
