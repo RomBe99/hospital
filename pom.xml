@@ -59,5 +59,11 @@
             <artifactId>spring-boot-starter-validation</artifactId>
             <version>2.3.8.RELEASE</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.11</version>
+        </dependency>
     </dependencies>
 </project>
