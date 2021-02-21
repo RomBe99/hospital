@@ -1,10 +1,12 @@
 package net.thumbtack.hospital.controller;
 
+import net.thumbtack.hospital.controller.api.MockedControllerTestApi;
 import net.thumbtack.hospital.dtorequest.admin.*;
 import net.thumbtack.hospital.dtorequest.patient.PatientRegistrationDtoRequest;
 import net.thumbtack.hospital.dtorequest.schedule.DtoRequestWithSchedule;
 import net.thumbtack.hospital.dtoresponse.admin.*;
 import net.thumbtack.hospital.dtoresponse.doctor.DoctorLoginDtoResponse;
+import net.thumbtack.hospital.dtoresponse.other.EmptyDtoResponse;
 import net.thumbtack.hospital.dtoresponse.patient.PatientInformationDtoResponse;
 import net.thumbtack.hospital.dtoresponse.patient.PatientRegistrationDtoResponse;
 import net.thumbtack.hospital.dtoresponse.schedule.ScheduleCellDtoResponse;
@@ -12,6 +14,8 @@ import net.thumbtack.hospital.util.ScheduleGenerators;
 import net.thumbtack.hospital.util.WeekDay;
 import net.thumbtack.hospital.util.adapter.DtoAdapters;
 import net.thumbtack.hospital.util.adapter.ScheduleTransformers;
+import org.apache.commons.lang3.tuple.Pair;
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -24,22 +28,38 @@ import java.util.*;
 public class AdministratorMockedControllerTest extends MockedControllerTestApi {
     @Test
     public void administratorRegistrationTest() throws Exception {
-        String rootAdminSessionId = loginRootAdmin();
-        AdminRegistrationDtoRequest registrationRequest =
+        final String rootAdminSessionId = loginRootAdmin();
+        final AdminRegistrationDtoRequest registrationRequest =
                 new AdminRegistrationDtoRequest("Аласдаир", "Охота", "Test admin №1", "OhotaAlasdair252", "SDQGjC4GUvAB");
 
-        AdminRegistrationDtoResponse expectedResponse = new AdminRegistrationDtoResponse(
-                registrationRequest.getFirstName(), registrationRequest.getLastName(), registrationRequest.getPatronymic(),
-                registrationRequest.getPosition());
-        administratorRegistration(rootAdminSessionId, registrationRequest, expectedResponse);
+        {
+            final AdminRegistrationDtoResponse actualResponse = administratorRegistration(rootAdminSessionId, registrationRequest);
+            final AdminRegistrationDtoResponse expectedResponse = new AdminRegistrationDtoResponse(actualResponse.getId(),
+                    registrationRequest.getFirstName(), registrationRequest.getLastName(), registrationRequest.getPatronymic(),
+                    registrationRequest.getPosition());
 
-        String testAdminSessionId = login(registrationRequest.getLogin(), registrationRequest.getPassword(),
-                new AdminLoginDtoResponse(registrationRequest.getFirstName(), registrationRequest.getLastName(), registrationRequest.getPatronymic(), registrationRequest.getPosition()));
+            Assert.assertEquals(expectedResponse, actualResponse);
+        }
 
-        getUserInformation(testAdminSessionId,
-                new AdminInformationDtoResponse(registrationRequest.getLogin(), registrationRequest.getPassword(),
-                        registrationRequest.getFirstName(), registrationRequest.getLastName(), registrationRequest.getPatronymic(),
-                        registrationRequest.getPosition()));
+        final Pair<String, AdminLoginDtoResponse> loginData = login(registrationRequest.getLogin(), registrationRequest.getPassword(), AdminLoginDtoResponse.class);
+        final String testAdminSessionId = loginData.getKey();
+
+        {
+            final AdminLoginDtoResponse actualResponse = loginData.getValue();
+            final AdminLoginDtoResponse expectedResponse = new AdminLoginDtoResponse(actualResponse.getId(), registrationRequest.getFirstName(), registrationRequest.getLastName(), registrationRequest.getPatronymic(), registrationRequest.getPosition());
+
+            Assert.assertEquals(expectedResponse, actualResponse);
+        }
+
+        {
+            final AdminInformationDtoResponse actualResponse = getUserInformation(testAdminSessionId, AdminInformationDtoResponse.class);
+            final AdminInformationDtoResponse expectedResponse = new AdminInformationDtoResponse(actualResponse.getId(), registrationRequest.getLogin(), registrationRequest.getPassword(),
+                    registrationRequest.getFirstName(), registrationRequest.getLastName(), registrationRequest.getPatronymic(),
+                    registrationRequest.getPosition());
+            expectedResponse.setId(actualResponse.getId());
+
+            Assert.assertEquals(expectedResponse, actualResponse);
+        }
 
         logout(rootAdminSessionId);
         logout(testAdminSessionId);
@@ -47,33 +67,49 @@ public class AdministratorMockedControllerTest extends MockedControllerTestApi {
 
     @Test
     public void editAdministratorProfileTest() throws Exception {
-        String rootAdminSessionId = loginRootAdmin();
-        AdminRegistrationDtoRequest registrationRequest =
+        final String rootAdminSessionId = loginRootAdmin();
+        final AdminRegistrationDtoRequest registrationRequest =
                 new AdminRegistrationDtoRequest("Аласдаир", "Охота", "Test admin №1", "OhotaAlasdair252", "SDQGjC4GUvAB");
 
-        AdminRegistrationDtoResponse expectedResponse = new AdminRegistrationDtoResponse(
-                registrationRequest.getFirstName(), registrationRequest.getLastName(), registrationRequest.getPatronymic(),
-                registrationRequest.getPosition());
-        administratorRegistration(rootAdminSessionId, registrationRequest, expectedResponse);
+        {
+            final AdminRegistrationDtoResponse actualResponse = administratorRegistration(rootAdminSessionId, registrationRequest);
+            final AdminRegistrationDtoResponse expectedResponse = new AdminRegistrationDtoResponse(actualResponse.getId(),
+                    registrationRequest.getFirstName(), registrationRequest.getLastName(), registrationRequest.getPatronymic(),
+                    registrationRequest.getPosition());
 
-        AdminLoginDtoResponse adminLoginResponse =
-                new AdminLoginDtoResponse(registrationRequest.getFirstName(), registrationRequest.getLastName(),
-                        registrationRequest.getPatronymic(), registrationRequest.getPosition());
+            Assert.assertEquals(expectedResponse, actualResponse);
+        }
 
-        String testAdminSessionId = login(registrationRequest.getLogin(), registrationRequest.getPassword(),
-                adminLoginResponse);
+        final Pair<String, AdminLoginDtoResponse> loginData = login(registrationRequest.getLogin(), registrationRequest.getPassword(), AdminLoginDtoResponse.class);
+        final String testAdminSessionId = loginData.getKey();
+        final AdminLoginDtoResponse adminLoginResponse = new AdminLoginDtoResponse(loginData.getValue().getId(),
+                registrationRequest.getFirstName(), registrationRequest.getLastName(),
+                registrationRequest.getPatronymic(), registrationRequest.getPosition());
+        Assert.assertEquals(adminLoginResponse, loginData.getValue());
 
-        EditAdminProfileDtoRequest editAdminProfileRequest =
+        final EditAdminProfileDtoRequest editAdminProfileRequest =
                 new EditAdminProfileDtoRequest("Алимад", "Федоров",
                         registrationRequest.getPosition(), registrationRequest.getPassword(), "OMoqtge7e1V1");
 
-        editAdministratorProfile(testAdminSessionId, editAdminProfileRequest,
-                new EditAdminProfileDtoResponse(adminLoginResponse.getId(), editAdminProfileRequest.getFirstName(), editAdminProfileRequest.getLastName(), editAdminProfileRequest.getPatronymic(), editAdminProfileRequest.getPosition()));
+        {
+            final EditAdminProfileDtoResponse actualResponse = editAdministratorProfile(testAdminSessionId, editAdminProfileRequest);
+            final EditAdminProfileDtoResponse expectedResponse = new EditAdminProfileDtoResponse(adminLoginResponse.getId(),
+                    editAdminProfileRequest.getFirstName(), editAdminProfileRequest.getLastName(), editAdminProfileRequest.getPatronymic(), editAdminProfileRequest.getPosition());
 
-        getUserInformation(testAdminSessionId,
-                new AdminInformationDtoResponse(registrationRequest.getLogin(), editAdminProfileRequest.getNewPassword(),
-                        editAdminProfileRequest.getFirstName(), editAdminProfileRequest.getLastName(), editAdminProfileRequest.getPatronymic(),
-                        editAdminProfileRequest.getPosition()));
+            Assert.assertEquals(expectedResponse, actualResponse);
+        }
+
+
+        {
+            final AdminInformationDtoResponse expectedResponse = new AdminInformationDtoResponse(
+                    registrationRequest.getLogin(), editAdminProfileRequest.getNewPassword(),
+                    editAdminProfileRequest.getFirstName(), editAdminProfileRequest.getLastName(), editAdminProfileRequest.getPatronymic(),
+                    editAdminProfileRequest.getPosition());
+            final AdminInformationDtoResponse actualResponse = getUserInformation(testAdminSessionId, expectedResponse.getClass());
+            expectedResponse.setId(actualResponse.getId());
+
+            Assert.assertEquals(expectedResponse, actualResponse);
+        }
 
         logout(rootAdminSessionId);
         logout(testAdminSessionId);
@@ -81,100 +117,130 @@ public class AdministratorMockedControllerTest extends MockedControllerTestApi {
 
     @Test
     public void removeDoctorTest() throws Exception {
-        String rootAdminSessionId = loginRootAdmin();
+        final String rootAdminSessionId = loginRootAdmin();
 
-        LocalDate dateStart = LocalDate.now();
-        LocalDate dateEnd = dateStart.plusDays(5);
+        final LocalDate dateStart = LocalDate.now();
+        final LocalDate dateEnd = dateStart.plusDays(5);
 
-        DoctorRegistrationDtoRequest doctorRegistrationRequest =
+
+        final DoctorRegistrationDtoRequest doctorRegistrationRequest =
                 new DoctorRegistrationDtoRequest(dateStart.toString(), dateEnd.toString(), 15, Collections.emptyList(),
                         "Саркис", "Семёнов", "Вениаминович",
                         "Surgeon", "205", "SarkisSemenov585", "xjNE6QK6d3b9");
-        DoctorRegistrationDtoResponse doctorRegistrationResponse =
-                new DoctorRegistrationDtoResponse(doctorRegistrationRequest.getFirstName(), doctorRegistrationRequest.getLastName(), doctorRegistrationRequest.getPatronymic(),
-                        doctorRegistrationRequest.getSpeciality(), doctorRegistrationRequest.getRoom(), Collections.emptyList());
+        final DoctorRegistrationDtoResponse actualDoctorRegistrationResponse = doctorRegistration(rootAdminSessionId, doctorRegistrationRequest);
+        final DoctorRegistrationDtoResponse expectedDoctorRegistrationResponse = new DoctorRegistrationDtoResponse(actualDoctorRegistrationResponse.getId(),
+                doctorRegistrationRequest.getFirstName(), doctorRegistrationRequest.getLastName(), doctorRegistrationRequest.getPatronymic(),
+                doctorRegistrationRequest.getSpeciality(), doctorRegistrationRequest.getRoom(), actualDoctorRegistrationResponse.getSchedule());
+        Assert.assertEquals(expectedDoctorRegistrationResponse, actualDoctorRegistrationResponse);
 
-        doctorRegistration(rootAdminSessionId, doctorRegistrationRequest, doctorRegistrationResponse);
-
-        RemoveDoctorDtoRequest removeDoctorRequest = new RemoveDoctorDtoRequest(LocalDate.now().toString());
-        removeDoctor(rootAdminSessionId, doctorRegistrationResponse.getId(), removeDoctorRequest);
+        {
+            final RemoveDoctorDtoRequest removeDoctorRequest = new RemoveDoctorDtoRequest(LocalDate.now().toString());
+            final EmptyDtoResponse actualResponse = removeDoctor(rootAdminSessionId, expectedDoctorRegistrationResponse.getId(), removeDoctorRequest);
+            final EmptyDtoResponse expectedResponse = new EmptyDtoResponse();
+            Assert.assertEquals(expectedResponse, actualResponse);
+        }
 
         logout(rootAdminSessionId);
     }
 
     @Test
     public void getPatientInformationByAdminAndDoctorTest() throws Exception {
-        String rootAdminSessionId = loginRootAdmin();
+        final String rootAdminSessionId = loginRootAdmin();
 
-        PatientRegistrationDtoRequest patientRegistrationRequest =
-                new PatientRegistrationDtoRequest("Аббо", "Титов", "vixej10213@inmail92.com",
-                        "399822, г. Дербент, ул. Онежская, дом 77, квартира 773", "+7 (922) 069-47-76",
-                        "AbboTitov756", "zRAMIyf7uUVc");
-        PatientRegistrationDtoResponse patientRegistrationResponse =
-                new PatientRegistrationDtoResponse(patientRegistrationRequest.getFirstName(), patientRegistrationRequest.getLastName(), patientRegistrationRequest.getPatronymic(),
-                        patientRegistrationRequest.getEmail(), patientRegistrationRequest.getAddress(), patientRegistrationRequest.getPhone());
-        String patientSessionId = patientRegistration(patientRegistrationRequest, patientRegistrationResponse);
+        final PatientRegistrationDtoRequest patientRegistrationRequest = new PatientRegistrationDtoRequest(
+                "Аббо", "Титов", "vixej10213@inmail92.com",
+                "399822, г. Дербент, ул. Онежская, дом 77, квартира 773", "+7 (922) 069-47-76",
+                "AbboTitov756", "zRAMIyf7uUVc");
+        final Pair<String, PatientRegistrationDtoResponse> patientRegistrationData = patientRegistration(patientRegistrationRequest);
+        final PatientRegistrationDtoResponse patientRegistrationResponse = new PatientRegistrationDtoResponse(patientRegistrationData.getValue().getId(),
+                patientRegistrationRequest.getFirstName(), patientRegistrationRequest.getLastName(), patientRegistrationRequest.getPatronymic(),
+                patientRegistrationRequest.getEmail(), patientRegistrationRequest.getAddress(), patientRegistrationRequest.getPhone());
 
-        PatientInformationDtoResponse patientInformationResponse =
-                new PatientInformationDtoResponse(patientRegistrationResponse.getId(),
-                        patientRegistrationResponse.getFirstName(), patientRegistrationResponse.getLastName(), patientRegistrationResponse.getPatronymic(),
-                        patientRegistrationResponse.getEmail(), patientRegistrationResponse.getAddress(), patientRegistrationResponse.getPhone());
-        getPatientInformation(rootAdminSessionId, patientRegistrationResponse.getId(), patientInformationResponse);
+        final PatientInformationDtoResponse expectedResponse = new PatientInformationDtoResponse(patientRegistrationResponse.getId(),
+                patientRegistrationResponse.getFirstName(), patientRegistrationResponse.getLastName(), patientRegistrationResponse.getPatronymic(),
+                patientRegistrationResponse.getEmail(), patientRegistrationResponse.getAddress(), patientRegistrationResponse.getPhone());
 
-        DoctorRegistrationDtoRequest doctorRegistrationRequest =
+        {
+            final PatientInformationDtoResponse actualResponse = getPatientInformation(rootAdminSessionId, expectedResponse.getId());
+            Assert.assertEquals(expectedResponse, actualResponse);
+        }
+
+        final DoctorRegistrationDtoRequest doctorRegistrationRequest =
                 new DoctorRegistrationDtoRequest(LocalDate.now().toString(), LocalDate.now().toString(), 15, Collections.emptyList(),
                         "Саркис", "Семёнов", "Вениаминович",
                         "Surgeon", "205", "SarkisSemenov585", "xjNE6QK6d3b9");
-        DoctorRegistrationDtoResponse doctorRegistrationResponse =
-                new DoctorRegistrationDtoResponse(doctorRegistrationRequest.getFirstName(), doctorRegistrationRequest.getLastName(), doctorRegistrationRequest.getPatronymic(),
-                        doctorRegistrationRequest.getSpeciality(), doctorRegistrationRequest.getRoom(), Collections.emptyList());
-        doctorRegistration(rootAdminSessionId, doctorRegistrationRequest, doctorRegistrationResponse);
+        final DoctorRegistrationDtoResponse actualDoctorRegistrationResponse = doctorRegistration(rootAdminSessionId, doctorRegistrationRequest);
+        final DoctorRegistrationDtoResponse expectedDoctorRegistrationResponse = new DoctorRegistrationDtoResponse(actualDoctorRegistrationResponse.getId(),
+                doctorRegistrationRequest.getFirstName(), doctorRegistrationRequest.getLastName(), doctorRegistrationRequest.getPatronymic(),
+                doctorRegistrationRequest.getSpeciality(), doctorRegistrationRequest.getRoom(), actualDoctorRegistrationResponse.getSchedule());
+        Assert.assertEquals(expectedDoctorRegistrationResponse, actualDoctorRegistrationResponse);
 
-        String doctorSessionId = login(doctorRegistrationRequest.getLogin(), doctorRegistrationRequest.getPassword(),
-                new DoctorLoginDtoResponse(doctorRegistrationResponse.getFirstName(), doctorRegistrationResponse.getLastName(), doctorRegistrationResponse.getPatronymic(),
-                        doctorRegistrationResponse.getSpeciality(), doctorRegistrationResponse.getRoom(), doctorRegistrationResponse.getSchedule()));
-        getPatientInformation(doctorSessionId, patientRegistrationResponse.getId(), patientInformationResponse);
+        final Pair<String, DoctorLoginDtoResponse> loginData = login(doctorRegistrationRequest.getLogin(), doctorRegistrationRequest.getPassword(), DoctorLoginDtoResponse.class);
+
+        {
+            final DoctorLoginDtoResponse actualDoctorLoginResponse = loginData.getValue();
+            final DoctorLoginDtoResponse expectedDoctorLoginResponse = new DoctorLoginDtoResponse(expectedDoctorRegistrationResponse.getId(),
+                    expectedDoctorRegistrationResponse.getFirstName(), expectedDoctorRegistrationResponse.getLastName(), expectedDoctorRegistrationResponse.getPatronymic(),
+                    expectedDoctorRegistrationResponse.getSpeciality(), expectedDoctorRegistrationResponse.getRoom(), expectedDoctorRegistrationResponse.getSchedule());
+
+            Assert.assertEquals(expectedDoctorLoginResponse, actualDoctorLoginResponse);
+        }
+
+        final String doctorSessionId = loginData.getKey();
+
+        {
+            final PatientInformationDtoResponse actualResponse = getPatientInformation(doctorSessionId, patientRegistrationResponse.getId());
+            Assert.assertEquals(expectedResponse, actualResponse);
+        }
 
         logout(doctorSessionId);
-        logout(patientSessionId);
+        logout(patientRegistrationData.getKey());
         logout(rootAdminSessionId);
     }
 
     @Test
     public void insertDoctorWithWeekScheduleTest() throws Exception {
-        String rootAdminSessionId = loginRootAdmin();
+        final String rootAdminSessionId = loginRootAdmin();
 
-        int duration = 15;
-        LocalDate dateStart = LocalDate.of(2020, 3, 1);
-        LocalDate dateEnd = LocalDate.of(2020, 3, 31);
-        LocalTime timeStart = LocalTime.of(8, 0);
-        LocalTime timeEnd = LocalTime.of(17, 0);
-        List<Integer> weekDays = Arrays.asList(1, 2, 3);
+        final int duration = 15;
+        final LocalDate dateStart = LocalDate.of(2020, 3, 1);
+        final LocalDate dateEnd = LocalDate.of(2020, 3, 31);
+        final LocalTime timeStart = LocalTime.of(8, 0);
+        final LocalTime timeEnd = LocalTime.of(17, 0);
+        final List<Integer> weekDays = Arrays.asList(1, 2, 3);
 
-        DtoRequestWithSchedule generatedWeekSchedule = ScheduleGenerators.generateDtoRequestWithWeekSchedule(
+        final DtoRequestWithSchedule generatedWeekSchedule = ScheduleGenerators.generateDtoRequestWithWeekSchedule(
                 duration, dateStart, dateEnd, timeStart, timeEnd, weekDays);
 
-        DoctorRegistrationDtoRequest doctorRegistrationRequest =
+        final DoctorRegistrationDtoRequest doctorRegistrationRequest =
                 new DoctorRegistrationDtoRequest(generatedWeekSchedule.getDateStart(), generatedWeekSchedule.getDateEnd(), generatedWeekSchedule.getDuration(),
                         generatedWeekSchedule.getWeekSchedule(),
                         "Саркис", "Семёнов", "Вениаминович",
                         "Surgeon", "205", "SarkisSemenov585", "xjNE6QK6d3b9");
-        DoctorRegistrationDtoResponse doctorRegistrationResponse = new DoctorRegistrationDtoResponse(
+        final DoctorRegistrationDtoResponse actualDoctorRegistrationResponse = doctorRegistration(rootAdminSessionId, doctorRegistrationRequest);
+        final DoctorRegistrationDtoResponse expectedDoctorRegistrationResponse = new DoctorRegistrationDtoResponse(actualDoctorRegistrationResponse.getId(),
                 doctorRegistrationRequest.getFirstName(), doctorRegistrationRequest.getLastName(), doctorRegistrationRequest.getPatronymic(),
-                doctorRegistrationRequest.getSpeciality(), doctorRegistrationRequest.getRoom(), null);
-        doctorRegistration(rootAdminSessionId, doctorRegistrationRequest, doctorRegistrationResponse);
+                doctorRegistrationRequest.getSpeciality(), doctorRegistrationRequest.getRoom(), actualDoctorRegistrationResponse.getSchedule());
+        Assert.assertEquals(expectedDoctorRegistrationResponse, actualDoctorRegistrationResponse);
 
-        String doctorSessionId = login(doctorRegistrationRequest.getLogin(), doctorRegistrationRequest.getPassword(),
-                new DoctorLoginDtoResponse(doctorRegistrationResponse.getFirstName(), doctorRegistrationResponse.getLastName(), doctorRegistrationResponse.getPatronymic(),
-                        doctorRegistrationResponse.getSpeciality(), doctorRegistrationResponse.getRoom(), doctorRegistrationResponse.getSchedule()));
+        final Pair<String, DoctorLoginDtoResponse> loginData = login(doctorRegistrationRequest.getLogin(), doctorRegistrationRequest.getPassword(), DoctorLoginDtoResponse.class);
 
-        logout(doctorSessionId);
+        {
+            final DoctorLoginDtoResponse actualDoctorLoginResponse = loginData.getValue();
+            final DoctorLoginDtoResponse expectedDoctorLoginResponse = new DoctorLoginDtoResponse(actualDoctorLoginResponse.getId(),
+                    expectedDoctorRegistrationResponse.getFirstName(), expectedDoctorRegistrationResponse.getLastName(), expectedDoctorRegistrationResponse.getPatronymic(),
+                    expectedDoctorRegistrationResponse.getSpeciality(), expectedDoctorRegistrationResponse.getRoom(), expectedDoctorRegistrationResponse.getSchedule());
+
+            Assert.assertEquals(expectedDoctorLoginResponse, actualDoctorLoginResponse);
+        }
+
+        logout(loginData.getKey());
         logout(rootAdminSessionId);
     }
 
     @Test
     public void insertDoctorWithWeekDayScheduleTest() throws Exception {
-        String rootAdminSessionId = loginRootAdmin();
+        final String rootAdminSessionId = loginRootAdmin();
 
         int duration = 30;
         LocalDate dateStart = LocalDate.of(2020, 7, 1);
@@ -184,30 +250,38 @@ public class AdministratorMockedControllerTest extends MockedControllerTestApi {
         weekSchedule.put(WeekDay.TUESDAY, new AbstractMap.SimpleEntry<>(LocalTime.of(12, 0), LocalTime.of(18, 0)));
         weekSchedule.put(WeekDay.THURSDAY, new AbstractMap.SimpleEntry<>(LocalTime.of(10, 0), LocalTime.of(16, 0)));
 
-        DtoRequestWithSchedule generatedWeekSchedule =
+        final DtoRequestWithSchedule generatedWeekSchedule =
                 ScheduleGenerators.generateDtoRequestWithDaySchedule(duration, dateStart, dateEnd, weekSchedule);
 
-        DoctorRegistrationDtoRequest doctorRegistrationRequest =
+        final DoctorRegistrationDtoRequest doctorRegistrationRequest =
                 new DoctorRegistrationDtoRequest(generatedWeekSchedule.getDateStart(), generatedWeekSchedule.getDateEnd(), generatedWeekSchedule.getDuration(),
                         generatedWeekSchedule.getWeekDaysSchedule(),
                         "Юнонна", "Ушакова", "Константиновна",
                         "Dentist", "471", "YunonnaUshakova642", "qypzb2XheqYG");
-        DoctorRegistrationDtoResponse doctorRegistrationResponse = new DoctorRegistrationDtoResponse(
+        final DoctorRegistrationDtoResponse actualDoctorRegistrationResponse = doctorRegistration(rootAdminSessionId, doctorRegistrationRequest);
+        final DoctorRegistrationDtoResponse expectedDoctorRegistrationResponse = new DoctorRegistrationDtoResponse(actualDoctorRegistrationResponse.getId(),
                 doctorRegistrationRequest.getFirstName(), doctorRegistrationRequest.getLastName(), doctorRegistrationRequest.getPatronymic(),
-                doctorRegistrationRequest.getSpeciality(), doctorRegistrationRequest.getRoom(), null);
-        doctorRegistration(rootAdminSessionId, doctorRegistrationRequest, doctorRegistrationResponse);
+                doctorRegistrationRequest.getSpeciality(), doctorRegistrationRequest.getRoom(), actualDoctorRegistrationResponse.getSchedule());
+        Assert.assertEquals(expectedDoctorRegistrationResponse, actualDoctorRegistrationResponse);
 
-        String doctorSessionId = login(doctorRegistrationRequest.getLogin(), doctorRegistrationRequest.getPassword(),
-                new DoctorLoginDtoResponse(doctorRegistrationResponse.getFirstName(), doctorRegistrationResponse.getLastName(), doctorRegistrationResponse.getPatronymic(),
-                        doctorRegistrationResponse.getSpeciality(), doctorRegistrationResponse.getRoom(), doctorRegistrationResponse.getSchedule()));
+        final Pair<String, DoctorLoginDtoResponse> loginData = login(doctorRegistrationRequest.getLogin(), doctorRegistrationRequest.getPassword(), DoctorLoginDtoResponse.class);
+
+        {
+            final DoctorLoginDtoResponse actualResponse = loginData.getValue();
+            final DoctorLoginDtoResponse expectedResponse = new DoctorLoginDtoResponse(actualResponse.getId(),
+                    expectedDoctorRegistrationResponse.getFirstName(), expectedDoctorRegistrationResponse.getLastName(), expectedDoctorRegistrationResponse.getPatronymic(),
+                    expectedDoctorRegistrationResponse.getSpeciality(), expectedDoctorRegistrationResponse.getRoom(), expectedDoctorRegistrationResponse.getSchedule());
+
+            Assert.assertEquals(expectedResponse, actualResponse);
+        }
 
         logout(rootAdminSessionId);
-        logout(doctorSessionId);
+        logout(loginData.getKey());
     }
 
     @Test
     public void editDoctorScheduleWithWeekScheduleTest() throws Exception {
-        String rootAdminSessionId = loginRootAdmin();
+        final String rootAdminSessionId = loginRootAdmin();
 
         int duration = 15;
         LocalDate dateStart = LocalDate.of(2020, 3, 1);
@@ -219,15 +293,16 @@ public class AdministratorMockedControllerTest extends MockedControllerTestApi {
         DtoRequestWithSchedule generatedWeekSchedule =
                 ScheduleGenerators.generateDtoRequestWithWeekSchedule(duration, dateStart, dateEnd, timeStart, timeEnd, weekDays);
 
-        DoctorRegistrationDtoRequest doctorRegistrationRequest =
+        final DoctorRegistrationDtoRequest doctorRegistrationRequest =
                 new DoctorRegistrationDtoRequest(generatedWeekSchedule.getDateStart(), generatedWeekSchedule.getDateEnd(), generatedWeekSchedule.getDuration(),
                         generatedWeekSchedule.getWeekSchedule(),
                         "Саркис", "Семёнов", "Вениаминович",
                         "Surgeon", "205", "SarkisSemenov585", "xjNE6QK6d3b9");
-        DoctorRegistrationDtoResponse doctorRegistrationResponse = new DoctorRegistrationDtoResponse(
+        final DoctorRegistrationDtoResponse actualDoctorRegistrationResponse = doctorRegistration(rootAdminSessionId, doctorRegistrationRequest);
+        final DoctorRegistrationDtoResponse expectedDoctorRegistrationResponse = new DoctorRegistrationDtoResponse(actualDoctorRegistrationResponse.getId(),
                 doctorRegistrationRequest.getFirstName(), doctorRegistrationRequest.getLastName(), doctorRegistrationRequest.getPatronymic(),
-                doctorRegistrationRequest.getSpeciality(), doctorRegistrationRequest.getRoom(), null);
-        doctorRegistration(rootAdminSessionId, doctorRegistrationRequest, doctorRegistrationResponse);
+                doctorRegistrationRequest.getSpeciality(), doctorRegistrationRequest.getRoom(), actualDoctorRegistrationResponse.getSchedule());
+        Assert.assertEquals(expectedDoctorRegistrationResponse, actualDoctorRegistrationResponse);
 
         duration = 30;
         dateEnd = dateStart.plusDays(15);
@@ -236,24 +311,29 @@ public class AdministratorMockedControllerTest extends MockedControllerTestApi {
         weekDays = Arrays.asList(1, 3, 4, 5);
         generatedWeekSchedule = ScheduleGenerators.generateDtoRequestWithWeekSchedule(
                 duration, dateStart, dateEnd, timeStart, timeEnd, weekDays);
-        int doctorId = doctorRegistrationResponse.getId();
-        List<ScheduleCellDtoResponse> expectedSchedule =
+        final int doctorId = expectedDoctorRegistrationResponse.getId();
+        final List<ScheduleCellDtoResponse> expectedSchedule =
                 DtoAdapters.transform(ScheduleTransformers.transformWeekSchedule(generatedWeekSchedule, doctorId));
 
-        EditDoctorScheduleDtoRequest editDoctorScheduleRequest =
-                new EditDoctorScheduleDtoRequest(dateStart.toString(), dateEnd.toString(), duration, generatedWeekSchedule.getWeekSchedule());
-        EditDoctorScheduleDtoResponse editDoctorScheduleResponse =
-                new EditDoctorScheduleDtoResponse(doctorId,
-                        doctorRegistrationResponse.getFirstName(), doctorRegistrationResponse.getLastName(),
-                        doctorRegistrationResponse.getPatronymic(), doctorRegistrationResponse.getSpeciality(), doctorRegistrationResponse.getRoom(), expectedSchedule);
-        editDoctorSchedule(rootAdminSessionId, doctorId, editDoctorScheduleRequest, editDoctorScheduleResponse);
+        {
+            final EditDoctorScheduleDtoRequest editDoctorScheduleRequest =
+                    new EditDoctorScheduleDtoRequest(dateStart.toString(), dateEnd.toString(), duration, generatedWeekSchedule.getWeekSchedule());
+            final EditDoctorScheduleDtoResponse expectedResponse =
+                    new EditDoctorScheduleDtoResponse(doctorId,
+                            expectedDoctorRegistrationResponse.getFirstName(), expectedDoctorRegistrationResponse.getLastName(),
+                            expectedDoctorRegistrationResponse.getPatronymic(), expectedDoctorRegistrationResponse.getSpeciality(),
+                            expectedDoctorRegistrationResponse.getRoom(), expectedSchedule);
+            final EditDoctorScheduleDtoResponse actualResponse = editDoctorSchedule(rootAdminSessionId, doctorId, editDoctorScheduleRequest);
+
+            Assert.assertEquals(expectedResponse, actualResponse);
+        }
 
         logout(rootAdminSessionId);
     }
 
     @Test
     public void editDoctorScheduleWithWeekDayScheduleTest() throws Exception {
-        String rootAdminSessionId = loginRootAdmin();
+        final String rootAdminSessionId = loginRootAdmin();
 
         int duration = 30;
         LocalDate dateStart = LocalDate.of(2020, 7, 1);
@@ -266,15 +346,16 @@ public class AdministratorMockedControllerTest extends MockedControllerTestApi {
         DtoRequestWithSchedule generatedWeekSchedule =
                 ScheduleGenerators.generateDtoRequestWithDaySchedule(duration, dateStart, dateEnd, weekSchedule);
 
-        DoctorRegistrationDtoRequest doctorRegistrationRequest =
+        final DoctorRegistrationDtoRequest doctorRegistrationRequest =
                 new DoctorRegistrationDtoRequest(generatedWeekSchedule.getDateStart(), generatedWeekSchedule.getDateEnd(), generatedWeekSchedule.getDuration(),
                         generatedWeekSchedule.getWeekDaysSchedule(),
                         "Юнонна", "Ушакова", "Константиновна",
                         "Dentist", "471", "YunonnaUshakova642", "qypzb2XheqYG");
-        DoctorRegistrationDtoResponse doctorRegistrationResponse = new DoctorRegistrationDtoResponse(
+        final DoctorRegistrationDtoResponse actualDoctorRegistrationResponse = doctorRegistration(rootAdminSessionId, doctorRegistrationRequest);
+        final DoctorRegistrationDtoResponse expectedDoctorRegistrationResponse = new DoctorRegistrationDtoResponse(actualDoctorRegistrationResponse.getId(),
                 doctorRegistrationRequest.getFirstName(), doctorRegistrationRequest.getLastName(), doctorRegistrationRequest.getPatronymic(),
-                doctorRegistrationRequest.getSpeciality(), doctorRegistrationRequest.getRoom(), null);
-        doctorRegistration(rootAdminSessionId, doctorRegistrationRequest, doctorRegistrationResponse);
+                doctorRegistrationRequest.getSpeciality(), doctorRegistrationRequest.getRoom(), actualDoctorRegistrationResponse.getSchedule());
+        Assert.assertEquals(expectedDoctorRegistrationResponse, actualDoctorRegistrationResponse);
 
         duration = 15;
         dateStart = dateStart.plusDays(5);
@@ -286,17 +367,22 @@ public class AdministratorMockedControllerTest extends MockedControllerTestApi {
         weekSchedule.put(WeekDay.FRIDAY, new AbstractMap.SimpleEntry<>(LocalTime.of(10, 30), LocalTime.of(16, 0)));
         generatedWeekSchedule =
                 ScheduleGenerators.generateDtoRequestWithDaySchedule(duration, dateStart, dateEnd, weekSchedule);
-        int doctorId = doctorRegistrationResponse.getId();
-        List<ScheduleCellDtoResponse> expectedSchedule =
+        final int doctorId = expectedDoctorRegistrationResponse.getId();
+        final List<ScheduleCellDtoResponse> expectedSchedule =
                 DtoAdapters.transform(ScheduleTransformers.transformWeekDaysSchedule(generatedWeekSchedule, doctorId));
 
-        EditDoctorScheduleDtoRequest editDoctorScheduleRequest =
-                new EditDoctorScheduleDtoRequest(dateStart.toString(), dateEnd.toString(), duration, generatedWeekSchedule.getWeekDaysSchedule());
-        EditDoctorScheduleDtoResponse editDoctorScheduleResponse =
-                new EditDoctorScheduleDtoResponse(doctorId,
-                        doctorRegistrationResponse.getFirstName(), doctorRegistrationResponse.getLastName(),
-                        doctorRegistrationResponse.getPatronymic(), doctorRegistrationResponse.getSpeciality(), doctorRegistrationResponse.getRoom(), expectedSchedule);
-        editDoctorSchedule(rootAdminSessionId, doctorId, editDoctorScheduleRequest, editDoctorScheduleResponse);
+        {
+            final EditDoctorScheduleDtoRequest editDoctorScheduleRequest =
+                    new EditDoctorScheduleDtoRequest(dateStart.toString(), dateEnd.toString(), duration, generatedWeekSchedule.getWeekDaysSchedule());
+            final EditDoctorScheduleDtoResponse expectedResponse =
+                    new EditDoctorScheduleDtoResponse(doctorId,
+                            expectedDoctorRegistrationResponse.getFirstName(), expectedDoctorRegistrationResponse.getLastName(),
+                            expectedDoctorRegistrationResponse.getPatronymic(), expectedDoctorRegistrationResponse.getSpeciality(),
+                            expectedDoctorRegistrationResponse.getRoom(), expectedSchedule);
+            final EditDoctorScheduleDtoResponse actualResponse = editDoctorSchedule(rootAdminSessionId, doctorId, editDoctorScheduleRequest);
+
+            Assert.assertEquals(expectedResponse, actualResponse);
+        }
 
         logout(rootAdminSessionId);
     }
