@@ -5,6 +5,7 @@ import net.thumbtack.hospital.mapper.CommonMapper;
 import net.thumbtack.hospital.mapper.DoctorMapper;
 import net.thumbtack.hospital.mapper.UserType;
 import net.thumbtack.hospital.model.user.Doctor;
+import org.apache.commons.lang3.RandomUtils;
 import org.apache.ibatis.session.SqlSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -89,9 +90,7 @@ public class DoctorDaoImpl implements DoctorDao {
                 return null;
             }
 
-            int index = (int) (Math.random() * doctors.size());
-
-            return doctors.get(index);
+            return doctors.get(RandomUtils.nextInt(0, doctors.size()));
         } catch (RuntimeException ex) {
             LOGGER.error("Can't get random doctor by speciality = {}", speciality, ex);
 
