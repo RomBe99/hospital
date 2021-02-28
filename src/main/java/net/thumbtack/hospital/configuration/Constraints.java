@@ -1,12 +1,15 @@
 package net.thumbtack.hospital.configuration;
 
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import java.util.Objects;
 
 @Component("Constraints")
 @ConfigurationProperties(prefix = "hospital.constraints")
+@Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 public class Constraints {
     private int maxNameLength;
     private int minPasswordLength;

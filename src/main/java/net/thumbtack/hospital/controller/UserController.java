@@ -35,7 +35,7 @@ public class UserController {
     public static final String GET_PATIENT_INFORMATION_URL = "patients/{patientId}";
     public static final String GET_SETTINGS_URL = "settings";
 
-    private static final Predicate<String> needSchedule = s -> s != null && !s.isEmpty() && s.equalsIgnoreCase("yes");
+    public static final Predicate<String> needSchedule = "yes"::equalsIgnoreCase;
 
     private final UserService userService;
     private final CookieFactory cookieFactory;

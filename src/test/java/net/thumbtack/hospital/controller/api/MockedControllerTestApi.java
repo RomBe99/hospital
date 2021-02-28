@@ -167,7 +167,7 @@ public class MockedControllerTestApi extends BaseSpringConfiguration {
                 .characterEncoding(StandardCharsets.UTF_8.name())
                 .queryParam(queryParamName, schedule);
 
-        if (startDate != null && endDate != null) {
+        if (UserController.needSchedule.test(schedule)) {
             final String startDateParamName = "startDate";
             requestBuilder.queryParam(startDateParamName, startDate);
 
@@ -200,7 +200,7 @@ public class MockedControllerTestApi extends BaseSpringConfiguration {
             requestBuilder.queryParam(specialityParamName, speciality);
         }
 
-        if (startDate != null && endDate != null) {
+        if (UserController.needSchedule.test(schedule)) {
             final String startDateParamName = "startDate";
             requestBuilder.queryParam(startDateParamName, startDate);
 
