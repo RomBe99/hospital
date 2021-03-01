@@ -1,5 +1,6 @@
-package net.thumbtack.hospital.controller;
+package net.thumbtack.hospital.controller.mock;
 
+import net.thumbtack.hospital.controller.PatientController;
 import net.thumbtack.hospital.controller.api.MockedControllerTestApi;
 import net.thumbtack.hospital.dtorequest.admin.DoctorRegistrationDtoRequest;
 import net.thumbtack.hospital.dtorequest.patient.AppointmentToDoctorDtoRequest;
@@ -37,10 +38,10 @@ import java.util.*;
 public class PatientMockedControllerTest extends MockedControllerTestApi {
     @Test
     public void patientRegistrationTest() throws Exception {
-        final PatientRegistrationDtoRequest patientRegistrationRequest =
-                new PatientRegistrationDtoRequest("Пахон", "Петров",
-                        "camikaf920@mijumail.com", "617823, г. Усмань, ул. Гаккелевская, дом 153, квартира 346", "+7 (922) 656-58-24",
-                        "PahonPetrov927", "ugSfPaGD1YBv");
+        final PatientRegistrationDtoRequest patientRegistrationRequest = new PatientRegistrationDtoRequest(
+                "Пахон", "Петров",
+                "camikaf920@mijumail.com", "617823, г. Усмань, ул. Гаккелевская, дом 153, квартира 346", "+7 (922) 656-58-24",
+                "PahonPetrov927", "ugSfPaGD1YBv");
 
         final Pair<String, PatientRegistrationDtoResponse> patientRegistrationData = patientRegistration(patientRegistrationRequest);
 

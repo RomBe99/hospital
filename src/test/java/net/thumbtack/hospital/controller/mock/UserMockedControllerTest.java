@@ -1,4 +1,4 @@
-package net.thumbtack.hospital.controller;
+package net.thumbtack.hospital.controller.mock;
 
 import net.thumbtack.hospital.configuration.Constraints;
 import net.thumbtack.hospital.controller.api.MockedControllerTestApi;
@@ -22,22 +22,20 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Arrays;
 import java.util.List;
-import java.util.function.Function;
 
 @RunWith(SpringRunner.class)
 public class UserMockedControllerTest extends MockedControllerTestApi {
     @Autowired
     private Constraints constraints;
-    private static final Function<Constraints, ServerSettingsDtoResponse> serverSettingsProducer =
-            c -> new ServerSettingsDtoResponse(c.getMaxNameLength(), c.getMinPasswordLength());
+    private final ServerSettingsDtoResponse correctServerSettingsResponse =
+            new ServerSettingsDtoResponse(constraints.getMaxNameLength(), constraints.getMinPasswordLength());
 
     @Test
     public void getAdministratorSettings() throws Exception {
         final String rootAdminSessionId = loginRootAdmin();
 
-        final SettingsDtoResponse expectedResponse = serverSettingsProducer.apply(constraints);
-        final SettingsDtoResponse actualResponse = getSettings(rootAdminSessionId, expectedResponse.getClass());
-        Assert.assertEquals(expectedResponse, actualResponse);
+        final SettingsDtoResponse actualResponse = getSettings(rootAdminSessionId, correctServerSettingsResponse.getClass());
+        Assert.assertEquals(correctServerSettingsResponse, actualResponse);
     }
 
     @Test
@@ -78,10 +76,9 @@ public class UserMockedControllerTest extends MockedControllerTestApi {
         }
 
         {
-            final SettingsDtoResponse expectedResponse = serverSettingsProducer.apply(constraints);
-            final SettingsDtoResponse actualResponse = getSettings(loginData.getKey(), expectedResponse.getClass());
+            final SettingsDtoResponse actualResponse = getSettings(loginData.getKey(), correctServerSettingsResponse.getClass());
 
-            Assert.assertEquals(expectedResponse, actualResponse);
+            Assert.assertEquals(correctServerSettingsResponse, actualResponse);
         }
     }
 
@@ -105,10 +102,9 @@ public class UserMockedControllerTest extends MockedControllerTestApi {
         }
 
         {
-            final SettingsDtoResponse expectedResponse = serverSettingsProducer.apply(constraints);
-            final SettingsDtoResponse actualResponse = getSettings(patientRegistrationData.getKey(), expectedResponse.getClass());
+            final SettingsDtoResponse actualResponse = getSettings(patientRegistrationData.getKey(), correctServerSettingsResponse.getClass());
 
-            Assert.assertEquals(expectedResponse, actualResponse);
+            Assert.assertEquals(correctServerSettingsResponse, actualResponse);
         }
     }
 }

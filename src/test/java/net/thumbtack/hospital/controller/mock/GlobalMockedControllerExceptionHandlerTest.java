@@ -1,5 +1,6 @@
-package net.thumbtack.hospital.controller;
+package net.thumbtack.hospital.controller.mock;
 
+import net.thumbtack.hospital.controller.AdministratorController;
 import net.thumbtack.hospital.controller.api.MockedControllerTestApi;
 import net.thumbtack.hospital.dtorequest.admin.DoctorRegistrationDtoRequest;
 import net.thumbtack.hospital.dtoresponse.other.ErrorDtoResponse;
