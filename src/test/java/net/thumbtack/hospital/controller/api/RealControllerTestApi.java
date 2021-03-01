@@ -288,7 +288,7 @@ public class RealControllerTestApi extends BaseSpringConfiguration {
         putSessionIdToHeaders(headers, sessionId);
 
         final ResponseEntity<CreateMedicalCommissionDtoResponse> response =
-                restTemplate.exchange(url, HttpMethod.DELETE, new HttpEntity<>(request, headers), CreateMedicalCommissionDtoResponse.class);
+                restTemplate.exchange(url, HttpMethod.POST, new HttpEntity<>(request, headers), CreateMedicalCommissionDtoResponse.class);
         Assert.assertEquals(HttpStatus.OK, response.getStatusCode());
 
         final CreateMedicalCommissionDtoResponse actualResponse = response.getBody();
@@ -311,6 +311,7 @@ public class RealControllerTestApi extends BaseSpringConfiguration {
         final PatientRegistrationDtoResponse actualResponse = response.getBody();
         Assert.assertNotNull(actualResponse);
         Assert.assertNotEquals(0, actualResponse.getId());
+        request.setPhone(actualResponse.getPhone());
 
         return Pair.of(sessionId, actualResponse);
     }
