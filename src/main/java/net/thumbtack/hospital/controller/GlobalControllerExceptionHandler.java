@@ -29,16 +29,16 @@ public class GlobalControllerExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseBody
     public ErrorsDtoResponse handleFieldValidationExceptions(MethodArgumentNotValidException ex) {
-        List<ObjectError> errors = ex.getBindingResult().getAllErrors();
+        List<FieldError> errors = ex.getBindingResult().getFieldErrors();
         List<ErrorDtoResponse> result = new ArrayList<>(errors.size());
 
         String errorCode;
         String field;
         String errorMessage;
 
-        for (ObjectError e : errors) {
+        for (FieldError e : errors) {
             errorCode = e.getDefaultMessage();
-            field = ((FieldError) e).getField();
+            field = e.getField();
             errorMessage = errorMessageFactory.getValidationMessageByCode(errorCode);
 
             result.add(new ErrorDtoResponse(errorCode, field, errorMessage));

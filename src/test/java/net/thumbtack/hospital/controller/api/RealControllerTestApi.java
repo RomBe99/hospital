@@ -27,7 +27,6 @@ import net.thumbtack.hospital.dtoresponse.patient.PatientInformationDtoResponse;
 import net.thumbtack.hospital.dtoresponse.patient.PatientRegistrationDtoResponse;
 import net.thumbtack.hospital.dtoresponse.patient.ticket.AllTicketsDtoResponse;
 import net.thumbtack.hospital.dtoresponse.user.GetAllDoctorsDtoResponse;
-import net.thumbtack.hospital.util.cookie.CookieFactory;
 import org.apache.commons.lang3.tuple.Pair;
 import org.junit.Assert;
 import org.junit.Before;
@@ -46,7 +45,6 @@ public class RealControllerTestApi extends BaseSpringConfiguration {
         headers.add(HttpHeaders.COOKIE, sessionId);
     }
 
-
     @Before
     public void clearDatabase() {
         final String url = buildUrl(DebugController.PREFIX_URL, DebugController.DEBUG_CLEAR_URL);
@@ -56,7 +54,7 @@ public class RealControllerTestApi extends BaseSpringConfiguration {
     }
 
     @Override
-    public <T extends LoginUserDtoResponse> Pair<String, T> login(String login, String password, Class<T> clazz) throws Exception {
+    public <T extends LoginUserDtoResponse> Pair<String, T> login(String login, String password, Class<T> clazz) {
         final String url = buildUrl(UserController.PREFIX_URL, UserController.LOGIN_URL);
         final LoginDtoRequest request = new LoginDtoRequest(login, password);
         final ResponseEntity<T> response = restTemplate.postForEntity(url, request, clazz);
