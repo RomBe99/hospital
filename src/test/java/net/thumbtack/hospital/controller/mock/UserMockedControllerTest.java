@@ -27,12 +27,12 @@ import java.util.List;
 public class UserMockedControllerTest extends MockedControllerTestApi {
     @Autowired
     private Constraints constraints;
-    private final ServerSettingsDtoResponse correctServerSettingsResponse =
-            new ServerSettingsDtoResponse(constraints.getMaxNameLength(), constraints.getMinPasswordLength());
 
     @Test
     public void getAdministratorSettings() throws Exception {
         final String rootAdminSessionId = loginRootAdmin();
+        final ServerSettingsDtoResponse correctServerSettingsResponse =
+                new ServerSettingsDtoResponse(constraints.getMaxNameLength(), constraints.getMinPasswordLength());
 
         final SettingsDtoResponse actualResponse = getSettings(rootAdminSessionId, correctServerSettingsResponse.getClass());
         Assert.assertEquals(correctServerSettingsResponse, actualResponse);
@@ -76,6 +76,8 @@ public class UserMockedControllerTest extends MockedControllerTestApi {
         }
 
         {
+            final ServerSettingsDtoResponse correctServerSettingsResponse =
+                    new ServerSettingsDtoResponse(constraints.getMaxNameLength(), constraints.getMinPasswordLength());
             final SettingsDtoResponse actualResponse = getSettings(loginData.getKey(), correctServerSettingsResponse.getClass());
 
             Assert.assertEquals(correctServerSettingsResponse, actualResponse);
@@ -102,6 +104,8 @@ public class UserMockedControllerTest extends MockedControllerTestApi {
         }
 
         {
+            final ServerSettingsDtoResponse correctServerSettingsResponse =
+                    new ServerSettingsDtoResponse(constraints.getMaxNameLength(), constraints.getMinPasswordLength());
             final SettingsDtoResponse actualResponse = getSettings(patientRegistrationData.getKey(), correctServerSettingsResponse.getClass());
 
             Assert.assertEquals(correctServerSettingsResponse, actualResponse);
