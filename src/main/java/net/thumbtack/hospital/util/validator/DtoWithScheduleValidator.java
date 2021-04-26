@@ -11,21 +11,24 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public class DtoWithScheduleValidator implements ConstraintValidator<DtoWithSchedule, DtoRequestWithSchedule> {
+    private final Map<Boolean, Predicate<Object>> fieldValidators = new HashMap<>();
+    final int maxScheduleCount = 1;
+
+    public DtoWithScheduleValidator() {
+        fieldValidators.put(false, Objects::nonNull);
+        fieldValidators.put(true, o -> !((Collection<?>) o).isEmpty());
+    }
+
     public boolean isValid(DtoRequestWithSchedule request, ConstraintValidatorContext context) {
         List<Field> fieldsWithSchedule = Arrays.stream(request.getClass().getSuperclass().getDeclaredFields())
                 .filter(f -> f.isAnnotationPresent(DtoWithSchedule.Schedule.class))
                 .collect(Collectors.toList());
 
-        Map<Boolean, Predicate<Object>> fieldValidators = new HashMap<>();
-        fieldValidators.put(false, Objects::nonNull);
-        fieldValidators.put(true, o -> !((Collection<?>) o).isEmpty());
-
-        final int maxScheduleCount = 1;
-        int scheduleCount = 0;
+        var scheduleCount = 0;
         boolean isCollection;
         Object temp;
 
-        for (Field f : fieldsWithSchedule) {
+        for (var f : fieldsWithSchedule) {
             f.setAccessible(true);
 
             isCollection = f.getAnnotation(DtoWithSchedule.Schedule.class).isCollection();

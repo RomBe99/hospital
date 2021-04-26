@@ -11,7 +11,6 @@ import net.thumbtack.hospital.model.user.Patient;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.function.BiFunction;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -47,11 +46,11 @@ public class DtoAdapters {
             return Collections.emptyList();
         }
 
-        Map<Supplier<Boolean>, BiFunction<DtoRequestWithSchedule, Integer, List<ScheduleCell>>> transformers = new HashMap<>();
+        final var transformers = new HashMap<Supplier<Boolean>, BiFunction<DtoRequestWithSchedule, Integer, List<ScheduleCell>>>();
         transformers.put(() -> request.getWeekSchedule() != null, ScheduleTransformers::transformWeekSchedule);
         transformers.put(() -> !request.getWeekDaysSchedule().isEmpty(), ScheduleTransformers::transformWeekDaysSchedule);
 
-        for (Supplier<Boolean> p : transformers.keySet()) {
+        for (var p : transformers.keySet()) {
             if (p.get()) {
                 return ScheduleTransformers.sortSchedule(transformers.get(p).apply(request, doctorId));
             }

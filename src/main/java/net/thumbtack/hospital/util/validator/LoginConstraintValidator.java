@@ -18,9 +18,9 @@ public class LoginConstraintValidator implements ConstraintValidator<Login, Stri
     @Override
     public boolean isValid(String loginField, ConstraintValidatorContext constraintValidatorContext) {
         // Set of letters and numbers (latin + cyrillic)
-        String regex = "^[а-яА-ЯёЁa-zA-Z0-9]+$";
+        final var regex = "^[а-яА-ЯёЁa-zA-Z0-9]+$";
 
-        return loginField != null && !loginField.isEmpty() && loginField.length() <= constraints.getMaxNameLength() &&
+        return loginField != null && !loginField.isBlank() && loginField.length() <= constraints.getMaxNameLength() &&
                 loginField.matches(regex);
     }
 }

@@ -24,7 +24,7 @@ public enum WeekDay {
     }
 
     public static WeekDay of(String weekDayName) {
-        WeekDay result = NAME_TO_WEEK_DAY.get(weekDayName);
+        final var result = NAME_TO_WEEK_DAY.get(weekDayName);
 
         if (result == null) {
             throw new IllegalArgumentException("Invalid value for WeekDay: " + weekDayName);

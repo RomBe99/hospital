@@ -10,7 +10,7 @@ public class AppointmentToDoctorValidator implements ConstraintValidator<Appoint
     @Override
     public boolean isValid(AppointmentToDoctorDtoRequest request, ConstraintValidatorContext constraintValidatorContext) {
         boolean isValidDoctorId = request.getDoctorId() > 0;
-        boolean isValidDoctorSpeciality = request.getSpeciality() != null && !request.getSpeciality().isEmpty();
+        boolean isValidDoctorSpeciality = request.getSpeciality() != null && !request.getSpeciality().isBlank();
 
         return isValidDoctorId ^ isValidDoctorSpeciality;
     }
