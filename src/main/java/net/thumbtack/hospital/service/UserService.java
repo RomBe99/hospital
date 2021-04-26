@@ -17,9 +17,7 @@ import net.thumbtack.hospital.dtoresponse.patient.PatientInformationDtoResponse;
 import net.thumbtack.hospital.dtoresponse.patient.PatientLoginDtoResponse;
 import net.thumbtack.hospital.dtoresponse.user.GetAllDoctorsDtoResponse;
 import net.thumbtack.hospital.mapper.UserType;
-import net.thumbtack.hospital.model.user.Administrator;
 import net.thumbtack.hospital.model.user.Doctor;
-import net.thumbtack.hospital.model.user.Patient;
 import net.thumbtack.hospital.util.adapter.DtoAdapters;
 import net.thumbtack.hospital.util.error.PermissionDeniedException;
 import net.thumbtack.hospital.util.security.SecurityManagerImpl;
@@ -30,7 +28,6 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
@@ -55,25 +52,31 @@ public class UserService {
     }
 
     public LoginUserDtoResponse login(LoginDtoRequest request, String sessionId) {
-        final int userId = userDao.login(sessionId, request.getLogin(), request.getPassword());
-        final UserType userType = UserType.valueOf(commonDao.getUserTypeByUserId(userId));
+        final var userId = userDao.login(sessionId, request.getLogin(), request.getPassword());
+        final var userType = UserType.valueOf(commonDao.getUserTypeByUserId(userId));
 
-        final Map<UserType, Supplier<? extends LoginUserDtoResponse>> responseMap = new HashMap<>();
+        final var responseMap = new HashMap<UserType, Supplier<? extends LoginUserDtoResponse>>();
         responseMap.put(UserType.PATIENT, () -> {
-            Patient p = patientDao.getPatientById(userId);
+            final var patient = patientDao.getPatientById(userId);
 
-            return new PatientLoginDtoResponse(p.getId(), p.getFirstName(), p.getLastName(), p.getPatronymic(), p.getEmail(), p.getAddress(), p.getPhone());
+            return new PatientLoginDtoResponse(patient.getId(),
+                    patient.getFirstName(), patient.getLastName(), patient.getPatronymic(),
+                    patient.getEmail(), patient.getAddress(), patient.getPhone());
         });
         responseMap.put(UserType.ADMINISTRATOR, () -> {
-            Administrator a = administratorDao.getAdministratorById(userId);
+            final var administrator = administratorDao.getAdministratorById(userId);
 
-            return new AdminLoginDtoResponse(a.getId(), a.getFirstName(), a.getLastName(), a.getPatronymic(), a.getPosition());
+            return new AdminLoginDtoResponse(administrator.getId(),
+                    administrator.getFirstName(), administrator.getLastName(), administrator.getPatronymic(),
+                    administrator.getPosition());
         });
         responseMap.put(UserType.DOCTOR, () -> {
-            Doctor d = doctorDao.getDoctorById(userId);
+            final var doctor = doctorDao.getDoctorById(userId);
 
-            return new DoctorLoginDtoResponse(d.getId(), d.getFirstName(), d.getLastName(), d.getPatronymic(), d.getSpecialty(), d.getCabinet(),
-                    d.getSchedule().stream()
+            return new DoctorLoginDtoResponse(doctor.getId(),
+                    doctor.getFirstName(), doctor.getLastName(), doctor.getPatronymic(),
+                    doctor.getSpecialty(), doctor.getCabinet(),
+                    doctor.getSchedule().stream()
                             .map(DtoAdapters::transform)
                             .collect(Collectors.toList()));
         });
@@ -88,15 +91,15 @@ public class UserService {
     }
 
     public UserInformationDtoResponse getUserInformation(String sessionId) throws PermissionDeniedException {
-        final int userId = SecurityManagerImpl
+        final var userId = SecurityManagerImpl
                 .getSecurityManager()
                 .hasPermission(sessionId);
 
-        final UserType userType = UserType.valueOf(commonDao.getUserTypeByUserId(userId));
+        final var userType = UserType.valueOf(commonDao.getUserTypeByUserId(userId));
 
-        final Map<UserType, Supplier<? extends UserInformationDtoResponse>> responseMap = new HashMap<>();
+        final var responseMap = new HashMap<UserType, Supplier<? extends UserInformationDtoResponse>>();
         responseMap.put(UserType.PATIENT, () -> {
-            Patient patient = patientDao.getPatientById(userId);
+            final var patient = patientDao.getPatientById(userId);
 
             return new FullPatientInformationDtoResponse(patient.getId(),
                     patient.getLogin(), patient.getPassword(),
@@ -104,14 +107,14 @@ public class UserService {
                     patient.getEmail(), patient.getAddress(), patient.getPhone());
         });
         responseMap.put(UserType.ADMINISTRATOR, () -> {
-            Administrator admin = administratorDao.getAdministratorById(userId);
+            final var admin = administratorDao.getAdministratorById(userId);
 
             return new AdminInformationDtoResponse(admin.getId(),
                     admin.getLogin(), admin.getPassword(),
                     admin.getFirstName(), admin.getLastName(), admin.getPatronymic(), admin.getPosition());
         });
         responseMap.put(UserType.DOCTOR, () -> {
-            Doctor doctor = doctorDao.getDoctorById(userId);
+            final var doctor = doctorDao.getDoctorById(userId);
 
             return new DoctorInformationDtoResponse(doctor.getId(),
                     doctor.getLogin(), doctor.getPassword(),
@@ -130,7 +133,7 @@ public class UserService {
                 .getSecurityManager(UserType.PATIENT, UserType.DOCTOR, UserType.ADMINISTRATOR)
                 .hasPermission(sessionId);
 
-        final Patient patient = patientDao.getPatientById(patientId);
+        final var patient = patientDao.getPatientById(patientId);
 
         return new PatientInformationDtoResponse(patientId,
                 patient.getFirstName(), patient.getLastName(), patient.getPatronymic(),
@@ -139,7 +142,7 @@ public class UserService {
 
     public DoctorInformationDtoResponse getDoctorInformation(String sessionId, int doctorId,
                                                              LocalDate startDate, LocalDate endDate) throws PermissionDeniedException {
-        final int patientId = SecurityManagerImpl
+        final var patientId = SecurityManagerImpl
                 .getSecurityManager(UserType.PATIENT)
                 .hasPermission(sessionId);
         final Doctor doctor;
@@ -161,7 +164,7 @@ public class UserService {
 
     public GetAllDoctorsDtoResponse getDoctorsInformation(String sessionId, String speciality,
                                                           LocalDate startDate, LocalDate endDate) throws PermissionDeniedException {
-        final int patientId = SecurityManagerImpl
+        final var patientId = SecurityManagerImpl
                 .getSecurityManager(UserType.PATIENT)
                 .hasPermission(sessionId);
         final List<Doctor> doctors;
@@ -184,7 +187,7 @@ public class UserService {
     }
 
     public SettingsDtoResponse getSettings(String sessionId) {
-        final Map<UserType, Supplier<? extends SettingsDtoResponse>> settingsSuppliers = new HashMap<>();
+        final var settingsSuppliers = new HashMap<UserType, Supplier<? extends SettingsDtoResponse>>();
         settingsSuppliers.put(UserType.ADMINISTRATOR,
                 () -> new ServerSettingsDtoResponse(constraints.getMaxNameLength(), constraints.getMinPasswordLength()));
         settingsSuppliers.put(UserType.PATIENT,
@@ -194,7 +197,7 @@ public class UserService {
         settingsSuppliers.put(null,
                 () -> new ServerSettingsDtoResponse(constraints.getMaxNameLength(), constraints.getMinPasswordLength()));
 
-        for (UserType t : UserType.values()) {
+        for (var t : UserType.values()) {
             try {
                 SecurityManagerImpl
                         .getSecurityManager(t)
