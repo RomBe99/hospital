@@ -41,7 +41,7 @@ public class ScheduleTransformers {
     }
 
     public static List<ScheduleCell> transformWeekSchedule(DtoRequestWithSchedule request, int doctorId) {
-        final int duration = request.getDuration();
+        final var duration = request.getDuration();
         final var dateStart = LocalDate.parse(request.getDateStart());
         final var dateEnd = LocalDate.parse(request.getDateEnd());
         final var workDaysOfWeek = request.getWeekSchedule().getWeekDays().stream()
@@ -60,7 +60,7 @@ public class ScheduleTransformers {
 
         List<TimeCell> temp;
 
-        for (LocalDate d = dateStart; d.isBefore(dateEnd); d = d.plusDays(1)) {
+        for (var d = dateStart; d.isBefore(dateEnd); d = d.plusDays(1)) {
             if (isWeekend(d, workDaysOfWeek)) {
                 continue;
             }
