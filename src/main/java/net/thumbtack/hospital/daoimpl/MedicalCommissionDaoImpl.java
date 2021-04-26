@@ -3,7 +3,6 @@ package net.thumbtack.hospital.daoimpl;
 import net.thumbtack.hospital.dao.MedicalCommissionDao;
 import net.thumbtack.hospital.mapper.MedicalCommissionMapper;
 import net.thumbtack.hospital.model.ticket.TicketToMedicalCommission;
-import org.apache.ibatis.session.SqlSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
@@ -20,9 +19,9 @@ public class MedicalCommissionDaoImpl implements MedicalCommissionDao {
     public void createMedicalCommission(TicketToMedicalCommission ticket) {
         LOGGER.debug("Creating medical commission = {}", ticket);
 
-        try (SqlSession session = getSession()) {
+        try (final var session = getSession()) {
             try {
-                final MedicalCommissionMapper mapper = session.getMapper(MedicalCommissionMapper.class);
+                final var mapper = session.getMapper(MedicalCommissionMapper.class);
                 mapper.createMedicalCommission(ticket);
                 mapper.insertDoctorsInMedicalCommission(ticket.getId(), ticket.getDoctorIds());
 
@@ -41,7 +40,7 @@ public class MedicalCommissionDaoImpl implements MedicalCommissionDao {
     public void denyMedicalCommission(String ticketTitle) {
         LOGGER.debug("Deny ticket with title = {} to commission", ticketTitle);
 
-        try (SqlSession session = getSession()) {
+        try (final var session = getSession()) {
             try {
                 session.getMapper(MedicalCommissionMapper.class).denyMedicalCommission(ticketTitle);
 
@@ -60,7 +59,7 @@ public class MedicalCommissionDaoImpl implements MedicalCommissionDao {
     public List<TicketToMedicalCommission> getTicketsToMedicalCommission(int patientId) {
         LOGGER.debug("Get all tickets to medical commission for patient = {}", patientId);
 
-        try (SqlSession session = getSession()) {
+        try (final var session = getSession()) {
             return session.selectList("net.thumbtack.hospital.mapper.PatientMapper.getTicketsToMedicalCommission", patientId);
         } catch (RuntimeException ex) {
             LOGGER.error("Can't get all tickets to medical commission for patient = {}", patientId, ex);

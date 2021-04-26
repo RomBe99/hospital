@@ -5,7 +5,6 @@ import net.thumbtack.hospital.mapper.CommonMapper;
 import net.thumbtack.hospital.mapper.PatientMapper;
 import net.thumbtack.hospital.mapper.UserType;
 import net.thumbtack.hospital.model.user.Patient;
-import org.apache.ibatis.session.SqlSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
@@ -20,11 +19,11 @@ public class PatientDaoImpl implements PatientDao {
     public void insertPatient(Patient patient) {
         LOGGER.debug("Insert patient = {}", patient);
 
-        try (SqlSession session = getSession()) {
+        try (final var session = getSession()) {
             try {
                 final Integer userTypeId = session.getMapper(CommonMapper.class).getUserTypeId(UserType.PATIENT.getType());
 
-                PatientMapper mapper = session.getMapper(PatientMapper.class);
+                final var mapper = session.getMapper(PatientMapper.class);
                 mapper.insertUser(patient, userTypeId);
                 mapper.insertPatient(patient);
 
@@ -43,9 +42,9 @@ public class PatientDaoImpl implements PatientDao {
     public void updatePatient(Patient patient, String newPassword) {
         LOGGER.debug("Update patient = {}", patient);
 
-        try (SqlSession session = getSession()) {
+        try (final var session = getSession()) {
             try {
-                final PatientMapper mapper = session.getMapper(PatientMapper.class);
+                final var mapper = session.getMapper(PatientMapper.class);
                 mapper.updateUser(patient, newPassword);
                 mapper.updatePatient(patient);
 
@@ -64,7 +63,7 @@ public class PatientDaoImpl implements PatientDao {
     public Patient getPatientById(int id) {
         LOGGER.debug("Get patient with id = {}", id);
 
-        try (SqlSession session = getSession()) {
+        try (final var session = getSession()) {
             return session.selectOne("net.thumbtack.hospital.mapper.PatientMapper.getPatientById", id);
         } catch (RuntimeException ex) {
             LOGGER.error("Can't get patient with id = {}", id, ex);
@@ -77,8 +76,8 @@ public class PatientDaoImpl implements PatientDao {
     public int hasPermissions(String sessionId) {
         LOGGER.debug("Checking patient permissions for session id = {}", sessionId);
 
-        try (SqlSession session = getSession()) {
-            final Integer userId = session.getMapper(PatientMapper.class).hasPermissions(sessionId);
+        try (final var session = getSession()) {
+            final var userId = session.getMapper(PatientMapper.class).hasPermissions(sessionId);
 
             return userId == null ? 0 : userId;
         } catch (RuntimeException ex) {
