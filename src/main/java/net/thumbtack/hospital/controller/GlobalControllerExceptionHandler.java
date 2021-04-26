@@ -7,7 +7,6 @@ import net.thumbtack.hospital.util.error.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.FieldError;
-import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -29,8 +28,8 @@ public class GlobalControllerExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseBody
     public ErrorsDtoResponse handleFieldValidationExceptions(MethodArgumentNotValidException ex) {
-        List<FieldError> errors = ex.getBindingResult().getFieldErrors();
-        List<ErrorDtoResponse> result = new ArrayList<>(errors.size());
+        final var errors = ex.getBindingResult().getFieldErrors();
+        final var result = new ArrayList<ErrorDtoResponse>(errors.size());
 
         String errorCode;
         String field;
@@ -51,13 +50,13 @@ public class GlobalControllerExceptionHandler {
     @ExceptionHandler(ScheduleException.class)
     @ResponseBody
     public ErrorsDtoResponse handleScheduleExceptions(ScheduleException ex) {
-        Map<ScheduleErrorCode, String> errorCodeToField = new HashMap<>();
+        final var errorCodeToField = new HashMap<ScheduleErrorCode, String>();
         errorCodeToField.put(ScheduleErrorCode.SCHEDULE_HAVE_APPOINTMENT, "schedule");
         errorCodeToField.put(ScheduleErrorCode.ALREADY_CONTAINS_APPOINTMENT, "date and time");
 
-        String errorCode = ex.getErrorCode().getErrorCode();
-        String field = errorCodeToField.get(ex.getErrorCode());
-        String errorMessage = ex.getErrorCode().getErrorMessage();
+        final var errorCode = ex.getErrorCode().getErrorCode();
+        final var field = errorCodeToField.get(ex.getErrorCode());
+        final var errorMessage = ex.getErrorCode().getErrorMessage();
 
         return new ErrorsDtoResponse(Collections.singletonList(new ErrorDtoResponse(errorCode, field, errorMessage)));
     }
@@ -66,9 +65,9 @@ public class GlobalControllerExceptionHandler {
     @ExceptionHandler(DoctorNotFoundException.class)
     @ResponseBody
     public ErrorsDtoResponse handleDoctorNotFoundException(DoctorNotFoundException ex) {
-        final String errorCode = ex.getErrorCode().getErrorCode();
-        final String field = "id or speciality";
-        final String errorMessage = ex.getErrorCode().getErrorMessage();
+        final var errorCode = ex.getErrorCode().getErrorCode();
+        final var field = "id or speciality";
+        final var errorMessage = ex.getErrorCode().getErrorMessage();
 
         return new ErrorsDtoResponse(Collections.singletonList(new ErrorDtoResponse(errorCode, field, errorMessage)));
     }
@@ -77,9 +76,9 @@ public class GlobalControllerExceptionHandler {
     @ExceptionHandler(PermissionDeniedException.class)
     @ResponseBody
     public ErrorsDtoResponse handlePermissionExceptions(PermissionDeniedException ex) {
-        String errorCode = ex.getErrorCode().getErrorCode();
-        String field = CookieFactory.JAVA_SESSION_ID;
-        String errorMessage = ex.getErrorCode().getErrorMessage();
+        final var errorCode = ex.getErrorCode().getErrorCode();
+        final var field = CookieFactory.JAVA_SESSION_ID;
+        final var errorMessage = ex.getErrorCode().getErrorMessage();
 
         return new ErrorsDtoResponse(Collections.singletonList(new ErrorDtoResponse(errorCode, field, errorMessage)));
     }

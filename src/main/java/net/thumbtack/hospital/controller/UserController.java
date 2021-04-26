@@ -61,9 +61,9 @@ public class UserController {
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public LoginUserDtoResponse login(@Valid @RequestBody LoginDtoRequest request, HttpServletResponse response) {
-        Cookie javaSessionId = cookieFactory.produceCookie(CookieFactory.JAVA_SESSION_ID);
+        final var javaSessionId = cookieFactory.produceCookie(CookieFactory.JAVA_SESSION_ID);
 
-        LoginUserDtoResponse dtoResponse = userService.login(request, javaSessionId.getValue());
+        final var dtoResponse = userService.login(request, javaSessionId.getValue());
         response.addCookie(javaSessionId);
 
         return dtoResponse;
@@ -107,7 +107,7 @@ public class UserController {
                                                           @RequestParam(value = "speciality", required = false) String speciality,
                                                           @RequestParam(value = "startDate", required = false) String startDate,
                                                           @RequestParam(value = "endDate", required = false) String endDate) throws PermissionDeniedException {
-        Supplier<String> specialitySupplier = () -> speciality == null || speciality.isEmpty() ? null : speciality;
+        final Supplier<String> specialitySupplier = () -> speciality == null || speciality.isEmpty() ? null : speciality;
 
         if (needSchedule.test(schedule)) {
             return userService.getDoctorsInformation(sessionId, specialitySupplier.get(),
