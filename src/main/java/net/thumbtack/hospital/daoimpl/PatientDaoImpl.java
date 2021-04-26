@@ -21,7 +21,7 @@ public class PatientDaoImpl implements PatientDao {
 
         try (final var session = getSession()) {
             try {
-                final Integer userTypeId = session.getMapper(CommonMapper.class).getUserTypeId(UserType.PATIENT.getType());
+                final var userTypeId = session.getMapper(CommonMapper.class).getUserTypeId(UserType.PATIENT.getType());
 
                 final var mapper = session.getMapper(PatientMapper.class);
                 mapper.insertUser(patient, userTypeId);
