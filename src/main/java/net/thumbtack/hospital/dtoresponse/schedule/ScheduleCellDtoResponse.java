@@ -38,8 +38,7 @@ public class ScheduleCellDtoResponse {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ScheduleCellDtoResponse that = (ScheduleCellDtoResponse) o;
-        return Objects.equals(date, that.date) &&
-                Objects.equals(daySchedule, that.daySchedule);
+        return Objects.equals(date, that.date) && Objects.equals(daySchedule, that.daySchedule);
     }
 
     @Override
