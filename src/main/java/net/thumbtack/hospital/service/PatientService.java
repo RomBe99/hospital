@@ -14,8 +14,6 @@ import net.thumbtack.hospital.dtoresponse.patient.ticket.TicketToMedicalCommissi
 import net.thumbtack.hospital.mapper.UserType;
 import net.thumbtack.hospital.model.user.Doctor;
 import net.thumbtack.hospital.model.user.Patient;
-import net.thumbtack.hospital.model.ticket.TicketToMedicalCommission;
-import net.thumbtack.hospital.model.ticket.TicketToDoctor;
 import net.thumbtack.hospital.util.error.*;
 import net.thumbtack.hospital.util.security.SecurityManagerImpl;
 import net.thumbtack.hospital.util.ticket.TicketFactory;
@@ -25,7 +23,6 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.stream.Collectors;
 
 @Service("PatientService")
@@ -37,7 +34,7 @@ public class PatientService {
     private final MedicalCommissionDao medicalCommissionDao;
 
     public static String phoneTransformer(String phone) {
-        final String result = phone.replaceAll("\\D+", "");
+        final var result = phone.replaceAll("\\D+", "");
 
         return result.startsWith("7") ? '+' + result : result;
     }
@@ -54,10 +51,9 @@ public class PatientService {
     public PatientRegistrationDtoResponse patientRegistration(PatientRegistrationDtoRequest request) {
         request.setPhone(phoneTransformer(request.getPhone()));
 
-        final Patient patient =
-                new Patient(request.getLogin(), request.getPassword(),
-                        request.getFirstName(), request.getLastName(), request.getPatronymic(),
-                        request.getEmail(), request.getAddress(), request.getPhone());
+        final var patient = new Patient(request.getLogin(), request.getPassword(),
+                request.getFirstName(), request.getLastName(), request.getPatronymic(),
+                request.getEmail(), request.getAddress(), request.getPhone());
 
         patientDao.insertPatient(patient);
 
@@ -67,7 +63,7 @@ public class PatientService {
     }
 
     public EditPatientProfileDtoResponse editPatientProfile(String sessionId, EditPatientProfileDtoRequest request) throws PermissionDeniedException {
-        final int patientId = SecurityManagerImpl
+        final var patientId = SecurityManagerImpl
                 .getSecurityManager(UserType.PATIENT)
                 .hasPermission(sessionId);
 
@@ -77,10 +73,9 @@ public class PatientService {
             request.setNewPassword(request.getOldPassword());
         }
 
-        final Patient patient =
-                new Patient(patientId, null, request.getOldPassword(),
-                        request.getFirstName(), request.getLastName(), request.getPatronymic(),
-                        request.getEmail(), request.getAddress(), request.getPhone());
+        final var patient = new Patient(patientId, null, request.getOldPassword(),
+                request.getFirstName(), request.getLastName(), request.getPatronymic(),
+                request.getEmail(), request.getAddress(), request.getPhone());
 
         patientDao.updatePatient(patient, request.getNewPassword());
 
@@ -90,7 +85,7 @@ public class PatientService {
 
     public AppointmentToDoctorDtoResponse appointmentToDoctor(String sessionId, AppointmentToDoctorDtoRequest request)
             throws PermissionDeniedException, ScheduleException, DoctorNotFoundException {
-        final int patientId = SecurityManagerImpl
+        final var patientId = SecurityManagerImpl
                 .getSecurityManager(UserType.PATIENT)
                 .hasPermission(sessionId);
 
@@ -106,11 +101,11 @@ public class PatientService {
             throw new DoctorNotFoundException(DoctorNotFoundErrorCode.DOCTOR_NOT_FOUND);
         }
 
-        final LocalDate ticketDate = LocalDate.parse(request.getDate());
-        final LocalTime ticketTime = LocalTime.parse(request.getTime());
-        final String ticketTitle = TicketFactory.buildTicketToDoctor(doctor.getId(), ticketDate, ticketTime);
+        final var ticketDate = LocalDate.parse(request.getDate());
+        final var ticketTime = LocalTime.parse(request.getTime());
+        final var ticketTitle = TicketFactory.buildTicketToDoctor(doctor.getId(), ticketDate, ticketTime);
 
-        boolean containsAppointment = commonDao.containsAppointment(ticketTitle);
+        final var containsAppointment = commonDao.containsAppointment(ticketTitle);
 
         if (containsAppointment) {
             throw new ScheduleException(ScheduleErrorCode.ALREADY_CONTAINS_APPOINTMENT);
@@ -132,7 +127,7 @@ public class PatientService {
     }
 
     public void denyTicket(String sessionId, String ticketTitle) throws PermissionDeniedException {
-        final int patientId = SecurityManagerImpl
+        final var patientId = SecurityManagerImpl
                 .getSecurityManager(UserType.PATIENT)
                 .hasPermission(sessionId);
 
@@ -140,14 +135,14 @@ public class PatientService {
     }
 
     public AllTicketsDtoResponse getTickets(String sessionId) throws PermissionDeniedException {
-        final int patientId = SecurityManagerImpl
+        final var patientId = SecurityManagerImpl
                 .getSecurityManager(UserType.PATIENT)
                 .hasPermission(sessionId);
 
-        final List<TicketToDoctor> ticketsToDoctors = scheduleDao.getTicketsToDoctor(patientId);
-        final List<TicketToMedicalCommission> ticketsToMedicalCommission = medicalCommissionDao.getTicketsToMedicalCommission(patientId);
+        final var ticketsToDoctors = scheduleDao.getTicketsToDoctor(patientId);
+        final var ticketsToMedicalCommission = medicalCommissionDao.getTicketsToMedicalCommission(patientId);
 
-        final List<TicketDtoResponse> tickets = new ArrayList<>(ticketsToDoctors.size() + ticketsToMedicalCommission.size());
+        final var tickets = new ArrayList<TicketDtoResponse>(ticketsToDoctors.size() + ticketsToMedicalCommission.size());
 
         tickets.addAll(ticketsToDoctors.stream()
                 .map(t -> new TicketToDoctorDtoResponse(

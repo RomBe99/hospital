@@ -5,7 +5,6 @@ import net.thumbtack.hospital.mapper.AdministratorMapper;
 import net.thumbtack.hospital.mapper.CommonMapper;
 import net.thumbtack.hospital.mapper.UserType;
 import net.thumbtack.hospital.model.user.Administrator;
-import org.apache.ibatis.session.SqlSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
@@ -20,11 +19,11 @@ public class AdministratorDaoImpl implements AdministratorDao {
     public void insertAdministrator(Administrator administrator) {
         LOGGER.debug("Insert administrator = {}", administrator);
 
-        try (SqlSession session = getSession()) {
+        try (final var session = getSession()) {
             try {
-                final Integer userTypeId = session.getMapper(CommonMapper.class).getUserTypeId(UserType.ADMINISTRATOR.getType());
+                final var userTypeId = session.getMapper(CommonMapper.class).getUserTypeId(UserType.ADMINISTRATOR.getType());
 
-                final AdministratorMapper mapper = session.getMapper(AdministratorMapper.class);
+                final var mapper = session.getMapper(AdministratorMapper.class);
                 mapper.insertUser(administrator, userTypeId);
                 mapper.insertAdministrator(administrator);
 
@@ -43,9 +42,9 @@ public class AdministratorDaoImpl implements AdministratorDao {
     public void updateAdministrator(Administrator administrator, String newPassword) {
         LOGGER.debug("Update administrator = {}", administrator);
 
-        try (SqlSession session = getSession()) {
+        try (final var session = getSession()) {
             try {
-                final AdministratorMapper mapper = session.getMapper(AdministratorMapper.class);
+                final var mapper = session.getMapper(AdministratorMapper.class);
                 mapper.updateUser(administrator, newPassword);
                 mapper.updateAdministrator(administrator);
 
@@ -64,7 +63,7 @@ public class AdministratorDaoImpl implements AdministratorDao {
     public Administrator getAdministratorById(int id) {
         LOGGER.debug("Get administrator with id = {}", id);
 
-        try (SqlSession session = getSession()) {
+        try (final var session = getSession()) {
             return session.selectOne("net.thumbtack.hospital.mapper.AdministratorMapper.getAdminById", id);
         } catch (RuntimeException ex) {
             LOGGER.error("Can't get administrator with id = {}", id, ex);
@@ -77,7 +76,7 @@ public class AdministratorDaoImpl implements AdministratorDao {
     public void removeAdministrator(int id) {
         LOGGER.debug("Remove administrator with id = {}", id);
 
-        try (SqlSession session = getSession()) {
+        try (final var session = getSession()) {
             try {
                 session.getMapper(AdministratorMapper.class).removeAdministratorById(id);
 
@@ -96,8 +95,8 @@ public class AdministratorDaoImpl implements AdministratorDao {
     public int hasPermissions(String sessionId) {
         LOGGER.debug("Checking administrator permissions for session id = {}", sessionId);
 
-        try (SqlSession session = getSession()) {
-            final Integer userId = session.getMapper(AdministratorMapper.class).hasPermissions(sessionId);
+        try (final var session = getSession()) {
+            final var userId = session.getMapper(AdministratorMapper.class).hasPermissions(sessionId);
 
             return userId == null ? 0 : userId;
         } catch (RuntimeException ex) {

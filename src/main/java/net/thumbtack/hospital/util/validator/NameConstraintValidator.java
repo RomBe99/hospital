@@ -23,7 +23,7 @@ public class NameConstraintValidator implements ConstraintValidator<Name, String
 
     @Override
     public boolean isValid(String nameField, ConstraintValidatorContext context) {
-        if (isPatronymic && (nameField == null || nameField.isEmpty())) {
+        if (isPatronymic && (nameField == null || nameField.isBlank())) {
             return true;
         }
 
@@ -31,7 +31,7 @@ public class NameConstraintValidator implements ConstraintValidator<Name, String
             return false;
         }
 
-        String regex = "^[а-яА-ЯёЁa-zA-Z0-9]+$";
+        final var regex = "^[а-яА-ЯёЁa-zA-Z0-9]+$";
 
         return nameField.length() <= constraints.getMaxNameLength() && nameField.matches(regex);
     }

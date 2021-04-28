@@ -8,18 +8,22 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class PhoneConstraintValidator implements ConstraintValidator<Phone, String> {
+    final Map<String, Integer> numberPrefixToLength = new HashMap<>();
+
+    public PhoneConstraintValidator() {
+        numberPrefixToLength.put("8", 11);
+        numberPrefixToLength.put("+7", 12);
+    }
+
     @Override
     public boolean isValid(String phoneField, ConstraintValidatorContext constraintValidatorContext) {
-        if (phoneField == null) {
+        if (phoneField == null || phoneField.isBlank()) {
             return false;
         }
 
-        final String regex = "^((8|\\+7)[\\- ]?)?(\\(?\\d{3}\\)?[\\- ]?)?[\\d\\- ]{7,10}$";
-        Map<String, Integer> numberPrefixToLength = new HashMap<>();
-        numberPrefixToLength.put("8", 11);
-        numberPrefixToLength.put("+7", 12);
+        final var regex = "^((8|\\+7)[\\- ]?)?(\\(?\\d{3}\\)?[\\- ]?)?[\\d\\- ]{7,10}$";
 
-        for (String prefix : numberPrefixToLength.keySet()) {
+        for (var prefix : numberPrefixToLength.keySet()) {
             if (phoneField.startsWith(prefix) && phoneField.length() >= numberPrefixToLength.get(prefix)) {
                 return phoneField.matches(regex);
             }

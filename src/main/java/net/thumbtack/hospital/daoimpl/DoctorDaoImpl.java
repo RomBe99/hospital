@@ -6,12 +6,9 @@ import net.thumbtack.hospital.mapper.DoctorMapper;
 import net.thumbtack.hospital.mapper.UserType;
 import net.thumbtack.hospital.model.user.Doctor;
 import org.apache.commons.lang3.RandomUtils;
-import org.apache.ibatis.session.SqlSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
-
-import java.util.List;
 
 import static net.thumbtack.hospital.util.mybatis.MyBatisUtils.getSession;
 
@@ -23,14 +20,14 @@ public class DoctorDaoImpl implements DoctorDao {
     public void insertDoctor(Doctor doctor) {
         LOGGER.debug("Insert doctor = {}", doctor);
 
-        try (SqlSession session = getSession()) {
+        try (final var session = getSession()) {
             try {
-                final CommonMapper commonMapper = session.getMapper(CommonMapper.class);
-                final Integer userTypeId = commonMapper.getUserTypeId(UserType.DOCTOR.getType());
-                final Integer cabinetId = commonMapper.getCabinetIdByName(doctor.getCabinet());
-                final Integer specialityId = commonMapper.getDoctorSpecialityIdByName(doctor.getSpecialty());
+                final var commonMapper = session.getMapper(CommonMapper.class);
+                final var userTypeId = commonMapper.getUserTypeId(UserType.DOCTOR.getType());
+                final var cabinetId = commonMapper.getCabinetIdByName(doctor.getCabinet());
+                final var specialityId = commonMapper.getDoctorSpecialityIdByName(doctor.getSpecialty());
 
-                DoctorMapper doctorMapper = session.getMapper(DoctorMapper.class);
+                var doctorMapper = session.getMapper(DoctorMapper.class);
                 doctorMapper.insertUser(doctor, userTypeId);
                 doctorMapper.insertDoctor(doctor.getId(), specialityId, cabinetId);
 
@@ -49,7 +46,7 @@ public class DoctorDaoImpl implements DoctorDao {
     public void removeDoctor(int id) {
         LOGGER.debug("Delete doctor with id = {}", id);
 
-        try (SqlSession session = getSession()) {
+        try (final var session = getSession()) {
             try {
                 session.getMapper(DoctorMapper.class).removeDoctor(id);
 
@@ -68,7 +65,7 @@ public class DoctorDaoImpl implements DoctorDao {
     public Doctor getDoctorById(int id) {
         LOGGER.debug("Get doctor by id = {}", id);
 
-        try (SqlSession session = getSession()) {
+        try (final var session = getSession()) {
             return session.selectOne("net.thumbtack.hospital.mapper.DoctorMapper.getDoctorById", id);
         } catch (RuntimeException ex) {
             LOGGER.error("Can't get doctor by id = {}", id, ex);
@@ -81,10 +78,10 @@ public class DoctorDaoImpl implements DoctorDao {
     public Doctor getRandomDoctorBySpeciality(String speciality) {
         LOGGER.debug("Get random doctor by speciality = {}", speciality);
 
-        try (SqlSession session = getSession()) {
-            final Integer specialityId = session.getMapper(CommonMapper.class).getDoctorSpecialityIdByName(speciality);
+        try (final var session = getSession()) {
+            final var specialityId = session.getMapper(CommonMapper.class).getDoctorSpecialityIdByName(speciality);
 
-            final List<Doctor> doctors = session.selectList("net.thumbtack.hospital.mapper.DoctorMapper.getDoctorsBySpecialityId", specialityId);
+            final var doctors = session.<Doctor>selectList("net.thumbtack.hospital.mapper.DoctorMapper.getDoctorsBySpecialityId", specialityId);
 
             if (doctors.isEmpty()) {
                 return null;
@@ -102,8 +99,8 @@ public class DoctorDaoImpl implements DoctorDao {
     public int hasPermissions(String sessionId) {
         LOGGER.debug("Checking doctor permissions for session id = {}", sessionId);
 
-        try (SqlSession session = getSession()) {
-            final Integer userId = session.getMapper(DoctorMapper.class).hasPermissions(sessionId);
+        try (final var session = getSession()) {
+            final var userId = session.getMapper(DoctorMapper.class).hasPermissions(sessionId);
 
             return userId == null ? 0 : userId;
         } catch (RuntimeException ex) {

@@ -23,7 +23,7 @@ public class PasswordConstraintValidator implements ConstraintValidator<Password
 
     @Override
     public boolean isValid(String passwordField, ConstraintValidatorContext context) {
-        if (isNewPassword && (passwordField == null || passwordField.isEmpty())) {
+        if (isNewPassword && (passwordField == null || passwordField.isBlank())) {
             return true;
         }
 
@@ -37,7 +37,7 @@ public class PasswordConstraintValidator implements ConstraintValidator<Password
         }
 
         // Latin lowercase and capital letters, numbers
-        String regex = "^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?!.*\\s).*$";
+        final var regex = "^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?!.*\\s).*$";
 
         return passwordField.matches(regex);
     }

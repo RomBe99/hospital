@@ -20,7 +20,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
@@ -52,9 +51,9 @@ public class PatientController {
     @ResponseBody
     public PatientRegistrationDtoResponse patientRegistration(@Valid @RequestBody PatientRegistrationDtoRequest request,
                                                               HttpServletResponse response) {
-        PatientRegistrationDtoResponse dtoResponse = patientService.patientRegistration(request);
+        final var dtoResponse = patientService.patientRegistration(request);
 
-        Cookie javaSessionId = cookieFactory.produceCookie(CookieFactory.JAVA_SESSION_ID);
+        final var javaSessionId = cookieFactory.produceCookie(CookieFactory.JAVA_SESSION_ID);
 
         userService.login(new LoginDtoRequest(request.getLogin(), request.getPassword()), javaSessionId.getValue());
         response.addCookie(javaSessionId);

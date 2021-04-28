@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 
+// TODO Make as bean
 public class TicketFactory {
     private static StringBuilder convertDateToString(LocalDate date) {
         return new StringBuilder().append(date.getDayOfMonth()).append(date.getMonthValue()).append(date.getYear());
@@ -14,7 +15,7 @@ public class TicketFactory {
     }
 
     private static StringBuilder buildDoctorChapter(int doctorId) {
-        final String doctorTicketPrefix = "D";
+        final var doctorTicketPrefix = "D";
 
         return new StringBuilder(doctorTicketPrefix).append(doctorId);
     }
@@ -27,8 +28,8 @@ public class TicketFactory {
     }
 
     public static String buildTicketToCommission(LocalDate date, LocalTime time, List<Integer> doctorIds) {
-        final String commissionTicketPrefix = "C";
-        final StringBuilder result = new StringBuilder(commissionTicketPrefix);
+        final var commissionTicketPrefix = "C";
+        final var result = new StringBuilder(commissionTicketPrefix);
 
         doctorIds.forEach(i -> result.append(buildDoctorChapter(i)));
 

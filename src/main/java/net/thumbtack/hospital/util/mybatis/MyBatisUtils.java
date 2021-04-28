@@ -8,7 +8,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.io.Reader;
 
 public class MyBatisUtils {
     private static SqlSessionFactory sqlSessionFactory;
@@ -21,9 +20,9 @@ public class MyBatisUtils {
 
         LOGGER.debug("Initializing SQL sessions factory");
 
-        final String configResource = "mybatis-config.xml";
+        final var configResource = "mybatis-config.xml";
 
-        try (Reader reader = Resources.getResourceAsReader(configResource)) {
+        try (final var reader = Resources.getResourceAsReader(configResource)) {
             sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
         } catch (IOException ex) {
             LOGGER.error("Can't initialize SQL session factory, error loading mybatis-config.xml", ex);

@@ -4,7 +4,6 @@ import net.thumbtack.hospital.dao.ScheduleDao;
 import net.thumbtack.hospital.mapper.ScheduleMapper;
 import net.thumbtack.hospital.model.schedule.ScheduleCell;
 import net.thumbtack.hospital.model.ticket.TicketToDoctor;
-import org.apache.ibatis.session.SqlSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
@@ -22,9 +21,9 @@ public class ScheduleDaoImpl implements ScheduleDao {
     public void insertSchedule(int doctorId, List<ScheduleCell> schedule) {
         LOGGER.debug("Insert schedule = {}", schedule);
 
-        try (SqlSession session = getSession()) {
+        try (final var session = getSession()) {
             try {
-                final ScheduleMapper mapper = session.getMapper(ScheduleMapper.class);
+                final var mapper = session.getMapper(ScheduleMapper.class);
                 mapper.insertScheduleCells(doctorId, schedule);
 
                 for (ScheduleCell c : schedule) {
@@ -47,13 +46,13 @@ public class ScheduleDaoImpl implements ScheduleDao {
         LOGGER.debug("Edit schedule from date start = {} and date end = {} where schedule = {}",
                 dateStart, dateEnd, newSchedule);
 
-        try (SqlSession session = getSession()) {
+        try (final var session = getSession()) {
             try {
-                final ScheduleMapper mapper = session.getMapper(ScheduleMapper.class);
+                final var mapper = session.getMapper(ScheduleMapper.class);
                 mapper.removeSchedule(doctorId, dateStart, dateEnd);
                 mapper.insertScheduleCells(doctorId, newSchedule);
 
-                for (ScheduleCell c : newSchedule) {
+                for (var c : newSchedule) {
                     mapper.insertTimeCells(c.getId(), c.getCells());
                 }
 
@@ -74,7 +73,7 @@ public class ScheduleDaoImpl implements ScheduleDao {
     public void appointmentToDoctor(int patientId, String ticketTitle) {
         LOGGER.debug("Patient = {} appointment to ticket = {}", patientId, ticketTitle);
 
-        try (SqlSession session = getSession()) {
+        try (final var session = getSession()) {
             try {
                 session.getMapper(ScheduleMapper.class).appointmentToDoctor(patientId, ticketTitle);
 
@@ -93,7 +92,7 @@ public class ScheduleDaoImpl implements ScheduleDao {
     public void denyTicket(int patientId, String ticketTitle) {
         LOGGER.debug("Patient = {} deny ticket = {}", patientId, ticketTitle);
 
-        try (SqlSession session = getSession()) {
+        try (final var session = getSession()) {
             try {
                 session.getMapper(ScheduleMapper.class).denyTicket(patientId, ticketTitle);
 
@@ -112,7 +111,7 @@ public class ScheduleDaoImpl implements ScheduleDao {
     public List<TicketToDoctor> getTicketsToDoctor(int patientId) {
         LOGGER.debug("Get all tickets to doctor for patient = {}", patientId);
 
-        try (SqlSession session = getSession()) {
+        try (final var session = getSession()) {
             return session.selectList("net.thumbtack.hospital.mapper.PatientMapper.getTicketsToDoctor", patientId);
         } catch (RuntimeException ex) {
             LOGGER.error("Can't get all tickets to doctor for patient = {}", patientId, ex);

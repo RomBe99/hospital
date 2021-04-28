@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Objects;
 
 public class ErrorsDtoResponse {
-    List<ErrorDtoResponse> errors = new ArrayList<>();
+    private List<ErrorDtoResponse> errors = new ArrayList<>();
 
     public ErrorsDtoResponse() {
     }

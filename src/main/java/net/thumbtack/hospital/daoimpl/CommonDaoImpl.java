@@ -2,14 +2,12 @@ package net.thumbtack.hospital.daoimpl;
 
 import net.thumbtack.hospital.dao.CommonDao;
 import net.thumbtack.hospital.mapper.CommonMapper;
-import org.apache.ibatis.session.SqlSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
 import java.util.HashMap;
-import java.util.Map;
 
 import static net.thumbtack.hospital.util.mybatis.MyBatisUtils.getSession;
 
@@ -21,7 +19,7 @@ public class CommonDaoImpl implements CommonDao {
     public String getUserTypeByUserId(int userId) {
         LOGGER.debug("Get user type by user id = {}", userId);
 
-        try (SqlSession session = getSession()) {
+        try (final var session = getSession()) {
             return session.getMapper(CommonMapper.class).getUserTypeByUserId(userId);
         } catch (RuntimeException ex) {
             LOGGER.error("Can't get user type by user id  = {}", userId, ex);
@@ -34,8 +32,8 @@ public class CommonDaoImpl implements CommonDao {
     public boolean containsAppointments(int doctorId, LocalDate dateStart, LocalDate dateEnd) {
         LOGGER.debug("Check is an appointment to doctor = {} from {} to {}", doctorId, dateStart, dateEnd);
 
-        try (SqlSession session = getSession()) {
-            final Map<String, Object> params = new HashMap<>();
+        try (final var session = getSession()) {
+            final var params = new HashMap<String, Object>();
             params.put("doctorId", doctorId);
             params.put("dateStart", dateStart);
             params.put("dateEnd", dateEnd);
@@ -53,7 +51,7 @@ public class CommonDaoImpl implements CommonDao {
     public boolean containsAppointment(String ticketTitle) {
         LOGGER.debug("Check is an appointment to ticket = {}", ticketTitle);
 
-        try (SqlSession session = getSession()) {
+        try (final var session = getSession()) {
             return session.getMapper(CommonMapper.class).containsAppointment(ticketTitle);
         } catch (RuntimeException ex) {
             LOGGER.error("Can't check appointment to ticket = {}", ticketTitle, ex);
