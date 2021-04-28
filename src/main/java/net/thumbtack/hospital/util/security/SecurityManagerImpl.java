@@ -35,7 +35,7 @@ public class SecurityManagerImpl implements SecurityManager {
         }
 
         for (var ut : userPermissions) {
-            int userId = userDaos.get(ut).hasPermissions(sessionId);
+            final var userId = userDaos.get(ut).hasPermissions(sessionId);
 
             if (userId != 0) {
                 return userId;

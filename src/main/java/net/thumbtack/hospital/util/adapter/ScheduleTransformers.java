@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 
 public class ScheduleTransformers {
     public static boolean isWeekend(LocalDate testDate, List<DayOfWeek> workDaysOfWeek) {
-        var dayOfWeek = DayOfWeek.from(testDate);
+        final var dayOfWeek = DayOfWeek.from(testDate);
 
         final var weekendDayCheckers = List.<Predicate<DayOfWeek>>of(
                 d -> d == DayOfWeek.SATURDAY,
@@ -58,14 +58,12 @@ public class ScheduleTransformers {
             durations.add(t);
         }
 
-        List<TimeCell> temp;
-
         for (var d = dateStart; d.isBefore(dateEnd); d = d.plusDays(1)) {
             if (isWeekend(d, workDaysOfWeek)) {
                 continue;
             }
 
-            temp = new ArrayList<>();
+            final var temp = new ArrayList<TimeCell>();
 
             for (var t : durations) {
                 temp.add(new TimeCell(t, duration, TicketFactory.buildTicketToDoctor(doctorId, d, t)));
@@ -86,30 +84,26 @@ public class ScheduleTransformers {
         final var weekDurationTimes = new LinkedMultiValueMap<DayOfWeek, LocalTime>();
 
         final var result = new LinkedList<ScheduleCell>();
-        LocalTime durationStartTime;
-        LocalTime durationEndTime;
 
         for (var r : daySchedule) {
-            durationStartTime = LocalTime.parse(r.getTimeStart());
-            durationEndTime = LocalTime.parse(r.getTimeEnd());
+            final var durationStartTime = LocalTime.parse(r.getTimeStart());
+            final var durationEndTime = LocalTime.parse(r.getTimeEnd());
 
             for (var t = durationStartTime; t.isBefore(durationEndTime); t = t.plusMinutes(duration)) {
                 weekDurationTimes.add(WeekDay.transformToDayOfWeek(r.getWeekDay()), t);
             }
         }
 
-        List<LocalTime> durations;
-        List<TimeCell> temp;
         final var workDaysOfWeek = new ArrayList<>(weekDurationTimes.keySet());
 
         for (var d = dateStart; d.isBefore(dateEnd); d = d.plusDays(1)) {
-            durations = weekDurationTimes.get(d.getDayOfWeek());
+            final var durations = weekDurationTimes.get(d.getDayOfWeek());
 
             if (isWeekend(d, workDaysOfWeek) || durations == null) {
                 continue;
             }
 
-            temp = new ArrayList<>();
+            final var temp = new ArrayList<TimeCell>();
 
             for (var t : durations) {
                 temp.add(new TimeCell(t, duration, TicketFactory.buildTicketToDoctor(doctorId, d, t)));

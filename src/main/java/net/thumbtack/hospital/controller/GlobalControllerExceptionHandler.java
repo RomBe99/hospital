@@ -35,7 +35,7 @@ public class GlobalControllerExceptionHandler {
         String field;
         String errorMessage;
 
-        for (FieldError e : errors) {
+        for (var e : errors) {
             errorCode = e.getDefaultMessage();
             field = e.getField();
             errorMessage = errorMessageFactory.getValidationMessageByCode(errorCode);
