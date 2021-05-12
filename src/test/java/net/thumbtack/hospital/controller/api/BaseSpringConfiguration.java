@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import net.thumbtack.hospital.server.HospitalApplication;
 import net.thumbtack.hospital.util.mybatis.MyBatisUtils;
-import org.junit.BeforeClass;
+import org.junit.jupiter.api.BeforeAll;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -16,31 +16,31 @@ public abstract class BaseSpringConfiguration implements UserTestApi, PatientTes
     @Autowired
     private ObjectMapper jsonMapper;
 
-    @BeforeClass
+    @BeforeAll
     public static void setUpDatabase() {
         MyBatisUtils.initConnection();
     }
 
     public String buildUrl(String... urlParts) {
-        final String separator = "/";
+        final var separator = "/";
 
         if (urlParts.length == 0) {
             return separator;
         }
 
-        StringJoiner sj = new StringJoiner(separator);
+        final var sj = new StringJoiner(separator);
 
-        for (String part : urlParts) {
+        for (var part : urlParts) {
             sj.add(part);
         }
 
-        final String result = sj.toString();
+        final var result = sj.toString();
 
         return result.startsWith(separator) ? result : separator + result;
     }
 
     public String buildUrlWithPathVariable(String pathVarName, String pathVarValue, String... urlParts) {
-        final String nameWithBrackets = '{' + pathVarName + '}';
+        final var nameWithBrackets = '{' + pathVarName + '}';
 
         return buildUrl(urlParts).replace(nameWithBrackets, pathVarValue);
     }

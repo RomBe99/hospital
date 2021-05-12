@@ -5,21 +5,23 @@ import net.thumbtack.hospital.model.user.Doctor;
 import net.thumbtack.hospital.model.user.Patient;
 import net.thumbtack.hospital.model.user.User;
 import net.thumbtack.hospital.util.ticket.TicketFactory;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class MedicalCommissionDaoTest extends DaoTestApi {
     @Test
     public void createMedicalCommissionTest() {
-        Doctor doctorCreatedCommission = new Doctor("MenaAltyrev568", "ceVCCj14uw4H",
+        final var doctorCreatedCommission = new Doctor("MenaAltyrev568", "ceVCCj14uw4H",
                 "Варсеник", "Чудина", "Ивановна", "342", "Therapist", Collections.emptyList());
 
-        List<Doctor> doctors = Arrays.asList(doctorCreatedCommission,
+        final var doctors = List.of(doctorCreatedCommission,
                 new Doctor("ArnestinaChehova823", "l1E57ydLV9M1",
                         "Арнестина", "Чехова", "Ефимовна", "104", "Dentist", Collections.emptyList()),
                 new Doctor("KostantinVolochkov999", "d8Nb22tloSMQ",
@@ -31,34 +33,34 @@ public class MedicalCommissionDaoTest extends DaoTestApi {
                 new Doctor("MagamedzakirSaharov326", "9V3JaO1Ollde",
                         "Магамедзакир", "Сахаров", "Анатольевич", "124", "Dentist", Collections.emptyList()));
 
-        for (Doctor d : doctors) {
+        for (var d : doctors) {
             insertUser(d);
         }
 
-        Patient patient = new Patient("BogertZorin407", "saTPqK1Hs8gu",
+        final var patient = new Patient("BogertZorin407", "saTPqK1Hs8gu",
                 "Богерт", "Зорин", null, "5vwvd7@amazingmail.xyz",
                 "457441, г. Орел, ул. Вешних Вод, дом 26, квартира 398", "+79465104246");
         insertUser(patient);
 
-        LocalDate commissionDate = LocalDate.of(2020, 4, 7);
-        LocalTime commissionTime = LocalTime.of(14, 30);
-        List<Integer> doctorIds = doctors.stream().map(User::getId).collect(Collectors.toList());
-        String ticketTitle = TicketFactory.buildTicketToCommission(commissionDate, commissionTime, doctorIds);
-        String cabinet = doctorCreatedCommission.getCabinet();
-        int patientId = patient.getId();
-        int duration = 120;
+        final var commissionDate = LocalDate.of(2020, 4, 7);
+        final var commissionTime = LocalTime.of(14, 30);
+        final var doctorIds = doctors.stream().map(User::getId).collect(Collectors.toList());
+        final var ticketTitle = TicketFactory.buildTicketToCommission(commissionDate, commissionTime, doctorIds);
+        final var cabinet = doctorCreatedCommission.getCabinet();
+        final var patientId = patient.getId();
+        final var duration = 120;
 
-        TicketToMedicalCommission ticket =
-                new TicketToMedicalCommission(ticketTitle, cabinet, commissionDate, commissionTime, patientId, doctorIds, duration);
+        final var ticket = new TicketToMedicalCommission(ticketTitle, cabinet, commissionDate, commissionTime,
+                patientId, doctorIds, duration);
         createMedicalCommission(ticket);
     }
 
     @Test
     public void denyMedicalCommissionTest() {
-        Doctor doctorCreatedCommission = new Doctor("MenaAltyrev568", "ceVCCj14uw4H",
+        final var doctorCreatedCommission = new Doctor("MenaAltyrev568", "ceVCCj14uw4H",
                 "Варсеник", "Чудина", "Ивановна", "342", "Therapist", Collections.emptyList());
 
-        List<Doctor> doctors = Arrays.asList(doctorCreatedCommission,
+        final var doctors = List.of(doctorCreatedCommission,
                 new Doctor("ArnestinaChehova823", "l1E57ydLV9M1",
                         "Арнестина", "Чехова", "Ефимовна", "104", "Dentist", Collections.emptyList()),
                 new Doctor("KostantinVolochkov999", "d8Nb22tloSMQ",
@@ -70,32 +72,32 @@ public class MedicalCommissionDaoTest extends DaoTestApi {
                 new Doctor("MagamedzakirSaharov326", "9V3JaO1Ollde",
                         "Магамедзакир", "Сахаров", "Анатольевич", "124", "Dentist", Collections.emptyList()));
 
-        for (Doctor d : doctors) {
+        for (var d : doctors) {
             insertUser(d);
         }
 
-        Patient patient = new Patient("BogertZorin407", "saTPqK1Hs8gu",
+        final var patient = new Patient("BogertZorin407", "saTPqK1Hs8gu",
                 "Богерт", "Зорин", null, "5vwvd7@amazingmail.xyz",
                 "457441, г. Орел, ул. Вешних Вод, дом 26, квартира 398", "+79465104246");
         insertUser(patient);
 
-        LocalDate commissionDate = LocalDate.of(2020, 4, 7);
-        LocalTime commissionTime = LocalTime.of(14, 30);
-        List<Integer> doctorIds = doctors.stream().map(User::getId).collect(Collectors.toList());
-        String ticketTitle = TicketFactory.buildTicketToCommission(commissionDate, commissionTime, doctorIds);
-        String cabinet = doctorCreatedCommission.getCabinet();
-        int patientId = patient.getId();
-        int duration = 120;
+        final var commissionDate = LocalDate.of(2020, 4, 7);
+        final var commissionTime = LocalTime.of(14, 30);
+        final var doctorIds = doctors.stream().map(User::getId).collect(Collectors.toList());
+        final var ticketTitle = TicketFactory.buildTicketToCommission(commissionDate, commissionTime, doctorIds);
+        final var cabinet = doctorCreatedCommission.getCabinet();
+        final var patientId = patient.getId();
+        final var duration = 120;
 
-        TicketToMedicalCommission ticket =
-                new TicketToMedicalCommission(ticketTitle, cabinet, commissionDate, commissionTime, patientId, doctorIds, duration);
+        final var ticket = new TicketToMedicalCommission(ticketTitle, cabinet, commissionDate, commissionTime,
+                patientId, doctorIds, duration);
         createMedicalCommission(ticket);
         denyMedicalCommission(ticketTitle);
     }
 
     @Test
     public void getEmptyListTicketsToMedicalCommissionTest() {
-        Patient patient = new Patient("BogertZorin407", "saTPqK1Hs8gu",
+        final var patient = new Patient("BogertZorin407", "saTPqK1Hs8gu",
                 "Богерт", "Зорин", null, "5vwvd7@amazingmail.xyz",
                 "457441, г. Орел, ул. Вешних Вод, дом 26, квартира 398", "+79465104246");
         insertUser(patient);
@@ -105,7 +107,7 @@ public class MedicalCommissionDaoTest extends DaoTestApi {
 
     @Test
     public void getTicketsToMedicalCommissionTest() {
-        Map<String, Doctor> doctors = Stream.of(
+        final var doctors = List.of(
                 new Doctor("MenaAltyrev568", "ceVCCj14uw4H",
                         "Варсеник", "Чудина", "Ивановна", "342", "Therapist", Collections.emptyList()),
                 new Doctor("ArnestinaChehova823", "l1E57ydLV9M1",
@@ -118,37 +120,38 @@ public class MedicalCommissionDaoTest extends DaoTestApi {
                         "Балмурад", "Обломов", "Андреевич", "471", "Traumatologist", Collections.emptyList()),
                 new Doctor("MagamedzakirSaharov326", "9V3JaO1Ollde",
                         "Магамедзакир", "Сахаров", "Анатольевич", "124", "Dentist", Collections.emptyList()))
-                .collect(Collectors.toMap(User::getLogin, d -> d));
+                .stream().collect(Collectors.toMap(User::getLogin, d -> d));
 
-        for (Doctor d : doctors.values()) {
+        for (var d : doctors.values()) {
             insertUser(d);
         }
 
-        Patient patient = new Patient("BogertZorin407", "saTPqK1Hs8gu",
+        final var patient = new Patient("BogertZorin407", "saTPqK1Hs8gu",
                 "Богерт", "Зорин", null, "5vwvd7@amazingmail.xyz",
                 "457441, г. Орел, ул. Вешних Вод, дом 26, квартира 398", "+79465104246");
         insertUser(patient);
 
         // Create some commissions
 
-        Doctor doctorCreatedCommission = doctors.get("MagamedzakirSaharov326");
-        LocalDate commissionDate = LocalDate.of(2020, 4, 7);
-        LocalTime commissionTime = LocalTime.of(14, 30);
-        List<Integer> doctorIds = doctors.values().stream()
+        var doctorCreatedCommission = doctors.get("MagamedzakirSaharov326");
+        var commissionDate = LocalDate.of(2020, 4, 7);
+        var commissionTime = LocalTime.of(14, 30);
+        var doctorIds = doctors.values().stream()
                 .map(User::getId)
                 .collect(Collectors.toList());
-        String ticketTitle = TicketFactory.buildTicketToCommission(commissionDate, commissionTime, doctorIds);
-        String cabinet = doctorCreatedCommission.getCabinet();
-        int patientId = patient.getId();
-        int duration = 120;
+        var ticketTitle = TicketFactory.buildTicketToCommission(commissionDate, commissionTime, doctorIds);
+        var cabinet = doctorCreatedCommission.getCabinet();
+        var patientId = patient.getId();
+        var duration = 120;
 
-        List<TicketToMedicalCommission> expectedTickets = new ArrayList<>();
+        final var expectedTickets = new ArrayList<TicketToMedicalCommission>();
         expectedTickets.add(new TicketToMedicalCommission(ticketTitle, cabinet, commissionDate, commissionTime, patientId, doctorIds, duration));
 
         doctorCreatedCommission = doctors.get("AzhinaSolntseva451");
         commissionDate = LocalDate.of(2020, 3, 25);
         commissionTime = LocalTime.of(13, 0);
-        doctorIds = Stream.of(doctors.get("MenaAltyrev568"), doctors.get("ArnestinaChehova823"), doctorCreatedCommission)
+        doctorIds = List.of(doctors.get("MenaAltyrev568"), doctors.get("ArnestinaChehova823"), doctorCreatedCommission)
+                .stream()
                 .map(User::getId)
                 .collect(Collectors.toList());
         ticketTitle = TicketFactory.buildTicketToCommission(commissionDate, commissionTime, doctorIds);
@@ -159,7 +162,8 @@ public class MedicalCommissionDaoTest extends DaoTestApi {
         doctorCreatedCommission = doctors.get("BalmuradOblomov794");
         commissionDate = LocalDate.of(2020, 5, 10);
         commissionTime = LocalTime.of(8, 0);
-        doctorIds = Stream.of(doctors.get("AzhinaSolntseva451"), doctorCreatedCommission)
+        doctorIds = List.of(doctors.get("AzhinaSolntseva451"), doctorCreatedCommission)
+                .stream()
                 .map(User::getId)
                 .collect(Collectors.toList());
         ticketTitle = TicketFactory.buildTicketToCommission(commissionDate, commissionTime, doctorIds);
@@ -167,149 +171,149 @@ public class MedicalCommissionDaoTest extends DaoTestApi {
         duration = 100;
         expectedTickets.add(new TicketToMedicalCommission(ticketTitle, cabinet, commissionDate, commissionTime, patientId, doctorIds, duration));
 
-        for (TicketToMedicalCommission t : expectedTickets) {
+        for (var t : expectedTickets) {
             createMedicalCommission(t);
         }
 
         getTicketsToMedicalCommission(patientId, expectedTickets);
     }
 
-    @Test(expected = RuntimeException.class)
+    @Test
     public void insertTicketToMedicalCommissionWithNullTitleTest() {
-        Doctor doctor = new Doctor("AbilfatGolovin602", "FW9E1x2m2u18",
+        final var doctor = new Doctor("AbilfatGolovin602", "FW9E1x2m2u18",
                 "Абилфат", "Головин", "Анатольевич", "261", "Dentist", Collections.emptyList());
         insertUser(doctor);
 
-        Patient patient = new Patient("BogertZorin407", "saTPqK1Hs8gu",
+        final var patient = new Patient("BogertZorin407", "saTPqK1Hs8gu",
                 "Богерт", "Зорин", null, "5vwvd7@amazingmail.xyz",
                 "457441, г. Орел, ул. Вешних Вод, дом 26, квартира 398", "+79465104246");
         insertUser(patient);
 
-        TicketToMedicalCommission incorrectTicket =
-                new TicketToMedicalCommission(null, doctor.getCabinet(),
-                        LocalDate.of(2020, 3, 4), LocalTime.of(8, 0), patient.getId(),
-                        Collections.singletonList(doctor.getId()), 120);
-        createMedicalCommission(incorrectTicket);
+        final var incorrectTicket = new TicketToMedicalCommission(null, doctor.getCabinet(),
+                LocalDate.of(2020, 3, 4), LocalTime.of(8, 0), patient.getId(),
+                Collections.singletonList(doctor.getId()), 120);
+
+        Assertions.assertThrows(RuntimeException.class, () -> createMedicalCommission(incorrectTicket));
     }
 
-    @Test(expected = RuntimeException.class)
+    @Test
     public void insertTicketToMedicalCommissionWithIncorrectCabinetTest() {
-        Doctor doctor = new Doctor("AbilfatGolovin602", "FW9E1x2m2u18",
+        final var doctor = new Doctor("AbilfatGolovin602", "FW9E1x2m2u18",
                 "Абилфат", "Головин", "Анатольевич", "261", "Dentist", Collections.emptyList());
         insertUser(doctor);
 
-        Patient patient = new Patient("BogertZorin407", "saTPqK1Hs8gu",
+        final var patient = new Patient("BogertZorin407", "saTPqK1Hs8gu",
                 "Богерт", "Зорин", null, "5vwvd7@amazingmail.xyz",
                 "457441, г. Орел, ул. Вешних Вод, дом 26, квартира 398", "+79465104246");
         insertUser(patient);
 
-        TicketToMedicalCommission incorrectTicket =
-                new TicketToMedicalCommission("Ticket title", "Incorrect cabinet",
-                        LocalDate.of(2020, 3, 4), LocalTime.of(8, 0), patient.getId(),
-                        Collections.singletonList(doctor.getId()), 120);
-        createMedicalCommission(incorrectTicket);
+        final var incorrectTicket = new TicketToMedicalCommission("Ticket title", "Incorrect cabinet",
+                LocalDate.of(2020, 3, 4), LocalTime.of(8, 0), patient.getId(),
+                Collections.singletonList(doctor.getId()), 120);
+
+        Assertions.assertThrows(RuntimeException.class, () -> createMedicalCommission(incorrectTicket));
     }
 
-    @Test(expected = RuntimeException.class)
+    @Test
     public void insertTicketToMedicalCommissionWithNullCabinetTest() {
-        Doctor doctor = new Doctor("AbilfatGolovin602", "FW9E1x2m2u18",
+        final var doctor = new Doctor("AbilfatGolovin602", "FW9E1x2m2u18",
                 "Абилфат", "Головин", "Анатольевич", "261", "Dentist", Collections.emptyList());
         insertUser(doctor);
 
-        Patient patient = new Patient("BogertZorin407", "saTPqK1Hs8gu",
+        final var patient = new Patient("BogertZorin407", "saTPqK1Hs8gu",
                 "Богерт", "Зорин", null, "5vwvd7@amazingmail.xyz",
                 "457441, г. Орел, ул. Вешних Вод, дом 26, квартира 398", "+79465104246");
         insertUser(patient);
 
-        TicketToMedicalCommission incorrectTicket =
-                new TicketToMedicalCommission("Ticket title", null,
-                        LocalDate.of(2020, 3, 4), LocalTime.of(8, 0), patient.getId(),
-                        Collections.singletonList(doctor.getId()), 120);
-        createMedicalCommission(incorrectTicket);
+        final var incorrectTicket = new TicketToMedicalCommission("Ticket title", null,
+                LocalDate.of(2020, 3, 4), LocalTime.of(8, 0), patient.getId(),
+                Collections.singletonList(doctor.getId()), 120);
+
+        Assertions.assertThrows(RuntimeException.class, () -> createMedicalCommission(incorrectTicket));
     }
 
-    @Test(expected = RuntimeException.class)
+    @Test
     public void insertTicketToMedicalCommissionWithNullDateTest() {
-        Doctor doctor = new Doctor("AbilfatGolovin602", "FW9E1x2m2u18",
+        final var doctor = new Doctor("AbilfatGolovin602", "FW9E1x2m2u18",
                 "Абилфат", "Головин", "Анатольевич", "261", "Dentist", Collections.emptyList());
         insertUser(doctor);
 
-        Patient patient = new Patient("BogertZorin407", "saTPqK1Hs8gu",
+        final var patient = new Patient("BogertZorin407", "saTPqK1Hs8gu",
                 "Богерт", "Зорин", null, "5vwvd7@amazingmail.xyz",
                 "457441, г. Орел, ул. Вешних Вод, дом 26, квартира 398", "+79465104246");
         insertUser(patient);
 
-        TicketToMedicalCommission incorrectTicket =
-                new TicketToMedicalCommission("Ticket title", doctor.getCabinet(),
-                        null, LocalTime.of(8, 0), patient.getId(),
-                        Collections.singletonList(doctor.getId()), 120);
-        createMedicalCommission(incorrectTicket);
+        final var incorrectTicket = new TicketToMedicalCommission("Ticket title", doctor.getCabinet(),
+                null, LocalTime.of(8, 0), patient.getId(),
+                Collections.singletonList(doctor.getId()), 120);
+
+        Assertions.assertThrows(RuntimeException.class, () -> createMedicalCommission(incorrectTicket));
     }
 
-    @Test(expected = RuntimeException.class)
+    @Test
     public void insertTicketToMedicalCommissionWithNullTimeTest() {
-        Doctor doctor = new Doctor("AbilfatGolovin602", "FW9E1x2m2u18",
+        final var doctor = new Doctor("AbilfatGolovin602", "FW9E1x2m2u18",
                 "Абилфат", "Головин", "Анатольевич", "261", "Dentist", Collections.emptyList());
         insertUser(doctor);
 
-        Patient patient = new Patient("BogertZorin407", "saTPqK1Hs8gu",
+        final var patient = new Patient("BogertZorin407", "saTPqK1Hs8gu",
                 "Богерт", "Зорин", null, "5vwvd7@amazingmail.xyz",
                 "457441, г. Орел, ул. Вешних Вод, дом 26, квартира 398", "+79465104246");
         insertUser(patient);
 
-        TicketToMedicalCommission incorrectTicket =
-                new TicketToMedicalCommission("Ticket title", doctor.getCabinet(),
-                        LocalDate.of(2020, 3, 4), null, patient.getId(),
-                        Collections.singletonList(doctor.getId()), 120);
-        createMedicalCommission(incorrectTicket);
+        final var incorrectTicket = new TicketToMedicalCommission("Ticket title", doctor.getCabinet(),
+                LocalDate.of(2020, 3, 4), null, patient.getId(),
+                Collections.singletonList(doctor.getId()), 120);
+
+        Assertions.assertThrows(RuntimeException.class, () -> createMedicalCommission(incorrectTicket));
     }
 
-    @Test(expected = RuntimeException.class)
+    @Test
     public void insertTicketToMedicalCommissionWithIncorrectPatientIdTest() {
-        Doctor doctor = new Doctor("AbilfatGolovin602", "FW9E1x2m2u18",
+        final var doctor = new Doctor("AbilfatGolovin602", "FW9E1x2m2u18",
                 "Абилфат", "Головин", "Анатольевич", "261", "Dentist", Collections.emptyList());
         insertUser(doctor);
 
-        TicketToMedicalCommission incorrectTicket =
-                new TicketToMedicalCommission("Ticket title", doctor.getCabinet(),
-                        LocalDate.of(2020, 3, 4), LocalTime.of(8, 0), -1,
-                        Collections.singletonList(doctor.getId()), 120);
-        createMedicalCommission(incorrectTicket);
+        final var incorrectTicket = new TicketToMedicalCommission("Ticket title", doctor.getCabinet(),
+                LocalDate.of(2020, 3, 4), LocalTime.of(8, 0), -1,
+                Collections.singletonList(doctor.getId()), 120);
+
+        Assertions.assertThrows(RuntimeException.class, () -> createMedicalCommission(incorrectTicket));
     }
 
-    @Test(expected = RuntimeException.class)
+    @Test
     public void insertTicketToMedicalCommissionWithEmptyDoctorIdsTest() {
-        Doctor doctor = new Doctor("AbilfatGolovin602", "FW9E1x2m2u18",
+        final var doctor = new Doctor("AbilfatGolovin602", "FW9E1x2m2u18",
                 "Абилфат", "Головин", "Анатольевич", "261", "Dentist", Collections.emptyList());
         insertUser(doctor);
 
-        Patient patient = new Patient("BogertZorin407", "saTPqK1Hs8gu",
+        final var patient = new Patient("BogertZorin407", "saTPqK1Hs8gu",
                 "Богерт", "Зорин", null, "5vwvd7@amazingmail.xyz",
                 "457441, г. Орел, ул. Вешних Вод, дом 26, квартира 398", "+79465104246");
         insertUser(patient);
 
-        TicketToMedicalCommission incorrectTicket =
-                new TicketToMedicalCommission("Ticket title", doctor.getCabinet(),
-                        LocalDate.of(2020, 3, 4), LocalTime.of(8, 0), patient.getId(),
-                        Collections.emptyList(), 120);
-        createMedicalCommission(incorrectTicket);
+        final var incorrectTicket = new TicketToMedicalCommission("Ticket title", doctor.getCabinet(),
+                LocalDate.of(2020, 3, 4), LocalTime.of(8, 0), patient.getId(),
+                Collections.emptyList(), 120);
+
+        Assertions.assertThrows(RuntimeException.class, () -> createMedicalCommission(incorrectTicket));
     }
 
-    @Test(expected = RuntimeException.class)
+    @Test
     public void insertTicketToMedicalCommissionWithIncorrectDoctorIdsTest() {
-        Doctor doctor = new Doctor("AbilfatGolovin602", "FW9E1x2m2u18",
+        final var doctor = new Doctor("AbilfatGolovin602", "FW9E1x2m2u18",
                 "Абилфат", "Головин", "Анатольевич", "261", "Dentist", Collections.emptyList());
         insertUser(doctor);
 
-        Patient patient = new Patient("BogertZorin407", "saTPqK1Hs8gu",
+        final var patient = new Patient("BogertZorin407", "saTPqK1Hs8gu",
                 "Богерт", "Зорин", null, "5vwvd7@amazingmail.xyz",
                 "457441, г. Орел, ул. Вешних Вод, дом 26, квартира 398", "+79465104246");
         insertUser(patient);
 
-        TicketToMedicalCommission incorrectTicket =
-                new TicketToMedicalCommission("Ticket title", doctor.getCabinet(),
-                        LocalDate.of(2020, 3, 4), LocalTime.of(8, 0), patient.getId(),
-                        Arrays.asList(-1, -2), 120);
-        createMedicalCommission(incorrectTicket);
+        final var incorrectTicket = new TicketToMedicalCommission("Ticket title", doctor.getCabinet(),
+                LocalDate.of(2020, 3, 4), LocalTime.of(8, 0), patient.getId(),
+                List.of(-1, -2), 120);
+
+        Assertions.assertThrows(RuntimeException.class, () -> createMedicalCommission(incorrectTicket));
     }
 }

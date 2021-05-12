@@ -31,14 +31,13 @@ import net.thumbtack.hospital.dtoresponse.schedule.DtoResponseWithSchedule;
 import net.thumbtack.hospital.dtoresponse.user.GetAllDoctorsDtoResponse;
 import net.thumbtack.hospital.util.cookie.CookieFactory;
 import org.apache.commons.lang3.tuple.Pair;
-import org.junit.Assert;
-import org.junit.Before;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.http.MediaType;
-import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
@@ -51,51 +50,52 @@ public class MockedControllerTestApi extends BaseSpringConfiguration {
     @Autowired
     protected MockMvc mvc;
 
-    @Before
+    @BeforeEach
     public void clearDatabase() throws Exception {
-        final String url = buildUrl(DebugController.PREFIX_URL, DebugController.DEBUG_CLEAR_URL);
+        final var url = buildUrl(DebugController.PREFIX_URL, DebugController.DEBUG_CLEAR_URL);
 
-        final String actualJsonResponse = mvc.perform(
+        final var actualJsonResponse = mvc.perform(
                 MockMvcRequestBuilders
                         .post(url)
                         .characterEncoding(StandardCharsets.UTF_8.name()))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
-        Assert.assertFalse(actualJsonResponse.isEmpty());
 
-        final String expectedJsonResponse = mapToJson(new EmptyDtoResponse());
-        Assert.assertEquals(expectedJsonResponse, actualJsonResponse);
+        Assertions.assertFalse(actualJsonResponse.isEmpty());
+
+        final var expectedJsonResponse = mapToJson(new EmptyDtoResponse());
+        Assertions.assertEquals(expectedJsonResponse, actualJsonResponse);
     }
 
     // Debug controller methods
 
     private void getScheduleByDoctorId(int doctorId, DtoResponseWithSchedule expectedResponse) throws Exception {
-        final String pathVarName = "doctorId";
-        final String url = buildUrlWithPathVariable(pathVarName, String.valueOf(doctorId),
+        final var pathVarName = "doctorId";
+        final var url = buildUrlWithPathVariable(pathVarName, String.valueOf(doctorId),
                 DebugController.PREFIX_URL, DebugController.GET_SCHEDULE_BY_DOCTOR_ID_URL);
 
-        final String actualJsonResponse = mvc.perform(
+        final var actualJsonResponse = mvc.perform(
                 MockMvcRequestBuilders
                         .get(url)
                         .characterEncoding(StandardCharsets.UTF_8.name()))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
-        Assert.assertFalse(actualJsonResponse.isEmpty());
+        Assertions.assertFalse(actualJsonResponse.isEmpty());
 
-        final GetScheduleByDoctorIdDtoResponse actualResponse = mapFromJson(actualJsonResponse, GetScheduleByDoctorIdDtoResponse.class);
-        Assert.assertEquals(expectedResponse.getSchedule(), actualResponse.getSchedule());
+        final var actualResponse = mapFromJson(actualJsonResponse, GetScheduleByDoctorIdDtoResponse.class);
+        Assertions.assertEquals(expectedResponse.getSchedule(), actualResponse.getSchedule());
     }
 
     // User controller methods
 
     @Override
     public <T extends LoginUserDtoResponse> Pair<String, T> login(String login, String password, Class<T> clazz) throws Exception {
-        final String url = buildUrl(UserController.PREFIX_URL, UserController.LOGIN_URL);
-        final LoginDtoRequest request = new LoginDtoRequest(login, password);
-        final String json = mapToJson(request);
+        final var url = buildUrl(UserController.PREFIX_URL, UserController.LOGIN_URL);
+        final var request = new LoginDtoRequest(login, password);
+        final var json = mapToJson(request);
 
-        final MockHttpServletResponse response = mvc.perform(
+        final var response = mvc.perform(
                 MockMvcRequestBuilders
                         .post(url)
                         .contentType(MediaType.APPLICATION_JSON_VALUE).content(json)
@@ -104,23 +104,23 @@ public class MockedControllerTestApi extends BaseSpringConfiguration {
                 .andExpect(MockMvcResultMatchers.cookie().exists(CookieFactory.JAVA_SESSION_ID))
                 .andReturn().getResponse();
 
-        final String sessionId = Objects.requireNonNull(response.getCookie(CookieFactory.JAVA_SESSION_ID)).getValue();
-        Assert.assertFalse(sessionId.isEmpty());
+        final var sessionId = Objects.requireNonNull(response.getCookie(CookieFactory.JAVA_SESSION_ID)).getValue();
+        Assertions.assertFalse(sessionId.isEmpty());
 
-        final String actualJsonResponse = response.getContentAsString(StandardCharsets.UTF_8);
-        Assert.assertFalse(actualJsonResponse.isEmpty());
+        final var actualJsonResponse = response.getContentAsString(StandardCharsets.UTF_8);
+        Assertions.assertFalse(actualJsonResponse.isEmpty());
 
-        final T actualResponse = mapFromJson(actualJsonResponse, clazz);
-        Assert.assertNotEquals(0, actualResponse.getId());
+        final var actualResponse = mapFromJson(actualJsonResponse, clazz);
+        Assertions.assertNotEquals(0, actualResponse.getId());
 
         return Pair.of(sessionId, actualResponse);
     }
 
     @Override
     public void logout(String sessionId) throws Exception {
-        final String url = buildUrl(UserController.PREFIX_URL, UserController.LOGOUT_URL);
+        final var url = buildUrl(UserController.PREFIX_URL, UserController.LOGOUT_URL);
 
-        final String actualJsonResponse = mvc.perform(
+        final var actualJsonResponse = mvc.perform(
                 MockMvcRequestBuilders
                         .delete(url)
                         .cookie(new Cookie(CookieFactory.JAVA_SESSION_ID, sessionId))
@@ -128,17 +128,17 @@ public class MockedControllerTestApi extends BaseSpringConfiguration {
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
-        Assert.assertFalse(actualJsonResponse.isEmpty());
+        Assertions.assertFalse(actualJsonResponse.isEmpty());
 
-        final String expectedJsonResponse = mapToJson(new EmptyDtoResponse());
-        Assert.assertEquals(expectedJsonResponse, actualJsonResponse);
+        final var expectedJsonResponse = mapToJson(new EmptyDtoResponse());
+        Assertions.assertEquals(expectedJsonResponse, actualJsonResponse);
     }
 
     @Override
     public <T extends UserInformationDtoResponse> T getUserInformation(String sessionId, Class<T> clazz) throws Exception {
-        final String url = buildUrl(UserController.PREFIX_URL, UserController.GET_USER_INFORMATION_URL);
+        final var url = buildUrl(UserController.PREFIX_URL, UserController.GET_USER_INFORMATION_URL);
 
-        final String actualJsonResponse = mvc.perform(
+        final var actualJsonResponse = mvc.perform(
                 MockMvcRequestBuilders
                         .get(url)
                         .cookie(new Cookie(CookieFactory.JAVA_SESSION_ID, sessionId))
@@ -146,84 +146,84 @@ public class MockedControllerTestApi extends BaseSpringConfiguration {
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
-        Assert.assertFalse(actualJsonResponse.isEmpty());
+        Assertions.assertFalse(actualJsonResponse.isEmpty());
 
-        final T actualResponse = mapFromJson(actualJsonResponse, clazz);
-        Assert.assertNotEquals(0, actualResponse.getId());
+        final var actualResponse = mapFromJson(actualJsonResponse, clazz);
+        Assertions.assertNotEquals(0, actualResponse.getId());
 
         return actualResponse;
     }
 
     @Override
     public DoctorInformationDtoResponse getDoctorInformation(String sessionId, int doctorId, String schedule, String startDate, String endDate) throws Exception {
-        final String pathVarName = "doctorId";
-        final String url = buildUrlWithPathVariable(pathVarName, String.valueOf(doctorId),
+        final var pathVarName = "doctorId";
+        final var url = buildUrlWithPathVariable(pathVarName, String.valueOf(doctorId),
                 UserController.PREFIX_URL, UserController.GET_DOCTOR_INFORMATION_URL);
 
-        final String queryParamName = "schedule";
-        final MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders
+        final var queryParamName = "schedule";
+        final var requestBuilder = MockMvcRequestBuilders
                 .get(url)
                 .cookie(new Cookie(CookieFactory.JAVA_SESSION_ID, sessionId))
                 .characterEncoding(StandardCharsets.UTF_8.name())
                 .queryParam(queryParamName, schedule);
 
         if (UserController.needSchedule.test(schedule)) {
-            final String startDateParamName = "startDate";
+            final var startDateParamName = "startDate";
             requestBuilder.queryParam(startDateParamName, startDate);
 
-            final String endDateParamName = "endDate";
+            final var endDateParamName = "endDate";
             requestBuilder.queryParam(endDateParamName, endDate);
         }
 
-        final String actualJsonResponse = mvc.perform(requestBuilder)
+        final var actualJsonResponse = mvc.perform(requestBuilder)
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
-        Assert.assertFalse(actualJsonResponse.isEmpty());
+        Assertions.assertFalse(actualJsonResponse.isEmpty());
 
         return mapFromJson(actualJsonResponse, DoctorInformationDtoResponse.class);
     }
 
     @Override
     public GetAllDoctorsDtoResponse getDoctorsInformation(String sessionId, String schedule, String speciality, String startDate, String endDate) throws Exception {
-        final String url = buildUrl(UserController.PREFIX_URL, UserController.GET_DOCTORS_INFORMATION_URL);
+        final var url = buildUrl(UserController.PREFIX_URL, UserController.GET_DOCTORS_INFORMATION_URL);
 
-        final String queryParamName = "schedule";
-        final MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders
+        final var queryParamName = "schedule";
+        final var requestBuilder = MockMvcRequestBuilders
                 .get(url)
                 .cookie(new Cookie(CookieFactory.JAVA_SESSION_ID, sessionId))
                 .characterEncoding(StandardCharsets.UTF_8.name())
                 .queryParam(queryParamName, schedule);
 
         if (speciality != null) {
-            final String specialityParamName = "speciality";
+            final var specialityParamName = "speciality";
             requestBuilder.queryParam(specialityParamName, speciality);
         }
 
         if (UserController.needSchedule.test(schedule)) {
-            final String startDateParamName = "startDate";
+            final var startDateParamName = "startDate";
             requestBuilder.queryParam(startDateParamName, startDate);
 
-            final String endDateParamName = "endDate";
+            final var endDateParamName = "endDate";
             requestBuilder.queryParam(endDateParamName, endDate);
         }
 
-        final String actualJsonResponse = mvc.perform(requestBuilder)
+        final var actualJsonResponse = mvc.perform(requestBuilder)
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
-        Assert.assertFalse(actualJsonResponse.isEmpty());
+        Assertions.assertFalse(actualJsonResponse.isEmpty());
 
         return mapFromJson(actualJsonResponse, GetAllDoctorsDtoResponse.class);
     }
 
     @Override
     public PatientInformationDtoResponse getPatientInformation(String sessionId, int patientId) throws Exception {
-        final String pathVarName = "patientId";
-        final String url = buildUrlWithPathVariable(pathVarName, String.valueOf(patientId),
+        final var pathVarName = "patientId";
+        final var url = buildUrlWithPathVariable(pathVarName, String.valueOf(patientId),
                 UserController.PREFIX_URL, UserController.GET_PATIENT_INFORMATION_URL);
 
-        final String actualJsonResponse = mvc.perform(
+        final var actualJsonResponse = mvc.perform(
                 MockMvcRequestBuilders
                         .get(url)
                         .cookie(new Cookie(CookieFactory.JAVA_SESSION_ID, sessionId))
@@ -232,16 +232,16 @@ public class MockedControllerTestApi extends BaseSpringConfiguration {
                 .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
 
-        Assert.assertFalse(actualJsonResponse.isEmpty());
+        Assertions.assertFalse(actualJsonResponse.isEmpty());
 
         return mapFromJson(actualJsonResponse, PatientInformationDtoResponse.class);
     }
 
     @Override
     public <T extends SettingsDtoResponse> T getSettings(String sessionId, Class<T> clazz) throws Exception {
-        final String url = buildUrl(UserController.PREFIX_URL, UserController.GET_SETTINGS_URL);
+        final var url = buildUrl(UserController.PREFIX_URL, UserController.GET_SETTINGS_URL);
 
-        final String actualJsonResponse = mvc.perform(
+        final var actualJsonResponse = mvc.perform(
                 MockMvcRequestBuilders
                         .get(url)
                         .cookie(new Cookie(CookieFactory.JAVA_SESSION_ID, sessionId))
@@ -249,7 +249,7 @@ public class MockedControllerTestApi extends BaseSpringConfiguration {
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
-        Assert.assertFalse(actualJsonResponse.isEmpty());
+        Assertions.assertFalse(actualJsonResponse.isEmpty());
 
         return mapFromJson(actualJsonResponse, clazz);
     }
@@ -258,10 +258,10 @@ public class MockedControllerTestApi extends BaseSpringConfiguration {
 
     @Override
     public AdminRegistrationDtoResponse administratorRegistration(String sessionId, AdminRegistrationDtoRequest request) throws Exception {
-        final String url = buildUrl(AdministratorController.PREFIX_URL, AdministratorController.ADMINISTRATOR_REGISTRATION_URL);
-        final String json = mapToJson(request);
+        final var url = buildUrl(AdministratorController.PREFIX_URL, AdministratorController.ADMINISTRATOR_REGISTRATION_URL);
+        final var json = mapToJson(request);
 
-        final String actualJsonResponse = mvc.perform(
+        final var actualJsonResponse = mvc.perform(
                 MockMvcRequestBuilders
                         .post(url)
                         .cookie(new Cookie(CookieFactory.JAVA_SESSION_ID, sessionId))
@@ -270,19 +270,19 @@ public class MockedControllerTestApi extends BaseSpringConfiguration {
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
-        Assert.assertFalse(actualJsonResponse.isEmpty());
+        Assertions.assertFalse(actualJsonResponse.isEmpty());
 
-        final AdminRegistrationDtoResponse actualResponse = mapFromJson(actualJsonResponse, AdminRegistrationDtoResponse.class);
-        Assert.assertNotEquals(0, actualResponse.getId());
+        final var actualResponse = mapFromJson(actualJsonResponse, AdminRegistrationDtoResponse.class);
+        Assertions.assertNotEquals(0, actualResponse.getId());
 
         return actualResponse;
     }
 
     public DoctorRegistrationDtoResponse doctorRegistration(String sessionId, DoctorRegistrationDtoRequest request) throws Exception {
-        final String url = buildUrl(AdministratorController.PREFIX_URL, AdministratorController.DOCTOR_REGISTRATION_URL);
-        final String json = mapToJson(request);
+        final var url = buildUrl(AdministratorController.PREFIX_URL, AdministratorController.DOCTOR_REGISTRATION_URL);
+        final var json = mapToJson(request);
 
-        final String actualJsonResponse = mvc.perform(
+        final var actualJsonResponse = mvc.perform(
                 MockMvcRequestBuilders
                         .post(url)
                         .cookie(new Cookie(CookieFactory.JAVA_SESSION_ID, sessionId))
@@ -291,21 +291,21 @@ public class MockedControllerTestApi extends BaseSpringConfiguration {
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
-        Assert.assertFalse(actualJsonResponse.isEmpty());
+        Assertions.assertFalse(actualJsonResponse.isEmpty());
 
-        final DoctorRegistrationDtoResponse actualResponse = mapFromJson(actualJsonResponse, DoctorRegistrationDtoResponse.class);
-        Assert.assertNotEquals(0, actualResponse.getId());
-        actualResponse.getSchedule().forEach(Assert::assertNotNull);
+        final var actualResponse = mapFromJson(actualJsonResponse, DoctorRegistrationDtoResponse.class);
+        Assertions.assertNotEquals(0, actualResponse.getId());
+        actualResponse.getSchedule().forEach(Assertions::assertNotNull);
 
         return actualResponse;
     }
 
     @Override
     public EditAdminProfileDtoResponse editAdministratorProfile(String sessionId, EditAdminProfileDtoRequest request) throws Exception {
-        final String url = buildUrl(AdministratorController.PREFIX_URL, AdministratorController.EDIT_ADMINISTRATOR_PROFILE_URL);
-        final String json = mapToJson(request);
+        final var url = buildUrl(AdministratorController.PREFIX_URL, AdministratorController.EDIT_ADMINISTRATOR_PROFILE_URL);
+        final var json = mapToJson(request);
 
-        final String actualJsonResponse = mvc.perform(
+        final var actualJsonResponse = mvc.perform(
                 MockMvcRequestBuilders
                         .put(url)
                         .cookie(new Cookie(CookieFactory.JAVA_SESSION_ID, sessionId))
@@ -314,19 +314,19 @@ public class MockedControllerTestApi extends BaseSpringConfiguration {
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
-        Assert.assertFalse(actualJsonResponse.isEmpty());
+        Assertions.assertFalse(actualJsonResponse.isEmpty());
 
         return mapFromJson(actualJsonResponse, EditAdminProfileDtoResponse.class);
     }
 
     @Override
     public EditDoctorScheduleDtoResponse editDoctorSchedule(String sessionId, int doctorId, EditDoctorScheduleDtoRequest request) throws Exception {
-        final String pathVarName = "doctorId";
-        final String url = buildUrlWithPathVariable(pathVarName, String.valueOf(doctorId),
+        final var pathVarName = "doctorId";
+        final var url = buildUrlWithPathVariable(pathVarName, String.valueOf(doctorId),
                 AdministratorController.PREFIX_URL, AdministratorController.EDIT_DOCTOR_SCHEDULE_URL);
-        final String json = mapToJson(request);
+        final var json = mapToJson(request);
 
-        final String actualJsonResponse = mvc.perform(
+        final var actualJsonResponse = mvc.perform(
                 MockMvcRequestBuilders
                         .put(url)
                         .cookie(new Cookie(CookieFactory.JAVA_SESSION_ID, sessionId))
@@ -335,19 +335,19 @@ public class MockedControllerTestApi extends BaseSpringConfiguration {
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
-        Assert.assertFalse(actualJsonResponse.isEmpty());
+        Assertions.assertFalse(actualJsonResponse.isEmpty());
 
         return mapFromJson(actualJsonResponse, EditDoctorScheduleDtoResponse.class);
     }
 
     @Override
     public EmptyDtoResponse removeDoctor(String sessionId, int doctorId, RemoveDoctorDtoRequest request) throws Exception {
-        final String pathVarName = "doctorId";
-        final String url = buildUrlWithPathVariable(pathVarName, String.valueOf(doctorId),
+        final var pathVarName = "doctorId";
+        final var url = buildUrlWithPathVariable(pathVarName, String.valueOf(doctorId),
                 AdministratorController.PREFIX_URL, AdministratorController.REMOVE_DOCTOR_URL);
-        final String json = mapToJson(request);
+        final var json = mapToJson(request);
 
-        final String actualJsonResponse = mvc.perform(
+        final var actualJsonResponse = mvc.perform(
                 MockMvcRequestBuilders
                         .delete(url)
                         .cookie(new Cookie(CookieFactory.JAVA_SESSION_ID, sessionId))
@@ -356,7 +356,7 @@ public class MockedControllerTestApi extends BaseSpringConfiguration {
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
-        Assert.assertFalse(actualJsonResponse.isEmpty());
+        Assertions.assertFalse(actualJsonResponse.isEmpty());
 
         return mapFromJson(actualJsonResponse, EmptyDtoResponse.class);
     }
@@ -364,10 +364,10 @@ public class MockedControllerTestApi extends BaseSpringConfiguration {
     // Patient controller methods
 
     public Pair<String, PatientRegistrationDtoResponse> patientRegistration(PatientRegistrationDtoRequest request) throws Exception {
-        final String url = buildUrl(PatientController.PREFIX_URL, PatientController.PATIENT_REGISTRATION_URL);
-        final String json = mapToJson(request);
+        final var url = buildUrl(PatientController.PREFIX_URL, PatientController.PATIENT_REGISTRATION_URL);
+        final var json = mapToJson(request);
 
-        final MockHttpServletResponse response = mvc.perform(
+        final var response = mvc.perform(
                 MockMvcRequestBuilders
                         .post(url)
                         .contentType(MediaType.APPLICATION_JSON_VALUE).content(json)
@@ -377,14 +377,14 @@ public class MockedControllerTestApi extends BaseSpringConfiguration {
                 .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andReturn().getResponse();
 
-        final String sessionId = Objects.requireNonNull(response.getCookie(CookieFactory.JAVA_SESSION_ID)).getValue();
-        Assert.assertFalse(sessionId.isEmpty());
+        final var sessionId = Objects.requireNonNull(response.getCookie(CookieFactory.JAVA_SESSION_ID)).getValue();
+        Assertions.assertFalse(sessionId.isEmpty());
 
-        final String actualJsonResponse = response.getContentAsString(StandardCharsets.UTF_8);
-        Assert.assertFalse(actualJsonResponse.isEmpty());
+        final var actualJsonResponse = response.getContentAsString(StandardCharsets.UTF_8);
+        Assertions.assertFalse(actualJsonResponse.isEmpty());
 
-        final PatientRegistrationDtoResponse actualResponse = mapFromJson(actualJsonResponse, PatientRegistrationDtoResponse.class);
-        Assert.assertNotEquals(0, actualResponse.getId());
+        final var actualResponse = mapFromJson(actualJsonResponse, PatientRegistrationDtoResponse.class);
+        Assertions.assertNotEquals(0, actualResponse.getId());
 
         request.setPhone(actualResponse.getPhone());
 
@@ -393,10 +393,10 @@ public class MockedControllerTestApi extends BaseSpringConfiguration {
 
     @Override
     public EditPatientProfileDtoResponse editPatientProfile(String sessionId, EditPatientProfileDtoRequest request) throws Exception {
-        final String url = buildUrl(PatientController.PREFIX_URL, PatientController.EDIT_PATIENT_PROFILE_URL);
-        final String json = mapToJson(request);
+        final var url = buildUrl(PatientController.PREFIX_URL, PatientController.EDIT_PATIENT_PROFILE_URL);
+        final var json = mapToJson(request);
 
-        final String actualJsonResponse = mvc.perform(
+        final var actualJsonResponse = mvc.perform(
                 MockMvcRequestBuilders
                         .put(url)
                         .cookie(new Cookie(CookieFactory.JAVA_SESSION_ID, sessionId))
@@ -405,9 +405,9 @@ public class MockedControllerTestApi extends BaseSpringConfiguration {
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
-        Assert.assertFalse(actualJsonResponse.isEmpty());
+        Assertions.assertFalse(actualJsonResponse.isEmpty());
 
-        final EditPatientProfileDtoResponse actualResponse = mapFromJson(actualJsonResponse, EditPatientProfileDtoResponse.class);
+        final var actualResponse = mapFromJson(actualJsonResponse, EditPatientProfileDtoResponse.class);
         request.setPhone(actualResponse.getPhone());
 
         return actualResponse;
@@ -415,8 +415,8 @@ public class MockedControllerTestApi extends BaseSpringConfiguration {
 
     @Override
     public AppointmentToDoctorDtoResponse appointmentToDoctor(String sessionId, AppointmentToDoctorDtoRequest request) throws Exception {
-        final String url = buildUrl(PatientController.PREFIX_URL, PatientController.APPOINTMENT_TO_DOCTOR_URL);
-        final String json = mapToJson(request);
+        final var url = buildUrl(PatientController.PREFIX_URL, PatientController.APPOINTMENT_TO_DOCTOR_URL);
+        final var json = mapToJson(request);
 
         final String actualJsonResponse = mvc.perform(
                 MockMvcRequestBuilders
@@ -427,17 +427,17 @@ public class MockedControllerTestApi extends BaseSpringConfiguration {
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
-        Assert.assertFalse(actualJsonResponse.isEmpty());
+        Assertions.assertFalse(actualJsonResponse.isEmpty());
 
         return mapFromJson(actualJsonResponse, AppointmentToDoctorDtoResponse.class);
     }
 
     @Override
     public EmptyDtoResponse denyTicketToDoctor(String sessionId, String ticketTitle) throws Exception {
-        final String pathVarName = "ticketTitle";
-        final String url = buildUrlWithPathVariable(pathVarName, ticketTitle, PatientController.PREFIX_URL, PatientController.DENY_TICKET_TO_DOCTOR_URL);
+        final var pathVarName = "ticketTitle";
+        final var url = buildUrlWithPathVariable(pathVarName, ticketTitle, PatientController.PREFIX_URL, PatientController.DENY_TICKET_TO_DOCTOR_URL);
 
-        final String actualJsonResponse = mvc.perform(
+        final var actualJsonResponse = mvc.perform(
                 MockMvcRequestBuilders
                         .delete(url)
                         .cookie(new Cookie(CookieFactory.JAVA_SESSION_ID, sessionId))
@@ -445,16 +445,16 @@ public class MockedControllerTestApi extends BaseSpringConfiguration {
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
-        Assert.assertFalse(actualJsonResponse.isEmpty());
+        Assertions.assertFalse(actualJsonResponse.isEmpty());
 
         return mapFromJson(actualJsonResponse, EmptyDtoResponse.class);
     }
 
     @Override
     public AllTicketsDtoResponse getTickets(String sessionId) throws Exception {
-        final String url = buildUrl(PatientController.PREFIX_URL, PatientController.GET_TICKETS_URL);
+        final var url = buildUrl(PatientController.PREFIX_URL, PatientController.GET_TICKETS_URL);
 
-        final String actualJsonResponse = mvc.perform(
+        final var actualJsonResponse = mvc.perform(
                 MockMvcRequestBuilders
                         .get(url)
                         .cookie(new Cookie(CookieFactory.JAVA_SESSION_ID, sessionId))
@@ -462,7 +462,7 @@ public class MockedControllerTestApi extends BaseSpringConfiguration {
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
-        Assert.assertFalse(actualJsonResponse.isEmpty());
+        Assertions.assertFalse(actualJsonResponse.isEmpty());
 
         return mapFromJson(actualJsonResponse, AllTicketsDtoResponse.class);
     }
@@ -471,10 +471,10 @@ public class MockedControllerTestApi extends BaseSpringConfiguration {
 
     @Override
     public CreateMedicalCommissionDtoResponse createMedicalCommission(String sessionId, CreateMedicalCommissionDtoRequest request) throws Exception {
-        final String url = buildUrl(DoctorController.PREFIX_URL, DoctorController.CREATE_MEDICAL_COMMISSION_URL);
-        final String json = mapToJson(request);
+        final var url = buildUrl(DoctorController.PREFIX_URL, DoctorController.CREATE_MEDICAL_COMMISSION_URL);
+        final var json = mapToJson(request);
 
-        final String actualJsonResponse = mvc.perform(
+        final var actualJsonResponse = mvc.perform(
                 MockMvcRequestBuilders
                         .post(url)
                         .cookie(new Cookie(CookieFactory.JAVA_SESSION_ID, sessionId))
@@ -483,7 +483,7 @@ public class MockedControllerTestApi extends BaseSpringConfiguration {
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
-        Assert.assertFalse(actualJsonResponse.isEmpty());
+        Assertions.assertFalse(actualJsonResponse.isEmpty());
 
         return mapFromJson(actualJsonResponse, CreateMedicalCommissionDtoResponse.class);
     }

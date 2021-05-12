@@ -5,10 +5,10 @@ import net.thumbtack.hospital.dtorequest.schedule.DtoRequestWithSchedule;
 import net.thumbtack.hospital.dtorequest.schedule.WeekScheduleDtoRequest;
 import net.thumbtack.hospital.model.schedule.ScheduleCell;
 import net.thumbtack.hospital.util.adapter.DtoAdapters;
+import org.apache.commons.lang3.tuple.Pair;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -18,7 +18,7 @@ public class ScheduleGenerators {
                                                                             LocalDate dateStart, LocalDate dateEnd,
                                                                             LocalTime timeStart, LocalTime timeEnd,
                                                                             List<Integer> weekDays) {
-        WeekScheduleDtoRequest weekSchedule = new WeekScheduleDtoRequest(timeStart.toString(), timeEnd.toString(), weekDays);
+        var weekSchedule = new WeekScheduleDtoRequest(timeStart.toString(), timeEnd.toString(), weekDays);
 
         return new DtoRequestWithSchedule(dateStart.toString(), dateEnd.toString(), duration, weekSchedule) {
             @Override
@@ -90,12 +90,11 @@ public class ScheduleGenerators {
 
     public static DtoRequestWithSchedule generateDtoRequestWithDaySchedule(int duration,
                                                                            LocalDate dateStart, LocalDate dateEnd,
-                                                                           Map<WeekDay, AbstractMap.SimpleEntry<LocalTime, LocalTime>> schedule) {
-        List<DayScheduleDtoRequest> weekDaySchedule = new ArrayList<>(schedule.size());
-        AbstractMap.SimpleEntry<LocalTime, LocalTime> temp;
+                                                                           Map<WeekDay, Pair<LocalTime, LocalTime>> schedule) {
+        final var weekDaySchedule = new ArrayList<DayScheduleDtoRequest>(schedule.size());
 
-        for (WeekDay weekDay : schedule.keySet()) {
-            temp = schedule.get(weekDay);
+        for (var weekDay : schedule.keySet()) {
+            final var temp = schedule.get(weekDay);
             weekDaySchedule.add(new DayScheduleDtoRequest(temp.getKey().toString(), temp.getValue().toString(), weekDay.getName()));
         }
 

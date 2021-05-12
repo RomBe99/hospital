@@ -17,16 +17,15 @@ import net.thumbtack.hospital.util.cookie.CookieFactory;
 import net.thumbtack.hospital.util.error.PermissionDeniedException;
 import net.thumbtack.hospital.util.mybatis.MyBatisUtils;
 import net.thumbtack.hospital.util.security.SecurityManagerImpl;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.BeforeClass;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -39,13 +38,14 @@ public abstract class DaoTestApi {
     private final ScheduleDao scheduleDao = new ScheduleDaoImpl();
     private final CommonDao commonDao = new CommonDaoImpl();
     private final DebugDao debugDao = new DebugDaoImpl();
+    private final CookieFactory cookieFactory = new CookieFactory();
 
-    @BeforeClass
+    @BeforeAll
     public static void setUp() {
         MyBatisUtils.initConnection();
     }
 
-    @Before
+    @BeforeEach
     public void clearDatabase() {
         debugDao.clearUsers();
         debugDao.clearLoggedInUsers();
@@ -58,34 +58,34 @@ public abstract class DaoTestApi {
         debugDao.clearTimeCells();
     }
 
-    public static String generateSessionId() {
-        return new CookieFactory().produceCookie(CookieFactory.JAVA_SESSION_ID).getValue();
+    protected String generateSessionId() {
+        return cookieFactory.produceCookie(CookieFactory.JAVA_SESSION_ID).getValue();
     }
 
     // Template methods
 
     public void insertUser(User user) {
-        final Map<Class<? extends User>, Consumer<User>> userInsertOperations = new HashMap<>();
+        final var userInsertOperations = new HashMap<Class<? extends User>, Consumer<User>>();
         userInsertOperations.put(Doctor.class, u -> doctorDao.insertDoctor((Doctor) u));
         userInsertOperations.put(Patient.class, u -> patientDao.insertPatient((Patient) u));
         userInsertOperations.put(Administrator.class, u -> administratorDao.insertAdministrator((Administrator) u));
 
         userInsertOperations.get(user.getClass()).accept(user);
 
-        final User userAfterInsert = getUserById(user.getId(), user.getClass());
-        Assert.assertEquals(user, userAfterInsert);
+        final var userAfterInsert = getUserById(user.getId(), user.getClass());
+        Assertions.assertEquals(user, userAfterInsert);
     }
 
     public void hasPermissions(String sessionId, int expectedUserId, UserType... userTypes) throws PermissionDeniedException {
-        final int actualUserId = SecurityManagerImpl
+        final var actualUserId = SecurityManagerImpl
                 .getSecurityManager(userTypes)
                 .hasPermission(sessionId);
 
-        Assert.assertEquals(expectedUserId, actualUserId);
+        Assertions.assertEquals(expectedUserId, actualUserId);
     }
 
     public User getUserById(int userId, Class<? extends User> userClass) {
-        final Map<Class<? extends User>, Function<Integer, ? extends User>> userSuppliers = new HashMap<>();
+        final var userSuppliers = new HashMap<Class<? extends User>, Function<Integer, ? extends User>>();
         userSuppliers.put(Doctor.class, doctorDao::getDoctorById);
         userSuppliers.put(Patient.class, patientDao::getPatientById);
         userSuppliers.put(Administrator.class, administratorDao::getAdministratorById);
@@ -96,48 +96,48 @@ public abstract class DaoTestApi {
     }
 
     public void updateUser(User user, String newPassword) {
-        final Map<Class<? extends User>, Consumer<User>> userUpdaters = new HashMap<>();
+        final var userUpdaters = new HashMap<Class<? extends User>, Consumer<User>>();
         userUpdaters.put(Patient.class, u -> patientDao.updatePatient((Patient) u, newPassword));
         userUpdaters.put(Administrator.class, u -> administratorDao.updateAdministrator((Administrator) u, newPassword));
 
         userUpdaters.get(user.getClass()).accept(user);
         user.setPassword(newPassword);
 
-        final User userAfterUpdate = getUserById(user.getId(), user.getClass());
-        Assert.assertEquals(user, userAfterUpdate);
+        final var userAfterUpdate = getUserById(user.getId(), user.getClass());
+        Assertions.assertEquals(user, userAfterUpdate);
     }
 
     public void removeUserById(int userId, Class<? extends User> userType) {
-        final Map<Class<? extends User>, Consumer<Integer>> userRemovers = new HashMap<>();
+        final var userRemovers = new HashMap<Class<? extends User>, Consumer<Integer>>();
         userRemovers.put(Doctor.class, doctorDao::removeDoctor);
         userRemovers.put(Administrator.class, administratorDao::removeAdministrator);
 
         userRemovers.get(userType).accept(userId);
 
-        final User userAfterDelete = getUserById(userId, userType);
-        Assert.assertNull(userAfterDelete);
+        final var userAfterDelete = getUserById(userId, userType);
+        Assertions.assertNull(userAfterDelete);
     }
 
     // User dao methods
 
     public String login(String login, String password) {
-        final String sessionId = generateSessionId();
-        final int actualUserId = userDao.login(sessionId, login, password);
+        final var sessionId = generateSessionId();
+        final var actualUserId = userDao.login(sessionId, login, password);
 
-        Assert.assertNotEquals(0, actualUserId);
+        Assertions.assertNotEquals(0, actualUserId);
 
         try {
             hasPermissions(sessionId, actualUserId);
         } catch (PermissionDeniedException ex) {
-            Assert.fail();
+            Assertions.fail();
         }
 
         return sessionId;
     }
 
     public String loginRootAdmin() {
-        final String login = "admin";
-        final String password = "admin";
+        final var login = "admin";
+        final var password = "admin";
 
         return login(login, password);
     }
@@ -148,7 +148,7 @@ public abstract class DaoTestApi {
         try {
             hasPermissions(sessionId, 0);
         } catch (PermissionDeniedException e) {
-            Assert.fail();
+            Assertions.fail();
         }
     }
 
@@ -157,7 +157,7 @@ public abstract class DaoTestApi {
     }
 
     public List<Doctor> getDoctorsInformation(int patientId, String speciality, LocalDate dateStart, LocalDate dateEnd) {
-        final List<Doctor> result = userDao.getDoctorsInformationWithSchedule(patientId, speciality, dateStart, dateEnd);
+        final var result = userDao.getDoctorsInformationWithSchedule(patientId, speciality, dateStart, dateEnd);
         result.sort(Comparator.comparingInt(User::getId));
 
         return result;
@@ -168,47 +168,47 @@ public abstract class DaoTestApi {
     public void createMedicalCommission(TicketToMedicalCommission ticket) {
         ticket.getDoctorIds().sort(Integer::compareTo);
         medicalCommissionDao.createMedicalCommission(ticket);
-        Assert.assertNotEquals(0, ticket.getId());
+        Assertions.assertNotEquals(0, ticket.getId());
 
-        final TicketToMedicalCommission insertedTicket = debugDao.getTicketToMedicalCommissionByTitle(ticket.getTitle());
-        Assert.assertEquals(ticket, insertedTicket);
+        final var insertedTicket = debugDao.getTicketToMedicalCommissionByTitle(ticket.getTitle());
+        Assertions.assertEquals(ticket, insertedTicket);
     }
 
     public void getTicketsToMedicalCommission(int patientId, List<TicketToMedicalCommission> expectedTickets) {
-        final List<TicketToMedicalCommission> actualTickets = medicalCommissionDao.getTicketsToMedicalCommission(patientId);
+        final var actualTickets = medicalCommissionDao.getTicketsToMedicalCommission(patientId);
         actualTickets.forEach(t -> t.getDoctorIds().sort(Integer::compareTo));
 
         expectedTickets.sort(Comparator.comparing(Ticket::getTime));
         expectedTickets.sort(Comparator.comparing(Ticket::getDate));
 
-        Assert.assertEquals(expectedTickets, actualTickets);
+        Assertions.assertEquals(expectedTickets, actualTickets);
     }
 
     public void denyMedicalCommission(String ticketTitle) {
         medicalCommissionDao.denyMedicalCommission(ticketTitle);
 
         TicketToMedicalCommission insertedTicket = debugDao.getTicketToMedicalCommissionByTitle(ticketTitle);
-        Assert.assertNull(insertedTicket);
+        Assertions.assertNull(insertedTicket);
     }
 
     // Schedule dao methods
 
     public void scheduleInsertingChecker(int doctorId, LocalDate dateStart, LocalDate dateEnd,
                                          LocalTime timeStart, LocalTime timeEnd, List<ScheduleCell> expectedSchedule) {
-        final List<ScheduleCell> actualSchedule = debugDao.getScheduleByDoctorId(doctorId, dateStart, dateEnd, timeStart, timeEnd);
-        Assert.assertEquals(expectedSchedule.size(), actualSchedule.size());
+        final var actualSchedule = debugDao.getScheduleByDoctorId(doctorId, dateStart, dateEnd, timeStart, timeEnd);
+        Assertions.assertEquals(expectedSchedule.size(), actualSchedule.size());
         ScheduleTransformers.sortSchedule(actualSchedule);
-        Assert.assertEquals(expectedSchedule, actualSchedule);
+        Assertions.assertEquals(expectedSchedule, actualSchedule);
     }
 
     public void insertSchedule(int doctorId, List<ScheduleCell> schedule) {
         ScheduleTransformers.sortSchedule(schedule);
         scheduleDao.insertSchedule(doctorId, schedule);
 
-        schedule.forEach(s -> Assert.assertNotEquals(0, s.getId()));
+        schedule.forEach(s -> Assertions.assertNotEquals(0, s.getId()));
 
-        final LocalDate dateStart = schedule.iterator().next().getDate();
-        final LocalDate dateEnd = schedule.listIterator(schedule.size()).previous().getDate();
+        final var dateStart = schedule.iterator().next().getDate();
+        final var dateEnd = schedule.listIterator(schedule.size()).previous().getDate();
         scheduleInsertingChecker(doctorId, dateStart, dateEnd, null, null, schedule);
     }
 
@@ -216,7 +216,7 @@ public abstract class DaoTestApi {
         ScheduleTransformers.sortSchedule(newSchedule);
         scheduleDao.editSchedule(doctorId, dateStart, dateEnd, newSchedule);
 
-        newSchedule.forEach(s -> Assert.assertNotEquals(0, s.getId()));
+        newSchedule.forEach(s -> Assertions.assertNotEquals(0, s.getId()));
 
         scheduleInsertingChecker(doctorId, dateStart, dateEnd, null, null, newSchedule);
     }
@@ -224,19 +224,19 @@ public abstract class DaoTestApi {
     public void appointmentToDoctor(int patientId, String ticketTitle) {
         scheduleDao.appointmentToDoctor(patientId, ticketTitle);
 
-        final boolean containsPatient = debugDao.containsPatientInTimeCell(patientId, ticketTitle);
-        Assert.assertTrue(containsPatient);
+        final var containsPatient = debugDao.containsPatientInTimeCell(patientId, ticketTitle);
+        Assertions.assertTrue(containsPatient);
     }
 
     public void denyTicket(int patientId, String ticketTitle) {
         scheduleDao.denyTicket(patientId, ticketTitle);
 
-        final boolean containsPatient = debugDao.containsPatientInTimeCell(patientId, ticketTitle);
-        Assert.assertFalse(containsPatient);
+        final var containsPatient = debugDao.containsPatientInTimeCell(patientId, ticketTitle);
+        Assertions.assertFalse(containsPatient);
     }
 
     public List<TicketToDoctor> getTicketsToDoctor(int patientId) {
-        final List<TicketToDoctor> result = scheduleDao.getTicketsToDoctor(patientId);
+        final var result = scheduleDao.getTicketsToDoctor(patientId);
         result.sort(Comparator.comparing(Ticket::getTitle));
 
         return result;
@@ -245,8 +245,8 @@ public abstract class DaoTestApi {
     // Common dao methods
 
     public void getUserTypeByUserId(int userId, String expectedUserType) {
-        final String actualUserType = commonDao.getUserTypeByUserId(userId);
+        final var actualUserType = commonDao.getUserTypeByUserId(userId);
 
-        Assert.assertEquals(expectedUserType, actualUserType);
+        Assertions.assertEquals(expectedUserType, actualUserType);
     }
 }
