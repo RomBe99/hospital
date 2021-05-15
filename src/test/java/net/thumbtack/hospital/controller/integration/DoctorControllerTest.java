@@ -27,10 +27,10 @@ import java.util.stream.Collectors;
 public class DoctorControllerTest extends RealControllerTestApi {
     private final Function<CreateMedicalCommissionDtoRequest, CreateMedicalCommissionDtoResponse> MEDICAL_COMMISSION_REQUEST_TO_RESPONSE_TRANSFORMER =
             dtoRequest -> {
-                final List<Integer> doctorIds = dtoRequest.getDoctorIds();
-                final LocalDate date = LocalDate.parse(dtoRequest.getDate());
-                final LocalTime time = LocalTime.parse(dtoRequest.getTime());
-                final String ticketTitle = TicketFactory.buildTicketToCommission(date, time, doctorIds);
+                final var doctorIds = dtoRequest.getDoctorIds();
+                final var date = LocalDate.parse(dtoRequest.getDate());
+                final var time = LocalTime.parse(dtoRequest.getTime());
+                final var ticketTitle = TicketFactory.buildTicketToCommission(date, time, doctorIds);
 
                 return new CreateMedicalCommissionDtoResponse(ticketTitle, dtoRequest.getPatientId(), doctorIds,
                         dtoRequest.getRoom(), dtoRequest.getDate(), dtoRequest.getTime(), dtoRequest.getDuration());

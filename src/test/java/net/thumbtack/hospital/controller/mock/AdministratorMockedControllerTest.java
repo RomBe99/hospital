@@ -124,7 +124,6 @@ public class AdministratorMockedControllerTest extends MockedControllerTestApi {
         final var dateStart = LocalDate.now();
         final var dateEnd = dateStart.plusDays(5);
 
-
         final var doctorRegistrationRequest =
                 new DoctorRegistrationDtoRequest(dateStart.toString(), dateEnd.toString(), 15, Collections.emptyList(),
                         "Саркис", "Семёнов", "Вениаминович",

@@ -47,7 +47,7 @@ public class RealControllerTestApi extends BaseSpringConfiguration {
 
     @BeforeEach
     public void clearDatabase() {
-        final String url = buildUrl(DebugController.PREFIX_URL, DebugController.DEBUG_CLEAR_URL);
+        final var url = buildUrl(DebugController.PREFIX_URL, DebugController.DEBUG_CLEAR_URL);
 
         final var response = restTemplate.postForEntity(url, HttpEntity.EMPTY, EmptyDtoResponse.class);
         Assertions.assertEquals(HttpStatus.OK, response.getStatusCode());
