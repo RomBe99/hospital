@@ -10,26 +10,27 @@ import net.thumbtack.hospital.dtoresponse.doctor.DoctorLoginDtoResponse;
 import net.thumbtack.hospital.dtoresponse.other.EmptyDtoResponse;
 import net.thumbtack.hospital.dtoresponse.patient.PatientRegistrationDtoResponse;
 import net.thumbtack.hospital.util.ticket.TicketFactory;
-import org.apache.commons.lang3.tuple.Pair;
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.*;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 public class DoctorControllerTest extends RealControllerTestApi {
-    private static final Function<CreateMedicalCommissionDtoRequest, CreateMedicalCommissionDtoResponse> MEDICAL_COMMISSION_REQUEST_TO_RESPONSE_TRANSFORMER =
+    private final Function<CreateMedicalCommissionDtoRequest, CreateMedicalCommissionDtoResponse> MEDICAL_COMMISSION_REQUEST_TO_RESPONSE_TRANSFORMER =
             dtoRequest -> {
-                final List<Integer> doctorIds = dtoRequest.getDoctorIds();
-                final LocalDate date = LocalDate.parse(dtoRequest.getDate());
-                final LocalTime time = LocalTime.parse(dtoRequest.getTime());
-                final String ticketTitle = TicketFactory.buildTicketToCommission(date, time, doctorIds);
+                final var doctorIds = dtoRequest.getDoctorIds();
+                final var date = LocalDate.parse(dtoRequest.getDate());
+                final var time = LocalTime.parse(dtoRequest.getTime());
+                final var ticketTitle = TicketFactory.buildTicketToCommission(date, time, doctorIds);
 
                 return new CreateMedicalCommissionDtoResponse(ticketTitle, dtoRequest.getPatientId(), doctorIds,
                         dtoRequest.getRoom(), dtoRequest.getDate(), dtoRequest.getTime(), dtoRequest.getDuration());
@@ -37,14 +38,14 @@ public class DoctorControllerTest extends RealControllerTestApi {
 
     @Test
     public void createAndDenyMedicalCommission() throws Exception {
-        final String rootAdminSessionId = loginRootAdmin();
+        final var rootAdminSessionId = loginRootAdmin();
 
-        final DoctorRegistrationDtoRequest doctorCreatedCommission = new DoctorRegistrationDtoRequest(
+        final var doctorCreatedCommission = new DoctorRegistrationDtoRequest(
                 LocalDate.of(2020, 3, 1).toString(), LocalDate.of(2020, 3, 2).toString(), 15, Collections.emptyList(),
                 "Есенгалий", "Скачков", null,
                 "Surgeon", "104", "EsengaliySkachkov56", "u15fv6vy5NvA");
 
-        final List<DoctorRegistrationDtoRequest> doctorRegistrationRequests = Arrays.asList(
+        final var doctorRegistrationRequests = List.of(
                 doctorCreatedCommission,
                 new DoctorRegistrationDtoRequest(
                         LocalDate.of(2020, 3, 1).toString(), LocalDate.of(2020, 3, 2).toString(), 15, Collections.emptyList(),
@@ -63,60 +64,62 @@ public class DoctorControllerTest extends RealControllerTestApi {
                         "Хамнам", "Андрианов", null,
                         "Surgeon", "306", "HamnamAndrianov239", "6Ok5lrf2vdpI")
         );
-        final Map<DoctorRegistrationDtoRequest, DoctorRegistrationDtoResponse> doctorRegistrationResponses = new HashMap<>();
+        final var doctorRegistrationResponses = new HashMap<DoctorRegistrationDtoRequest, DoctorRegistrationDtoResponse>();
 
-        for (DoctorRegistrationDtoRequest r : doctorRegistrationRequests) {
-            final DoctorRegistrationDtoResponse actualResponse = doctorRegistration(rootAdminSessionId, r);
-            final DoctorRegistrationDtoResponse expectedResponse = new DoctorRegistrationDtoResponse(actualResponse.getId(),
+        for (var r : doctorRegistrationRequests) {
+            final var actualResponse = doctorRegistration(rootAdminSessionId, r);
+            final var expectedResponse = new DoctorRegistrationDtoResponse(actualResponse.getId(),
                     r.getFirstName(), r.getLastName(), r.getPatronymic(),
                     r.getSpeciality(), r.getRoom(), actualResponse.getSchedule());
-            Assert.assertEquals(expectedResponse, actualResponse);
+            Assertions.assertEquals(expectedResponse, actualResponse);
 
             doctorRegistrationResponses.put(r, expectedResponse);
 
         }
 
-        final Pair<String, DoctorLoginDtoResponse> doctorCreatedCommissionData = login(doctorCreatedCommission.getLogin(), doctorCreatedCommission.getPassword(), DoctorLoginDtoResponse.class);
+        final var doctorCreatedCommissionData = login(doctorCreatedCommission.getLogin(), doctorCreatedCommission.getPassword(), DoctorLoginDtoResponse.class);
 
         {
-            final DoctorLoginDtoResponse actualResponse = doctorCreatedCommissionData.getValue();
-            final DoctorLoginDtoResponse expectedResponse = new DoctorLoginDtoResponse(actualResponse.getId(),
+            final var actualResponse = doctorCreatedCommissionData.getValue();
+            final var expectedResponse = new DoctorLoginDtoResponse(actualResponse.getId(),
                     doctorCreatedCommission.getFirstName(), doctorCreatedCommission.getLastName(), doctorCreatedCommission.getPatronymic(),
                     doctorCreatedCommission.getSpeciality(), doctorCreatedCommission.getRoom(), Collections.emptyList());
 
-            Assert.assertEquals(expectedResponse, actualResponse);
+            Assertions.assertEquals(expectedResponse, actualResponse);
         }
 
-        final PatientRegistrationDtoRequest patientRegistrationRequest = new PatientRegistrationDtoRequest("Сеитибрам", "Ивлеев", "ftl4a@amazingmail.xyz", "423973, г. Саров (Морд.), ул. Новоподмосковный 6-й пер, дом 146, квартира 687", "+7 (922) 183-51-08", "SeitibramIvleev493", "DOCexbGeEIS7");
-        final Pair<String, PatientRegistrationDtoResponse> patientRegistrationData = patientRegistration(patientRegistrationRequest);
-        final int patientId = patientRegistrationData.getValue().getId();
+        final var patientRegistrationRequest = new PatientRegistrationDtoRequest("Сеитибрам", "Ивлеев", "ftl4a@amazingmail.xyz", "423973, г. Саров (Морд.), ул. Новоподмосковный 6-й пер, дом 146, квартира 687", "+7 (922) 183-51-08", "SeitibramIvleev493", "DOCexbGeEIS7");
+        final var patientRegistrationData = patientRegistration(patientRegistrationRequest);
+        final var patientId = patientRegistrationData.getValue().getId();
 
         {
-            final PatientRegistrationDtoResponse actualResponse = patientRegistrationData.getValue();
-            final PatientRegistrationDtoResponse expectedResponse = new PatientRegistrationDtoResponse(patientId,
+            final var actualResponse = patientRegistrationData.getValue();
+            final var expectedResponse = new PatientRegistrationDtoResponse(patientId,
                     patientRegistrationRequest.getFirstName(), patientRegistrationRequest.getLastName(), patientRegistrationRequest.getPatronymic(),
                     patientRegistrationRequest.getEmail(), patientRegistrationRequest.getAddress(), "+79221835108");
 
-            Assert.assertEquals(expectedResponse, actualResponse);
+            Assertions.assertEquals(expectedResponse, actualResponse);
         }
-        final List<Integer> doctorIds = doctorRegistrationResponses.values().stream().map(DoctorRegistrationDtoResponse::getId).collect(Collectors.toList());
+        final var doctorIds = doctorRegistrationResponses.values().stream()
+                .map(DoctorRegistrationDtoResponse::getId)
+                .collect(Collectors.toList());
 
-        final CreateMedicalCommissionDtoRequest createMedicalCommissionRequest =
-                new CreateMedicalCommissionDtoRequest(patientId, doctorIds, "124", LocalDate.of(2020, 4, 5).toString(), LocalTime.of(12, 0).toString(), 120);
+        final var createMedicalCommissionRequest = new CreateMedicalCommissionDtoRequest(patientId, doctorIds, "124",
+                LocalDate.of(2020, 4, 5).toString(), LocalTime.of(12, 0).toString(), 120);
         {
-            final CreateMedicalCommissionDtoResponse actualResponse = createMedicalCommission(doctorCreatedCommissionData.getKey(), createMedicalCommissionRequest);
-            final CreateMedicalCommissionDtoResponse expectedResponse = MEDICAL_COMMISSION_REQUEST_TO_RESPONSE_TRANSFORMER.apply(createMedicalCommissionRequest);
-            Assert.assertEquals(expectedResponse, actualResponse);
+            final var actualResponse = createMedicalCommission(doctorCreatedCommissionData.getKey(), createMedicalCommissionRequest);
+            final var expectedResponse = MEDICAL_COMMISSION_REQUEST_TO_RESPONSE_TRANSFORMER.apply(createMedicalCommissionRequest);
+            Assertions.assertEquals(expectedResponse, actualResponse);
         }
 
-        final String ticketTitle = TicketFactory.buildTicketToCommission(LocalDate.parse(createMedicalCommissionRequest.getDate()),
+        final var ticketTitle = TicketFactory.buildTicketToCommission(LocalDate.parse(createMedicalCommissionRequest.getDate()),
                 LocalTime.parse(createMedicalCommissionRequest.getTime()), createMedicalCommissionRequest.getDoctorIds());
 
         {
-            final EmptyDtoResponse actualResponse = denyTicketToDoctor(patientRegistrationData.getKey(), ticketTitle);
-            final EmptyDtoResponse expectedResponse = new EmptyDtoResponse();
+            final var actualResponse = denyTicketToDoctor(patientRegistrationData.getKey(), ticketTitle);
+            final var expectedResponse = new EmptyDtoResponse();
 
-            Assert.assertEquals(expectedResponse, actualResponse);
+            Assertions.assertEquals(expectedResponse, actualResponse);
         }
     }
 }

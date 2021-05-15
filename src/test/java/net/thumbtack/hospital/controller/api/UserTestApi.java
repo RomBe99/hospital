@@ -8,19 +8,19 @@ import net.thumbtack.hospital.dtoresponse.other.abstractresponse.UserInformation
 import net.thumbtack.hospital.dtoresponse.patient.PatientInformationDtoResponse;
 import net.thumbtack.hospital.dtoresponse.user.GetAllDoctorsDtoResponse;
 import org.apache.commons.lang3.tuple.Pair;
-import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 
 public interface UserTestApi {
     <T extends LoginUserDtoResponse> Pair<String, T> login(String login, String password, Class<T> clazz) throws Exception;
 
     default String loginRootAdmin() throws Exception {
-        final String login = "admin";
-        final String password = "admin";
+        final var login = "admin";
+        final var password = "admin";
 
-        final Pair<String, AdminLoginDtoResponse> loginData = login(login, password, AdminLoginDtoResponse.class);
-        final AdminLoginDtoResponse expectedResponse = new AdminLoginDtoResponse(loginData.getValue().getId(),
+        final var loginData = login(login, password, AdminLoginDtoResponse.class);
+        final var expectedResponse = new AdminLoginDtoResponse(loginData.getValue().getId(),
                 "Roman", "Belinsky", null, "Root admin");
-        Assert.assertEquals(expectedResponse, loginData.getValue());
+        Assertions.assertEquals(expectedResponse, loginData.getValue());
 
         return loginData.getKey();
     }

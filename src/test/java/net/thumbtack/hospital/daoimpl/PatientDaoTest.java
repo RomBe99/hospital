@@ -1,40 +1,40 @@
 package net.thumbtack.hospital.daoimpl;
 
 import net.thumbtack.hospital.model.user.Patient;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class PatientDaoTest extends DaoTestApi {
     @Test
     public void insertPatientTest1() {
-        Patient patient = new Patient("EallaMerkulova844", "2PrKexqqZ5FK",
+        final var patient = new Patient("EallaMerkulova844", "2PrKexqqZ5FK",
                 "Еалла", "Меркулова", null, "jojece9022@aenmail.net",
                 "403105, г. Красной Чикой, ул. Сыромятнический 1-й пер, дом 182, квартира 729", "+79835018633");
         insertUser(patient);
 
-        String sessionId = login(patient.getLogin(), patient.getPassword());
+        final var sessionId = login(patient.getLogin(), patient.getPassword());
         logout(sessionId);
     }
 
     @Test
     public void insertPatientTest2() {
-        Patient patient = new Patient("MarikaLevchenko0", "nrusOqHiqsbB",
+        final var patient = new Patient("MarikaLevchenko0", "nrusOqHiqsbB",
                 "Марика", "Левченко", null, "hzdvmndhtcuraxvchh@ttirv.org",
                 "391634, г. Емельяново, ул. Полевой (Усть-Славянка) пер, дом 5, квартира 44", "89340237045");
         insertUser(patient);
 
-        String sessionId = login(patient.getLogin(), patient.getPassword());
+        final var sessionId = login(patient.getLogin(), patient.getPassword());
         logout(sessionId);
     }
 
     @Test
     public void updatePatientInformation1() {
-        Patient patient = new Patient("EallaMerkulova844", "2PrKexqqZ5FK",
+        final var patient = new Patient("EallaMerkulova844", "2PrKexqqZ5FK",
                 "Еалла", "Меркулова", "Григорьевна", "jojece9022@aenmail.net",
                 "403105, г. Красной Чикой, ул. Сыромятнический 1-й пер, дом 182, квартира 729", "+79835018633");
         insertUser(patient);
 
-        String sessionId = login(patient.getLogin(), patient.getPassword());
+        final var sessionId = login(patient.getLogin(), patient.getPassword());
 
         patient.setAddress("403105, г. Красной Чикой, ул. Сыромятнический 1-й пер, дом 182, квартира 729");
         patient.setLastName("Варфоломеева");
@@ -46,7 +46,7 @@ public class PatientDaoTest extends DaoTestApi {
 
     @Test
     public void updatePatientInformation2() {
-        Patient patient = new Patient("HimenaDovlatova926", "Z9snOza5K2rq",
+        final var patient = new Patient("HimenaDovlatova926", "Z9snOza5K2rq",
                 "Химена", "Довлатова", "Борисовна", "qiqoplqpzrxenqqlan@ttirv.net",
                 "416428, г. Ачхой-Мартан, ул. Набережная (Кунцево), дом 132, квартира 587", "+79249988899");
         insertUser(patient);
@@ -65,169 +65,182 @@ public class PatientDaoTest extends DaoTestApi {
         logout(sessionId);
     }
 
-    @Test(expected = RuntimeException.class)
+    @Test
     public void insertPatientsWithSameLoginTest() {
-        Patient patient = new Patient("EallaMerkulova844", "2PrKexqqZ5FK",
+        final var patient = new Patient("EallaMerkulova844", "2PrKexqqZ5FK",
                 "Еалла", "Меркулова", "Григорьевна", "jojece9022@aenmail.net",
                 "403105, г. Красной Чикой, ул. Сыромятнический 1-й пер, дом 182, квартира 729", "+79835018633");
 
         try {
             insertUser(patient);
         } catch (RuntimeException ex) {
-            Assert.fail();
+            Assertions.fail();
         }
 
-        insertUser(patient);
+        Assertions.assertThrows(RuntimeException.class, () -> insertUser(patient));
     }
 
-    @Test(expected = RuntimeException.class)
+    @Test
     public void insertPatientWithIncorrectLoginTest() {
-        Patient patient = new Patient(null, "2PrKexqqZ5FK",
+        final var patient = new Patient(null, "2PrKexqqZ5FK",
                 "Еалла", "Меркулова", "Григорьевна", "jojece9022@aenmail.net",
                 "403105, г. Красной Чикой, ул. Сыромятнический 1-й пер, дом 182, квартира 729", "+79835018633");
-        insertUser(patient);
+
+        Assertions.assertThrows(RuntimeException.class, () -> insertUser(patient));
     }
 
-    @Test(expected = RuntimeException.class)
+    @Test
     public void insertPatientWithIncorrectPasswordTest() {
-        Patient patient = new Patient("EallaMerkulova844", null,
+        final var patient = new Patient("EallaMerkulova844", null,
                 "Еалла", "Меркулова", "Григорьевна", "jojece9022@aenmail.net",
                 "403105, г. Красной Чикой, ул. Сыромятнический 1-й пер, дом 182, квартира 729", "+79835018633");
-        insertUser(patient);
+
+        Assertions.assertThrows(RuntimeException.class, () -> insertUser(patient));
     }
 
-    @Test(expected = RuntimeException.class)
+    @Test
     public void insertPatientWithIncorrectFirstnameTest() {
-        Patient patient = new Patient("EallaMerkulova844", "2PrKexqqZ5FK",
+        final var patient = new Patient("EallaMerkulova844", "2PrKexqqZ5FK",
                 null, "Меркулова", "Григорьевна", "jojece9022@aenmail.net",
                 "403105, г. Красной Чикой, ул. Сыромятнический 1-й пер, дом 182, квартира 729", "+79835018633");
-        insertUser(patient);
+
+        Assertions.assertThrows(RuntimeException.class, () -> insertUser(patient));
     }
 
-    @Test(expected = RuntimeException.class)
+    @Test
     public void insertPatientWithIncorrectLastnameTest() {
-        Patient patient = new Patient("EallaMerkulova844", "2PrKexqqZ5FK",
+        final var patient = new Patient("EallaMerkulova844", "2PrKexqqZ5FK",
                 "Еалла", null, "Григорьевна", "jojece9022@aenmail.net",
                 "403105, г. Красной Чикой, ул. Сыромятнический 1-й пер, дом 182, квартира 729", "+79835018633");
-        insertUser(patient);
+
+        Assertions.assertThrows(RuntimeException.class, () -> insertUser(patient));
     }
 
-    @Test(expected = RuntimeException.class)
+    @Test
     public void insertPatientWithIncorrectEmailTest() {
-        Patient patient = new Patient("EallaMerkulova844", "2PrKexqqZ5FK",
+        final var patient = new Patient("EallaMerkulova844", "2PrKexqqZ5FK",
                 "Еалла", "Меркулова", "Григорьевна", null,
                 "403105, г. Красной Чикой, ул. Сыромятнический 1-й пер, дом 182, квартира 729", "+79835018633");
-        insertUser(patient);
+
+        Assertions.assertThrows(RuntimeException.class, () -> insertUser(patient));
+
     }
 
-    @Test(expected = RuntimeException.class)
+    @Test
     public void insertPatientWithIncorrectAddressTest() {
-        Patient patient = new Patient("EallaMerkulova844", "2PrKexqqZ5FK",
+        final var patient = new Patient("EallaMerkulova844", "2PrKexqqZ5FK",
                 "Еалла", "Меркулова", "Григорьевна", "jojece9022@aenmail.net",
                 null, "+79835018633");
-        insertUser(patient);
+
+        Assertions.assertThrows(RuntimeException.class, () -> insertUser(patient));
     }
 
-    @Test(expected = RuntimeException.class)
+    @Test
     public void insertPatientWithIncorrectPhoneTest() {
-        Patient patient = new Patient("EallaMerkulova844", "2PrKexqqZ5FK",
+        final var patient = new Patient("EallaMerkulova844", "2PrKexqqZ5FK",
                 "Еалла", "Меркулова", "Григорьевна", "jojece9022@aenmail.net",
                 "403105, г. Красной Чикой, ул. Сыромятнический 1-й пер, дом 182, квартира 729", null);
-        insertUser(patient);
+
+        Assertions.assertThrows(RuntimeException.class, () -> insertUser(patient));
     }
 
-    @Test(expected = RuntimeException.class)
+    @Test
     public void updatePatientWithIncorrectPasswordTest() {
-        Patient patient = new Patient("EallaMerkulova844", "2PrKexqqZ5FK",
+        final var patient = new Patient("EallaMerkulova844", "2PrKexqqZ5FK",
                 "Еалла", "Меркулова", "Григорьевна", "jojece9022@aenmail.net",
                 "403105, г. Красной Чикой, ул. Сыромятнический 1-й пер, дом 182, квартира 729", "+79835018633");
 
         try {
             insertUser(patient);
         } catch (RuntimeException ex) {
-            Assert.fail();
+            Assertions.fail();
         }
 
-        updateUser(patient, null);
+        Assertions.assertThrows(RuntimeException.class, () -> updateUser(patient, null));
     }
 
-    @Test(expected = RuntimeException.class)
+    @Test
     public void updatePatientWithIncorrectFirstnameTest() {
-        Patient patient = new Patient("EallaMerkulova844", "2PrKexqqZ5FK",
+        final var patient = new Patient("EallaMerkulova844", "2PrKexqqZ5FK",
                 "Еалла", "Меркулова", "Григорьевна", "jojece9022@aenmail.net",
                 "403105, г. Красной Чикой, ул. Сыромятнический 1-й пер, дом 182, квартира 729", "+79835018633");
 
         try {
             insertUser(patient);
         } catch (RuntimeException ex) {
-            Assert.fail();
+            Assertions.fail();
         }
 
         patient.setFirstName(null);
-        updateUser(patient, patient.getPassword());
+
+        Assertions.assertThrows(RuntimeException.class, () -> updateUser(patient, patient.getPassword()));
     }
 
-    @Test(expected = RuntimeException.class)
+    @Test
     public void updatePatientWithIncorrectLastnameTest() {
-        Patient patient = new Patient("EallaMerkulova844", "2PrKexqqZ5FK",
+        final var patient = new Patient("EallaMerkulova844", "2PrKexqqZ5FK",
                 "Еалла", "Меркулова", "Григорьевна", "jojece9022@aenmail.net",
                 "403105, г. Красной Чикой, ул. Сыромятнический 1-й пер, дом 182, квартира 729", "+79835018633");
 
         try {
             insertUser(patient);
         } catch (RuntimeException ex) {
-            Assert.fail();
+            Assertions.fail();
         }
 
         patient.setLastName(null);
-        updateUser(patient, patient.getPassword());
+
+        Assertions.assertThrows(RuntimeException.class, () -> updateUser(patient, patient.getPassword()));
     }
 
-    @Test(expected = RuntimeException.class)
+    @Test
     public void updatePatientWithIncorrectEmailTest() {
-        Patient patient = new Patient("EallaMerkulova844", "2PrKexqqZ5FK",
+        final var patient = new Patient("EallaMerkulova844", "2PrKexqqZ5FK",
                 "Еалла", "Меркулова", "Григорьевна", "jojece9022@aenmail.net",
                 "403105, г. Красной Чикой, ул. Сыромятнический 1-й пер, дом 182, квартира 729", "+79835018633");
 
         try {
             insertUser(patient);
         } catch (RuntimeException ex) {
-            Assert.fail();
+            Assertions.fail();
         }
 
         patient.setEmail(null);
-        updateUser(patient, patient.getPassword());
+
+        Assertions.assertThrows(RuntimeException.class, () -> updateUser(patient, patient.getPassword()));
     }
 
-    @Test(expected = RuntimeException.class)
+    @Test
     public void updatePatientWithIncorrectAddressTest() {
-        Patient patient = new Patient("EallaMerkulova844", "2PrKexqqZ5FK",
+        final var patient = new Patient("EallaMerkulova844", "2PrKexqqZ5FK",
                 "Еалла", "Меркулова", "Григорьевна", "jojece9022@aenmail.net",
                 "403105, г. Красной Чикой, ул. Сыромятнический 1-й пер, дом 182, квартира 729", "+79835018633");
 
         try {
             insertUser(patient);
         } catch (RuntimeException ex) {
-            Assert.fail();
+            Assertions.fail();
         }
 
         patient.setAddress(null);
-        updateUser(patient, patient.getPassword());
+
+        Assertions.assertThrows(RuntimeException.class, () -> updateUser(patient, patient.getPassword()));
     }
 
-    @Test(expected = RuntimeException.class)
+    @Test
     public void updatePatientWithIncorrectPhoneTest() {
-        Patient patient = new Patient("EallaMerkulova844", "2PrKexqqZ5FK",
+        final var patient = new Patient("EallaMerkulova844", "2PrKexqqZ5FK",
                 "Еалла", "Меркулова", "Григорьевна", "jojece9022@aenmail.net",
                 "403105, г. Красной Чикой, ул. Сыромятнический 1-й пер, дом 182, квартира 729", "+79835018633");
 
         try {
             insertUser(patient);
         } catch (RuntimeException ex) {
-            Assert.fail();
+            Assertions.fail();
         }
 
         patient.setPhone(null);
-        updateUser(patient, patient.getPassword());
+
+        Assertions.assertThrows(RuntimeException.class, () -> updateUser(patient, patient.getPassword()));
     }
 }
