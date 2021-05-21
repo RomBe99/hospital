@@ -4,6 +4,7 @@ import java.time.DayOfWeek;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public enum WeekDay {
@@ -17,6 +18,14 @@ public enum WeekDay {
             .collect(Collectors.toMap(WeekDay::getName, w -> w));
     private static final Map<WeekDay, DayOfWeek> WEEK_DAY_TO_DAY_OF_WEEK = new HashMap<>();
 
+    static {
+        WEEK_DAY_TO_DAY_OF_WEEK.put(MONDAY, DayOfWeek.MONDAY);
+        WEEK_DAY_TO_DAY_OF_WEEK.put(TUESDAY, DayOfWeek.TUESDAY);
+        WEEK_DAY_TO_DAY_OF_WEEK.put(WEDNESDAY, DayOfWeek.WEDNESDAY);
+        WEEK_DAY_TO_DAY_OF_WEEK.put(THURSDAY, DayOfWeek.THURSDAY);
+        WEEK_DAY_TO_DAY_OF_WEEK.put(FRIDAY, DayOfWeek.FRIDAY);
+    }
+
     private final String name;
 
     WeekDay(String name) {
@@ -24,24 +33,12 @@ public enum WeekDay {
     }
 
     public static WeekDay of(String weekDayName) {
-        final var result = NAME_TO_WEEK_DAY.get(weekDayName);
-
-        if (result == null) {
-            throw new IllegalArgumentException("Invalid value for WeekDay: " + weekDayName);
-        }
-
-        return result;
+        return Optional
+                .ofNullable(NAME_TO_WEEK_DAY.get(weekDayName))
+                .orElseThrow(() -> new IllegalArgumentException("Invalid value for WeekDay: " + weekDayName));
     }
 
     public static DayOfWeek transformToDayOfWeek(WeekDay weekDay) {
-        if (WEEK_DAY_TO_DAY_OF_WEEK.isEmpty()) {
-            WEEK_DAY_TO_DAY_OF_WEEK.put(MONDAY, DayOfWeek.MONDAY);
-            WEEK_DAY_TO_DAY_OF_WEEK.put(TUESDAY, DayOfWeek.TUESDAY);
-            WEEK_DAY_TO_DAY_OF_WEEK.put(WEDNESDAY, DayOfWeek.WEDNESDAY);
-            WEEK_DAY_TO_DAY_OF_WEEK.put(THURSDAY, DayOfWeek.THURSDAY);
-            WEEK_DAY_TO_DAY_OF_WEEK.put(FRIDAY, DayOfWeek.FRIDAY);
-        }
-
         return WEEK_DAY_TO_DAY_OF_WEEK.get(weekDay);
     }
 
