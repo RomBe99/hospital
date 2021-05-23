@@ -9,9 +9,17 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.annotation.PropertySources;
 
 @SpringBootApplication(scanBasePackages = "net.thumbtack.hospital")
-@PropertySource("classpath:application.properties")
+@PropertySources({
+        @PropertySource("classpath:application.properties"),
+        @PropertySource("classpath:errors.properties"),
+        @PropertySource("classpath:tickets.properties"),
+        @PropertySource("classpath:constraints.properties"),
+        @PropertySource("classpath:database.properties")
+
+})
 @EnableConfigurationProperties({
         ErrorMessageFactory.class,
         TicketFactory.class

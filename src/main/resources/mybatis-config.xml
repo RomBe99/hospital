@@ -4,7 +4,7 @@
         "http://mybatis.org/dtd/mybatis-3-config.dtd">
 
 <configuration>
-    <properties resource='application.properties'/>
+    <properties resource='database.properties'/>
 
     <settings>
         <setting name="aggressiveLazyLoading" value="false"/>
