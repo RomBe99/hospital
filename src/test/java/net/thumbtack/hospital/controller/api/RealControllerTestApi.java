@@ -39,9 +39,9 @@ import java.util.Objects;
 
 public class RealControllerTestApi extends BaseSpringConfiguration {
     @Autowired
-    protected TestRestTemplate restTemplate;
+    private TestRestTemplate restTemplate;
 
-    protected static void putSessionIdToHeaders(HttpHeaders headers, String sessionId) {
+    protected void putSessionIdToHeaders(HttpHeaders headers, String sessionId) {
         headers.add(HttpHeaders.COOKIE, sessionId);
     }
 

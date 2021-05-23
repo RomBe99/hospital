@@ -6,7 +6,6 @@ import net.thumbtack.hospital.model.ticket.Ticket;
 import net.thumbtack.hospital.model.ticket.TicketToDoctor;
 import net.thumbtack.hospital.model.user.Doctor;
 import net.thumbtack.hospital.model.user.Patient;
-import net.thumbtack.hospital.util.ScheduleGenerators;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -30,10 +29,10 @@ public class ScheduleDaoTest extends DaoTestApi {
         final var timeStart = LocalTime.of(12, 0);
         final var timeEnd = timeStart.plusMinutes(duration * durationPerDay);
 
-        final var requestWithSchedule = ScheduleGenerators.generateDtoRequestWithWeekSchedule(duration,
+        final var requestWithSchedule = getScheduleGenerator().generateDtoRequestWithWeekSchedule(duration,
                 dateStart, dateEnd, timeStart, timeEnd, weekDays);
 
-        final var schedule = ScheduleGenerators.generateSchedule(doctorId, requestWithSchedule);
+        final var schedule = getScheduleGenerator().generateSchedule(doctorId, requestWithSchedule);
         insertSchedule(doctorId, schedule);
     }
 
@@ -48,10 +47,10 @@ public class ScheduleDaoTest extends DaoTestApi {
         final var timeStart = LocalTime.of(12, 0);
         final var timeEnd = timeStart.plusMinutes(duration * durationPerDay);
 
-        final var requestWithSchedule = ScheduleGenerators.generateDtoRequestWithWeekSchedule(duration,
+        final var requestWithSchedule = getScheduleGenerator().generateDtoRequestWithWeekSchedule(duration,
                 dateStart, dateEnd, timeStart, timeEnd, weekDays);
 
-        final var schedule = ScheduleGenerators.generateSchedule(incorrectDoctorId, requestWithSchedule);
+        final var schedule = getScheduleGenerator().generateSchedule(incorrectDoctorId, requestWithSchedule);
 
         Assertions.assertThrows(RuntimeException.class, () -> insertSchedule(incorrectDoctorId, schedule));
     }
@@ -80,10 +79,10 @@ public class ScheduleDaoTest extends DaoTestApi {
         var timeStart = LocalTime.of(8, 0);
         var timeEnd = timeStart.plusMinutes(duration * durationPerDay);
 
-        var requestWithSchedule = ScheduleGenerators.generateDtoRequestWithWeekSchedule(duration,
+        var requestWithSchedule = getScheduleGenerator().generateDtoRequestWithWeekSchedule(duration,
                 dateStart, dateEnd, timeStart, timeEnd, weekDays);
 
-        var schedule = ScheduleGenerators.generateSchedule(doctorId, requestWithSchedule);
+        var schedule = getScheduleGenerator().generateSchedule(doctorId, requestWithSchedule);
         insertSchedule(doctorId, schedule);
 
         // Editing schedule test
@@ -95,10 +94,10 @@ public class ScheduleDaoTest extends DaoTestApi {
         timeStart = LocalTime.of(9, 30);
         timeEnd = timeStart.plusMinutes(duration * durationPerDay);
 
-        requestWithSchedule = ScheduleGenerators.generateDtoRequestWithWeekSchedule(duration,
+        requestWithSchedule = getScheduleGenerator().generateDtoRequestWithWeekSchedule(duration,
                 dateStart, dateEnd, timeStart, timeEnd, weekDays);
 
-        var newSchedule = ScheduleGenerators.generateSchedule(doctorId, requestWithSchedule);
+        var newSchedule = getScheduleGenerator().generateSchedule(doctorId, requestWithSchedule);
         editSchedule(doctorId, dateStart, dateEnd, newSchedule);
     }
 
@@ -117,10 +116,10 @@ public class ScheduleDaoTest extends DaoTestApi {
         var timeStart = LocalTime.of(8, 0);
         var timeEnd = timeStart.plusMinutes(duration * durationPerDay);
 
-        var requestWithSchedule = ScheduleGenerators.generateDtoRequestWithWeekSchedule(duration,
+        var requestWithSchedule = getScheduleGenerator().generateDtoRequestWithWeekSchedule(duration,
                 dateStart, dateEnd, timeStart, timeEnd, weekDays);
 
-        var schedule = ScheduleGenerators.generateSchedule(doctorId, requestWithSchedule);
+        var schedule = getScheduleGenerator().generateSchedule(doctorId, requestWithSchedule);
         insertSchedule(doctorId, schedule);
 
         // Editing schedule test
@@ -133,10 +132,10 @@ public class ScheduleDaoTest extends DaoTestApi {
         timeStart = LocalTime.of(9, 30);
         timeEnd = timeStart.plusMinutes(duration * durationPerDay);
 
-        requestWithSchedule = ScheduleGenerators.generateDtoRequestWithWeekSchedule(duration,
+        requestWithSchedule = getScheduleGenerator().generateDtoRequestWithWeekSchedule(duration,
                 dateStart, dateEnd, timeStart, timeEnd, weekDays);
 
-        var newSchedule = ScheduleGenerators.generateSchedule(doctorId, requestWithSchedule);
+        var newSchedule = getScheduleGenerator().generateSchedule(doctorId, requestWithSchedule);
         editSchedule(doctorId, dateStart, dateEnd, newSchedule);
     }
 
@@ -155,10 +154,10 @@ public class ScheduleDaoTest extends DaoTestApi {
         var timeStart = LocalTime.of(8, 0);
         var timeEnd = timeStart.plusMinutes(duration * durationPerDay);
 
-        var requestWithSchedule = ScheduleGenerators.generateDtoRequestWithWeekSchedule(duration,
+        var requestWithSchedule = getScheduleGenerator().generateDtoRequestWithWeekSchedule(duration,
                 dateStart, dateEnd, timeStart, timeEnd, weekDays);
 
-        var schedule = ScheduleGenerators.generateSchedule(doctorId, requestWithSchedule);
+        var schedule = getScheduleGenerator().generateSchedule(doctorId, requestWithSchedule);
         insertSchedule(doctorId, schedule);
 
         // Editing schedule test
@@ -169,10 +168,10 @@ public class ScheduleDaoTest extends DaoTestApi {
         timeStart = LocalTime.of(9, 30);
         timeEnd = timeStart.plusMinutes(duration * durationPerDay);
 
-        requestWithSchedule = ScheduleGenerators.generateDtoRequestWithWeekSchedule(duration,
+        requestWithSchedule = getScheduleGenerator().generateDtoRequestWithWeekSchedule(duration,
                 dateStart, dateEnd, timeStart, timeEnd, weekDays);
 
-        var newSchedule = ScheduleGenerators.generateSchedule(doctorId, requestWithSchedule);
+        var newSchedule = getScheduleGenerator().generateSchedule(doctorId, requestWithSchedule);
         editSchedule(doctorId, dateStart, dateEnd, newSchedule);
     }
 
@@ -191,10 +190,10 @@ public class ScheduleDaoTest extends DaoTestApi {
         final var timeStart = LocalTime.of(8, 0);
         final var timeEnd = timeStart.plusMinutes(duration * durationPerDay);
 
-        final var requestWithSchedule = ScheduleGenerators.generateDtoRequestWithWeekSchedule(duration,
+        final var requestWithSchedule = getScheduleGenerator().generateDtoRequestWithWeekSchedule(duration,
                 dateStart, dateEnd, timeStart, timeEnd, weekDays);
 
-        final var schedule = ScheduleGenerators.generateSchedule(doctorId, requestWithSchedule);
+        final var schedule = getScheduleGenerator().generateSchedule(doctorId, requestWithSchedule);
         insertSchedule(doctorId, schedule);
 
         final var patient = new Patient("LivovHristofor214", "jhVvj8dk7y3s",
@@ -222,10 +221,10 @@ public class ScheduleDaoTest extends DaoTestApi {
         final var timeStart = LocalTime.of(8, 0);
         final var timeEnd = timeStart.plusMinutes(duration * durationPerDay);
 
-        final var requestWithSchedule = ScheduleGenerators.generateDtoRequestWithWeekSchedule(duration,
+        final var requestWithSchedule = getScheduleGenerator().generateDtoRequestWithWeekSchedule(duration,
                 dateStart, dateEnd, timeStart, timeEnd, weekDays);
 
-        final var schedule = ScheduleGenerators.generateSchedule(doctorId, requestWithSchedule);
+        final var schedule = getScheduleGenerator().generateSchedule(doctorId, requestWithSchedule);
         insertSchedule(doctorId, schedule);
 
         final var patient = new Patient("LivovHristofor214", "jhVvj8dk7y3s",
@@ -258,10 +257,10 @@ public class ScheduleDaoTest extends DaoTestApi {
         final var timeStart = LocalTime.of(8, 0);
         final var timeEnd = timeStart.plusMinutes(duration * durationPerDay);
 
-        final var requestWithSchedule = ScheduleGenerators.generateDtoRequestWithWeekSchedule(duration,
+        final var requestWithSchedule = getScheduleGenerator().generateDtoRequestWithWeekSchedule(duration,
                 dateStart, dateEnd, timeStart, timeEnd, weekDays);
 
-        final var schedule = ScheduleGenerators.generateSchedule(doctorId, requestWithSchedule);
+        final var schedule = getScheduleGenerator().generateSchedule(doctorId, requestWithSchedule);
         insertSchedule(doctorId, schedule);
 
         final var patient = new Patient("LivovHristofor214", "jhVvj8dk7y3s",

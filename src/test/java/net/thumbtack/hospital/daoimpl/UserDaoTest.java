@@ -3,8 +3,6 @@ package net.thumbtack.hospital.daoimpl;
 import net.thumbtack.hospital.model.schedule.TimeCell;
 import net.thumbtack.hospital.model.user.Doctor;
 import net.thumbtack.hospital.model.user.Patient;
-import net.thumbtack.hospital.util.ScheduleGenerators;
-import net.thumbtack.hospital.util.ticket.TicketFactory;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -31,10 +29,10 @@ public class UserDaoTest extends DaoTestApi {
         final var timeStart = LocalTime.of(12, 0);
         final var timeEnd = timeStart.plusMinutes(duration * durationPerDay);
 
-        final var requestWithSchedule = ScheduleGenerators.generateDtoRequestWithWeekSchedule(duration,
+        final var requestWithSchedule = getScheduleGenerator().generateDtoRequestWithWeekSchedule(duration,
                 dateStart, dateEnd, timeStart, timeEnd, weekDays);
 
-        final var schedule = ScheduleGenerators.generateSchedule(doctorId, requestWithSchedule);
+        final var schedule = getScheduleGenerator().generateSchedule(doctorId, requestWithSchedule);
         insertSchedule(doctorId, schedule);
         doctor.setSchedule(schedule);
 
@@ -61,10 +59,10 @@ public class UserDaoTest extends DaoTestApi {
         final var timeStart = LocalTime.of(12, 0);
         final var timeEnd = timeStart.plusMinutes(duration * durationPerDay);
 
-        final var requestWithSchedule = ScheduleGenerators.generateDtoRequestWithWeekSchedule(duration,
+        final var requestWithSchedule = getScheduleGenerator().generateDtoRequestWithWeekSchedule(duration,
                 dateStart, dateEnd, timeStart, timeEnd, weekDays);
 
-        final var schedule = ScheduleGenerators.generateSchedule(doctorId, requestWithSchedule);
+        final var schedule = getScheduleGenerator().generateSchedule(doctorId, requestWithSchedule);
         insertSchedule(doctorId, schedule);
 
         final var patient1 = new Patient("EallaMerkulova844", "2PrKexqqZ5FK",
@@ -73,9 +71,9 @@ public class UserDaoTest extends DaoTestApi {
         insertUser(patient1);
 
         final var patient1Tickets = List.of(
-                TicketFactory.buildTicketToDoctor(doctorId, LocalDate.of(2020, 3, 4), LocalTime.of(12, 0)),
-                TicketFactory.buildTicketToDoctor(doctorId, LocalDate.of(2020, 3, 23), LocalTime.of(13, 0)),
-                TicketFactory.buildTicketToDoctor(doctorId, LocalDate.of(2020, 3, 24), LocalTime.of(12, 30)));
+                getTicketFactory().buildTicketToDoctor(doctorId, LocalDate.of(2020, 3, 4), LocalTime.of(12, 0)),
+                getTicketFactory().buildTicketToDoctor(doctorId, LocalDate.of(2020, 3, 23), LocalTime.of(13, 0)),
+                getTicketFactory().buildTicketToDoctor(doctorId, LocalDate.of(2020, 3, 24), LocalTime.of(12, 30)));
         patient1Tickets.forEach(ticketTitle -> appointmentToDoctor(patient1.getId(), ticketTitle));
 
         final var patient2 = new Patient("MarikaLevchenko0", "nrusOqHiqsbB",
@@ -84,11 +82,11 @@ public class UserDaoTest extends DaoTestApi {
         insertUser(patient2);
 
         final var patient2Tickets = List.of(
-                TicketFactory.buildTicketToDoctor(doctorId, LocalDate.of(2020, 3, 4), LocalTime.of(12, 30)),
-                TicketFactory.buildTicketToDoctor(doctorId, LocalDate.of(2020, 3, 16), LocalTime.of(12, 0)),
-                TicketFactory.buildTicketToDoctor(doctorId, LocalDate.of(2020, 3, 24), LocalTime.of(14, 0)),
-                TicketFactory.buildTicketToDoctor(doctorId, LocalDate.of(2020, 3, 30), LocalTime.of(13, 0)),
-                TicketFactory.buildTicketToDoctor(doctorId, LocalDate.of(2020, 3, 31), LocalTime.of(14, 0)));
+                getTicketFactory().buildTicketToDoctor(doctorId, LocalDate.of(2020, 3, 4), LocalTime.of(12, 30)),
+                getTicketFactory().buildTicketToDoctor(doctorId, LocalDate.of(2020, 3, 16), LocalTime.of(12, 0)),
+                getTicketFactory().buildTicketToDoctor(doctorId, LocalDate.of(2020, 3, 24), LocalTime.of(14, 0)),
+                getTicketFactory().buildTicketToDoctor(doctorId, LocalDate.of(2020, 3, 30), LocalTime.of(13, 0)),
+                getTicketFactory().buildTicketToDoctor(doctorId, LocalDate.of(2020, 3, 31), LocalTime.of(14, 0)));
         patient2Tickets.forEach(ticketTitle -> appointmentToDoctor(patient2.getId(), ticketTitle));
 
         final var patientId = patient1.getId();
@@ -125,10 +123,10 @@ public class UserDaoTest extends DaoTestApi {
         final var timeStart = LocalTime.of(12, 0);
         final var timeEnd = timeStart.plusMinutes(duration * durationPerDay);
 
-        final var requestWithSchedule = ScheduleGenerators
-                .generateDtoRequestWithWeekSchedule(duration, dateStart, dateEnd, timeStart, timeEnd, weekDays);
+        final var requestWithSchedule =
+                getScheduleGenerator().generateDtoRequestWithWeekSchedule(duration, dateStart, dateEnd, timeStart, timeEnd, weekDays);
 
-        var schedule = ScheduleGenerators.generateSchedule(doctorId, requestWithSchedule);
+        var schedule = getScheduleGenerator().generateSchedule(doctorId, requestWithSchedule);
         insertSchedule(doctorId, schedule);
 
         final var bottomBound = dateStart.plusDays(5);

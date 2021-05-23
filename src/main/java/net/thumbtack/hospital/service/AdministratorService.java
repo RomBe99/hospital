@@ -34,13 +34,15 @@ public class AdministratorService {
     private final DoctorDao doctorDao;
     private final ScheduleDao scheduleDao;
     private final CommonDao commonDao;
+    private final DtoAdapters dtoAdapters;
 
     @Autowired
-    public AdministratorService(AdministratorDao administratorDao, DoctorDao doctorDao, ScheduleDao scheduleDao, CommonDao commonDao) {
+    public AdministratorService(AdministratorDao administratorDao, DoctorDao doctorDao, ScheduleDao scheduleDao, CommonDao commonDao, DtoAdapters dtoAdapters) {
         this.administratorDao = administratorDao;
         this.doctorDao = doctorDao;
         this.scheduleDao = scheduleDao;
         this.commonDao = commonDao;
+        this.dtoAdapters = dtoAdapters;
     }
 
     public AdminRegistrationDtoResponse administratorRegistration(String sessionId, AdminRegistrationDtoRequest request) throws PermissionDeniedException {
@@ -69,7 +71,7 @@ public class AdministratorService {
         doctorDao.insertDoctor(doctor);
 
         final var doctorId = doctor.getId();
-        final var schedule = DtoAdapters.transform(request, doctorId);
+        final var schedule = dtoAdapters.transform(request, doctorId);
 
         if (!schedule.isEmpty()) {
             scheduleDao.insertSchedule(doctorId, schedule);
@@ -78,7 +80,7 @@ public class AdministratorService {
 
         return new DoctorRegistrationDtoResponse(doctorId,
                 doctor.getFirstName(), doctor.getLastName(), doctor.getPatronymic(),
-                doctor.getSpecialty(), doctor.getCabinet(), DtoAdapters.transform(doctor.getSchedule()));
+                doctor.getSpecialty(), doctor.getCabinet(), dtoAdapters.transform(doctor.getSchedule()));
     }
 
     public EditAdminProfileDtoResponse editAdministratorProfile(String sessionId, EditAdminProfileDtoRequest request) throws PermissionDeniedException {
@@ -111,7 +113,7 @@ public class AdministratorService {
             throw new ScheduleException(ScheduleErrorCode.SCHEDULE_HAVE_APPOINTMENT);
         }
 
-        final var schedule = DtoAdapters.transform(request, doctorId);
+        final var schedule = dtoAdapters.transform(request, doctorId);
 
         if (!schedule.isEmpty()) {
             scheduleDao.editSchedule(doctorId, dateStart, dateEnd, schedule);
@@ -119,7 +121,7 @@ public class AdministratorService {
 
         return new EditDoctorScheduleDtoResponse(doctor.getId(),
                 doctor.getFirstName(), doctor.getLastName(), doctor.getPatronymic(),
-                doctor.getSpecialty(), doctor.getCabinet(), DtoAdapters.transform(schedule));
+                doctor.getSpecialty(), doctor.getCabinet(), dtoAdapters.transform(schedule));
     }
 
     public EmptyDtoResponse removeDoctor(String sessionId, int doctorId, RemoveDoctorDtoRequest request) throws PermissionDeniedException {

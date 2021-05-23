@@ -2,7 +2,6 @@ package net.thumbtack.hospital.daoimpl;
 
 import net.thumbtack.hospital.dao.*;
 import net.thumbtack.hospital.debug.DebugDao;
-import net.thumbtack.hospital.debug.DebugDaoImpl;
 import net.thumbtack.hospital.mapper.UserType;
 import net.thumbtack.hospital.model.schedule.ScheduleCell;
 import net.thumbtack.hospital.model.ticket.Ticket;
@@ -12,14 +11,19 @@ import net.thumbtack.hospital.model.user.Administrator;
 import net.thumbtack.hospital.model.user.Doctor;
 import net.thumbtack.hospital.model.user.Patient;
 import net.thumbtack.hospital.model.user.User;
-import net.thumbtack.hospital.util.adapter.ScheduleTransformers;
+import net.thumbtack.hospital.server.HospitalApplication;
+import net.thumbtack.hospital.util.ScheduleGenerator;
+import net.thumbtack.hospital.util.adapter.ScheduleTransformer;
 import net.thumbtack.hospital.util.cookie.CookieFactory;
 import net.thumbtack.hospital.util.error.PermissionDeniedException;
 import net.thumbtack.hospital.util.mybatis.MyBatisUtils;
 import net.thumbtack.hospital.util.security.SecurityManagerImpl;
+import net.thumbtack.hospital.util.ticket.TicketFactory;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -29,16 +33,32 @@ import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
+@SpringBootTest(classes = HospitalApplication.class, webEnvironment = SpringBootTest.WebEnvironment.NONE)
 public abstract class DaoTestApi {
-    private final AdministratorDao administratorDao = new AdministratorDaoImpl();
-    private final DoctorDao doctorDao = new DoctorDaoImpl();
-    private final PatientDao patientDao = new PatientDaoImpl();
-    private final UserDao userDao = new UserDaoImpl();
-    private final MedicalCommissionDao medicalCommissionDao = new MedicalCommissionDaoImpl();
-    private final ScheduleDao scheduleDao = new ScheduleDaoImpl();
-    private final CommonDao commonDao = new CommonDaoImpl();
-    private final DebugDao debugDao = new DebugDaoImpl();
-    private final CookieFactory cookieFactory = new CookieFactory();
+    @Autowired
+    private AdministratorDao administratorDao;
+    @Autowired
+    private DoctorDao doctorDao;
+    @Autowired
+    private PatientDao patientDao;
+    @Autowired
+    private UserDao userDao;
+    @Autowired
+    private MedicalCommissionDao medicalCommissionDao;
+    @Autowired
+    private ScheduleDao scheduleDao;
+    @Autowired
+    private CommonDao commonDao;
+    @Autowired
+    private DebugDao debugDao;
+    @Autowired
+    private CookieFactory cookieFactory;
+    @Autowired
+    private TicketFactory ticketFactory;
+    @Autowired
+    private ScheduleTransformer scheduleTransformer;
+    @Autowired
+    private ScheduleGenerator scheduleGenerator;
 
     @BeforeAll
     public static void setUp() {
@@ -60,6 +80,14 @@ public abstract class DaoTestApi {
 
     protected String generateSessionId() {
         return cookieFactory.produceCookie(CookieFactory.JAVA_SESSION_ID).getValue();
+    }
+
+    public TicketFactory getTicketFactory() {
+        return ticketFactory;
+    }
+
+    public ScheduleGenerator getScheduleGenerator() {
+        return scheduleGenerator;
     }
 
     // Template methods
@@ -197,12 +225,12 @@ public abstract class DaoTestApi {
                                          LocalTime timeStart, LocalTime timeEnd, List<ScheduleCell> expectedSchedule) {
         final var actualSchedule = debugDao.getScheduleByDoctorId(doctorId, dateStart, dateEnd, timeStart, timeEnd);
         Assertions.assertEquals(expectedSchedule.size(), actualSchedule.size());
-        ScheduleTransformers.sortSchedule(actualSchedule);
+        scheduleTransformer.sortSchedule(actualSchedule);
         Assertions.assertEquals(expectedSchedule, actualSchedule);
     }
 
     public void insertSchedule(int doctorId, List<ScheduleCell> schedule) {
-        ScheduleTransformers.sortSchedule(schedule);
+        scheduleTransformer.sortSchedule(schedule);
         scheduleDao.insertSchedule(doctorId, schedule);
 
         schedule.forEach(s -> Assertions.assertNotEquals(0, s.getId()));
@@ -213,7 +241,7 @@ public abstract class DaoTestApi {
     }
 
     public void editSchedule(int doctorId, LocalDate dateStart, LocalDate dateEnd, List<ScheduleCell> newSchedule) {
-        ScheduleTransformers.sortSchedule(newSchedule);
+        scheduleTransformer.sortSchedule(newSchedule);
         scheduleDao.editSchedule(doctorId, dateStart, dateEnd, newSchedule);
 
         newSchedule.forEach(s -> Assertions.assertNotEquals(0, s.getId()));

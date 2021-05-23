@@ -47,7 +47,7 @@ import java.util.Objects;
 @AutoConfigureMockMvc
 public class MockedControllerTestApi extends BaseSpringConfiguration {
     @Autowired
-    protected MockMvc mvc;
+    private MockMvc mvc;
 
     @BeforeEach
     public void clearDatabase() throws Exception {
@@ -485,5 +485,9 @@ public class MockedControllerTestApi extends BaseSpringConfiguration {
         Assertions.assertFalse(actualJsonResponse.isEmpty());
 
         return mapFromJson(actualJsonResponse, CreateMedicalCommissionDtoResponse.class);
+    }
+
+    public MockMvc getMvc() {
+        return mvc;
     }
 }

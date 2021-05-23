@@ -6,6 +6,8 @@ import net.thumbtack.hospital.dtorequest.schedule.WeekScheduleDtoRequest;
 import net.thumbtack.hospital.model.schedule.ScheduleCell;
 import net.thumbtack.hospital.util.adapter.DtoAdapters;
 import org.apache.commons.lang3.tuple.Pair;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -13,11 +15,19 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class ScheduleGenerators {
-    public static DtoRequestWithSchedule generateDtoRequestWithWeekSchedule(int duration,
-                                                                            LocalDate dateStart, LocalDate dateEnd,
-                                                                            LocalTime timeStart, LocalTime timeEnd,
-                                                                            List<Integer> weekDays) {
+@Component("ScheduleGenerator")
+public class ScheduleGenerator {
+    private final DtoAdapters dtoAdapters;
+
+    @Autowired
+    public ScheduleGenerator(DtoAdapters dtoAdapters) {
+        this.dtoAdapters = dtoAdapters;
+    }
+
+    public DtoRequestWithSchedule generateDtoRequestWithWeekSchedule(int duration,
+                                                                     LocalDate dateStart, LocalDate dateEnd,
+                                                                     LocalTime timeStart, LocalTime timeEnd,
+                                                                     List<Integer> weekDays) {
         var weekSchedule = new WeekScheduleDtoRequest(timeStart.toString(), timeEnd.toString(), weekDays);
 
         return new DtoRequestWithSchedule(dateStart.toString(), dateEnd.toString(), duration, weekSchedule) {
@@ -88,9 +98,9 @@ public class ScheduleGenerators {
         };
     }
 
-    public static DtoRequestWithSchedule generateDtoRequestWithDaySchedule(int duration,
-                                                                           LocalDate dateStart, LocalDate dateEnd,
-                                                                           Map<WeekDay, Pair<LocalTime, LocalTime>> schedule) {
+    public DtoRequestWithSchedule generateDtoRequestWithDaySchedule(int duration,
+                                                                    LocalDate dateStart, LocalDate dateEnd,
+                                                                    Map<WeekDay, Pair<LocalTime, LocalTime>> schedule) {
         final var weekDaySchedule = new ArrayList<DayScheduleDtoRequest>(schedule.size());
 
         for (var weekDay : schedule.keySet()) {
@@ -166,7 +176,7 @@ public class ScheduleGenerators {
         };
     }
 
-    public static List<ScheduleCell> generateSchedule(int doctorId, DtoRequestWithSchedule requestWithSchedule) {
-        return DtoAdapters.transform(requestWithSchedule, doctorId);
+    public List<ScheduleCell> generateSchedule(int doctorId, DtoRequestWithSchedule requestWithSchedule) {
+        return dtoAdapters.transform(requestWithSchedule, doctorId);
     }
 }

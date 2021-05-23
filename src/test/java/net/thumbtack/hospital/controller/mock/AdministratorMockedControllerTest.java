@@ -9,10 +9,7 @@ import net.thumbtack.hospital.dtoresponse.doctor.DoctorLoginDtoResponse;
 import net.thumbtack.hospital.dtoresponse.other.EmptyDtoResponse;
 import net.thumbtack.hospital.dtoresponse.patient.PatientInformationDtoResponse;
 import net.thumbtack.hospital.dtoresponse.patient.PatientRegistrationDtoResponse;
-import net.thumbtack.hospital.util.ScheduleGenerators;
 import net.thumbtack.hospital.util.WeekDay;
-import net.thumbtack.hospital.util.adapter.DtoAdapters;
-import net.thumbtack.hospital.util.adapter.ScheduleTransformers;
 import org.apache.commons.lang3.tuple.Pair;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -210,7 +207,7 @@ public class AdministratorMockedControllerTest extends MockedControllerTestApi {
         final var timeEnd = LocalTime.of(17, 0);
         final var weekDays = List.of(1, 2, 3);
 
-        final var generatedWeekSchedule = ScheduleGenerators.generateDtoRequestWithWeekSchedule(
+        final var generatedWeekSchedule = getScheduleGenerator().generateDtoRequestWithWeekSchedule(
                 duration, dateStart, dateEnd, timeStart, timeEnd, weekDays);
 
         final var doctorRegistrationRequest =
@@ -252,7 +249,7 @@ public class AdministratorMockedControllerTest extends MockedControllerTestApi {
         weekSchedule.put(WeekDay.THURSDAY, Pair.of(LocalTime.of(10, 0), LocalTime.of(16, 0)));
 
         final var generatedWeekSchedule =
-                ScheduleGenerators.generateDtoRequestWithDaySchedule(duration, dateStart, dateEnd, weekSchedule);
+                getScheduleGenerator().generateDtoRequestWithDaySchedule(duration, dateStart, dateEnd, weekSchedule);
 
         final var doctorRegistrationRequest = new DoctorRegistrationDtoRequest(
                 generatedWeekSchedule.getDateStart(), generatedWeekSchedule.getDateEnd(), generatedWeekSchedule.getDuration(),
@@ -292,7 +289,7 @@ public class AdministratorMockedControllerTest extends MockedControllerTestApi {
         var weekDays = List.of(1, 2, 3);
 
         DtoRequestWithSchedule generatedWeekSchedule =
-                ScheduleGenerators.generateDtoRequestWithWeekSchedule(duration, dateStart, dateEnd, timeStart, timeEnd, weekDays);
+                getScheduleGenerator().generateDtoRequestWithWeekSchedule(duration, dateStart, dateEnd, timeStart, timeEnd, weekDays);
 
         final DoctorRegistrationDtoRequest doctorRegistrationRequest =
                 new DoctorRegistrationDtoRequest(generatedWeekSchedule.getDateStart(), generatedWeekSchedule.getDateEnd(), generatedWeekSchedule.getDuration(),
@@ -310,11 +307,11 @@ public class AdministratorMockedControllerTest extends MockedControllerTestApi {
         timeStart = LocalTime.of(10, 0);
         timeEnd = LocalTime.of(16, 30);
         weekDays = List.of(1, 3, 4, 5);
-        generatedWeekSchedule = ScheduleGenerators.generateDtoRequestWithWeekSchedule(
+        generatedWeekSchedule = getScheduleGenerator().generateDtoRequestWithWeekSchedule(
                 duration, dateStart, dateEnd, timeStart, timeEnd, weekDays);
         final var doctorId = expectedDoctorRegistrationResponse.getId();
         final var expectedSchedule =
-                DtoAdapters.transform(ScheduleTransformers.transformWeekSchedule(generatedWeekSchedule, doctorId));
+                getDtoAdapters().transform(getScheduleTransformer().transformWeekSchedule(generatedWeekSchedule, doctorId));
 
         {
             final var editDoctorScheduleRequest =
@@ -345,7 +342,7 @@ public class AdministratorMockedControllerTest extends MockedControllerTestApi {
         weekSchedule.put(WeekDay.FRIDAY, Pair.of(LocalTime.of(10, 0), LocalTime.of(16, 0)));
 
         var generatedWeekSchedule =
-                ScheduleGenerators.generateDtoRequestWithDaySchedule(duration, dateStart, dateEnd, weekSchedule);
+                getScheduleGenerator().generateDtoRequestWithDaySchedule(duration, dateStart, dateEnd, weekSchedule);
 
         final var doctorRegistrationRequest =
                 new DoctorRegistrationDtoRequest(generatedWeekSchedule.getDateStart(), generatedWeekSchedule.getDateEnd(), generatedWeekSchedule.getDuration(),
@@ -367,10 +364,10 @@ public class AdministratorMockedControllerTest extends MockedControllerTestApi {
         weekSchedule.put(WeekDay.THURSDAY, Pair.of(LocalTime.of(8, 45), LocalTime.of(14, 15)));
         weekSchedule.put(WeekDay.FRIDAY, Pair.of(LocalTime.of(10, 30), LocalTime.of(16, 0)));
         generatedWeekSchedule =
-                ScheduleGenerators.generateDtoRequestWithDaySchedule(duration, dateStart, dateEnd, weekSchedule);
+                getScheduleGenerator().generateDtoRequestWithDaySchedule(duration, dateStart, dateEnd, weekSchedule);
         final var doctorId = expectedDoctorRegistrationResponse.getId();
         final var expectedSchedule =
-                DtoAdapters.transform(ScheduleTransformers.transformWeekDaysSchedule(generatedWeekSchedule, doctorId));
+                getDtoAdapters().transform(getScheduleTransformer().transformWeekDaysSchedule(generatedWeekSchedule, doctorId));
 
         {
             final var editDoctorScheduleRequest =

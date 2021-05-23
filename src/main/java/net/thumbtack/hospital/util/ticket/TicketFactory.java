@@ -1,41 +1,52 @@
 package net.thumbtack.hospital.util.ticket;
 
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 
-// TODO Make as bean
+@Component("TicketFactory")
+@Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 public class TicketFactory {
-    private static StringBuilder convertDateToString(LocalDate date) {
-        return new StringBuilder().append(date.getDayOfMonth()).append(date.getMonthValue()).append(date.getYear());
-    }
+    private final String doctorTicketPrefix = "D";
+    private final String commissionTicketPrefix = "C";
 
-    private static StringBuilder convertTimeToString(LocalTime time) {
-        return new StringBuilder().append(time.getHour()).append(time.getMinute());
-    }
-
-    private static StringBuilder buildDoctorChapter(int doctorId) {
-        final var doctorTicketPrefix = "D";
-
-        return new StringBuilder(doctorTicketPrefix).append(doctorId);
-    }
-
-    public static String buildTicketToDoctor(int doctorId, LocalDate date, LocalTime time) {
+    public String buildTicketToDoctor(int doctorId, LocalDate date, LocalTime time) {
         return buildDoctorChapter(doctorId)
                 .append(convertDateToString(date))
                 .append(convertTimeToString(time))
                 .toString();
     }
 
-    public static String buildTicketToCommission(LocalDate date, LocalTime time, List<Integer> doctorIds) {
-        final var commissionTicketPrefix = "C";
+    public String buildTicketToCommission(LocalDate date, LocalTime time, List<Integer> doctorIds) {
         final var result = new StringBuilder(commissionTicketPrefix);
 
         doctorIds.forEach(i -> result.append(buildDoctorChapter(i)));
 
-        result.append(convertDateToString(date));
-        result.append(convertTimeToString(time));
+        return result
+                .append(convertDateToString(date))
+                .append(convertTimeToString(time))
+                .toString();
+    }
 
-        return result.toString();
+    private StringBuilder convertDateToString(LocalDate date) {
+        return new StringBuilder()
+                .append(date.getDayOfMonth())
+                .append(date.getMonthValue())
+                .append(date.getYear());
+    }
+
+    private StringBuilder convertTimeToString(LocalTime time) {
+        return new StringBuilder()
+                .append(time.getHour())
+                .append(time.getMinute());
+    }
+
+    private StringBuilder buildDoctorChapter(int doctorId) {
+        return new StringBuilder(doctorTicketPrefix)
+                .append(doctorId);
     }
 }

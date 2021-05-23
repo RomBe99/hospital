@@ -13,11 +13,9 @@ import net.thumbtack.hospital.dtoresponse.patient.AppointmentToDoctorDtoResponse
 import net.thumbtack.hospital.dtoresponse.patient.EditPatientProfileDtoResponse;
 import net.thumbtack.hospital.dtoresponse.patient.FullPatientInformationDtoResponse;
 import net.thumbtack.hospital.dtoresponse.patient.PatientRegistrationDtoResponse;
-import net.thumbtack.hospital.util.ScheduleGenerators;
 import net.thumbtack.hospital.util.cookie.CookieFactory;
 import net.thumbtack.hospital.util.error.DoctorNotFoundErrorCode;
 import net.thumbtack.hospital.util.error.ScheduleErrorCode;
-import net.thumbtack.hospital.util.ticket.TicketFactory;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -139,7 +137,7 @@ public class PatientMockedControllerTest extends MockedControllerTestApi {
         final var timeEnd = LocalTime.of(17, 0);
         final var weekDays = List.of(1, 2, 3);
 
-        final var generatedWeekSchedule = ScheduleGenerators.generateDtoRequestWithWeekSchedule(
+        final var generatedWeekSchedule = getScheduleGenerator().generateDtoRequestWithWeekSchedule(
                 duration, dateStart, dateEnd, timeStart, timeEnd, weekDays);
 
         final var doctorRegistrationRequest = new DoctorRegistrationDtoRequest(
@@ -178,7 +176,7 @@ public class PatientMockedControllerTest extends MockedControllerTestApi {
         final var appointmentToDoctorRequest = new AppointmentToDoctorDtoRequest(
                 expectedDoctorRegistrationResponse.getId(), appointmentDate.toString(), appointmentTime.toString());
 
-        final var expectedTicket = TicketFactory.buildTicketToDoctor(appointmentToDoctorRequest.getDoctorId(), appointmentDate, appointmentTime);
+        final var expectedTicket = getTicketFactory().buildTicketToDoctor(appointmentToDoctorRequest.getDoctorId(), appointmentDate, appointmentTime);
         final var expectedResponse = new AppointmentToDoctorDtoResponse(
                 expectedTicket, appointmentToDoctorRequest.getDoctorId(),
                 expectedDoctorRegistrationResponse.getFirstName(), expectedDoctorRegistrationResponse.getLastName(), expectedDoctorRegistrationResponse.getPatronymic(),
@@ -199,7 +197,7 @@ public class PatientMockedControllerTest extends MockedControllerTestApi {
         final var timeEnd = LocalTime.of(17, 0);
         final var weekDays = List.of(1, 2, 3);
 
-        final var generatedWeekSchedule = ScheduleGenerators.generateDtoRequestWithWeekSchedule(
+        final var generatedWeekSchedule = getScheduleGenerator().generateDtoRequestWithWeekSchedule(
                 duration, dateStart, dateEnd, timeStart, timeEnd, weekDays);
 
         final var doctorRegistrationRequest = new DoctorRegistrationDtoRequest(
@@ -237,7 +235,7 @@ public class PatientMockedControllerTest extends MockedControllerTestApi {
         final var appointmentToDoctorRequest = new AppointmentToDoctorDtoRequest(
                 expectedDoctorRegistrationResponse.getId(), appointmentDate.toString(), appointmentTime.toString());
 
-        final var expectedTicket = TicketFactory.buildTicketToDoctor(appointmentToDoctorRequest.getDoctorId(), appointmentDate, appointmentTime);
+        final var expectedTicket = getTicketFactory().buildTicketToDoctor(appointmentToDoctorRequest.getDoctorId(), appointmentDate, appointmentTime);
         final var expectedResponse = new AppointmentToDoctorDtoResponse(
                 expectedTicket, appointmentToDoctorRequest.getDoctorId(),
                 expectedDoctorRegistrationResponse.getFirstName(), expectedDoctorRegistrationResponse.getLastName(), expectedDoctorRegistrationResponse.getPatronymic(),
@@ -260,7 +258,7 @@ public class PatientMockedControllerTest extends MockedControllerTestApi {
         final var timeEnd = LocalTime.of(17, 0);
         final var weekDays = List.of(1, 2, 3);
 
-        final var generatedWeekSchedule = ScheduleGenerators.generateDtoRequestWithWeekSchedule(
+        final var generatedWeekSchedule = getScheduleGenerator().generateDtoRequestWithWeekSchedule(
                 duration, dateStart, dateEnd, timeStart, timeEnd, weekDays);
 
         final var doctorRegistrationRequest = new DoctorRegistrationDtoRequest(
@@ -299,7 +297,7 @@ public class PatientMockedControllerTest extends MockedControllerTestApi {
         final var appointmentToDoctorRequest = new AppointmentToDoctorDtoRequest(
                 expectedDoctorRegistrationResponse.getId(), appointmentDate.toString(), appointmentTime.toString());
 
-        final var expectedTicket = TicketFactory.buildTicketToDoctor(appointmentToDoctorRequest.getDoctorId(), appointmentDate, appointmentTime);
+        final var expectedTicket = getTicketFactory().buildTicketToDoctor(appointmentToDoctorRequest.getDoctorId(), appointmentDate, appointmentTime);
         final var expectedResponse = new AppointmentToDoctorDtoResponse(
                 expectedTicket, appointmentToDoctorRequest.getDoctorId(),
                 expectedDoctorRegistrationResponse.getFirstName(), expectedDoctorRegistrationResponse.getLastName(), expectedDoctorRegistrationResponse.getPatronymic(),
@@ -311,7 +309,7 @@ public class PatientMockedControllerTest extends MockedControllerTestApi {
         final var url = buildUrl(PatientController.PREFIX_URL, PatientController.APPOINTMENT_TO_DOCTOR_URL);
         final var json = mapToJson(appointmentToDoctorRequest);
 
-        final var actualJsonResponse = mvc.perform(
+        final var actualJsonResponse = getMvc().perform(
                 MockMvcRequestBuilders
                         .patch(url)
                         .cookie(new Cookie(CookieFactory.JAVA_SESSION_ID, patientSessionId))
@@ -356,7 +354,7 @@ public class PatientMockedControllerTest extends MockedControllerTestApi {
         final var url = buildUrl(PatientController.PREFIX_URL, PatientController.APPOINTMENT_TO_DOCTOR_URL);
         final var json = mapToJson(appointmentToDoctorRequest);
 
-        final var actualJsonResponse = mvc.perform(
+        final var actualJsonResponse = getMvc().perform(
                 MockMvcRequestBuilders
                         .patch(url)
                         .cookie(new Cookie(CookieFactory.JAVA_SESSION_ID, patientSessionId))
@@ -384,7 +382,7 @@ public class PatientMockedControllerTest extends MockedControllerTestApi {
         final var timeEnd = LocalTime.of(17, 0);
         final var weekDays = List.of(1, 2, 3);
 
-        final var generatedWeekSchedule = ScheduleGenerators.generateDtoRequestWithWeekSchedule(
+        final var generatedWeekSchedule = getScheduleGenerator().generateDtoRequestWithWeekSchedule(
                 duration, dateStart, dateEnd, timeStart, timeEnd, weekDays);
 
         final var doctorRegistrationRequest =
@@ -423,7 +421,7 @@ public class PatientMockedControllerTest extends MockedControllerTestApi {
         final AppointmentToDoctorDtoRequest appointmentToDoctorRequest = new AppointmentToDoctorDtoRequest(
                 expectedDoctorRegistrationResponse.getSpeciality(), appointmentDate.toString(), appointmentTime.toString());
 
-        final var expectedTicket = TicketFactory.buildTicketToDoctor(expectedDoctorRegistrationResponse.getId(), appointmentDate, appointmentTime);
+        final var expectedTicket = getTicketFactory().buildTicketToDoctor(expectedDoctorRegistrationResponse.getId(), appointmentDate, appointmentTime);
         final var expectedResponse = new AppointmentToDoctorDtoResponse(
                 expectedTicket, expectedDoctorRegistrationResponse.getId(),
                 expectedDoctorRegistrationResponse.getFirstName(), expectedDoctorRegistrationResponse.getLastName(), expectedDoctorRegistrationResponse.getPatronymic(),
@@ -446,7 +444,7 @@ public class PatientMockedControllerTest extends MockedControllerTestApi {
         final var speciality = "Surgeon";
         final var responses = new HashMap<Integer, DoctorRegistrationDtoResponse>();
 
-        final var generatedWeekSchedule = ScheduleGenerators.generateDtoRequestWithWeekSchedule(
+        final var generatedWeekSchedule = getScheduleGenerator().generateDtoRequestWithWeekSchedule(
                 duration, dateStart, dateEnd, timeStart, timeEnd, weekDays);
 
         {
@@ -517,7 +515,7 @@ public class PatientMockedControllerTest extends MockedControllerTestApi {
         final var actualResponse = appointmentToDoctor(patientSessionId, appointmentToDoctorRequest);
         final var docResponse = responses.get(actualResponse.getDoctorId());
 
-        final var expectedTicket = TicketFactory.buildTicketToDoctor(docResponse.getId(), appointmentDate, appointmentTime);
+        final var expectedTicket = getTicketFactory().buildTicketToDoctor(docResponse.getId(), appointmentDate, appointmentTime);
         final var expectedResponse = new AppointmentToDoctorDtoResponse(expectedTicket, docResponse.getId(),
                 docResponse.getFirstName(), docResponse.getLastName(), docResponse.getPatronymic(),
                 docResponse.getSpeciality(), docResponse.getRoom(), appointmentDate.toString(), appointmentTime.toString()

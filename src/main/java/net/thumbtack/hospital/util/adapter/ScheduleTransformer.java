@@ -5,6 +5,10 @@ import net.thumbtack.hospital.model.schedule.ScheduleCell;
 import net.thumbtack.hospital.model.schedule.TimeCell;
 import net.thumbtack.hospital.util.WeekDay;
 import net.thumbtack.hospital.util.ticket.TicketFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
 
 import java.time.DayOfWeek;
@@ -17,8 +21,17 @@ import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-public class ScheduleTransformers {
-    public static boolean isWeekend(LocalDate testDate, List<DayOfWeek> workDaysOfWeek) {
+@Component("ScheduleTransformer")
+@Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
+public class ScheduleTransformer {
+    private final TicketFactory ticketFactory;
+
+    @Autowired
+    public ScheduleTransformer(TicketFactory ticketFactory) {
+        this.ticketFactory = ticketFactory;
+    }
+
+    public boolean isWeekend(LocalDate testDate, List<DayOfWeek> workDaysOfWeek) {
         final var dayOfWeek = DayOfWeek.from(testDate);
 
         final var weekendDayCheckers = List.<Predicate<DayOfWeek>>of(
@@ -36,11 +49,11 @@ public class ScheduleTransformers {
         return false;
     }
 
-    public static boolean isEmptyScheduleRequest(DtoRequestWithSchedule request) {
+    public boolean isEmptyScheduleRequest(DtoRequestWithSchedule request) {
         return request.getWeekSchedule() == null && request.getWeekDaysSchedule().isEmpty();
     }
 
-    public static List<ScheduleCell> transformWeekSchedule(DtoRequestWithSchedule request, int doctorId) {
+    public List<ScheduleCell> transformWeekSchedule(DtoRequestWithSchedule request, int doctorId) {
         final var duration = request.getDuration();
         final var dateStart = LocalDate.parse(request.getDateStart());
         final var dateEnd = LocalDate.parse(request.getDateEnd());
@@ -66,7 +79,7 @@ public class ScheduleTransformers {
             final var temp = new ArrayList<TimeCell>();
 
             for (var t : durations) {
-                temp.add(new TimeCell(t, duration, TicketFactory.buildTicketToDoctor(doctorId, d, t)));
+                temp.add(new TimeCell(t, duration, ticketFactory.buildTicketToDoctor(doctorId, d, t)));
             }
 
             result.add(new ScheduleCell(null, d, temp));
@@ -75,7 +88,7 @@ public class ScheduleTransformers {
         return result;
     }
 
-    public static List<ScheduleCell> transformWeekDaysSchedule(DtoRequestWithSchedule request, int doctorId) {
+    public List<ScheduleCell> transformWeekDaysSchedule(DtoRequestWithSchedule request, int doctorId) {
         final var duration = request.getDuration();
         final var dateStart = LocalDate.parse(request.getDateStart());
         final var dateEnd = LocalDate.parse(request.getDateEnd());
@@ -106,7 +119,7 @@ public class ScheduleTransformers {
             final var temp = new ArrayList<TimeCell>();
 
             for (var t : durations) {
-                temp.add(new TimeCell(t, duration, TicketFactory.buildTicketToDoctor(doctorId, d, t)));
+                temp.add(new TimeCell(t, duration, ticketFactory.buildTicketToDoctor(doctorId, d, t)));
             }
 
             result.add(new ScheduleCell(null, d, temp));
@@ -115,7 +128,7 @@ public class ScheduleTransformers {
         return result;
     }
 
-    public static List<ScheduleCell> sortSchedule(List<ScheduleCell> schedule) {
+    public List<ScheduleCell> sortSchedule(List<ScheduleCell> schedule) {
         schedule.sort(Comparator.comparing(ScheduleCell::getDate));
         schedule.forEach(sc -> sc.getCells().sort(Comparator.comparing(TimeCell::getTime)));
 

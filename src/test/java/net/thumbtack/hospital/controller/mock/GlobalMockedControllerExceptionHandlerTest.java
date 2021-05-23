@@ -36,7 +36,7 @@ public class GlobalMockedControllerExceptionHandlerTest extends MockedController
     public void incorrectPostUrlTest() throws Exception {
         final var url = "/incorrect_url";
 
-        mvc.perform(MockMvcRequestBuilders.post(url))
+        getMvc().perform(MockMvcRequestBuilders.post(url))
                 .andExpect(MockMvcResultMatchers.status().isNotFound());
     }
 
@@ -44,7 +44,7 @@ public class GlobalMockedControllerExceptionHandlerTest extends MockedController
     public void incorrectDeleteUrlTest() throws Exception {
         final var url = "/incorrect_url";
 
-        mvc.perform(MockMvcRequestBuilders.delete(url))
+        getMvc().perform(MockMvcRequestBuilders.delete(url))
                 .andExpect(MockMvcResultMatchers.status().isNotFound());
     }
 
@@ -52,7 +52,7 @@ public class GlobalMockedControllerExceptionHandlerTest extends MockedController
     public void incorrectGetUrlTest() throws Exception {
         final var url = "/incorrect_url";
 
-        mvc.perform(MockMvcRequestBuilders.get(url))
+        getMvc().perform(MockMvcRequestBuilders.get(url))
                 .andExpect(MockMvcResultMatchers.status().isNotFound());
     }
 
@@ -60,7 +60,7 @@ public class GlobalMockedControllerExceptionHandlerTest extends MockedController
     public void incorrectPutUrlTest() throws Exception {
         final var url = "/incorrect_url";
 
-        mvc.perform(MockMvcRequestBuilders.put(url))
+        getMvc().perform(MockMvcRequestBuilders.put(url))
                 .andExpect(MockMvcResultMatchers.status().isNotFound());
     }
 
@@ -68,7 +68,7 @@ public class GlobalMockedControllerExceptionHandlerTest extends MockedController
     public void incorrectPatchUrlTest() throws Exception {
         final var url = "/incorrect_url";
 
-        mvc.perform(MockMvcRequestBuilders.patch(url))
+        getMvc().perform(MockMvcRequestBuilders.patch(url))
                 .andExpect(MockMvcResultMatchers.status().isNotFound());
     }
 
@@ -82,7 +82,7 @@ public class GlobalMockedControllerExceptionHandlerTest extends MockedController
                 "Surgeon", "124", "EpihariyaKozlova75", "44XNaexggtgK");
         final var json = mapToJson(request);
 
-        final var actualJsonResponse = mvc.perform(
+        final var actualJsonResponse = getMvc().perform(
                 MockMvcRequestBuilders
                         .post(url)
                         .cookie(new Cookie(CookieFactory.JAVA_SESSION_ID, incorrectSessionId))
@@ -111,7 +111,7 @@ public class GlobalMockedControllerExceptionHandlerTest extends MockedController
                 "", null, "", null);
         final var json = mapToJson(request);
 
-        final var actualJsonResponse = mvc.perform(
+        final var actualJsonResponse = getMvc().perform(
                 MockMvcRequestBuilders
                         .post(url)
                         .cookie(new Cookie(CookieFactory.JAVA_SESSION_ID, rootAdminSessionId))
@@ -150,7 +150,7 @@ public class GlobalMockedControllerExceptionHandlerTest extends MockedController
                 "", null, "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "asd");
         final var json = mapToJson(request);
 
-        final var actualJsonResponse = mvc.perform(
+        final var actualJsonResponse = getMvc().perform(
                 MockMvcRequestBuilders
                         .post(url)
                         .cookie(new Cookie(CookieFactory.JAVA_SESSION_ID, rootAdminSessionId))

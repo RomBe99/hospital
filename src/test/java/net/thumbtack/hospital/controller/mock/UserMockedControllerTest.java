@@ -8,7 +8,6 @@ import net.thumbtack.hospital.dtoresponse.admin.DoctorRegistrationDtoResponse;
 import net.thumbtack.hospital.dtoresponse.doctor.DoctorLoginDtoResponse;
 import net.thumbtack.hospital.dtoresponse.other.ServerSettingsDtoResponse;
 import net.thumbtack.hospital.dtoresponse.patient.PatientRegistrationDtoResponse;
-import net.thumbtack.hospital.util.ScheduleGenerators;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -46,7 +45,7 @@ public class UserMockedControllerTest extends MockedControllerTestApi {
         final var timeEnd = LocalTime.of(17, 0);
         final var weekDays = List.of(1, 2, 3);
 
-        final var generatedWeekSchedule = ScheduleGenerators.generateDtoRequestWithWeekSchedule(
+        final var generatedWeekSchedule = getScheduleGenerator().generateDtoRequestWithWeekSchedule(
                 duration, dateStart, dateEnd, timeStart, timeEnd, weekDays);
 
         final var doctorRegistrationRequest = new DoctorRegistrationDtoRequest(

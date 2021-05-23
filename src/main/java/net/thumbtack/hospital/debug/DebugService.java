@@ -12,10 +12,12 @@ import java.util.stream.Collectors;
 @Component("DebugService")
 public class DebugService {
     private final DebugDao debugDao;
+    private final DtoAdapters dtoAdapters;
 
     @Autowired
-    public DebugService(DebugDao debugDao) {
+    public DebugService(DebugDao debugDao, DtoAdapters dtoAdapters) {
         this.debugDao = debugDao;
+        this.dtoAdapters = dtoAdapters;
     }
 
     public void clear() {
@@ -32,7 +34,7 @@ public class DebugService {
 
     public GetScheduleByDoctorIdDtoResponse getScheduleByDoctorId(int doctorId) {
         List<ScheduleCellDtoResponse> responseSchedule = debugDao.getScheduleByDoctorId(doctorId, null, null, null, null).stream()
-                .map(DtoAdapters::transform)
+                .map(dtoAdapters::transform)
                 .collect(Collectors.toList());
 
         return new GetScheduleByDoctorIdDtoResponse(responseSchedule);

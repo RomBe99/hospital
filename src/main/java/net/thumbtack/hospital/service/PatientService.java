@@ -32,6 +32,7 @@ public class PatientService {
     private final PatientDao patientDao;
     private final ScheduleDao scheduleDao;
     private final MedicalCommissionDao medicalCommissionDao;
+    private final TicketFactory ticketFactory;
 
     public static String phoneTransformer(String phone) {
         final var result = phone.replaceAll("\\D+", "");
@@ -40,12 +41,15 @@ public class PatientService {
     }
 
     @Autowired
-    public PatientService(PatientDao patientDao, DoctorDao doctorDao, CommonDao commonDao, ScheduleDao scheduleDao, MedicalCommissionDao medicalCommissionDao) {
+    public PatientService(PatientDao patientDao, DoctorDao doctorDao,
+                          CommonDao commonDao, ScheduleDao scheduleDao, MedicalCommissionDao medicalCommissionDao,
+                          TicketFactory ticketFactory) {
         this.patientDao = patientDao;
         this.doctorDao = doctorDao;
         this.commonDao = commonDao;
         this.scheduleDao = scheduleDao;
         this.medicalCommissionDao = medicalCommissionDao;
+        this.ticketFactory = ticketFactory;
     }
 
     public PatientRegistrationDtoResponse patientRegistration(PatientRegistrationDtoRequest request) {
@@ -103,7 +107,7 @@ public class PatientService {
 
         final var ticketDate = LocalDate.parse(request.getDate());
         final var ticketTime = LocalTime.parse(request.getTime());
-        final var ticketTitle = TicketFactory.buildTicketToDoctor(doctor.getId(), ticketDate, ticketTime);
+        final var ticketTitle = ticketFactory.buildTicketToDoctor(doctor.getId(), ticketDate, ticketTime);
 
         final var containsAppointment = commonDao.containsAppointment(ticketTitle);
 

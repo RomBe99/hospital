@@ -45,7 +45,7 @@ public class UserController {
         this.cookieFactory = cookieFactory;
     }
 
-    private static LocalDate generateStartDate(String startDate) {
+    private LocalDate generateStartDate(String startDate) {
         return startDate == null || startDate.isEmpty() ?
                 LocalDate.now() : LocalDate.parse(startDate);
     }

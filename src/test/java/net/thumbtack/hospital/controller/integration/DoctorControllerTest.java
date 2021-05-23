@@ -9,7 +9,6 @@ import net.thumbtack.hospital.dtoresponse.doctor.CreateMedicalCommissionDtoRespo
 import net.thumbtack.hospital.dtoresponse.doctor.DoctorLoginDtoResponse;
 import net.thumbtack.hospital.dtoresponse.other.EmptyDtoResponse;
 import net.thumbtack.hospital.dtoresponse.patient.PatientRegistrationDtoResponse;
-import net.thumbtack.hospital.util.ticket.TicketFactory;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -30,7 +29,7 @@ public class DoctorControllerTest extends RealControllerTestApi {
                 final var doctorIds = dtoRequest.getDoctorIds();
                 final var date = LocalDate.parse(dtoRequest.getDate());
                 final var time = LocalTime.parse(dtoRequest.getTime());
-                final var ticketTitle = TicketFactory.buildTicketToCommission(date, time, doctorIds);
+                final var ticketTitle = getTicketFactory().buildTicketToCommission(date, time, doctorIds);
 
                 return new CreateMedicalCommissionDtoResponse(ticketTitle, dtoRequest.getPatientId(), doctorIds,
                         dtoRequest.getRoom(), dtoRequest.getDate(), dtoRequest.getTime(), dtoRequest.getDuration());
@@ -112,7 +111,7 @@ public class DoctorControllerTest extends RealControllerTestApi {
             Assertions.assertEquals(expectedResponse, actualResponse);
         }
 
-        final var ticketTitle = TicketFactory.buildTicketToCommission(LocalDate.parse(createMedicalCommissionRequest.getDate()),
+        final var ticketTitle = getTicketFactory().buildTicketToCommission(LocalDate.parse(createMedicalCommissionRequest.getDate()),
                 LocalTime.parse(createMedicalCommissionRequest.getTime()), createMedicalCommissionRequest.getDoctorIds());
 
         {

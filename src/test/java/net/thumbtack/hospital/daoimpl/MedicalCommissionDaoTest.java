@@ -4,7 +4,6 @@ import net.thumbtack.hospital.model.ticket.TicketToMedicalCommission;
 import net.thumbtack.hospital.model.user.Doctor;
 import net.thumbtack.hospital.model.user.Patient;
 import net.thumbtack.hospital.model.user.User;
-import net.thumbtack.hospital.util.ticket.TicketFactory;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -45,7 +44,7 @@ public class MedicalCommissionDaoTest extends DaoTestApi {
         final var commissionDate = LocalDate.of(2020, 4, 7);
         final var commissionTime = LocalTime.of(14, 30);
         final var doctorIds = doctors.stream().map(User::getId).collect(Collectors.toList());
-        final var ticketTitle = TicketFactory.buildTicketToCommission(commissionDate, commissionTime, doctorIds);
+        final var ticketTitle = getTicketFactory().buildTicketToCommission(commissionDate, commissionTime, doctorIds);
         final var cabinet = doctorCreatedCommission.getCabinet();
         final var patientId = patient.getId();
         final var duration = 120;
@@ -84,7 +83,7 @@ public class MedicalCommissionDaoTest extends DaoTestApi {
         final var commissionDate = LocalDate.of(2020, 4, 7);
         final var commissionTime = LocalTime.of(14, 30);
         final var doctorIds = doctors.stream().map(User::getId).collect(Collectors.toList());
-        final var ticketTitle = TicketFactory.buildTicketToCommission(commissionDate, commissionTime, doctorIds);
+        final var ticketTitle = getTicketFactory().buildTicketToCommission(commissionDate, commissionTime, doctorIds);
         final var cabinet = doctorCreatedCommission.getCabinet();
         final var patientId = patient.getId();
         final var duration = 120;
@@ -139,7 +138,7 @@ public class MedicalCommissionDaoTest extends DaoTestApi {
         var doctorIds = doctors.values().stream()
                 .map(User::getId)
                 .collect(Collectors.toList());
-        var ticketTitle = TicketFactory.buildTicketToCommission(commissionDate, commissionTime, doctorIds);
+        var ticketTitle = getTicketFactory().buildTicketToCommission(commissionDate, commissionTime, doctorIds);
         var cabinet = doctorCreatedCommission.getCabinet();
         var patientId = patient.getId();
         var duration = 120;
@@ -154,7 +153,7 @@ public class MedicalCommissionDaoTest extends DaoTestApi {
                 .stream()
                 .map(User::getId)
                 .collect(Collectors.toList());
-        ticketTitle = TicketFactory.buildTicketToCommission(commissionDate, commissionTime, doctorIds);
+        ticketTitle = getTicketFactory().buildTicketToCommission(commissionDate, commissionTime, doctorIds);
         cabinet = doctors.get("MenaAltyrev568").getCabinet();
         duration = 30;
         expectedTickets.add(new TicketToMedicalCommission(ticketTitle, cabinet, commissionDate, commissionTime, patientId, doctorIds, duration));
@@ -166,7 +165,7 @@ public class MedicalCommissionDaoTest extends DaoTestApi {
                 .stream()
                 .map(User::getId)
                 .collect(Collectors.toList());
-        ticketTitle = TicketFactory.buildTicketToCommission(commissionDate, commissionTime, doctorIds);
+        ticketTitle = getTicketFactory().buildTicketToCommission(commissionDate, commissionTime, doctorIds);
         cabinet = doctorCreatedCommission.getCabinet();
         duration = 100;
         expectedTickets.add(new TicketToMedicalCommission(ticketTitle, cabinet, commissionDate, commissionTime, patientId, doctorIds, duration));

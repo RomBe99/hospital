@@ -39,16 +39,18 @@ public class UserService {
     private final DoctorDao doctorDao;
     private final CommonDao commonDao;
     private final Constraints constraints;
+    private final DtoAdapters dtoAdapters;
 
     @Autowired
     public UserService(PatientDao patientDao, @Qualifier("UserDaoImpl") UserDao userDao,
-                       AdministratorDao administratorDao, DoctorDao doctorDao, CommonDao commonDao, Constraints constraints) {
+                       AdministratorDao administratorDao, DoctorDao doctorDao, CommonDao commonDao, Constraints constraints, DtoAdapters dtoAdapters) {
         this.patientDao = patientDao;
         this.userDao = userDao;
         this.administratorDao = administratorDao;
         this.doctorDao = doctorDao;
         this.commonDao = commonDao;
         this.constraints = constraints;
+        this.dtoAdapters = dtoAdapters;
     }
 
     public LoginUserDtoResponse login(LoginDtoRequest request, String sessionId) {
@@ -77,7 +79,7 @@ public class UserService {
                     doctor.getFirstName(), doctor.getLastName(), doctor.getPatronymic(),
                     doctor.getSpecialty(), doctor.getCabinet(),
                     doctor.getSchedule().stream()
-                            .map(DtoAdapters::transform)
+                            .map(dtoAdapters::transform)
                             .collect(Collectors.toList()));
         });
 
@@ -121,7 +123,7 @@ public class UserService {
                     doctor.getFirstName(), doctor.getLastName(), doctor.getPatronymic(),
                     doctor.getSpecialty(), doctor.getCabinet(),
                     doctor.getSchedule().stream()
-                            .map(DtoAdapters::transform)
+                            .map(dtoAdapters::transform)
                             .collect(Collectors.toList()));
         });
 
@@ -158,7 +160,7 @@ public class UserService {
                 doctor.getFirstName(), doctor.getLastName(), doctor.getPatronymic(),
                 doctor.getSpecialty(), doctor.getCabinet(),
                 doctor.getSchedule().stream()
-                        .map(DtoAdapters::transform)
+                        .map(dtoAdapters::transform)
                         .collect(Collectors.toList()));
     }
 
@@ -181,7 +183,7 @@ public class UserService {
                         d.getFirstName(), d.getLastName(), d.getPatronymic(),
                         d.getSpecialty(), d.getCabinet(),
                         d.getSchedule().stream()
-                                .map(DtoAdapters::transform)
+                                .map(dtoAdapters::transform)
                                 .collect(Collectors.toList())))
                 .collect(Collectors.toList()));
     }

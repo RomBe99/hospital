@@ -17,10 +17,12 @@ import java.time.LocalTime;
 @Service("DoctorService")
 public class DoctorService {
     private final MedicalCommissionDao medicalCommissionDao;
+    private final TicketFactory ticketFactory;
 
     @Autowired
-    public DoctorService(MedicalCommissionDao medicalCommissionDao) {
+    public DoctorService(MedicalCommissionDao medicalCommissionDao, TicketFactory ticketFactory) {
         this.medicalCommissionDao = medicalCommissionDao;
+        this.ticketFactory = ticketFactory;
     }
 
     public CreateMedicalCommissionDtoResponse createMedicalCommission(String sessionId,
@@ -37,7 +39,7 @@ public class DoctorService {
             doctorIds.add(commissionCreatorId);
         }
 
-        final var title = TicketFactory.buildTicketToCommission(date, time, doctorIds);
+        final var title = ticketFactory.buildTicketToCommission(date, time, doctorIds);
         final var patientId = request.getPatientId();
         final var duration = request.getDuration();
         final var room = request.getRoom();

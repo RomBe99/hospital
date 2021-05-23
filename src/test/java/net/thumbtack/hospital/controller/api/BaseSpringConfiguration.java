@@ -3,18 +3,29 @@ package net.thumbtack.hospital.controller.api;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import net.thumbtack.hospital.server.HospitalApplication;
+import net.thumbtack.hospital.util.ScheduleGenerator;
+import net.thumbtack.hospital.util.adapter.DtoAdapters;
+import net.thumbtack.hospital.util.adapter.ScheduleTransformer;
 import net.thumbtack.hospital.util.mybatis.MyBatisUtils;
+import net.thumbtack.hospital.util.ticket.TicketFactory;
 import org.junit.jupiter.api.BeforeAll;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.StringJoiner;
 
-@SpringBootTest(classes = HospitalApplication.class,
-        webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(classes = HospitalApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public abstract class BaseSpringConfiguration implements UserTestApi, PatientTestApi, AdministratorTestApi, DoctorTestApi {
     @Autowired
     private ObjectMapper jsonMapper;
+    @Autowired
+    private TicketFactory ticketFactory;
+    @Autowired
+    private ScheduleTransformer scheduleTransformer;
+    @Autowired
+    private DtoAdapters dtoAdapters;
+    @Autowired
+    private ScheduleGenerator scheduleGenerator;
 
     @BeforeAll
     public static void setUpDatabase() {
@@ -40,9 +51,7 @@ public abstract class BaseSpringConfiguration implements UserTestApi, PatientTes
     }
 
     public String buildUrlWithPathVariable(String pathVarName, String pathVarValue, String... urlParts) {
-        final var nameWithBrackets = '{' + pathVarName + '}';
-
-        return buildUrl(urlParts).replace(nameWithBrackets, pathVarValue);
+        return buildUrl(urlParts).replace(String.format("{%s}", pathVarName), pathVarValue);
     }
 
     public String mapToJson(Object obj) throws JsonProcessingException {
@@ -51,5 +60,21 @@ public abstract class BaseSpringConfiguration implements UserTestApi, PatientTes
 
     public <T> T mapFromJson(String json, Class<T> clazz) throws JsonProcessingException {
         return jsonMapper.readValue(json, clazz);
+    }
+
+    public TicketFactory getTicketFactory() {
+        return ticketFactory;
+    }
+
+    public ScheduleTransformer getScheduleTransformer() {
+        return scheduleTransformer;
+    }
+
+    public DtoAdapters getDtoAdapters() {
+        return dtoAdapters;
+    }
+
+    public ScheduleGenerator getScheduleGenerator() {
+        return scheduleGenerator;
     }
 }

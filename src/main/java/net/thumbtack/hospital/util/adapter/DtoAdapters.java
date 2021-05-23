@@ -7,6 +7,10 @@ import net.thumbtack.hospital.dtoresponse.schedule.ScheduleTimeCellDtoResponse;
 import net.thumbtack.hospital.model.schedule.ScheduleCell;
 import net.thumbtack.hospital.model.schedule.TimeCell;
 import net.thumbtack.hospital.model.user.Patient;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -15,44 +19,53 @@ import java.util.function.BiFunction;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
+@Component("DtoAdapters")
+@Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 public class DtoAdapters {
-    public static ScheduleTimeCellDtoResponse transform(TimeCell tc) {
+    private final ScheduleTransformer scheduleTransformer;
+
+    @Autowired
+    public DtoAdapters(ScheduleTransformer scheduleTransformer) {
+        this.scheduleTransformer = scheduleTransformer;
+    }
+
+    public ScheduleTimeCellDtoResponse transform(TimeCell tc) {
         return new ScheduleTimeCellDtoResponse(tc.getTime(),
                 tc.getPatient() == null ? null : transform(tc.getPatient()),
                 tc.getDuration());
     }
 
-    public static ScheduleCellDtoResponse transform(ScheduleCell sc) {
+    public ScheduleCellDtoResponse transform(ScheduleCell sc) {
         return new ScheduleCellDtoResponse(sc.getDate(),
                 sc.getCells() == null ? null : sc.getCells().stream()
-                        .map(DtoAdapters::transform)
+                        .map(this::transform)
                         .collect(Collectors.toList()));
     }
 
-    public static List<ScheduleCellDtoResponse> transform(List<ScheduleCell> schedule) {
+    public List<ScheduleCellDtoResponse> transform(List<ScheduleCell> schedule) {
         return schedule.stream()
-                .map(DtoAdapters::transform)
+                .map(this::transform)
                 .collect(Collectors.toList());
     }
 
-    public static PatientInformationDtoResponse transform(Patient patient) {
+    public PatientInformationDtoResponse transform(Patient patient) {
         return new PatientInformationDtoResponse(patient.getId(),
                 patient.getFirstName(), patient.getLastName(), patient.getPatronymic(),
                 patient.getEmail(), patient.getAddress(), patient.getPhone());
     }
 
-    public static List<ScheduleCell> transform(DtoRequestWithSchedule request, int doctorId) {
-        if (ScheduleTransformers.isEmptyScheduleRequest(request)) {
+    public List<ScheduleCell> transform(DtoRequestWithSchedule request, int doctorId) {
+        if (scheduleTransformer.isEmptyScheduleRequest(request)) {
             return Collections.emptyList();
         }
 
         final var transformers = new HashMap<Supplier<Boolean>, BiFunction<DtoRequestWithSchedule, Integer, List<ScheduleCell>>>();
-        transformers.put(() -> request.getWeekSchedule() != null, ScheduleTransformers::transformWeekSchedule);
-        transformers.put(() -> !request.getWeekDaysSchedule().isEmpty(), ScheduleTransformers::transformWeekDaysSchedule);
+        transformers.put(() -> request.getWeekSchedule() != null, scheduleTransformer::transformWeekSchedule);
+        transformers.put(() -> !request.getWeekDaysSchedule().isEmpty(), scheduleTransformer::transformWeekDaysSchedule);
 
         for (var p : transformers.keySet()) {
             if (p.get()) {
-                return ScheduleTransformers.sortSchedule(transformers.get(p).apply(request, doctorId));
+                return scheduleTransformer.sortSchedule(transformers.get(p).apply(request, doctorId));
             }
         }
 
