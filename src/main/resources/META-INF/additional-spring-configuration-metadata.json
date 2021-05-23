@@ -96,6 +96,16 @@
       "name": "hospital.errors.invalid-appointment-doctor-request",
       "type": "java.lang.String",
       "description": "Error code for invalid appointment to doctor request."
+    },
+    {
+      "name": "hospital.ticket.doctor-ticket-prefix",
+      "type": "java.lang.String",
+      "description": "Prefix for doctor ticket."
+    },
+    {
+      "name": "hospital.ticket.medical-commission-ticket-prefix",
+      "type": "java.lang.String",
+      "description": "Prefix for medical commission ticket."
     }
   ]
 }

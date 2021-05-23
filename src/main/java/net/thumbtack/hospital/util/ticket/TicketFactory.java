@@ -1,18 +1,18 @@
 package net.thumbtack.hospital.util.ticket;
 
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 
-@Component("TicketFactory")
-@Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
+@ConfigurationProperties("hospital.ticket")
 public class TicketFactory {
-    private final String doctorTicketPrefix = "D";
-    private final String commissionTicketPrefix = "C";
+    @Value("#{${hospital.ticket.doctor-ticket-prefix}}")
+    private String doctorTicketPrefix;
+    @Value("#{${hospital.ticket.medical-commission-ticket-prefix}}")
+    private String commissionTicketPrefix;
 
     public String buildTicketToDoctor(int doctorId, LocalDate date, LocalTime time) {
         return buildDoctorChapter(doctorId)

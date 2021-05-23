@@ -2,6 +2,7 @@ package net.thumbtack.hospital.server;
 
 import net.thumbtack.hospital.util.error.ErrorMessageFactory;
 import net.thumbtack.hospital.util.mybatis.MyBatisUtils;
+import net.thumbtack.hospital.util.ticket.TicketFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
@@ -11,7 +12,10 @@ import org.springframework.context.annotation.PropertySource;
 
 @SpringBootApplication(scanBasePackages = "net.thumbtack.hospital")
 @PropertySource("classpath:application.properties")
-@EnableConfigurationProperties(ErrorMessageFactory.class)
+@EnableConfigurationProperties({
+        ErrorMessageFactory.class,
+        TicketFactory.class
+})
 public class HospitalApplication {
     private static final Logger LOGGER = LoggerFactory.getLogger(HospitalApplication.class);
 
