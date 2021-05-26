@@ -13,8 +13,8 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.function.BiFunction;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -59,9 +59,10 @@ public class DtoAdapters {
             return Collections.emptyList();
         }
 
-        final var transformers = new HashMap<Supplier<Boolean>, BiFunction<DtoRequestWithSchedule, Integer, List<ScheduleCell>>>();
-        transformers.put(() -> request.getWeekSchedule() != null, scheduleTransformer::transformWeekSchedule);
-        transformers.put(() -> !request.getWeekDaysSchedule().isEmpty(), scheduleTransformer::transformWeekDaysSchedule);
+        final var transformers = Map.<Supplier<Boolean>, BiFunction<DtoRequestWithSchedule, Integer, List<ScheduleCell>>>of(
+                () -> request.getWeekSchedule() != null, scheduleTransformer::transformWeekSchedule,
+                () -> !request.getWeekDaysSchedule().isEmpty(), scheduleTransformer::transformWeekDaysSchedule
+        );
 
         for (var p : transformers.keySet()) {
             if (p.get()) {
