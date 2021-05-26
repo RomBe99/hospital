@@ -26,8 +26,8 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
@@ -57,33 +57,33 @@ public class UserService {
         final var userId = userDao.login(sessionId, request.getLogin(), request.getPassword());
         final var userType = UserType.valueOf(commonDao.getUserTypeByUserId(userId));
 
-        final var responseMap = new HashMap<UserType, Supplier<? extends LoginUserDtoResponse>>();
-        responseMap.put(UserType.PATIENT, () -> {
-            final var patient = patientDao.getPatientById(userId);
+        return Map.<UserType, Supplier<? extends LoginUserDtoResponse>>of(
+                UserType.PATIENT, () -> {
+                    final var patient = patientDao.getPatientById(userId);
 
-            return new PatientLoginDtoResponse(patient.getId(),
-                    patient.getFirstName(), patient.getLastName(), patient.getPatronymic(),
-                    patient.getEmail(), patient.getAddress(), patient.getPhone());
-        });
-        responseMap.put(UserType.ADMINISTRATOR, () -> {
-            final var administrator = administratorDao.getAdministratorById(userId);
+                    return new PatientLoginDtoResponse(patient.getId(),
+                            patient.getFirstName(), patient.getLastName(), patient.getPatronymic(),
+                            patient.getEmail(), patient.getAddress(), patient.getPhone());
+                },
+                UserType.ADMINISTRATOR, () -> {
+                    final var administrator = administratorDao.getAdministratorById(userId);
 
-            return new AdminLoginDtoResponse(administrator.getId(),
-                    administrator.getFirstName(), administrator.getLastName(), administrator.getPatronymic(),
-                    administrator.getPosition());
-        });
-        responseMap.put(UserType.DOCTOR, () -> {
-            final var doctor = doctorDao.getDoctorById(userId);
+                    return new AdminLoginDtoResponse(administrator.getId(),
+                            administrator.getFirstName(), administrator.getLastName(), administrator.getPatronymic(),
+                            administrator.getPosition());
+                },
+                UserType.DOCTOR, () -> {
+                    final var doctor = doctorDao.getDoctorById(userId);
 
-            return new DoctorLoginDtoResponse(doctor.getId(),
-                    doctor.getFirstName(), doctor.getLastName(), doctor.getPatronymic(),
-                    doctor.getSpecialty(), doctor.getCabinet(),
-                    doctor.getSchedule().stream()
-                            .map(dtoAdapters::transform)
-                            .collect(Collectors.toList()));
-        });
-
-        return responseMap.get(userType).get();
+                    return new DoctorLoginDtoResponse(doctor.getId(),
+                            doctor.getFirstName(), doctor.getLastName(), doctor.getPatronymic(),
+                            doctor.getSpecialty(), doctor.getCabinet(),
+                            doctor.getSchedule().stream()
+                                    .map(dtoAdapters::transform)
+                                    .collect(Collectors.toList()));
+                })
+                .get(userType)
+                .get();
     }
 
     public EmptyDtoResponse logout(String sessionId) {
@@ -99,35 +99,35 @@ public class UserService {
 
         final var userType = UserType.valueOf(commonDao.getUserTypeByUserId(userId));
 
-        final var responseMap = new HashMap<UserType, Supplier<? extends UserInformationDtoResponse>>();
-        responseMap.put(UserType.PATIENT, () -> {
-            final var patient = patientDao.getPatientById(userId);
+        return Map.<UserType, Supplier<? extends UserInformationDtoResponse>>of(
+                UserType.PATIENT, () -> {
+                    final var patient = patientDao.getPatientById(userId);
 
-            return new FullPatientInformationDtoResponse(patient.getId(),
-                    patient.getLogin(), patient.getPassword(),
-                    patient.getFirstName(), patient.getLastName(), patient.getPatronymic(),
-                    patient.getEmail(), patient.getAddress(), patient.getPhone());
-        });
-        responseMap.put(UserType.ADMINISTRATOR, () -> {
-            final var admin = administratorDao.getAdministratorById(userId);
+                    return new FullPatientInformationDtoResponse(patient.getId(),
+                            patient.getLogin(), patient.getPassword(),
+                            patient.getFirstName(), patient.getLastName(), patient.getPatronymic(),
+                            patient.getEmail(), patient.getAddress(), patient.getPhone());
+                },
+                UserType.ADMINISTRATOR, () -> {
+                    final var admin = administratorDao.getAdministratorById(userId);
 
-            return new AdminInformationDtoResponse(admin.getId(),
-                    admin.getLogin(), admin.getPassword(),
-                    admin.getFirstName(), admin.getLastName(), admin.getPatronymic(), admin.getPosition());
-        });
-        responseMap.put(UserType.DOCTOR, () -> {
-            final var doctor = doctorDao.getDoctorById(userId);
+                    return new AdminInformationDtoResponse(admin.getId(),
+                            admin.getLogin(), admin.getPassword(),
+                            admin.getFirstName(), admin.getLastName(), admin.getPatronymic(), admin.getPosition());
+                },
+                UserType.DOCTOR, () -> {
+                    final var doctor = doctorDao.getDoctorById(userId);
 
-            return new DoctorInformationDtoResponse(doctor.getId(),
-                    doctor.getLogin(), doctor.getPassword(),
-                    doctor.getFirstName(), doctor.getLastName(), doctor.getPatronymic(),
-                    doctor.getSpecialty(), doctor.getCabinet(),
-                    doctor.getSchedule().stream()
-                            .map(dtoAdapters::transform)
-                            .collect(Collectors.toList()));
-        });
-
-        return responseMap.get(userType).get();
+                    return new DoctorInformationDtoResponse(doctor.getId(),
+                            doctor.getLogin(), doctor.getPassword(),
+                            doctor.getFirstName(), doctor.getLastName(), doctor.getPatronymic(),
+                            doctor.getSpecialty(), doctor.getCabinet(),
+                            doctor.getSchedule().stream()
+                                    .map(dtoAdapters::transform)
+                                    .collect(Collectors.toList()));
+                })
+                .get(userType)
+                .get();
     }
 
     public PatientInformationDtoResponse getPatientInformation(String sessionId, int patientId) throws PermissionDeniedException {
@@ -189,15 +189,16 @@ public class UserService {
     }
 
     public SettingsDtoResponse getSettings(String sessionId) {
-        final var settingsSuppliers = new HashMap<UserType, Supplier<? extends SettingsDtoResponse>>();
-        settingsSuppliers.put(UserType.ADMINISTRATOR,
-                () -> new ServerSettingsDtoResponse(constraints.getMaxNameLength(), constraints.getMinPasswordLength()));
-        settingsSuppliers.put(UserType.PATIENT,
-                () -> new ServerSettingsDtoResponse(constraints.getMaxNameLength(), constraints.getMinPasswordLength()));
-        settingsSuppliers.put(UserType.DOCTOR,
-                () -> new ServerSettingsDtoResponse(constraints.getMaxNameLength(), constraints.getMinPasswordLength()));
-        settingsSuppliers.put(null,
-                () -> new ServerSettingsDtoResponse(constraints.getMaxNameLength(), constraints.getMinPasswordLength()));
+        final var settingsSuppliers = Map.<UserType, Supplier<? extends SettingsDtoResponse>>of(
+                UserType.ADMINISTRATOR,
+                () -> new ServerSettingsDtoResponse(constraints.getMaxNameLength(), constraints.getMinPasswordLength()),
+                UserType.PATIENT,
+                () -> new ServerSettingsDtoResponse(constraints.getMaxNameLength(), constraints.getMinPasswordLength()),
+                UserType.DOCTOR,
+                () -> new ServerSettingsDtoResponse(constraints.getMaxNameLength(), constraints.getMinPasswordLength()),
+                UserType.USER,
+                () -> new ServerSettingsDtoResponse(constraints.getMaxNameLength(), constraints.getMinPasswordLength())
+        );
 
         for (var t : UserType.values()) {
             try {

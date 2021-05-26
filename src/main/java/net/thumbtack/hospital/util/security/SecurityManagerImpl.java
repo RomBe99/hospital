@@ -9,19 +9,20 @@ import net.thumbtack.hospital.mapper.UserType;
 import net.thumbtack.hospital.util.error.PermissionDeniedErrorCode;
 import net.thumbtack.hospital.util.error.PermissionDeniedException;
 
-import java.util.*;
+import java.util.Map;
+import java.util.Set;
 
 public class SecurityManagerImpl implements SecurityManager {
-    private final Set<UserType> userPermissions = new HashSet<>();
-    private final Map<UserType, PermissionsDao> userDaos = new HashMap<>();
+    private final Set<UserType> userPermissions;
+    private final Map<UserType, PermissionsDao> userDaos = Map.of(
+            UserType.PATIENT, new PatientDaoImpl(),
+            UserType.ADMINISTRATOR, new AdministratorDaoImpl(),
+            UserType.DOCTOR, new DoctorDaoImpl(),
+            UserType.USER, new UserDaoImpl()
+    );
 
     private SecurityManagerImpl(UserType... userPermissions) {
-        this.userPermissions.addAll(Arrays.asList(userPermissions));
-
-        userDaos.put(UserType.PATIENT, new PatientDaoImpl());
-        userDaos.put(UserType.ADMINISTRATOR, new AdministratorDaoImpl());
-        userDaos.put(UserType.DOCTOR, new DoctorDaoImpl());
-        userDaos.put(null, new UserDaoImpl());
+        this.userPermissions = Set.of(userPermissions);
     }
 
     public static SecurityManager getSecurityManager(UserType... userPermissions) {
@@ -31,7 +32,7 @@ public class SecurityManagerImpl implements SecurityManager {
     @Override
     public int hasPermission(String sessionId) throws PermissionDeniedException {
         if (userPermissions.isEmpty()) {
-            return userDaos.get(null).hasPermissions(sessionId);
+            return userDaos.get(UserType.USER).hasPermissions(sessionId);
         }
 
         for (var ut : userPermissions) {
