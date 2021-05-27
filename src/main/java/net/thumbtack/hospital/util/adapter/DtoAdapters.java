@@ -16,17 +16,23 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.function.BiFunction;
-import java.util.function.Supplier;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 @Component("DtoAdapters")
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 public class DtoAdapters {
     private final ScheduleTransformer scheduleTransformer;
+    private final Map<Predicate<DtoRequestWithSchedule>, BiFunction<DtoRequestWithSchedule, Integer, List<ScheduleCell>>> testsToTransformers;
 
     @Autowired
     public DtoAdapters(ScheduleTransformer scheduleTransformer) {
         this.scheduleTransformer = scheduleTransformer;
+
+        testsToTransformers = Map.of(
+                r -> r.getWeekSchedule() != null, this.scheduleTransformer::transformWeekSchedule,
+                r -> !r.getWeekDaysSchedule().isEmpty(), this.scheduleTransformer::transformWeekDaysSchedule
+        );
     }
 
     public ScheduleTimeCellDtoResponse transform(TimeCell tc) {
@@ -59,14 +65,9 @@ public class DtoAdapters {
             return Collections.emptyList();
         }
 
-        final var transformers = Map.<Supplier<Boolean>, BiFunction<DtoRequestWithSchedule, Integer, List<ScheduleCell>>>of(
-                () -> request.getWeekSchedule() != null, scheduleTransformer::transformWeekSchedule,
-                () -> !request.getWeekDaysSchedule().isEmpty(), scheduleTransformer::transformWeekDaysSchedule
-        );
-
-        for (var p : transformers.keySet()) {
-            if (p.get()) {
-                return scheduleTransformer.sortSchedule(transformers.get(p).apply(request, doctorId));
+        for (var p : testsToTransformers.keySet()) {
+            if (p.test(request)) {
+                return scheduleTransformer.sortSchedule(testsToTransformers.get(p).apply(request, doctorId));
             }
         }
 
