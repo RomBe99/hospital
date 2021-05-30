@@ -10,7 +10,7 @@ public class WeekDayConstraintValidator implements ConstraintValidator<WeekDay, 
     public boolean isValid(String weekDay, ConstraintValidatorContext context) {
         try {
             net.thumbtack.hospital.util.WeekDay.of(weekDay);
-        } catch (IllegalArgumentException | NullPointerException ex) {
+        } catch (IllegalArgumentException ex) {
             return false;
         }
 

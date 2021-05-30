@@ -32,13 +32,12 @@ public class ScheduleTransformer {
     }
 
     public boolean isWeekend(LocalDate testDate, List<DayOfWeek> workDaysOfWeek) {
-        final var dayOfWeek = DayOfWeek.from(testDate);
-
         final var weekendDayCheckers = List.<Predicate<DayOfWeek>>of(
                 d -> d == DayOfWeek.SATURDAY,
                 d -> d == DayOfWeek.SUNDAY,
                 d -> !workDaysOfWeek.contains(d)
         );
+        final var dayOfWeek = DayOfWeek.from(testDate);
 
         for (var c : weekendDayCheckers) {
             if (c.test(dayOfWeek)) {
@@ -116,7 +115,7 @@ public class ScheduleTransformer {
                 continue;
             }
 
-            final var temp = new ArrayList<TimeCell>();
+            final var temp = new LinkedList<TimeCell>();
 
             for (var t : durations) {
                 temp.add(new TimeCell(t, duration, ticketFactory.buildTicketToDoctor(doctorId, d, t)));
