@@ -272,9 +272,9 @@ public abstract class DaoTestApi {
 
     // Common dao methods
 
-    public void getUserTypeByUserId(int userId, String expectedUserType) {
+    public UserType getUserTypeByUserId(int userId) {
         final var actualUserType = commonDao.getUserTypeByUserId(userId);
 
-        Assertions.assertEquals(expectedUserType, actualUserType);
+        return UserType.of(actualUserType);
     }
 }
